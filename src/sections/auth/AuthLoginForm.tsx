@@ -3,18 +3,18 @@ import * as Yup from 'yup';
 // next
 import NextLink from 'next/link';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Alert, IconButton, InputAdornment, Link, Stack } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
-import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 

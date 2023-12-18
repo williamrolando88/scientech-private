@@ -1,14 +1,8 @@
-import { useEffect } from 'react';
-// next
 import { useRouter } from 'next/router';
-// routes
-import { PATH_DASHBOARD } from '../routes/paths';
-// components
+import { useEffect } from 'react';
 import LoadingScreen from '../components/loading-screen';
-//
+import { PATH_DASHBOARD } from '../routes/paths';
 import { useAuthContext } from './useAuthContext';
-
-// ----------------------------------------------------------------------
 
 type GuestGuardProps = {
   children: React.ReactNode;

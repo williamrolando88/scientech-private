@@ -1,7 +1,7 @@
 // next
 import NextLink from 'next/link';
 // @mui
-import { Alert, Tooltip, Stack, Typography, Link, Box } from '@mui/material';
+import { Alert, Box, Link, Stack, Tooltip, Typography } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // layouts
