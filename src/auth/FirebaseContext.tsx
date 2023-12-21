@@ -1,20 +1,18 @@
-import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
-import { initializeApp } from 'firebase/app';
 import {
-  getAuth,
-  signOut,
-  signInWithPopup,
-  onAuthStateChanged,
-  GoogleAuthProvider,
   GithubAuthProvider,
+  GoogleAuthProvider,
   TwitterAuthProvider,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
 } from 'firebase/auth';
-import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
 // config
-import { FIREBASE_API } from '../config-global';
 //
+import { AUTH, DB } from 'src/firebase/config';
 import { ActionMapType, AuthStateType, AuthUserType, FirebaseContextType } from './types';
 
 // ----------------------------------------------------------------------
@@ -62,12 +60,6 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
 export const AuthContext = createContext<FirebaseContextType | null>(null);
 
 // ----------------------------------------------------------------------
-
-const firebaseApp = initializeApp(FIREBASE_API);
-
-const AUTH = getAuth(firebaseApp);
-
-const DB = getFirestore(firebaseApp);
 
 const GOOGLE_PROVIDER = new GoogleAuthProvider();
 

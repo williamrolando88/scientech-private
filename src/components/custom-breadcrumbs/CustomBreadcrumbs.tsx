@@ -1,10 +1,6 @@
-// @mui
-import { Box, Link, Stack, Typography, Breadcrumbs } from '@mui/material';
-//
-import { CustomBreadcrumbsProps } from './types';
+import { Box, Breadcrumbs, Link, Stack, Typography } from '@mui/material';
 import LinkItem from './LinkItem';
-
-// ----------------------------------------------------------------------
+import { CustomBreadcrumbsProps } from './types';
 
 export default function CustomBreadcrumbs({
   links,
@@ -15,7 +11,7 @@ export default function CustomBreadcrumbs({
   sx,
   ...other
 }: CustomBreadcrumbsProps) {
-  const lastLink = links[links.length - 1].name;
+  const lastLink = links ? links[links.length - 1].name : '';
 
   return (
     <Box sx={{ mb: 5, ...sx }}>
@@ -29,7 +25,7 @@ export default function CustomBreadcrumbs({
           )}
 
           {/* BREADCRUMBS */}
-          {!!links.length && (
+          {links && !!links.length && (
             <Breadcrumbs separator={<Separator />} {...other}>
               {links.map((link) => (
                 <LinkItem
@@ -67,8 +63,6 @@ export default function CustomBreadcrumbs({
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
 
 function Separator() {
   return (
