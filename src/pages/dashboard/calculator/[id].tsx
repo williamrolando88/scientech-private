@@ -1,9 +1,12 @@
-import DashboardTemplate from 'src/components/shared/DashboardTemplate';
+import { useRouter } from 'next/router';
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
 
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Page() {
-  const title = 'Dashboard';
-  return <DashboardTemplate>{title}</DashboardTemplate>;
+  const {
+    query: { id },
+  } = useRouter();
+
+  return <div>{`This is calculation ${id}`}</div>;
 }

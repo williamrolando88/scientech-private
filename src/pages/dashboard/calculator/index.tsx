@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
-const Page = () => {
+Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+
+export default function Page() {
   const { push } = useRouter();
 
   useEffect(() => {
@@ -10,6 +13,4 @@ const Page = () => {
   });
 
   return null;
-};
-
-export default Page;
+}

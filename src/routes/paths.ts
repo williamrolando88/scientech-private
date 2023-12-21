@@ -44,6 +44,7 @@ export const PATH_DASHBOARD = {
   scientech: {
     home: path(ROOTS_DASHBOARD, '/home'),
     calculator: {
+      root: path(ROOTS_DASHBOARD, '/calculator'),
       list: path(ROOTS_DASHBOARD, '/calculator/list'),
       new: path(ROOTS_DASHBOARD, '/calculator/new'),
       view: (id: string) => path(ROOTS_DASHBOARD, `/calculator/${id}`),

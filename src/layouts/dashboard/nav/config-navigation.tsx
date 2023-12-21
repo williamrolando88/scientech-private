@@ -44,7 +44,7 @@ const navConfig = [
       { title: 'home', path: PATH_DASHBOARD.scientech.home, icon: ICONS.dashboard },
       {
         title: 'Calcular Importación',
-        path: PATH_DASHBOARD.scientech.calculator.list,
+        path: PATH_DASHBOARD.scientech.calculator.root,
         icon: ICONS.invoice,
       },
     ],

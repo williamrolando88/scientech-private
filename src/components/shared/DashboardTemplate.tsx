@@ -1,7 +1,6 @@
 import { Container } from '@mui/material';
 import Head from 'next/head';
 import { FC } from 'react';
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
 import CustomBreadcrumbs, { CustomBreadcrumbsProps } from '../custom-breadcrumbs';
 import { useSettingsContext } from '../settings';
 
@@ -23,13 +22,11 @@ const DashboardTemplate: FC<DashboardTemplateProps> = ({
         <title>{documentTitle || 'Dashboard | Scientech'}</title>
       </Head>
 
-      <DashboardLayout>
-        <Container maxWidth={themeStretch ? false : 'lg'}>
-          <CustomBreadcrumbs {...customBreadcrumbsProps} />
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs {...customBreadcrumbsProps} />
 
-          {children}
-        </Container>
-      </DashboardLayout>
+        {children}
+      </Container>
     </>
   );
 };
