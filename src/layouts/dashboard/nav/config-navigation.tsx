@@ -1,8 +1,8 @@
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
+import Label from '../../../components/label';
 import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -36,6 +36,19 @@ const ICONS = {
 };
 
 const navConfig = [
+  // Scientech
+  // ----------------------------------------------------------------------
+  {
+    subheader: 'scientech',
+    items: [
+      { title: 'home', path: PATH_DASHBOARD.scientech.home, icon: ICONS.dashboard },
+      {
+        title: 'Calcular Importación',
+        path: PATH_DASHBOARD.scientech.calculator.list,
+        icon: ICONS.invoice,
+      },
+    ],
+  },
   // GENERAL
   // ----------------------------------------------------------------------
   {
