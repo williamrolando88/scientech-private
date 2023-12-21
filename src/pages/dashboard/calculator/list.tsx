@@ -65,13 +65,17 @@ export default function Page() {
       heading="Calculadora de Importaciones"
       action={
         <Link href={PATH_DASHBOARD.scientech.calculator.new}>
-          <Button />
+          <Button variant="contained">Nuevo</Button>
         </Link>
       }
     >
-      {loading && <div>Cargando...</div>}
-
-      <DataGrid columns={columns} rows={calculations || []} loading={loading} autoHeight />
+      <DataGrid
+        columns={columns}
+        rows={calculations || []}
+        loading={loading}
+        autoHeight
+        disableSelectionOnClick
+      />
     </DashboardTemplate>
   );
 }
