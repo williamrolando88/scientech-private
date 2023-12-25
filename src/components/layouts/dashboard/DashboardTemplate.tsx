@@ -7,8 +7,8 @@ import CustomBreadcrumbs, {
 import { useSettingsContext } from 'src/components/shared/settings';
 
 interface DashboardTemplateProps extends CustomBreadcrumbsProps {
-  documentTitle?: string;
   children: React.ReactNode;
+  documentTitle?: string;
 }
 
 const DashboardTemplate: FC<DashboardTemplateProps> = ({

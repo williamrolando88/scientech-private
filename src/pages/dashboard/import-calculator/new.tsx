@@ -4,5 +4,9 @@ import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplat
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Page() {
-  return <DashboardTemplate>Page</DashboardTemplate>;
+  return (
+    <DashboardTemplate documentTitle="Calcular Importación" heading="Calculadora de Importaciones">
+      Page
+    </DashboardTemplate>
+  );
 }

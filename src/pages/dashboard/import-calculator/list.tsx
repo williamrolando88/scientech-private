@@ -1,0 +1,24 @@
+import { Button } from '@mui/material';
+import Link from 'next/link';
+import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import ImportCalculatorList from '../../../components/importCalculator/ImportCalculatorList';
+
+Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+
+export default function Page() {
+  return (
+    <DashboardTemplate
+      documentTitle="Calcular Importación"
+      heading="Calculadora de Importaciones"
+      action={
+        <Link href={PATH_DASHBOARD.calculator.new}>
+          <Button variant="contained">Nuevo</Button>
+        </Link>
+      }
+    >
+      <ImportCalculatorList />
+    </DashboardTemplate>
+  );
+}
