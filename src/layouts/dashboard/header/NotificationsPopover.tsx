@@ -16,12 +16,14 @@ import {
 } from '@mui/material';
 import { noCase } from 'change-case';
 import { useState } from 'react';
-import { _notifications } from '../../../_mock/arrays';
+import { Notification } from 'src/@types/notifications';
 import { IconButtonAnimate } from '../../../components/animate';
 import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import Scrollbar from '../../../components/scrollbar';
 import { fToNow } from '../../../utils/formatTime';
+
+const _notifications: Notification[] = [];
 
 export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState(_notifications);
