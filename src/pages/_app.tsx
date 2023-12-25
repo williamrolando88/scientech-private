@@ -1,31 +1,25 @@
-import 'simplebar-react/dist/simplebar.min.css';
-
-import 'yet-another-react-lightbox/plugins/captions.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
-import 'yet-another-react-lightbox/styles.css';
-
-import 'mapbox-gl/dist/mapbox-gl.css';
-
-import 'react-quill/dist/quill.snow.css';
-
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
-
-import 'react-lazy-load-image-component/src/effects/blur.css';
-
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AuthProvider } from '../auth/FirebaseContext';
-import { MotionLazyContainer } from '../components/animate';
-import { StyledChart } from '../components/chart';
-import ProgressBar from '../components/progress-bar';
-import { SettingsProvider, ThemeSettings } from '../components/settings';
-import SnackbarProvider from '../components/snackbar';
-import ThemeProvider from '../theme';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import 'react-quill/dist/quill.snow.css';
+import 'simplebar-react/dist/simplebar.min.css';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { MotionLazyContainer } from 'src/components/shared/animate';
+import { StyledChart } from 'src/components/shared/chart';
+import SnackbarProvider from 'src/components/shared/snackbar/SnackbarProvider';
+import ThemeProvider from 'src/lib/theme';
+import { AuthProvider } from 'src/services/auth/FirebaseContext';
+import 'yet-another-react-lightbox/plugins/captions.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import 'yet-another-react-lightbox/styles.css';
+import ProgressBar from '../components/shared/progress-bar';
+import { SettingsProvider, ThemeSettings } from '../components/shared/settings';
 import createEmotionCache from '../utils/createEmotionCache';
 
 const clientSideEmotionCache = createEmotionCache();

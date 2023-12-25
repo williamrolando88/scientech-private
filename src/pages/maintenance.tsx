@@ -1,18 +1,10 @@
-// next
+import { Button, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
 import NextLink from 'next/link';
-// @mui
-import { Button, Typography, Stack } from '@mui/material';
-// layouts
-import CompactLayout from '../layouts/compact';
-// assets
+import CompactLayout from 'src/components/layouts/compact/CompactLayout';
 import { MaintenanceIllustration } from '../assets/illustrations';
 
-// ----------------------------------------------------------------------
-
 MaintenancePage.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
-
-// ----------------------------------------------------------------------
 
 export default function MaintenancePage() {
   return (

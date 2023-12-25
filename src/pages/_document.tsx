@@ -1,7 +1,7 @@
 import createEmotionServer from '@emotion/server/create-instance';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
-import palette from '../theme/palette';
-import { primaryFont } from '../theme/typography';
+import palette from 'src/lib/theme/palette';
+import { primaryFont } from 'src/lib/theme/typography';
 import createEmotionCache from '../utils/createEmotionCache';
 
 export default class MyDocument extends Document {

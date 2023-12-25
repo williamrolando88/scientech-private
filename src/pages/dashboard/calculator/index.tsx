@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
+import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { useEffectOnce } from 'usehooks-ts';
 

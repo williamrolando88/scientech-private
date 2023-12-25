@@ -1,9 +1,9 @@
 import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
+import CompactLayout from 'src/components/layouts/compact/CompactLayout';
 import { ComingSoonIllustration } from '../assets/illustrations';
-import { CustomTextField } from '../components/custom-input';
+import { CustomTextField } from '../components/shared/custom-input';
 import useCountdown from '../hooks/useCountdown';
-import CompactLayout from '../layouts/compact';
 
 ComingSoonPage.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
 
