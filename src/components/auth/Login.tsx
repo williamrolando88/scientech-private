@@ -1,4 +1,4 @@
-import { Alert, Box, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Link, Stack, Tooltip, Typography } from '@mui/material';
 import NextLink from 'next/link';
 import { useAuthContext } from 'src/services/auth/useAuthContext';
 import { PATH_AUTH } from '../../routes/paths';
@@ -30,10 +30,6 @@ export default function Login() {
           />
         </Tooltip>
       </Stack>
-
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert>
 
       <AuthLoginForm />
     </LoginLayout>
