@@ -1,23 +1,13 @@
-import { forwardRef } from 'react';
-// next
+import { Link, ListItemText, Tooltip } from '@mui/material';
 import NextLink from 'next/link';
-// @mui
-import { Tooltip, Link, ListItemText } from '@mui/material';
-// locales
-import { useLocales } from '../../../locales';
-// auth
+import { forwardRef } from 'react';
 import RoleBasedGuard from '../../../auth/RoleBasedGuard';
-//
 import Iconify from '../../iconify';
 import { NavItemProps } from '../types';
-import { StyledItem, StyledIcon } from './styles';
-
-// ----------------------------------------------------------------------
+import { StyledIcon, StyledItem } from './styles';
 
 const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
   ({ item, depth, open, active, isExternalLink, ...other }, ref) => {
-    const { translate } = useLocales();
-
     const { title, path, icon, children, disabled, caption, roles } = item;
 
     const subItem = depth !== 1;
@@ -34,7 +24,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         {icon && <StyledIcon>{icon}</StyledIcon>}
 
         <ListItemText
-          primary={`${translate(title)}`}
+          primary={title}
           primaryTypographyProps={{
             noWrap: true,
             sx: {
@@ -55,7 +45,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         />
 
         {caption && (
-          <Tooltip title={`${translate(caption)}`} arrow placement="right">
+          <Tooltip title={caption} arrow placement="right">
             <Iconify
               icon="eva:info-outline"
               width={16}

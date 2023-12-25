@@ -10,11 +10,11 @@ export default function Page() {
   const { push, prefetch } = useRouter();
 
   useEffect(() => {
-    push(PATH_DASHBOARD.scientech.calculator.list);
+    push(PATH_DASHBOARD.calculator.list);
   });
 
   useEffectOnce(() => {
-    prefetch(PATH_DASHBOARD.scientech.calculator.list);
+    prefetch(PATH_DASHBOARD.calculator.list);
   });
 
   return null;

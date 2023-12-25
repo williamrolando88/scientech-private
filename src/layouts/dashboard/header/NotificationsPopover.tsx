@@ -1,33 +1,27 @@
-import { noCase } from 'change-case';
-import { useState } from 'react';
-// @mui
 import {
-  Box,
-  Stack,
-  List,
-  Badge,
-  Button,
   Avatar,
-  Tooltip,
+  Badge,
+  Box,
+  Button,
   Divider,
   IconButton,
-  Typography,
-  ListItemText,
-  ListSubheader,
+  List,
   ListItemAvatar,
   ListItemButton,
+  ListItemText,
+  ListSubheader,
+  Stack,
+  Tooltip,
+  Typography,
 } from '@mui/material';
-// utils
-import { fToNow } from '../../../utils/formatTime';
-// _mock_
+import { noCase } from 'change-case';
+import { useState } from 'react';
 import { _notifications } from '../../../_mock/arrays';
-// components
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
-
-// ----------------------------------------------------------------------
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
+import Scrollbar from '../../../components/scrollbar';
+import { fToNow } from '../../../utils/formatTime';
 
 export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState(_notifications);

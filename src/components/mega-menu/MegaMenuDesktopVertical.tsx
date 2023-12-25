@@ -1,18 +1,18 @@
-import { useState } from 'react';
 import NextLink from 'next/link';
+import { useState } from 'react';
 // @mui
 import Masonry from '@mui/lab/Masonry';
-import { alpha, Theme } from '@mui/material/styles';
-import { Link, List, Paper, ListItem, Typography, Divider, Stack } from '@mui/material';
+import { Divider, Link, List, ListItem, Paper, Stack, Typography } from '@mui/material';
+import { Theme, alpha } from '@mui/material/styles';
 // @types
-import { ParentItemProps, MegaMenuItemProps } from './types';
+import { MegaMenuItemProps, ParentItemProps } from './types';
 // config
-import { NAV } from '../../config-global';
+import { NAV } from '../../lib/settings/global';
 // components
 import Iconify from '../iconify';
 //
-import MenuHotProducts from './MenuHotProducts';
 import MegaMenuCarousel from './MenuCarousel';
+import MenuHotProducts from './MenuHotProducts';
 
 // ----------------------------------------------------------------------
 

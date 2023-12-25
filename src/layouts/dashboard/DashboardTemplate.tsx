@@ -1,8 +1,8 @@
 import { Container } from '@mui/material';
 import Head from 'next/head';
 import { FC } from 'react';
-import CustomBreadcrumbs, { CustomBreadcrumbsProps } from '../custom-breadcrumbs';
-import { useSettingsContext } from '../settings';
+import CustomBreadcrumbs, { CustomBreadcrumbsProps } from '../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../components/settings';
 
 interface DashboardTemplateProps extends CustomBreadcrumbsProps {
   documentTitle?: string;
