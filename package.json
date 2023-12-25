@@ -8,14 +8,9 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "build-netlify": "next build && cp -r .next _next && mv _next .next/",
-    "export": "yarn build && next export -o _static",
-    "lint": "eslint --ext .ts,.tsx .",
+    "lint": "eslint --ext .ts,.tsx . && tsc",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
-    "clear-all": "rm -rf .next .swc _static node_modules",
-    "re-start": "rm -rf .next .swc _static node_modules && yarn install && yarn dev",
-    "re-build": "rm -rf .next .swc _static node_modules && yarn install && yarn build"
+    "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.0.2",
