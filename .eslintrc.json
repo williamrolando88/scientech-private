@@ -46,7 +46,7 @@
     "no-console": [
       1,
       {
-        "allow": ["error", "warn"]
+        "allow": ["error", "warn", "info"]
       }
     ],
     "react/jsx-no-useless-fragment": [

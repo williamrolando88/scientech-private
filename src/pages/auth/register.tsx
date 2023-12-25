@@ -1,11 +1,6 @@
-// next
 import Head from 'next/head';
-// auth
-import GuestGuard from '../../auth/GuestGuard';
-// sections
-import Register from '../../sections/auth/Register';
-
-// ----------------------------------------------------------------------
+import Register from 'src/components/auth/Register';
+import GuestGuard from 'src/services/auth/GuestGuard';
 
 export default function RegisterPage() {
   return (

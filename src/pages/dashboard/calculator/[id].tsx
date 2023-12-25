@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
+import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 

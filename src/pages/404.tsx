@@ -2,9 +2,9 @@ import { Button, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Head from 'next/head';
 import NextLink from 'next/link';
+import CompactLayout from 'src/components/layouts/compact/CompactLayout';
+import { MotionContainer, varBounce } from 'src/components/shared/animate';
 import { PageNotFoundIllustration } from '../assets/illustrations';
-import { MotionContainer, varBounce } from '../components/animate';
-import CompactLayout from '../layouts/compact';
 
 Page404.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
 

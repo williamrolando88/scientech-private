@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { ImportCalculator } from 'src/@types/calculator';
-import Iconify from 'src/components/iconify';
-import ImportCalculationsFirebase from 'src/firebase/importCalculations';
+import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import Iconify from 'src/components/shared/iconify';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
-import DashboardTemplate from 'src/layouts/dashboard/DashboardTemplate';
 import { PATH_DASHBOARD } from 'src/routes/paths';
+import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
