@@ -1,18 +1,8 @@
-// next
-import NextLink from 'next/link';
-// @mui
+import { AppBar, Box, BoxProps, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { AppBar, Toolbar, Box, BoxProps, Link } from '@mui/material';
-// config
-import { HEADER } from '../../config-global';
-// utils
-import { bgBlur } from '../../utils/cssStyles';
-// routes
-import { PATH_PAGE } from '../../routes/paths';
-// components
 import Logo from '../../components/logo';
-
-// ----------------------------------------------------------------------
+import { HEADER } from '../../lib/settings/global';
+import { bgBlur } from '../../utils/cssStyles';
 
 type Props = {
   isOffset: boolean;
@@ -43,18 +33,12 @@ export default function Header({ isOffset }: Props) {
         }}
       >
         <Logo />
-
-        <Link component={NextLink} href={PATH_PAGE.faqs} variant="subtitle2" color="inherit">
-          Need Help?
-        </Link>
       </Toolbar>
 
       {isOffset && <Shadow />}
     </AppBar>
   );
 }
-
-// ----------------------------------------------------------------------
 
 function Shadow({ sx, ...other }: BoxProps) {
   return (

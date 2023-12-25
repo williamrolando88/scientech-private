@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { ImportCalculator } from 'src/@types/calculator';
 import Iconify from 'src/components/iconify';
-import DashboardTemplate from 'src/components/shared/DashboardTemplate';
 import ImportCalculationsFirebase from 'src/firebase/importCalculations';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/layouts/dashboard/DashboardTemplate';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
@@ -44,7 +44,7 @@ export default function Page() {
         getActions: (params) => [
           <GridActionsCellItem
             label="Abrir"
-            onClick={() => push(PATH_DASHBOARD.scientech.calculator.view(params.id.toString()))}
+            onClick={() => push(PATH_DASHBOARD.calculator.view(params.id.toString()))}
             icon={<Iconify icon="pajamas:doc-text" />}
           />,
           <GridActionsCellItem
@@ -64,7 +64,7 @@ export default function Page() {
       documentTitle="Calcular Importación"
       heading="Calculadora de Importaciones"
       action={
-        <Link href={PATH_DASHBOARD.scientech.calculator.new}>
+        <Link href={PATH_DASHBOARD.calculator.new}>
           <Button variant="contained">Nuevo</Button>
         </Link>
       }

@@ -1,15 +1,15 @@
 import { memo } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { AppBar, Box, BoxProps, Toolbar } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // config
-import { HEADER } from '../../../config-global';
+import { HEADER } from '../../../lib/settings/global';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
 import { NavSectionHorizontal } from '../../../components/nav-section';
 //
-import navConfig from './config-navigation';
+import navConfig from '../../../lib/settings/navigation';
 
 // ----------------------------------------------------------------------
 

@@ -1,29 +1,29 @@
-import { useState, useEffect, forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 // next
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // @mui
 import {
   Box,
-  List,
-  Link,
-  Stack,
-  Drawer,
   Button,
   Divider,
-  Typography,
+  Drawer,
   IconButton,
-  ListItemText,
-  ListItemIcon,
+  Link,
+  List,
   ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
 } from '@mui/material';
 // config
-import { NAV, ICON } from '../../config-global';
+import { ICON, NAV } from '../../lib/settings/global';
 // @types
-import { ParentItemProps, MegaMenuItemProps } from './types';
+import { MegaMenuItemProps, ParentItemProps } from './types';
 //
-import Logo from '../logo';
 import Iconify from '../iconify';
+import Logo from '../logo';
 import Scrollbar from '../scrollbar';
 
 // ----------------------------------------------------------------------

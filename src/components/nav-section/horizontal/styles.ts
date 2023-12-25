@@ -1,14 +1,8 @@
-// @mui
-import { styled, alpha } from '@mui/material/styles';
-import { Popover, ListItemButton, ListItemIcon } from '@mui/material';
-// utils
+import { ListItemButton, ListItemIcon, Popover } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+import { ICON, NAV } from '../../../lib/settings/global';
 import { bgBlur } from '../../../utils/cssStyles';
-// config
-import { NAV, ICON } from '../../../config-global';
-//
 import { NavItemProps } from '../types';
-
-// ----------------------------------------------------------------------
 
 type StyledItemProps = Omit<NavItemProps, 'item'>;
 
@@ -79,16 +73,12 @@ export const StyledItem = styled(ListItemButton, {
   };
 });
 
-// ----------------------------------------------------------------------
-
 export const StyledIcon = styled(ListItemIcon)({
   marginRight: 8,
   flexShrink: 0,
   width: ICON.NAV_ITEM_HORIZONTAL,
   height: ICON.NAV_ITEM_HORIZONTAL,
 });
-
-// ----------------------------------------------------------------------
 
 export const StyledPopover = styled(Popover)(({ theme }) => ({
   pointerEvents: 'none',

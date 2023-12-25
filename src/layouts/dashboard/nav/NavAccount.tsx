@@ -1,16 +1,9 @@
-// next
-import NextLink from 'next/link';
-// @mui
-import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Typography } from '@mui/material';
-// auth
+import { alpha, styled } from '@mui/material/styles';
+import NextLink from 'next/link';
 import { useAuthContext } from '../../../auth/useAuthContext';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
 import { CustomAvatar } from '../../../components/custom-avatar';
-
-// ----------------------------------------------------------------------
+import { PATH_DASHBOARD } from '../../../routes/paths';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -23,13 +16,11 @@ const StyledRoot = styled('div')(({ theme }) => ({
   }),
 }));
 
-// ----------------------------------------------------------------------
-
 export default function NavAccount() {
   const { user } = useAuthContext();
 
   return (
-    <Link component={NextLink} href={PATH_DASHBOARD.user.account} underline="none" color="inherit">
+    <Link component={NextLink} href={PATH_DASHBOARD.root} underline="none" color="inherit">
       <StyledRoot>
         <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
 

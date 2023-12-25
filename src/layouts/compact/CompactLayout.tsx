@@ -1,11 +1,11 @@
 // next
 import dynamic from 'next/dynamic';
 // @mui
-import { Stack, Container } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 // config
-import { HEADER } from '../../config-global';
+import { HEADER } from '../../lib/settings/global';
 //
 const Header = dynamic(() => import('./Header'), { ssr: false });
 

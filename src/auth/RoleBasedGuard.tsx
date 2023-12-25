@@ -1,14 +1,8 @@
-import { m } from 'framer-motion';
-// @mui
 import { Container, Typography } from '@mui/material';
-// components
-import { MotionContainer, varBounce } from '../components/animate';
-// assets
+import { m } from 'framer-motion';
 import { ForbiddenIllustration } from '../assets/illustrations';
-//
+import { MotionContainer, varBounce } from '../components/animate';
 import { useAuthContext } from './useAuthContext';
-
-// ----------------------------------------------------------------------
 
 type RoleBasedGuardProp = {
   hasContent?: boolean;
@@ -17,11 +11,9 @@ type RoleBasedGuardProp = {
 };
 
 export default function RoleBasedGuard({ hasContent, roles, children }: RoleBasedGuardProp) {
-  // Logic here to get current user role
   const { user } = useAuthContext();
 
-  // const currentRole = 'user';
-  const currentRole = user?.role; // admin;
+  const currentRole = user?.role;
 
   if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
     return hasContent ? (

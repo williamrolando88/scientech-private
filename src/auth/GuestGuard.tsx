@@ -24,5 +24,5 @@ export default function GuestGuard({ children }: GuestGuardProps) {
     return <LoadingScreen />;
   }
 
-  return <> {children} </>;
+  return <>{children}</>;
 }

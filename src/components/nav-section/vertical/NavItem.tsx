@@ -1,18 +1,9 @@
-// next
+import { Box, Link, ListItemText, Tooltip } from '@mui/material';
 import NextLink from 'next/link';
-// @mui
-import { Box, Tooltip, Link, ListItemText } from '@mui/material';
-// locales
-import { useLocales } from '../../../locales';
-// auth
 import RoleBasedGuard from '../../../auth/RoleBasedGuard';
-//
 import Iconify from '../../iconify';
-//
 import { NavItemProps } from '../types';
-import { StyledItem, StyledIcon, StyledDotIcon } from './styles';
-
-// ----------------------------------------------------------------------
+import { StyledDotIcon, StyledIcon, StyledItem } from './styles';
 
 export default function NavItem({
   item,
@@ -22,8 +13,6 @@ export default function NavItem({
   isExternalLink,
   ...other
 }: NavItemProps) {
-  const { translate } = useLocales();
-
   const { title, path, icon, info, children, disabled, caption, roles } = item;
 
   const subItem = depth !== 1;
@@ -39,11 +28,11 @@ export default function NavItem({
       )}
 
       <ListItemText
-        primary={`${translate(title)}`}
+        primary={title}
         secondary={
           caption && (
-            <Tooltip title={`${translate(caption)}`} placement="top-start">
-              <span>{`${translate(caption)}`}</span>
+            <Tooltip title={caption} placement="top-start">
+              <span>{caption}</span>
             </Tooltip>
           )
         }

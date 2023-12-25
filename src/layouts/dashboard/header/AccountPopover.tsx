@@ -1,37 +1,20 @@
-import { useState } from 'react';
-// next
-import { useRouter } from 'next/router';
-// @mui
+import { Box, Divider, MenuItem, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
-// routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-// auth
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useAuthContext } from '../../../auth/useAuthContext';
-// components
-import { CustomAvatar } from '../../../components/custom-avatar';
-import { useSnackbar } from '../../../components/snackbar';
-import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
-
-// ----------------------------------------------------------------------
+import { CustomAvatar } from '../../../components/custom-avatar';
+import MenuPopover from '../../../components/menu-popover';
+import { useSnackbar } from '../../../components/snackbar';
+import { PATH_AUTH } from '../../../routes/paths';
 
 const OPTIONS = [
   {
     label: 'Home',
     linkTo: '/',
   },
-  {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  {
-    label: 'Settings',
-    linkTo: PATH_DASHBOARD.user.account,
-  },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const { replace, push } = useRouter();

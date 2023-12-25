@@ -1,27 +1,27 @@
 import { useState } from 'react';
 // @mui
+import { Box, Divider, Drawer, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { Box, Divider, Drawer, Stack, Typography, Tooltip, IconButton } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // config
-import { NAV } from '../../../config-global';
+import { NAV } from '../../../lib/settings/global';
 //
 import Iconify from '../../iconify';
 import Scrollbar from '../../scrollbar';
 //
-import { defaultSettings } from '../config-setting';
 import { useSettingsContext } from '../SettingsContext';
-import Block from './Block';
+import { defaultSettings } from '../config-setting';
 import BadgeDot from './BadgeDot';
-import ToggleButton from './ToggleButton';
-import ModeOptions from './ModeOptions';
-import LayoutOptions from './LayoutOptions';
-import StretchOptions from './StretchOptions';
+import Block from './Block';
+import ColorPresetsOptions from './ColorPresetsOptions';
 import ContrastOptions from './ContrastOptions';
 import DirectionOptions from './DirectionOptions';
 import FullScreenOptions from './FullScreenOptions';
-import ColorPresetsOptions from './ColorPresetsOptions';
+import LayoutOptions from './LayoutOptions';
+import ModeOptions from './ModeOptions';
+import StretchOptions from './StretchOptions';
+import ToggleButton from './ToggleButton';
 
 // ----------------------------------------------------------------------
 

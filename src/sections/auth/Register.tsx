@@ -1,13 +1,12 @@
 // next
 import NextLink from 'next/link';
 // @mui
-import { Stack, Typography, Link } from '@mui/material';
+import { Link, Stack, Typography } from '@mui/material';
 // layouts
 import LoginLayout from '../../layouts/login';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 //
-import AuthWithSocial from './AuthWithSocial';
 import AuthRegisterForm from './AuthRegisterForm';
 
 // ----------------------------------------------------------------------
@@ -43,8 +42,6 @@ export default function Register() {
         </Link>
         .
       </Typography>
-
-      <AuthWithSocial />
     </LoginLayout>
   );
 }

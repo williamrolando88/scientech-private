@@ -2,18 +2,17 @@ import { useEffect } from 'react';
 // next
 import { useRouter } from 'next/router';
 // @mui
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Drawer, Stack } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { NAV } from '../../../config-global';
+import { NAV } from '../../../lib/settings/global';
 // components
 import Logo from '../../../components/logo';
-import Scrollbar from '../../../components/scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
+import Scrollbar from '../../../components/scrollbar';
 //
-import navConfig from './config-navigation';
-import NavDocs from './NavDocs';
+import navConfig from '../../../lib/settings/navigation';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 
@@ -64,8 +63,6 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
       <NavSectionVertical data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
-
-      <NavDocs />
     </Scrollbar>
   );
 
