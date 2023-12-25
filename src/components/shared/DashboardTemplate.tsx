@@ -19,7 +19,7 @@ const DashboardTemplate: FC<DashboardTemplateProps> = ({
   return (
     <>
       <Head>
-        <title>{documentTitle || 'Dashboard | Scientech'}</title>
+        <title>{documentTitle || 'Dashboard'} | Scientech</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
