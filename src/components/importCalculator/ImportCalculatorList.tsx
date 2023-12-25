@@ -1,7 +1,7 @@
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { ImportCalculator } from 'src/@types/calculator';
+import { ImportCalculator } from 'src/@types/importCalculator';
 import Iconify from 'src/components/shared/iconify';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import { PATH_DASHBOARD } from 'src/routes/paths';
