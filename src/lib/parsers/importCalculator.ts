@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 export const ImportCalculatorMetadataValidationSchema = z.object({
   createdAt: z.coerce.number().optional(),
-  id: z.string().optional(),
   updatedAt: z.coerce.number().optional(),
   description: z.string(),
 });
@@ -31,4 +30,5 @@ export const ImportCalculatorValidationSchema = z.object({
   items: ImportCalculatorItemsValidationSchema.array(),
   notes: z.string().array().optional(),
   metadata: ImportCalculatorMetadataValidationSchema,
+  id: z.string().optional(),
 });
