@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import Chart, { useChart } from 'src/components/shared/chart';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
@@ -39,14 +40,22 @@ const ItemsSummaryGraph: FC = () => {
   if (!reportValues.length) return null;
 
   return (
-    <div className="w-full">
+    <Box>
+      <Typography
+        variant="h6"
+        fontWeight={600}
+        sx={{ textTransform: 'uppercase', textAlign: 'center', mb: 2 }}
+      >
+        Resumen unitario
+      </Typography>
+
       <Chart
         height={values.items.length * 40 + 120}
         type="bar"
         series={reportValues}
         options={chartOptions}
       />
-    </div>
+    </Box>
   );
 };
 
