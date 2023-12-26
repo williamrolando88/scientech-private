@@ -4,7 +4,7 @@ import { parseSafeNumber } from '../helpers/number';
 
 export const calculateImportation = (inputs: ImportCalculator) => {
   // todo: store these values on the server
-  const ISDTax = 0.04;
+  const ISDTax = Date.now() > 1704085200000 ? 0.02 : 0.035;
   const fodinfaTax = 0.005;
   const insuranceRate = 0.01;
 

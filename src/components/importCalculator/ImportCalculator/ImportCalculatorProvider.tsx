@@ -1,4 +1,5 @@
 import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
+import { useRouter } from 'next/router';
 import { FC, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import {
@@ -7,6 +8,7 @@ import {
 } from 'src/lib/constants/importCalculator';
 import { calculateImportation, getImportReport } from 'src/lib/modules/importCalculator';
 import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
@@ -39,6 +41,7 @@ interface Props {
 }
 
 export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues }) => {
+  const { push } = useRouter();
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
   const [totalFOB, setTotalFOB] = useState(0);
 
@@ -54,10 +57,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
     const id = await ImportCalculationsFirebase.upsert(formData);
 
     if (id) {
+      push(PATH_DASHBOARD.calculator.view(id));
       actions.setSubmitting(false);
-      actions.resetForm();
-      setReportValues([]);
-      setTotalFOB(0);
     }
   };
 
