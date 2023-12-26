@@ -26,6 +26,8 @@ interface Context {
   calculate: VoidFunction;
   reportValues: ApexAxisChartSeries;
   totalCost: number;
+  isSubmitting: boolean;
+  submitForm: VoidFunction;
 }
 
 export const CalculatorContext = createContext<Context>({} as Context);
@@ -39,12 +41,21 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
   const [totalCost, setTotalCost] = useState(0);
 
-  const { values, errors, touched, handleChange, resetForm, setValues, setFieldValue } =
-    useFormik<ImportCalculator>({
-      initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
-      onSubmit: () => {},
-      validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
-    });
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    resetForm,
+    setValues,
+    setFieldValue,
+    submitForm,
+  } = useFormik<ImportCalculator>({
+    initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
+    onSubmit: () => {},
+    validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
+  });
 
   const addRow = useCallback(() => {
     setValues((prevState) => ({
@@ -120,6 +131,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       calculate,
       reportValues,
       totalCost,
+      isSubmitting,
+      submitForm,
     }),
     [
       addNote,
@@ -135,6 +148,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       values,
       reportValues,
       totalCost,
+      isSubmitting,
+      submitForm,
     ]
   );
   return (
