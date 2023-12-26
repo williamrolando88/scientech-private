@@ -26,7 +26,7 @@ interface Context {
   ) => Promise<void> | Promise<FormikErrors<ImportCalculator>>;
   calculate: VoidFunction;
   reportValues: ApexAxisChartSeries;
-  totalCost: number;
+  totalFOB: number;
   isSubmitting: boolean;
   submitForm: VoidFunction;
 }
@@ -40,7 +40,7 @@ interface Props {
 
 export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues }) => {
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
-  const [totalCost, setTotalCost] = useState(0);
+  const [totalFOB, setTotalFOB] = useState(0);
 
   const handleSubmitForm = async (
     formData: ImportCalculator,
@@ -57,7 +57,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       actions.setSubmitting(false);
       actions.resetForm();
       setReportValues([]);
-      setTotalCost(0);
+      setTotalFOB(0);
     }
   };
 
@@ -117,7 +117,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const calculate = useCallback(() => {
     const { pricesArray, articlesReport } = calculateImportation(values);
 
-    setTotalCost(articlesReport.reduce((acc, item) => acc + item.FOB, 0));
+    setTotalFOB(articlesReport.reduce((acc, item) => acc + item.FOB, 0));
     setReportValues(getImportReport(articlesReport));
 
     setValues((prevValue) => ({
@@ -129,7 +129,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const resetCalculator = useCallback(() => {
     resetForm({ values: IMPORT_CALCULATOR_INITIAL_VALUE });
     setReportValues([]);
-    setTotalCost(0);
+    setTotalFOB(0);
   }, [resetForm]);
 
   useEffect(() => {
@@ -152,7 +152,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       setFieldValue,
       calculate,
       reportValues,
-      totalCost,
+      totalFOB,
       isSubmitting,
       submitForm,
     }),
@@ -169,7 +169,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       touched,
       values,
       reportValues,
-      totalCost,
+      totalFOB,
       isSubmitting,
       submitForm,
     ]

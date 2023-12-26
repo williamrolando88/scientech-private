@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
 
 const LotReport: FC = () => {
-  const { values, totalCost } = useImportCalculatorContext();
+  const { values, totalFOB } = useImportCalculatorContext();
 
   const totalWeight = values.items.reduce((acc, item) => acc + item.unitWeight * item.quantity, 0);
 
@@ -19,9 +19,9 @@ const LotReport: FC = () => {
       </Typography>
 
       <Typography>
-        Costo total: $
+        Total FOB: $
         <span>
-          <strong> {round(totalCost)} </strong>
+          <strong> {round(totalFOB, 2)} </strong>
         </span>
         USD
       </Typography>
