@@ -1,5 +1,5 @@
 import { collection, getDocs, query } from 'firebase/firestore';
-import { ImportCalculator } from 'src/@types/calculator';
+import { ImportCalculator } from 'src/@types/importCalculator';
 import { DB } from 'src/lib/settings/firebase';
 
 const list = async (): Promise<ImportCalculator[]> => {

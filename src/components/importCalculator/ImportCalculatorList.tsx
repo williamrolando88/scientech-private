@@ -1,20 +1,15 @@
-import { Button } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { ImportCalculator } from 'src/@types/calculator';
-import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
-import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import { ImportCalculator } from 'src/@types/importCalculator';
 import Iconify from 'src/components/shared/iconify';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 
-Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
-
-export default function Page() {
+const ImportCalculatorList = () => {
   const { push } = useRouter();
+
   const [calculations, loading] = useQueryOnMount<ImportCalculator[]>(
     ImportCalculationsFirebase.list
   );
@@ -60,22 +55,14 @@ export default function Page() {
   );
 
   return (
-    <DashboardTemplate
-      documentTitle="Calcular Importación"
-      heading="Calculadora de Importaciones"
-      action={
-        <Link href={PATH_DASHBOARD.calculator.new}>
-          <Button variant="contained">Nuevo</Button>
-        </Link>
-      }
-    >
-      <DataGrid
-        columns={columns}
-        rows={calculations || []}
-        loading={loading}
-        autoHeight
-        disableSelectionOnClick
-      />
-    </DashboardTemplate>
+    <DataGrid
+      columns={columns}
+      rows={calculations || []}
+      loading={loading}
+      autoHeight
+      disableSelectionOnClick
+    />
   );
-}
+};
+
+export default ImportCalculatorList;
