@@ -1,4 +1,4 @@
-import { FormikErrors, FormikTouched, useFormik } from 'formik';
+import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
 import { FC, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import {
@@ -7,6 +7,7 @@ import {
 } from 'src/lib/constants/importCalculator';
 import { calculateImportation, getImportReport } from 'src/lib/modules/importCalculator';
 import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
+import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 interface Context {
@@ -26,6 +27,8 @@ interface Context {
   calculate: VoidFunction;
   reportValues: ApexAxisChartSeries;
   totalCost: number;
+  isSubmitting: boolean;
+  submitForm: VoidFunction;
 }
 
 export const CalculatorContext = createContext<Context>({} as Context);
@@ -39,12 +42,33 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
   const [totalCost, setTotalCost] = useState(0);
 
-  const { values, errors, touched, handleChange, resetForm, setValues, setFieldValue } =
-    useFormik<ImportCalculator>({
-      initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
-      onSubmit: () => {},
-      validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
-    });
+  const handleSubmitForm = async (
+    formData: ImportCalculator,
+    actions: FormikHelpers<ImportCalculator>
+  ) => {
+    const id = await ImportCalculationsFirebase.upsert(formData);
+
+    if (id) {
+      actions.setSubmitting(false);
+      actions.resetForm();
+    }
+  };
+
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    resetForm,
+    setValues,
+    setFieldValue,
+    submitForm,
+  } = useFormik<ImportCalculator>({
+    initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
+    onSubmit: handleSubmitForm,
+    validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
+  });
 
   const addRow = useCallback(() => {
     setValues((prevState) => ({
@@ -120,6 +144,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       calculate,
       reportValues,
       totalCost,
+      isSubmitting,
+      submitForm,
     }),
     [
       addNote,
@@ -135,6 +161,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       values,
       reportValues,
       totalCost,
+      isSubmitting,
+      submitForm,
     ]
   );
   return (

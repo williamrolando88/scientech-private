@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
+import { COLLECTIONS } from 'src/lib/enums/collections';
 import { AUTH, DB } from 'src/lib/settings/firebase';
 import { ActionMapType, AuthStateType, AuthUserType, FirebaseContextType } from './types';
 
@@ -52,7 +53,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       onAuthStateChanged(AUTH, async (user) => {
         if (user) {
-          const userRef = doc(DB, 'users', user.uid);
+          const userRef = doc(DB, COLLECTIONS.USERS, user.uid);
           const docSnap = await getDoc(userRef);
           const profile = docSnap.data();
 
