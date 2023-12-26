@@ -51,6 +51,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
     if (id) {
       actions.setSubmitting(false);
       actions.resetForm();
+      setReportValues([]);
+      setTotalCost(0);
     }
   };
 
@@ -121,6 +123,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
 
   const resetCalculator = useCallback(() => {
     resetForm({ values: IMPORT_CALCULATOR_INITIAL_VALUE });
+    setReportValues([]);
+    setTotalCost(0);
   }, [resetForm]);
 
   useEffect(() => {

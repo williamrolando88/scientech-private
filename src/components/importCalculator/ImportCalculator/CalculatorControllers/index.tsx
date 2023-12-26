@@ -1,14 +1,26 @@
 import { Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import SplitButton from 'src/components/shared/SplitButton';
 import ConfirmDialog from 'src/components/shared/confirm-dialog';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import { SaveConfirmationModal } from './SaveConfirmationModal';
 
 const CalculatorControllers: FC = () => {
-  const { resetForm } = useImportCalculatorContext();
+  const { resetForm, values } = useImportCalculatorContext();
+  const { push } = useRouter();
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
+
+  const handleResetConfirmation = () => {
+    setResetModalOpen(false);
+    resetForm();
+
+    if (values.id) {
+      push(PATH_DASHBOARD.calculator.new);
+    }
+  };
 
   return (
     <>
@@ -20,9 +32,9 @@ const CalculatorControllers: FC = () => {
         }}
         options={[
           {
-            label: 'Reiniciar',
+            label: values.id ? 'Nuevo' : 'Reiniciar',
             onClick: () => setResetModalOpen(true),
-            icon: 'eva:refresh-fill',
+            icon: values.id ? 'eva:file-outline' : 'eva:refresh-fill',
           },
         ]}
       />
@@ -34,7 +46,7 @@ const CalculatorControllers: FC = () => {
         open={resetModalOpen}
         onClose={() => setResetModalOpen(false)}
         action={
-          <Button variant="contained" onClick={resetForm}>
+          <Button variant="contained" onClick={handleResetConfirmation}>
             Reiniciar
           </Button>
         }

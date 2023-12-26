@@ -21,7 +21,7 @@ const LotReport: FC = () => {
       <Typography>
         Costo total: $
         <span>
-          <strong> {round(totalCost, 2)} </strong>
+          <strong> {round(totalCost)} </strong>
         </span>
         USD
       </Typography>
