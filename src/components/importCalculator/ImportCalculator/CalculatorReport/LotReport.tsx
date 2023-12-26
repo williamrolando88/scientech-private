@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import { round } from 'mathjs';
 import { FC } from 'react';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
 
@@ -12,7 +13,7 @@ const LotReport: FC = () => {
       <Typography>
         Peso total:
         <span>
-          <strong> {totalWeight} </strong>
+          <strong> {round(totalWeight, 2)} </strong>
         </span>
         libras
       </Typography>
@@ -20,7 +21,7 @@ const LotReport: FC = () => {
       <Typography>
         Costo total: $
         <span>
-          <strong> {totalCost} </strong>
+          <strong> {round(totalCost, 2)} </strong>
         </span>
         USD
       </Typography>
