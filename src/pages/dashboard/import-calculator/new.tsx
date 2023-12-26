@@ -1,4 +1,4 @@
-import ImportCalculator from 'src/components/importCalculator/ImportCalculator';
+import ImportCalculatorComponent from 'src/components/importCalculator/ImportCalculator';
 import CalculatorControllers from 'src/components/importCalculator/ImportCalculator/CalculatorControllers';
 import { ImportCalculatorProvider } from 'src/components/importCalculator/ImportCalculator/ImportCalculatorProvider';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
@@ -14,7 +14,7 @@ export default function Page() {
         heading="Calculadora de Importaciones"
         action={<CalculatorControllers />}
       >
-        <ImportCalculator />
+        <ImportCalculatorComponent />
       </DashboardTemplate>
     </ImportCalculatorProvider>
   );

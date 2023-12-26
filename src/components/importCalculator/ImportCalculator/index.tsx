@@ -5,7 +5,7 @@ import CalculatorNotes from './CalculatorNotes';
 import { CalculatorReport } from './CalculatorReport';
 import CalculatorSettings from './CalculatorSettings';
 
-const ImportCalculator: FC = () => (
+const ImportCalculatorComponent: FC = () => (
   <Stack gap={3} py={4}>
     <CalculatorItems />
     <CalculatorSettings />
@@ -14,4 +14,4 @@ const ImportCalculator: FC = () => (
   </Stack>
 );
 
-export default ImportCalculator;
+export default ImportCalculatorComponent;
