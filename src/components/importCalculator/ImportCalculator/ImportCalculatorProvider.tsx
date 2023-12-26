@@ -134,9 +134,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
 
   useEffect(() => {
     if (fetchedValues) {
-      const { items, metadata, settings, id, notes } = fetchedValues;
-
-      setValues(() => ({ items, metadata, settings: { ...settings }, id, notes }));
+      setValues(fetchedValues);
     }
   }, [fetchedValues, setValues]);
 
