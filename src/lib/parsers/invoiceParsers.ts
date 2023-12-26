@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const InfoTributariaParser = z.object({
   razonSocial: z.string(),
@@ -15,10 +15,7 @@ const ImpuestoParser = z.object({
   valor: z.string(),
 });
 
-export const TotalImpuestoParser = z.union([
-  ImpuestoParser,
-  ImpuestoParser.array(),
-]);
+export const TotalImpuestoParser = z.union([ImpuestoParser, ImpuestoParser.array()]);
 
 const InfoFacturaParser = z.object({
   fechaEmision: z.string(),

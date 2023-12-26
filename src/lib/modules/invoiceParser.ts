@@ -1,6 +1,6 @@
-import { Factura } from 'src/@types/xmlParsers';
+import { Factura } from 'src/@types/invoiceParsers';
 import { xml2js } from 'xml-js';
-import { FacturaParser } from '../parsers/facturaParsers';
+import { FacturaParser } from '../parsers/invoiceParsers';
 
 const cleanObjectTree = (obj: any): any => {
   if (obj === null || obj === undefined || typeof obj !== 'object') {
