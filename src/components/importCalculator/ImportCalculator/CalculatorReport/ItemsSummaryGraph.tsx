@@ -17,6 +17,9 @@ const ItemsSummaryGraph: FC = () => {
         horizontal: true,
       },
     },
+    dataLabels: {
+      enabled: true,
+    },
     xaxis: {
       categories: values.items.map((item) => item.name),
     },
