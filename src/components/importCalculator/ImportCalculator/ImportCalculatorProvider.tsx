@@ -1,4 +1,4 @@
-import { FormikErrors, FormikTouched, useFormik } from 'formik';
+import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
 import { FC, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import {
@@ -7,6 +7,7 @@ import {
 } from 'src/lib/constants/importCalculator';
 import { calculateImportation, getImportReport } from 'src/lib/modules/importCalculator';
 import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
+import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 interface Context {
@@ -41,6 +42,18 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
   const [totalCost, setTotalCost] = useState(0);
 
+  const handleSubmitForm = async (
+    formData: ImportCalculator,
+    actions: FormikHelpers<ImportCalculator>
+  ) => {
+    const id = await ImportCalculationsFirebase.upsert(formData);
+
+    if (id) {
+      actions.setSubmitting(false);
+      actions.resetForm();
+    }
+  };
+
   const {
     values,
     errors,
@@ -53,7 +66,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
     submitForm,
   } = useFormik<ImportCalculator>({
     initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
-    onSubmit: () => {},
+    onSubmit: handleSubmitForm,
     validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
   });
 
