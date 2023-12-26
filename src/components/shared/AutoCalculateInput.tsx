@@ -45,6 +45,8 @@ export const AutoCalculateInput: FC<AutoCalculateInputProps> = ({
   useEffect(() => {
     if (value === 0) {
       setInputValue('0');
+    } else {
+      setInputValue((value as number).toString());
     }
   }, [value]);
 

@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import { COLLECTIONS } from 'src/lib/enums/collections';
 import { DB } from 'src/lib/settings/firebase';
@@ -13,6 +13,16 @@ const list = async (): Promise<ImportCalculator[]> => {
   const calculations = [] as ImportCalculator[];
   querySnapshot.forEach((document) => calculations.push(document.data() as ImportCalculator));
   return calculations;
+};
+
+const open = async (id: string): Promise<ImportCalculator> => {
+  const docRef = doc(DB, COLLECTIONS.IMPORT_CALCULATIONS, id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data() as ImportCalculator;
+  }
+  throw new Error('El calculo especificado no existe!');
 };
 
 const upsert = async (calculation: ImportCalculator): Promise<string> => {
@@ -38,6 +48,7 @@ const upsert = async (calculation: ImportCalculator): Promise<string> => {
 const ImportCalculationsFirebase = {
   list,
   upsert,
+  open,
 };
 
 export default ImportCalculationsFirebase;

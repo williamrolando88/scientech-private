@@ -1,4 +1,5 @@
 import { ImportCalculator, ImportCalculatorItems } from 'src/@types/importCalculator';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 export const IMPORT_CALCULATOR_NEW_ROW: ImportCalculatorItems = {
   margin: 0,
@@ -25,3 +26,17 @@ export const IMPORT_CALCULATOR_INITIAL_VALUE: ImportCalculator = {
     originTaxes: 0,
   },
 };
+
+export const IMPORT_CALCULATOR_LINKS = (lastLink: string) => [
+  {
+    name: 'Portal',
+    href: PATH_DASHBOARD.home,
+  },
+  {
+    name: 'Calculadora',
+    href: PATH_DASHBOARD.calculator.root,
+  },
+  {
+    name: lastLink,
+  },
+];

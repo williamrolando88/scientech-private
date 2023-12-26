@@ -1,4 +1,5 @@
 import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
+import { useRouter } from 'next/router';
 import { FC, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import {
@@ -7,6 +8,7 @@ import {
 } from 'src/lib/constants/importCalculator';
 import { calculateImportation, getImportReport } from 'src/lib/modules/importCalculator';
 import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
@@ -26,7 +28,7 @@ interface Context {
   ) => Promise<void> | Promise<FormikErrors<ImportCalculator>>;
   calculate: VoidFunction;
   reportValues: ApexAxisChartSeries;
-  totalCost: number;
+  totalFOB: number;
   isSubmitting: boolean;
   submitForm: VoidFunction;
 }
@@ -39,18 +41,24 @@ interface Props {
 }
 
 export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues }) => {
+  const { push } = useRouter();
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
-  const [totalCost, setTotalCost] = useState(0);
+  const [totalFOB, setTotalFOB] = useState(0);
 
   const handleSubmitForm = async (
     formData: ImportCalculator,
     actions: FormikHelpers<ImportCalculator>
   ) => {
+    if (!formData.items.length) {
+      actions.setSubmitting(false);
+      return;
+    }
+
     const id = await ImportCalculationsFirebase.upsert(formData);
 
     if (id) {
+      push(PATH_DASHBOARD.calculator.view(id));
       actions.setSubmitting(false);
-      actions.resetForm();
     }
   };
 
@@ -110,7 +118,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   const calculate = useCallback(() => {
     const { pricesArray, articlesReport } = calculateImportation(values);
 
-    setTotalCost(articlesReport.reduce((acc, item) => acc + item.FOB, 0));
+    setTotalFOB(articlesReport.reduce((acc, item) => acc + item.FOB, 0));
     setReportValues(getImportReport(articlesReport));
 
     setValues((prevValue) => ({
@@ -121,6 +129,8 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
 
   const resetCalculator = useCallback(() => {
     resetForm({ values: IMPORT_CALCULATOR_INITIAL_VALUE });
+    setReportValues([]);
+    setTotalFOB(0);
   }, [resetForm]);
 
   useEffect(() => {
@@ -143,7 +153,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       setFieldValue,
       calculate,
       reportValues,
-      totalCost,
+      totalFOB,
       isSubmitting,
       submitForm,
     }),
@@ -160,7 +170,7 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
       touched,
       values,
       reportValues,
-      totalCost,
+      totalFOB,
       isSubmitting,
       submitForm,
     ]
