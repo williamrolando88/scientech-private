@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 import Link from 'next/link';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculatorList from '../../../components/importCalculator/ImportCalculatorList';
 
@@ -17,6 +18,7 @@ export default function Page() {
           <Button variant="contained">Nuevo</Button>
         </Link>
       }
+      links={IMPORT_CALCULATOR_LINKS('Listado')}
     >
       <ImportCalculatorList />
     </DashboardTemplate>

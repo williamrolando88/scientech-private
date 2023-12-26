@@ -6,6 +6,7 @@ import { ImportCalculatorProvider } from 'src/components/importCalculator/Import
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
+import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
@@ -25,6 +26,7 @@ export default function Page() {
         documentTitle="Calcular Importación"
         heading="Calculadora de Importaciones"
         action={<CalculatorControllers />}
+        links={IMPORT_CALCULATOR_LINKS('Editar')}
       >
         <ImportCalculatorComponent />
       </DashboardTemplate>
