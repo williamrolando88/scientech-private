@@ -1,19 +1,14 @@
-import { LoadingButton } from '@mui/lab';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { FC, useState } from 'react';
 import SplitButton from 'src/components/shared/SplitButton';
+import ConfirmDialog from 'src/components/shared/confirm-dialog';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
+import { SaveConfirmationModal } from './SaveConfirmationModal';
 
 const CalculatorControllers: FC = () => {
-  const { resetForm, values } = useImportCalculatorContext();
+  const { resetForm } = useImportCalculatorContext();
   const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
 
   return (
     <>
@@ -26,59 +21,28 @@ const CalculatorControllers: FC = () => {
         options={[
           {
             label: 'Reiniciar',
-            onClick: resetForm,
+            onClick: () => setResetModalOpen(true),
             icon: 'eva:refresh-fill',
           },
         ]}
       />
 
       <SaveConfirmationModal open={saveModalOpen} onClose={() => setSaveModalOpen(false)} />
+
+      <ConfirmDialog
+        maxWidth="sm"
+        open={resetModalOpen}
+        onClose={() => setResetModalOpen(false)}
+        action={
+          <Button variant="contained" onClick={resetForm}>
+            Reiniciar
+          </Button>
+        }
+        title="Reiniciar calculadora"
+        content="Estas a punto de reiniciar la calculadora, esta acción es irreversible. ¿Deseas continuar?"
+      />
     </>
   );
 };
 
 export default CalculatorControllers;
-
-interface SaveConfirmationModalProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-const SaveConfirmationModal: FC<SaveConfirmationModalProps> = ({ onClose, open }) => {
-  const { values, errors, touched, isSubmitting, submitForm, handleChange } =
-    useImportCalculatorContext();
-
-  const handleConfirm = () => {
-    onClose();
-    submitForm();
-  };
-
-  return (
-    <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle>Guardar cálculo</DialogTitle>
-
-      <DialogContent dividers sx={{ border: 'none', pt: 1 }}>
-        <TextField
-          fullWidth
-          label="Descripción"
-          value={values.metadata.description}
-          name="metadata.description"
-          onChange={handleChange}
-          variant="outlined"
-          error={Boolean(errors.metadata?.description && touched.metadata?.description)}
-          helperText={touched.metadata?.description && errors.metadata?.description}
-          required
-        />
-      </DialogContent>
-
-      <DialogActions>
-        <Button color="error" disabled={isSubmitting} onClick={onClose}>
-          Cancelar
-        </Button>
-        <LoadingButton onClick={handleConfirm} loading={isSubmitting} variant="contained">
-          Guardar
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
-  );
-};

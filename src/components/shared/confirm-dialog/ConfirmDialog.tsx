@@ -1,5 +1,5 @@
 // @mui
-import { Dialog, Button, DialogTitle, DialogActions, DialogContent } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 //
 import { ConfirmDialogProps } from './types';
 
@@ -20,11 +20,11 @@ export default function ConfirmDialog({
       {content && <DialogContent sx={{ typography: 'body2' }}> {content} </DialogContent>}
 
       <DialogActions>
-        {action}
-
-        <Button variant="outlined" color="inherit" onClick={onClose}>
+        <Button color="error" onClick={onClose}>
           Cancel
         </Button>
+
+        {action}
       </DialogActions>
     </Dialog>
   );
