@@ -38,6 +38,11 @@ export default function SplitButton({ action, options }: SplitButtonProps) {
     setOpen(false);
   };
 
+  const handleItemClick = (fn: Function) => {
+    setOpen(false);
+    fn();
+  };
+
   return (
     <>
       <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
@@ -46,7 +51,6 @@ export default function SplitButton({ action, options }: SplitButtonProps) {
         </Button>
 
         <Button
-          size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
@@ -63,25 +67,20 @@ export default function SplitButton({ action, options }: SplitButtonProps) {
         }}
         open={open}
         anchorEl={anchorRef.current}
-        role={undefined}
         transition
+        placement="bottom-end"
         disablePortal
       >
         {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
+          <Grow {...TransitionProps} style={{}}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                  {options.map((option, index) => (
+                  {options.map((option) => (
                     <MenuItem
                       key={option.label}
                       disabled={option.disabled}
-                      onClick={option.onClick}
+                      onClick={() => handleItemClick(option.onClick)}
                     >
                       {option.icon && (
                         <ListItemIcon>

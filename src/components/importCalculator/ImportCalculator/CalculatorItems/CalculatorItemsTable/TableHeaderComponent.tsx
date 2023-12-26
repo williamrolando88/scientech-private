@@ -11,8 +11,7 @@ export const TableHeaderComponent: FC<Props> = ({ children, width = '4rem', expa
     fontWeight="700"
     width={!expand ? width : undefined}
     flexGrow={expand ? 1 : undefined}
-    bgcolor="secondary.main"
-    color="#fff"
+    bgcolor="primary.main"
     borderRadius={1}
     justifyContent="center"
     alignItems="center"
