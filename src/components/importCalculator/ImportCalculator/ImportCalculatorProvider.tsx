@@ -46,6 +46,11 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
     formData: ImportCalculator,
     actions: FormikHelpers<ImportCalculator>
   ) => {
+    if (!formData.items.length) {
+      actions.setSubmitting(false);
+      return;
+    }
+
     const id = await ImportCalculationsFirebase.upsert(formData);
 
     if (id) {
@@ -129,7 +134,9 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
 
   useEffect(() => {
     if (fetchedValues) {
-      setValues(fetchedValues);
+      const { items, metadata, settings, id, notes } = fetchedValues;
+
+      setValues(() => ({ items, metadata, settings: { ...settings }, id, notes }));
     }
   }, [fetchedValues, setValues]);
 
