@@ -21,26 +21,37 @@ const ImportCalculatorList = () => {
         headerName: 'Descripción',
         flex: 1,
         resizable: false,
+        minWidth: 200,
         valueGetter: (params) => params.row.metadata.description || 'Sin descripción',
+      },
+      {
+        field: 'created_at',
+        headerName: 'Creado',
+        resizable: false,
+        tipe: 'date',
+        width: 180,
+        valueGetter: (params) =>
+          new Date(params.row.metadata.createdAt || '').toLocaleString('es-ES'),
       },
       {
         field: 'updated_at',
         headerName: 'Modificado',
         resizable: false,
         tipe: 'date',
-        width: 200,
+        width: 180,
         valueGetter: (params) =>
           new Date(params.row.metadata.updatedAt || '').toLocaleString('es-ES'),
       },
       {
         field: 'actions',
         type: 'actions',
-        width: 100,
+        width: 50,
         getActions: (params) => [
           <GridActionsCellItem
             label="Abrir"
             onClick={() => push(PATH_DASHBOARD.calculator.view(params.id.toString()))}
             icon={<Iconify icon="pajamas:doc-text" />}
+            showInMenu
           />,
           <GridActionsCellItem
             label="Borrar"
@@ -58,6 +69,7 @@ const ImportCalculatorList = () => {
     <DataGrid
       columns={columns}
       rows={calculations || []}
+      onRowClick={(params) => push(PATH_DASHBOARD.calculator.view(params.id.toString()))}
       loading={loading}
       autoHeight
       disableSelectionOnClick
