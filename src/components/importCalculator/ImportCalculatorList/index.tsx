@@ -1,12 +1,13 @@
-import { Card, TextField } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColumns, GridToolbarContainer } from '@mui/x-data-grid';
+import { Card } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
-import { FC, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import Iconify from 'src/components/shared/iconify';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
+import { SearchToolbar } from './SearchToolbar';
 
 const ImportCalculatorList = () => {
   const [searchText, setSearchText] = useState('');
@@ -74,7 +75,7 @@ const ImportCalculatorList = () => {
     () =>
       searchText
         ? calculations?.filter((calculation) =>
-            calculation.metadata.description.includes(searchText)
+            calculation.metadata.description.toLowerCase().includes(searchText.toLowerCase())
           )
         : calculations,
     [calculations, searchText]
@@ -104,22 +105,3 @@ const ImportCalculatorList = () => {
 };
 
 export default ImportCalculatorList;
-
-interface SearchToolbarProps {
-  value: string;
-  handleChange: (value: string) => void;
-}
-
-const SearchToolbar: FC<SearchToolbarProps> = ({ handleChange, value }) => (
-  <GridToolbarContainer>
-    <TextField
-      name="search"
-      label="Buscar"
-      value={value}
-      onChange={(e) => handleChange(e.target.value)}
-      variant="standard"
-      size="small"
-      fullWidth
-    />
-  </GridToolbarContainer>
-);
