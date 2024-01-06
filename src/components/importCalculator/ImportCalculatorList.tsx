@@ -1,6 +1,7 @@
-import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
+import { Card, TextField } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColumns, GridToolbarContainer } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { ImportCalculator } from 'src/@types/importCalculator';
 import Iconify from 'src/components/shared/iconify';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
@@ -8,10 +9,12 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 
 const ImportCalculatorList = () => {
+  const [searchText, setSearchText] = useState('');
   const { push } = useRouter();
 
   const [calculations, loading] = useQueryOnMount<ImportCalculator[]>(
-    ImportCalculationsFirebase.list
+    ImportCalculationsFirebase.list,
+    []
   );
 
   const columns: GridColumns<ImportCalculator> = useMemo(
@@ -27,6 +30,7 @@ const ImportCalculatorList = () => {
       {
         field: 'created_at',
         headerName: 'Creado',
+        description: 'Fecha de creación',
         resizable: false,
         tipe: 'date',
         width: 180,
@@ -36,6 +40,7 @@ const ImportCalculatorList = () => {
       {
         field: 'updated_at',
         headerName: 'Modificado',
+        description: 'Fecha de la última modificación',
         resizable: false,
         tipe: 'date',
         width: 180,
@@ -65,16 +70,56 @@ const ImportCalculatorList = () => {
     [push]
   );
 
+  const filteredCalculations = useMemo(
+    () =>
+      searchText
+        ? calculations?.filter((calculation) =>
+            calculation.metadata.description.includes(searchText)
+          )
+        : calculations,
+    [calculations, searchText]
+  );
+
   return (
-    <DataGrid
-      columns={columns}
-      rows={calculations || []}
-      onRowClick={(params) => push(PATH_DASHBOARD.calculator.view(params.id.toString()))}
-      loading={loading}
-      autoHeight
-      disableSelectionOnClick
-    />
+    <Card>
+      <DataGrid
+        columns={columns}
+        rows={filteredCalculations}
+        onRowClick={(params) => push(PATH_DASHBOARD.calculator.view(params.id.toString()))}
+        loading={loading}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'updated_at', sort: 'desc' }],
+          },
+        }}
+        components={{ Toolbar: SearchToolbar }}
+        componentsProps={{
+          toolbar: { value: searchText, handleChange: setSearchText },
+        }}
+        autoHeight
+        disableSelectionOnClick
+      />
+    </Card>
   );
 };
 
 export default ImportCalculatorList;
+
+interface SearchToolbarProps {
+  value: string;
+  handleChange: (value: string) => void;
+}
+
+const SearchToolbar: FC<SearchToolbarProps> = ({ handleChange, value }) => (
+  <GridToolbarContainer>
+    <TextField
+      name="search"
+      label="Buscar"
+      value={value}
+      onChange={(e) => handleChange(e.target.value)}
+      variant="standard"
+      size="small"
+      fullWidth
+    />
+  </GridToolbarContainer>
+);

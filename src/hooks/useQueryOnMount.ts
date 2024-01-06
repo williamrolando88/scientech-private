@@ -2,10 +2,10 @@ import { useSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
 
-function useQueryOnMount<T>(fn: Function): [T, boolean] {
+function useQueryOnMount<T>(fn: Function, defaultValue: T): [T, boolean] {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<T>(defaultValue);
 
   const queryData = useCallback(async () => {
     try {
