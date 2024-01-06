@@ -25,4 +25,7 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/import-calculator/new'),
     view: (id: string) => path(ROOTS_DASHBOARD, `/import-calculator/${id}`),
   },
+  dayBook: {
+    root: path(ROOTS_DASHBOARD, '/day-book'),
+  },
 };
