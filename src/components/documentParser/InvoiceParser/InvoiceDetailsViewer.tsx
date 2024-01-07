@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@mui/material';
 import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
 import { Invoice } from 'src/@types/invoiceParsers';
@@ -9,30 +10,30 @@ const columns: GridColumns<Invoice> = [
     field: 'issueDate',
     headerName: 'Fecha de Emisión',
     type: 'date',
-    width: 150,
+    width: 130,
     sortable: false,
     valueGetter: (params) => params.row.infoFactura.fechaEmision,
   },
   {
     field: 'establishment',
     headerName: 'Suc.',
-    width: 80,
+    width: 50,
     sortable: false,
     valueGetter: (params) => params.row.infoTributaria.estab,
   },
   {
     field: 'issuePoint',
     headerName: 'Pto.',
-    width: 80,
+    width: 50,
     sortable: false,
     valueGetter: (params) => params.row.infoTributaria.ptoEmi,
   },
   {
     field: 'invoiceNumber',
     headerName: 'Nro.',
-    width: 80,
+    width: 120,
     sortable: false,
-    valueGetter: (params) => params.row.infoTributaria.codDoc,
+    valueGetter: (params) => params.row.infoTributaria.secuencial,
   },
   {
     field: 'issuer',
@@ -46,25 +47,59 @@ const columns: GridColumns<Invoice> = [
     headerName: 'Base 0%',
     sortable: false,
     valueGetter: (params) => {
-      console.log(params.row.infoFactura.totalConImpuestos.totalImpuesto);
-      return 0;
+      console.log(params.row);
+      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
+      let result = 0;
+
+      if (Array.isArray(value)) {
+        const baseCero = value.find((tax) => tax.codigoPorcentaje === '0');
+        result = Number(baseCero?.baseImponible || 0);
+      } else {
+        result = Number(value.codigoPorcentaje === '0' ? value.baseImponible : 0);
+      }
+
+      return round(result, 2);
     },
   },
   {
     field: 'baseTwelve',
     headerName: 'Base 12%',
     sortable: false,
-    valueGetter: (params) => params.row.infoFactura.totalConImpuestos.totalImpuesto,
+    valueGetter: (params) => {
+      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
+      let result = 0;
+
+      if (Array.isArray(value)) {
+        const baseTwelve = value.find((tax) => tax.codigoPorcentaje === '2');
+        result = Number(baseTwelve?.baseImponible || 0);
+      } else {
+        result = Number(value.codigoPorcentaje === '2' ? value.baseImponible : 0);
+      }
+
+      return round(result, 2);
+    },
   },
   {
     field: 'tax',
     headerName: 'IVA',
     sortable: false,
-    valueGetter: (params) => params.row.infoFactura.totalConImpuestos.totalImpuesto,
+    valueGetter: (params) => {
+      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
+      let result = 0;
+
+      if (Array.isArray(value)) {
+        const taxValue = value.find((tax) => tax.codigoPorcentaje === '2');
+        result = Number(taxValue?.valor);
+      } else {
+        result = Number(value.codigoPorcentaje === '2' ? value.valor : 0);
+      }
+
+      return round(result, 2);
+    },
   },
   {
     field: 'total',
-    headerName: 'total',
+    headerName: 'Total',
     sortable: false,
     valueGetter: (params) => params.row.infoFactura.importeTotal,
   },
@@ -105,6 +140,7 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({ data }) =>
         <DataGrid
           autoHeight
           columns={columns}
+          disableColumnFilter
           rows={filteredData}
           getRowId={(row) => row.infoTributaria.claveAcceso}
           initialState={{

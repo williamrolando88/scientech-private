@@ -4,7 +4,7 @@ const InvoiceInfoParser = z.object({
   razonSocial: z.string(),
   ruc: z.string(),
   claveAcceso: z.string(),
-  codDoc: z.string(),
+  secuencial: z.string(),
   estab: z.string(),
   ptoEmi: z.string(),
 });
