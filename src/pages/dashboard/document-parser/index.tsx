@@ -10,11 +10,11 @@ export default function Page() {
   const { push, prefetch } = useRouter();
 
   useEffect(() => {
-    push(PATH_DASHBOARD.documentParser.bill);
+    push(PATH_DASHBOARD.documentParser.invoice);
   });
 
   useEffectOnce(() => {
-    prefetch(PATH_DASHBOARD.documentParser.bill);
+    prefetch(PATH_DASHBOARD.documentParser.invoice);
   });
 
   return null;

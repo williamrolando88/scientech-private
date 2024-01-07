@@ -53,7 +53,7 @@ const navConfig = [
         title: 'Leer documento',
         path: PATH_DASHBOARD.documentParser.root,
         icon: ICONS.file,
-        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.bill }],
+        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice }],
       },
       {
         title: 'Cuentas contables',

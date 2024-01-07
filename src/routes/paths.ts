@@ -33,6 +33,6 @@ export const PATH_DASHBOARD = {
   },
   documentParser: {
     root: path(ROOTS_DASHBOARD, '/document-parser'),
-    bill: path(ROOTS_DASHBOARD, '/document-parser/bill'),
+    invoice: path(ROOTS_DASHBOARD, '/document-parser/invoice'),
   },
 };
