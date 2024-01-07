@@ -50,7 +50,7 @@ const navConfig = [
         icon: ICONS.analytics,
       },
       {
-        title: 'Leer documento',
+        title: 'Lector de documentos',
         path: PATH_DASHBOARD.documentParser.root,
         icon: ICONS.file,
         children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice }],
