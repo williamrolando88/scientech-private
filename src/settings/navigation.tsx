@@ -50,15 +50,15 @@ const navConfig = [
         icon: ICONS.analytics,
       },
       {
+        title: 'Leer documento',
+        path: PATH_DASHBOARD.documentParser.root,
+        icon: ICONS.file,
+        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.bill }],
+      },
+      {
         title: 'Cuentas contables',
         path: PATH_DASHBOARD.accountabilityAccounts.root,
         icon: ICONS.menuItem,
-      },
-      {
-        title: 'Lector de documentos',
-        path: PATH_DASHBOARD.documentParser.root,
-        icon: ICONS.menuItem,
-        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.bill }],
       },
     ],
   },
