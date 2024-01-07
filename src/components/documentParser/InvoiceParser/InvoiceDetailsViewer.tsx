@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@mui/material';
-import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridColumns, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
@@ -47,7 +47,6 @@ const columns: GridColumns<Invoice> = [
     headerName: 'Base 0%',
     sortable: false,
     valueGetter: (params) => {
-      console.log(params.row);
       const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
       let result = 0;
 
@@ -148,8 +147,19 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({ data }) =>
               sortModel: [{ field: 'issueDate', sort: 'asc' }],
             },
           }}
+          components={{
+            Toolbar: CustomToolbar,
+          }}
         />
       </CardContent>
     </Card>
   );
 };
+
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}
