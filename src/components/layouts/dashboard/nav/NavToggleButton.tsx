@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import Iconify from 'src/components/shared/iconify';
 import { useSettingsContext } from 'src/components/shared/settings';
 import useResponsive from 'src/hooks/useResponsive';
-import { NAV } from 'src/lib/settings/global';
+import { NAV } from 'src/settings/global';
 import { bgBlur } from 'src/utils/cssStyles';
 
 export default function NavToggleButton({ sx, ...other }: IconButtonProps) {

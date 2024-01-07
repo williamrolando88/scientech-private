@@ -1,32 +1,25 @@
-import { forwardRef, useEffect, useState } from 'react';
-// next
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  Link,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from '@mui/material';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-// @mui
-import {
-    Box,
-    Button,
-    Divider,
-    Drawer,
-    IconButton,
-    Link,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Stack,
-    Typography,
-} from '@mui/material';
-// config
-import { ICON, NAV } from '../../../lib/settings/global';
-// @types
-import { MegaMenuItemProps, ParentItemProps } from './types';
-//
+import { forwardRef, useEffect, useState } from 'react';
+import { ICON, NAV } from 'src/settings/global';
 import Iconify from '../iconify';
 import Logo from '../logo';
 import Scrollbar from '../scrollbar';
-
-// ----------------------------------------------------------------------
+import { MegaMenuItemProps, ParentItemProps } from './types';
 
 type Props = {
   data: MegaMenuItemProps[];

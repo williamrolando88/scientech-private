@@ -31,4 +31,8 @@ export const PATH_DASHBOARD = {
   accountabilityAccounts: {
     root: path(ROOTS_DASHBOARD, '/accountability-accounts'),
   },
+  documentParser: {
+    root: path(ROOTS_DASHBOARD, '/document-parser'),
+    bill: path(ROOTS_DASHBOARD, '/document-parser/bill'),
+  },
 };

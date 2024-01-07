@@ -1,14 +1,8 @@
-// @mui
 import { ListItemButton, ListItemIcon, Popover } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-// utils
+import { ICON } from 'src/settings/global';
 import { bgBlur } from '../../../../utils/cssStyles';
-// config
-import { ICON } from '../../../../lib/settings/global';
-//
 import { NavItemProps } from '../types';
-
-// ----------------------------------------------------------------------
 
 type StyledItemProps = Omit<NavItemProps, 'item'>;
 

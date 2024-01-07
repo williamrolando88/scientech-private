@@ -1,20 +1,13 @@
-import NextLink from 'next/link';
-import { useState } from 'react';
-// @mui
 import Masonry from '@mui/lab/Masonry';
 import { Divider, Link, List, ListItem, Paper, Stack, Typography } from '@mui/material';
 import { Theme, alpha } from '@mui/material/styles';
-// @types
-import { MegaMenuItemProps, ParentItemProps } from './types';
-// config
-import { NAV } from '../../../lib/settings/global';
-// components
+import NextLink from 'next/link';
+import { useState } from 'react';
+import { NAV } from 'src/settings/global';
 import Iconify from '../iconify';
-//
 import MegaMenuCarousel from './MenuCarousel';
 import MenuHotProducts from './MenuHotProducts';
-
-// ----------------------------------------------------------------------
+import { MegaMenuItemProps, ParentItemProps } from './types';
 
 const MENU_PAPER_WIDTH = 800;
 const PARENT_ITEM_HEIGHT = 40;

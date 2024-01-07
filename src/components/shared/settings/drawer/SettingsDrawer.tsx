@@ -1,15 +1,10 @@
-import { useState } from 'react';
-// @mui
 import { Box, Divider, Drawer, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-// utils
+import { useState } from 'react';
+import { NAV } from 'src/settings/global';
 import { bgBlur } from '../../../../utils/cssStyles';
-// config
-import { NAV } from '../../../../lib/settings/global';
-//
 import Iconify from '../../iconify';
 import Scrollbar from '../../scrollbar';
-//
 import { useSettingsContext } from '../SettingsContext';
 import { defaultSettings } from '../config-setting';
 import BadgeDot from './BadgeDot';
@@ -22,8 +17,6 @@ import LayoutOptions from './LayoutOptions';
 import ModeOptions from './ModeOptions';
 import StretchOptions from './StretchOptions';
 import ToggleButton from './ToggleButton';
-
-// ----------------------------------------------------------------------
 
 const SPACING = 2.5;
 

@@ -5,8 +5,8 @@ import Logo from 'src/components/shared/logo';
 import { NavSectionVertical } from 'src/components/shared/nav-section';
 import Scrollbar from 'src/components/shared/scrollbar';
 import useResponsive from 'src/hooks/useResponsive';
-import { NAV } from 'src/lib/settings/global';
-import navConfig from 'src/lib/settings/navigation';
+import { NAV } from 'src/settings/global';
+import navConfig from 'src/settings/navigation';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 

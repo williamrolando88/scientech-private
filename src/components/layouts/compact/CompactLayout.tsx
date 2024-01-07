@@ -1,7 +1,7 @@
 import { Container, Stack } from '@mui/material';
 import dynamic from 'next/dynamic';
 import useOffSetTop from 'src/hooks/useOffSetTop';
-import { HEADER } from 'src/lib/settings/global';
+import { HEADER } from 'src/settings/global';
 
 const Header = dynamic(() => import('./Header'), { ssr: false });
 

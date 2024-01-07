@@ -4,7 +4,7 @@ import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplat
 Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 function Page() {
-  return <DashboardTemplate>Here comes a selector</DashboardTemplate>;
+  return <DashboardTemplate>Bill parser</DashboardTemplate>;
 }
 
 export default Page;

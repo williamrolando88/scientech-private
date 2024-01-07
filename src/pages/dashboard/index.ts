@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { PATH_AFTER_LOGIN } from '../../lib/settings/global';
+import { PATH_AFTER_LOGIN } from 'src/settings/global';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 export default function Index() {

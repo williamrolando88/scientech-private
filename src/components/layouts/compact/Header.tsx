@@ -1,7 +1,7 @@
 import { AppBar, Box, BoxProps, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Logo from 'src/components/shared/logo';
-import { HEADER } from 'src/lib/settings/global';
+import { HEADER } from 'src/settings/global';
 import { bgBlur } from 'src/utils/cssStyles';
 
 type Props = {
