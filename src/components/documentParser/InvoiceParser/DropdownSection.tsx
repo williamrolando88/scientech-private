@@ -5,8 +5,9 @@ import { Upload } from 'src/components/shared/upload';
 interface DropdownSectionProps {
   files: (File | string)[];
   setFiles: (files: (File | string)[]) => void;
+  handleUpload: VoidFunction;
 }
-export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles }) => {
+export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles, handleUpload }) => {
   const handleRemoveFile = (inputFile: File | string) => {
     const filtered = files.filter((file) => file !== inputFile);
     setFiles(filtered);
@@ -39,7 +40,7 @@ export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles }) =
           onDrop={handleDropMultiFile}
           onRemove={handleRemoveFile}
           onRemoveAll={handleRemoveAllFiles}
-          onUpload={() => console.log('ON UPLOAD')}
+          onUpload={handleUpload}
         />
       </CardContent>
     </Card>
