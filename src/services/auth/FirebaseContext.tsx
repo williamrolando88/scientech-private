@@ -7,7 +7,7 @@ import {
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
 import { COLLECTIONS } from 'src/lib/enums/collections';
-import { AUTH, DB } from 'src/lib/settings/firebase';
+import { AUTH, DB } from 'src/settings/firebase';
 import { ActionMapType, AuthStateType, AuthUserType, FirebaseContextType } from './types';
 
 enum Types {

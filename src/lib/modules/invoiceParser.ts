@@ -1,6 +1,6 @@
-import { Factura } from 'src/@types/invoiceParsers';
+import { Invoice } from 'src/@types/invoiceParsers';
 import { xml2js } from 'xml-js';
-import { FacturaParser } from '../parsers/invoiceParsers';
+import { InvoiceParser } from '../parsers/invoiceParsers';
 
 const cleanObjectTree = (obj: any): any => {
   if (obj === null || obj === undefined || typeof obj !== 'object') {
@@ -45,11 +45,11 @@ const facturaXmlToJs = (xmlText: string) => {
   return factura;
 };
 
-export const parseFactura = (xmlText: string): Factura | null => {
+export const parseFactura = (xmlText: string): Invoice | null => {
   const convertedFactura = facturaXmlToJs(xmlText);
   const cleanFactura = cleanObjectTree(convertedFactura);
 
-  const parsedFactura = FacturaParser.safeParse(cleanFactura);
+  const parsedFactura = InvoiceParser.safeParse(cleanFactura);
 
   if (parsedFactura.success) {
     return parsedFactura.data;

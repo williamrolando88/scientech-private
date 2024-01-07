@@ -1,9 +1,5 @@
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
-import SvgColor from '../../components/shared/svg-color';
-
-// ----------------------------------------------------------------------
+import SvgColor from 'src/components/shared/svg-color';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 const icon = (name: string) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -52,6 +48,12 @@ const navConfig = [
         title: 'Libro Diario',
         path: PATH_DASHBOARD.dayBook.root,
         icon: ICONS.analytics,
+      },
+      {
+        title: 'Lector de documentos',
+        path: PATH_DASHBOARD.documentParser.root,
+        icon: ICONS.file,
+        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice }],
       },
       {
         title: 'Cuentas contables',
