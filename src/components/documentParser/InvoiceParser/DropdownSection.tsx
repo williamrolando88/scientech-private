@@ -37,6 +37,7 @@ export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles, han
         <Upload
           multiple
           files={files}
+          accept={{ 'text/xml': [] }}
           onDrop={handleDropMultiFile}
           onRemove={handleRemoveFile}
           onRemoveAll={handleRemoveAllFiles}

@@ -1,4 +1,4 @@
-import BillParser from 'src/components/documentParser/InvoiceParser';
+import InvoiceParser from 'src/components/documentParser/InvoiceParser';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 
@@ -7,7 +7,7 @@ Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</Dashboar
 function Page() {
   return (
     <DashboardTemplate documentTitle="Leer factura" heading="Leer factura">
-      <BillParser />
+      <InvoiceParser />
     </DashboardTemplate>
   );
 }
