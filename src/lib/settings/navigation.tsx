@@ -45,6 +45,16 @@ const navConfig = [
       },
     ],
   },
+  {
+    subheader: 'Contabilidad',
+    items: [
+      {
+        title: 'Libro Diario',
+        path: PATH_DASHBOARD.dayBook.root,
+        icon: ICONS.analytics,
+      },
+    ],
+  },
 ];
 
 export default navConfig;
