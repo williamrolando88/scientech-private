@@ -53,6 +53,11 @@ const navConfig = [
         path: PATH_DASHBOARD.dayBook.root,
         icon: ICONS.analytics,
       },
+      {
+        title: 'Cuentas contables',
+        path: PATH_DASHBOARD.accountabilityAccounts.root,
+        icon: ICONS.menuItem,
+      },
     ],
   },
 ];
