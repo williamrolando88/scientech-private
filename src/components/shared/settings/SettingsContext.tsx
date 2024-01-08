@@ -5,13 +5,13 @@ import localStorageAvailable from '../../../utils/localStorageAvailable';
 import { defaultSettings } from './config-setting';
 import { defaultPreset, getPresets, presetsOption } from './presets';
 import {
-    SettingsContextProps,
-    ThemeColorPresetsValue,
-    ThemeContrastValue,
-    ThemeDirectionValue,
-    ThemeLayoutValue,
-    ThemeModeValue,
-    ThemeStretchValue,
+  SettingsContextProps,
+  ThemeColorPresetsValue,
+  ThemeContrastValue,
+  ThemeDirectionValue,
+  ThemeLayoutValue,
+  ThemeModeValue,
+  ThemeStretchValue,
 } from './types';
 
 // ----------------------------------------------------------------------
@@ -68,17 +68,6 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   const [themeColorPresets, setThemeColorPresets] = useState(defaultSettings.themeColorPresets);
 
   const storageAvailable = localStorageAvailable();
-
-  const langStorage = storageAvailable ? localStorage.getItem('i18nextLng') : '';
-
-  const isArabic = langStorage === 'ar';
-
-  useEffect(() => {
-    if (isArabic) {
-      onChangeDirectionByLang('ar');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isArabic]);
 
   useEffect(() => {
     if (storageAvailable) {
