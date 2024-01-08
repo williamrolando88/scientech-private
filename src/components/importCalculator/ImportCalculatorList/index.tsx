@@ -33,7 +33,7 @@ const ImportCalculatorList = () => {
         headerName: 'Creado',
         description: 'Fecha de creación',
         resizable: false,
-        tipe: 'date',
+        type: 'date',
         width: 180,
         valueGetter: (params) =>
           new Date(params.row.metadata.createdAt || '').toLocaleString('es-ES'),
@@ -43,10 +43,16 @@ const ImportCalculatorList = () => {
         headerName: 'Modificado',
         description: 'Fecha de la última modificación',
         resizable: false,
-        tipe: 'date',
+        type: 'date',
         width: 180,
         valueGetter: (params) =>
           new Date(params.row.metadata.updatedAt || '').toLocaleString('es-ES'),
+      },
+      {
+        field: 'sortable_updated_at',
+        resizable: false,
+        hide: true,
+        valueGetter: (params) => params.row.metadata.updatedAt,
       },
       {
         field: 'actions',
@@ -90,7 +96,7 @@ const ImportCalculatorList = () => {
         loading={loading}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'updated_at', sort: 'desc' }],
+            sortModel: [{ field: 'sortable_updated_at', sort: 'desc' }],
           },
         }}
         components={{ Toolbar: SearchToolbar }}
