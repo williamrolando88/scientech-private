@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Alert, Card, Grid, TextField } from '@mui/material';
+import { Alert, Button, Card, Grid, Stack, TextField } from '@mui/material';
 import { FormikHelpers, useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { ReactElement, useState } from 'react';
@@ -56,6 +56,7 @@ function Page() {
     handleChange,
     handleSubmit,
     handleReset,
+    resetForm,
   } = useFormik<AccountCategory>({
     initialValues: ACCOUNT_CATEGORY_INITIAL_VALUE,
     validationSchema: toFormikValidationSchema(AccountCategoryParser),
@@ -68,13 +69,18 @@ function Page() {
       heading="Cuentas Contables"
     >
       <Card sx={{ p: 2 }}>
-        <form onSubmit={handleSubmit} onReset={handleReset}>
+        <Stack
+          component="form"
+          gap={2}
+          onSubmit={handleSubmit}
+          onReset={handleReset}
+        >
           <Alert severity="info">
             Aquí podrás agregar una cuenta contable que estará disponible a
             través de toda la aplicación
           </Alert>
 
-          <Grid container my={2} columns={3} columnSpacing={2}>
+          <Grid container columns={3} columnSpacing={2}>
             <Grid item xs={1}>
               <TextField
                 fullWidth
@@ -104,14 +110,24 @@ function Page() {
             </Grid>
           </Grid>
 
-          <LoadingButton
-            variant="contained"
-            type="submit"
-            loading={isSubmitting}
-          >
-            Guardar
-          </LoadingButton>
-        </form>
+          <Stack direction="row" alignSelf="end" gap={2}>
+            <Button
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => resetForm()}
+            >
+              Limpiar
+            </Button>
+
+            <LoadingButton
+              variant="contained"
+              type="submit"
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
+          </Stack>
+        </Stack>
       </Card>
     </DashboardTemplate>
   );
