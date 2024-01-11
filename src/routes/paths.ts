@@ -28,8 +28,8 @@ export const PATH_DASHBOARD = {
   dayBook: {
     root: path(ROOTS_DASHBOARD, '/day-book'),
   },
-  accountabilityAccounts: {
-    root: path(ROOTS_DASHBOARD, '/accountability-accounts'),
+  accountCategories: {
+    root: path(ROOTS_DASHBOARD, '/account-categories'),
   },
   documentParser: {
     root: path(ROOTS_DASHBOARD, '/document-parser'),
