@@ -1,5 +1,13 @@
 import { LoadingButton } from '@mui/lab';
-import { Alert, Button, Card, Grid, Stack, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { FormikHelpers, useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -68,6 +76,8 @@ const AddAccountCategory: FC = () => {
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
+        <Typography variant="h5">Agregar Cuenta Contable</Typography>
+
         <Alert severity="info">
           Aquí podrás agregar una cuenta contable que estará disponible a través
           de toda la aplicación
