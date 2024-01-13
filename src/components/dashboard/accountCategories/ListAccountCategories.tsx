@@ -50,7 +50,7 @@ const ListAccountCategories: FC = () => {
           <GridActionsCellItem
             label="Borrar"
             onClick={() => alert(`Delete ${params.id}`)}
-            icon={<Iconify icon="pajamas:doc-changes" />}
+            icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],
@@ -70,7 +70,7 @@ const ListAccountCategories: FC = () => {
           loading={loading}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'id', sort: 'desc' }],
+              sortModel: [{ field: 'id', sort: 'asc' }],
             },
           }}
           autoHeight

@@ -9,12 +9,14 @@ import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
 
 const AddAccountCategory: FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const { categories, setCategories } = useAccountCategoriesStore();
   const { enqueueSnackbar } = useSnackbar();
+  const { categories, setCategories } = useAccountCategoriesStore();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [multiple, setMultiple] = useState(false);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+  const toogleMultiple = () => setMultiple(!multiple);
 
   const handleSubmitForm = async (
     formData: AccountCategory,
@@ -37,8 +39,13 @@ const AddAccountCategory: FC = () => {
 
       setCategories(accountsCollection);
       actions.resetForm();
+
+      if (!multiple) {
+        closeModal();
+      }
     } catch (error) {
       console.error(error);
+
       enqueueSnackbar('Ocurrió un error al guardar la cuenta', {
         variant: 'error',
       });
@@ -60,6 +67,9 @@ const AddAccountCategory: FC = () => {
           initialValues={ACCOUNT_CATEGORY_INITIAL_VALUE}
           onSubmit={handleSubmitForm}
           onClose={closeModal}
+          showMultiple
+          multiple={multiple}
+          handleMultiple={toogleMultiple}
         />
       </Dialog>
     </>

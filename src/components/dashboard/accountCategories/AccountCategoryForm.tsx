@@ -4,8 +4,10 @@ import {
   Button,
   DialogActions,
   DialogContent,
+  FormControlLabel,
   Grid,
   Stack,
+  Switch,
   TextField,
 } from '@mui/material';
 import { FormikConfig, useFormik } from 'formik';
@@ -18,11 +20,18 @@ interface AccountCategoryFormProps {
   initialValues: AccountCategory;
   onSubmit: FormikConfig<AccountCategory>['onSubmit'];
   onClose: VoidFunction;
+  showMultiple?: boolean;
+  multiple?: boolean;
+  handleMultiple?: VoidFunction;
 }
+
 export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
   initialValues,
   onSubmit,
   onClose,
+  showMultiple,
+  multiple,
+  handleMultiple,
 }) => {
   const {
     values,
@@ -87,27 +96,40 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button type="button" disabled={isSubmitting} onClick={onClose}>
-          Cancelar
-        </Button>
+        <Stack direction="row" justifyContent="space-between" width="100%">
+          {showMultiple ? (
+            <FormControlLabel
+              label="Agregar varios"
+              control={<Switch checked={multiple} onChange={handleMultiple} />}
+            />
+          ) : (
+            <div />
+          )}
 
-        <Button
-          type="button"
-          disabled={isSubmitting}
-          onClick={() => resetForm()}
-          variant="contained"
-          color="error"
-        >
-          Limpiar
-        </Button>
+          <Stack direction="row" gap={2}>
+            <Button type="button" disabled={isSubmitting} onClick={onClose}>
+              Cancelar
+            </Button>
 
-        <LoadingButton
-          variant="contained"
-          onClick={submitForm}
-          loading={isSubmitting}
-        >
-          Guardar
-        </LoadingButton>
+            <Button
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => resetForm()}
+              variant="contained"
+              color="error"
+            >
+              Limpiar
+            </Button>
+
+            <LoadingButton
+              variant="contained"
+              onClick={submitForm}
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
+          </Stack>
+        </Stack>
       </DialogActions>
     </>
   );
