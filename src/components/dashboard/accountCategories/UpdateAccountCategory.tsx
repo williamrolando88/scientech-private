@@ -1,6 +1,9 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import { FC } from 'react';
+import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
+import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
 
@@ -13,10 +16,34 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
   accountCategory,
   onClose,
 }) => {
+  const { categories, setCategories } = useAccountCategoriesStore();
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSubmitForm: FormikConfig<AccountCategory>['onSubmit'] = async (
-    formData
+    formData,
+    actions
   ) => {
-    console.log(formData);
+    actions.setSubmitting(true);
+
+    const accountsCollection = categories.map((account) =>
+      account.id === formData.id ? formData : account
+    );
+
+    try {
+      await AccountCategories.upsert(accountsCollection);
+
+      setCategories(accountsCollection);
+      actions.resetForm();
+      onClose();
+    } catch (error) {
+      console.error(error);
+
+      enqueueSnackbar('Ocurrió un error al actualizar la cuenta', {
+        variant: 'error',
+      });
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   if (!accountCategory) return null;
@@ -34,6 +61,7 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
         initialValues={accountCategory}
         onSubmit={handleSubmitForm}
         onClose={onClose}
+        isUpdating
       />
     </Dialog>
   );

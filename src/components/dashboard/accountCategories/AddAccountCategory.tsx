@@ -35,7 +35,7 @@ const AddAccountCategory: FC = () => {
     const accountsCollection = [...categories, formData];
 
     try {
-      await AccountCategories.add(accountsCollection);
+      await AccountCategories.upsert(accountsCollection);
 
       setCategories(accountsCollection);
       actions.resetForm();
@@ -67,7 +67,6 @@ const AddAccountCategory: FC = () => {
           initialValues={ACCOUNT_CATEGORY_INITIAL_VALUE}
           onSubmit={handleSubmitForm}
           onClose={closeModal}
-          showMultiple
           multiple={multiple}
           handleMultiple={toogleMultiple}
         />

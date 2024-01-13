@@ -20,18 +20,18 @@ interface AccountCategoryFormProps {
   initialValues: AccountCategory;
   onSubmit: FormikConfig<AccountCategory>['onSubmit'];
   onClose: VoidFunction;
-  showMultiple?: boolean;
   multiple?: boolean;
   handleMultiple?: VoidFunction;
+  isUpdating?: boolean;
 }
 
 export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
   initialValues,
   onSubmit,
   onClose,
-  showMultiple,
   multiple,
   handleMultiple,
+  isUpdating = false,
 }) => {
   const {
     values,
@@ -75,6 +75,7 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
                 id="id"
                 error={touched.id && !!errors.id}
                 helperText={touched.id && errors.id}
+                disabled={isUpdating}
               />
             </Grid>
 
@@ -97,7 +98,7 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
 
       <DialogActions>
         <Stack direction="row" justifyContent="space-between" width="100%">
-          {showMultiple ? (
+          {!isUpdating ? (
             <FormControlLabel
               label="Agregar varios"
               control={<Switch checked={multiple} onChange={handleMultiple} />}
