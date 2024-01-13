@@ -112,15 +112,17 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
               Cancelar
             </Button>
 
-            <Button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() => resetForm()}
-              variant="contained"
-              color="error"
-            >
-              Limpiar
-            </Button>
+            {!isUpdating && (
+              <Button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => resetForm()}
+                variant="contained"
+                color="error"
+              >
+                Limpiar
+              </Button>
+            )}
 
             <LoadingButton
               variant="contained"
