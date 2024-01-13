@@ -57,7 +57,7 @@ const navConfig = [
       },
       {
         title: 'Cuentas contables',
-        path: PATH_DASHBOARD.accountabilityAccounts.root,
+        path: PATH_DASHBOARD.accountCategories.root,
         icon: ICONS.menuItem,
       },
     ],
