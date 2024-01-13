@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
-import { FormikHelpers } from 'formik';
+import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { ACCOUNT_CATEGORY_INITIAL_VALUE } from 'src/lib/constants/accountCategories';
@@ -18,9 +18,9 @@ const AddAccountCategory: FC = () => {
   const closeModal = () => setModalOpen(false);
   const toogleMultiple = () => setMultiple(!multiple);
 
-  const handleSubmitForm = async (
-    formData: AccountCategory,
-    actions: FormikHelpers<AccountCategory>
+  const handleSubmitForm: FormikConfig<AccountCategory>['onSubmit'] = async (
+    formData,
+    actions
   ) => {
     const isDuplicated = categories.some(
       (account) => account.id === formData.id
