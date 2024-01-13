@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material';
 import { ReactElement } from 'react';
 import AddAccountCategory from 'src/components/dashboard/accountCategories/AddAccountCategory';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
@@ -14,12 +13,9 @@ function Page() {
     <DashboardTemplate
       documentTitle="Cuentas Contables"
       heading="Cuentas Contables"
+      action={<AddAccountCategory />}
     >
-      <Stack gap={4}>
-        <AddAccountCategory />
-
-        <ListAccountCategories />
-      </Stack>
+      <ListAccountCategories />
     </DashboardTemplate>
   );
 }

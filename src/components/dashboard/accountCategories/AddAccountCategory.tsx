@@ -1,26 +1,20 @@
-import { LoadingButton } from '@mui/lab';
-import {
-  Alert,
-  Button,
-  Card,
-  CardHeader,
-  Grid,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { FormikHelpers, useFormik } from 'formik';
+import { Button, Dialog, DialogTitle } from '@mui/material';
+import { FormikHelpers } from 'formik';
 import { useSnackbar } from 'notistack';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ACCOUNT_CATEGORY_INITIAL_VALUE } from 'src/lib/constants/accountCategories';
-import { AccountCategoryParser } from 'src/lib/parsers/accountCategories';
 import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { AccountCategoryForm } from './AccountCategoryForm';
 
 const AddAccountCategory: FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const { categories, setCategories } = useAccountCategoriesStore();
   const { enqueueSnackbar } = useSnackbar();
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   const handleSubmitForm = async (
     formData: AccountCategory,
@@ -53,86 +47,22 @@ const AddAccountCategory: FC = () => {
     }
   };
 
-  const {
-    values,
-    touched,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-    handleReset,
-    resetForm,
-  } = useFormik<AccountCategory>({
-    initialValues: ACCOUNT_CATEGORY_INITIAL_VALUE,
-    validationSchema: toFormikValidationSchema(AccountCategoryParser),
-    onSubmit: handleSubmitForm,
-  });
-
   return (
-    <Card>
-      <CardHeader title="Agregar Cuenta Contable" />
+    <>
+      <Button onClick={openModal} variant="contained">
+        Nuevo
+      </Button>
 
-      <Stack
-        p={2}
-        gap={2}
-        component="form"
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-      >
-        <Alert severity="info">
-          Aquí podrás agregar una cuenta contable que estará disponible a través
-          de toda la aplicación
-        </Alert>
+      <Dialog fullWidth maxWidth="md" open={modalOpen} onClose={closeModal}>
+        <DialogTitle>Agregar Cuenta Contable</DialogTitle>
 
-        <Grid container columns={3} columnSpacing={2}>
-          <Grid item xs={1}>
-            <TextField
-              fullWidth
-              onFocus={(e) => e.target.select()}
-              label="Número de Cuenta"
-              onChange={handleChange}
-              value={values.id}
-              name="id"
-              id="id"
-              error={touched.id && !!errors.id}
-              helperText={touched.id && errors.id}
-            />
-          </Grid>
-
-          <Grid item xs={2}>
-            <TextField
-              fullWidth
-              onFocus={(e) => e.target.select()}
-              label="Nombre"
-              onChange={handleChange}
-              value={values.name}
-              name="name"
-              id="name"
-              error={touched.name && !!errors.name}
-              helperText={touched.name && errors.name}
-            />
-          </Grid>
-        </Grid>
-
-        <Stack direction="row" alignSelf="end" gap={2}>
-          <Button
-            type="button"
-            disabled={isSubmitting}
-            onClick={() => resetForm()}
-          >
-            Limpiar
-          </Button>
-
-          <LoadingButton
-            variant="contained"
-            type="submit"
-            loading={isSubmitting}
-          >
-            Guardar
-          </LoadingButton>
-        </Stack>
-      </Stack>
-    </Card>
+        <AccountCategoryForm
+          initialValues={ACCOUNT_CATEGORY_INITIAL_VALUE}
+          onSubmit={handleSubmitForm}
+          onClose={closeModal}
+        />
+      </Dialog>
+    </>
   );
 };
 

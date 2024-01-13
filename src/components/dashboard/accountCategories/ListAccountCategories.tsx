@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { useEffectOnce } from 'usehooks-ts';
 
-const ListAccountCategories = () => {
+const ListAccountCategories: FC = () => {
   const [loading, setLoading] = useState(false);
   const { categories, setCategories } = useAccountCategoriesStore();
 
