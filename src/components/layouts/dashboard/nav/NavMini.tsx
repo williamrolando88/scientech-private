@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material';
 import Logo from 'src/components/shared/logo';
 import { NavSectionMini } from 'src/components/shared/nav-section';
+import { hideScrollbarX } from 'src/lib/utils/cssStyles';
 import { NAV } from 'src/settings/global';
 import navConfig from 'src/settings/navigation';
-import { hideScrollbarX } from 'src/utils/cssStyles';
 import NavToggleButton from './NavToggleButton';
 
 export default function NavMini() {

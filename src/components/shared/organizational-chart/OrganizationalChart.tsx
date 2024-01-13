@@ -2,7 +2,7 @@ import { Tree, TreeNode } from 'react-organizational-chart';
 // @mui
 import { useTheme } from '@mui/material/styles';
 // utils
-import flattenArray from '../../../utils/flattenArray';
+import flattenArray from '../../../lib/utils/flattenArray';
 //
 import { GroupNode, SimpleNode, StandardNode } from './node';
 import { ListProps, OrganizationalChartProps, SubListProps } from './types';
@@ -71,7 +71,9 @@ export function List({ data, depth, variant, sx }: ListProps) {
         ))
       }
     >
-      {hasChild && <SubList data={data.children} depth={depth} variant={variant} sx={sx} />}
+      {hasChild && (
+        <SubList data={data.children} depth={depth} variant={variant} sx={sx} />
+      )}
     </TreeNode>
   );
 }
@@ -82,7 +84,13 @@ function SubList({ data, depth, variant, sx }: SubListProps) {
   return (
     <>
       {data.map((list) => (
-        <List key={list.name} data={list} depth={depth + 1} variant={variant} sx={sx} />
+        <List
+          key={list.name}
+          data={list}
+          depth={depth + 1}
+          variant={variant}
+          sx={sx}
+        />
       ))}
     </>
   );

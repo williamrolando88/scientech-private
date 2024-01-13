@@ -1,7 +1,7 @@
 import { getYear, isBefore, isSameDay, isSameMonth } from 'date-fns';
 import { useState } from 'react';
 // utils
-import { fDate } from '../../../utils/formatTime';
+import { fDate } from '../../../lib/utils/formatTime';
 //
 import { DateRangePickerProps } from './types';
 
@@ -9,7 +9,10 @@ import { DateRangePickerProps } from './types';
 
 type ReturnType = DateRangePickerProps;
 
-export default function useDateRangePicker(start: Date | null, end: Date | null): ReturnType {
+export default function useDateRangePicker(
+  start: Date | null,
+  end: Date | null
+): ReturnType {
   const [open, setOpen] = useState(false);
 
   const [endDate, setEndDate] = useState(end);
@@ -17,7 +20,10 @@ export default function useDateRangePicker(start: Date | null, end: Date | null)
   const [startDate, setStartDate] = useState(start);
 
   const isError =
-    (startDate && endDate && isBefore(new Date(endDate), new Date(startDate))) || false;
+    (startDate &&
+      endDate &&
+      isBefore(new Date(endDate), new Date(startDate))) ||
+    false;
 
   const currentYear = new Date().getFullYear();
 
@@ -25,13 +31,18 @@ export default function useDateRangePicker(start: Date | null, end: Date | null)
 
   const endDateYear = endDate ? getYear(endDate) : null;
 
-  const isCurrentYear = currentYear === startDateYear && currentYear === endDateYear;
+  const isCurrentYear =
+    currentYear === startDateYear && currentYear === endDateYear;
 
   const isSameDays =
-    startDate && endDate ? isSameDay(new Date(startDate), new Date(endDate)) : false;
+    startDate && endDate
+      ? isSameDay(new Date(startDate), new Date(endDate))
+      : false;
 
   const isSameMonths =
-    startDate && endDate ? isSameMonth(new Date(startDate), new Date(endDate)) : false;
+    startDate && endDate
+      ? isSameMonth(new Date(startDate), new Date(endDate))
+      : false;
 
   const standardLabel = `${fDate(startDate)} - ${fDate(endDate)}`;
 

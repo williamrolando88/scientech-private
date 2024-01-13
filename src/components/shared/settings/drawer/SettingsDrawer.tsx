@@ -1,8 +1,16 @@
-import { Box, Divider, Drawer, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { NAV } from 'src/settings/global';
-import { bgBlur } from '../../../../utils/cssStyles';
+import { bgBlur } from '../../../../lib/utils/cssStyles';
 import Iconify from '../../iconify';
 import Scrollbar from '../../scrollbar';
 import { useSettingsContext } from '../SettingsContext';
@@ -53,7 +61,13 @@ export default function SettingsDrawer() {
 
   return (
     <>
-      {!open && <ToggleButton open={open} notDefault={notDefault} onToggle={handleToggle} />}
+      {!open && (
+        <ToggleButton
+          open={open}
+          notDefault={notDefault}
+          onToggle={handleToggle}
+        />
+      )}
 
       <Drawer
         anchor="right"
@@ -62,10 +76,15 @@ export default function SettingsDrawer() {
         BackdropProps={{ invisible: true }}
         PaperProps={{
           sx: {
-            ...bgBlur({ color: theme.palette.background.default, opacity: 0.9 }),
+            ...bgBlur({
+              color: theme.palette.background.default,
+              opacity: 0.9,
+            }),
             width: NAV.W_BASE,
             boxShadow: `-24px 12px 40px 0 ${alpha(
-              theme.palette.mode === 'light' ? theme.palette.grey[500] : theme.palette.common.black,
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[500]
+                : theme.palette.common.black,
               0.16
             )}`,
           },
@@ -114,7 +133,10 @@ export default function SettingsDrawer() {
             <LayoutOptions />
           </Block>
 
-          <Block title="Stretch" tooltip="Only available at large resolutions > 1600px (xl)">
+          <Block
+            title="Stretch"
+            tooltip="Only available at large resolutions > 1600px (xl)"
+          >
             <StretchOptions />
           </Block>
 

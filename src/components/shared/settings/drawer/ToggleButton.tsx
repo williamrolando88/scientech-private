@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Box, Tooltip } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 // utils
-import { bgBlur } from '../../../../utils/cssStyles';
+import { bgBlur } from '../../../../lib/utils/cssStyles';
 //
 import { IconButtonAnimate } from '../../animate';
 import SvgColor from '../../svg-color';
@@ -39,7 +39,9 @@ export default function ToggleButton({ notDefault, open, onToggle }: Props) {
         position: 'fixed',
         borderRadius: '50%',
         boxShadow: `-12px 12px 32px -4px ${alpha(
-          theme.palette.mode === 'light' ? theme.palette.grey[600] : theme.palette.common.black,
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[600]
+            : theme.palette.common.black,
           0.36
         )}`,
         ...bgBlur({ color: theme.palette.background.default }),
