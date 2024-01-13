@@ -3,10 +3,10 @@ import {
   Alert,
   Button,
   Card,
+  CardHeader,
   Grid,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import { FormikHelpers, useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -69,15 +69,16 @@ const AddAccountCategory: FC = () => {
   });
 
   return (
-    <Card sx={{ p: 2 }}>
+    <Card>
+      <CardHeader title="Agregar Cuenta Contable" />
+
       <Stack
-        component="form"
+        p={2}
         gap={2}
+        component="form"
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <Typography variant="h5">Agregar Cuenta Contable</Typography>
-
         <Alert severity="info">
           Aquí podrás agregar una cuenta contable que estará disponible a través
           de toda la aplicación

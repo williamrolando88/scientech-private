@@ -1,4 +1,4 @@
-import { Card, Stack } from '@mui/material';
+import { Card, CardHeader, Stack } from '@mui/material';
 import { ReactElement } from 'react';
 import AddAccountCategory from 'src/components/dashboard/accountCategories/AddAccountCategory';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
@@ -43,6 +43,8 @@ const ListAccountCategories = () => {
 
   return (
     <Card>
+      <CardHeader title="Listado de Cuentas Contables" />
+
       <pre>{JSON.stringify(categories, null, 2)}</pre>
     </Card>
   );
