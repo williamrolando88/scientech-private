@@ -1,7 +1,15 @@
-import { collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
-import { ImportCalculator } from 'src/@types/importCalculator';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from 'firebase/firestore';
 import { COLLECTIONS } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
+import { ImportCalculator } from 'src/types/importCalculator';
 
 const list = async (): Promise<ImportCalculator[]> => {
   const q = query(
@@ -11,7 +19,9 @@ const list = async (): Promise<ImportCalculator[]> => {
   const querySnapshot = await getDocs(q);
 
   const calculations = [] as ImportCalculator[];
-  querySnapshot.forEach((document) => calculations.push(document.data() as ImportCalculator));
+  querySnapshot.forEach((document) =>
+    calculations.push(document.data() as ImportCalculator)
+  );
   return calculations;
 };
 

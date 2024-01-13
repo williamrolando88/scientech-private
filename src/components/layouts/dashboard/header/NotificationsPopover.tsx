@@ -16,12 +16,12 @@ import {
 } from '@mui/material';
 import { noCase } from 'change-case';
 import { useState } from 'react';
-import { Notification } from 'src/@types/notifications';
 import { IconButtonAnimate } from 'src/components/shared/animate';
 import Iconify from 'src/components/shared/iconify';
 import MenuPopover from 'src/components/shared/menu-popover';
 import Scrollbar from 'src/components/shared/scrollbar';
 import { fToNow } from 'src/lib/utils/formatTime';
+import { Notification } from 'src/types/notifications';
 
 const _notifications: Notification[] = [];
 

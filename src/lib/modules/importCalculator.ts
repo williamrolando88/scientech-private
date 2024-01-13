@@ -2,7 +2,7 @@ import { round } from 'mathjs';
 import {
   ImportCalculator,
   ItemCalculationValues,
-} from 'src/@types/importCalculator';
+} from 'src/types/importCalculator';
 import { parseSafeNumber } from '../utils/number';
 
 export const calculateImportation = (inputs: ImportCalculator) => {

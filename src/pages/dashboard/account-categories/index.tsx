@@ -3,12 +3,12 @@ import { Alert, Button, Card, Grid, Stack, TextField } from '@mui/material';
 import { FormikHelpers, useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { ReactElement, useState } from 'react';
-import { AccountCategory } from 'src/@types/accountCategories';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import { ACCOUNT_CATEGORY_INITIAL_VALUE } from 'src/lib/constants/accountCategories';
 import { AccountCategoryParser } from 'src/lib/parsers/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
+import { AccountCategory } from 'src/types/accountCategories';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 Page.getLayout = (page: ReactElement) => (

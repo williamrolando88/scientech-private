@@ -1,9 +1,14 @@
 import { Card, CardContent } from '@mui/material';
-import { DataGrid, GridColumns, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColumns,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from '@mui/x-data-grid';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { Invoice } from 'src/@types/invoiceParsers';
+import { Invoice } from 'src/types/invoiceParsers';
 
 const columns: GridColumns<Invoice> = [
   {
@@ -54,7 +59,9 @@ const columns: GridColumns<Invoice> = [
         const baseCero = value.find((tax) => tax.codigoPorcentaje === '0');
         result = Number(baseCero?.baseImponible || 0);
       } else {
-        result = Number(value.codigoPorcentaje === '0' ? value.baseImponible : 0);
+        result = Number(
+          value.codigoPorcentaje === '0' ? value.baseImponible : 0
+        );
       }
 
       return round(result, 2);
@@ -72,7 +79,9 @@ const columns: GridColumns<Invoice> = [
         const baseTwelve = value.find((tax) => tax.codigoPorcentaje === '2');
         result = Number(baseTwelve?.baseImponible || 0);
       } else {
-        result = Number(value.codigoPorcentaje === '2' ? value.baseImponible : 0);
+        result = Number(
+          value.codigoPorcentaje === '2' ? value.baseImponible : 0
+        );
       }
 
       return round(result, 2);
@@ -119,7 +128,9 @@ const getUniqueInvoice = (invoices: Invoice[]) => {
   });
 };
 
-export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({ data }) => {
+export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
+  data,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const filteredData = getUniqueInvoice(data);
@@ -127,9 +138,12 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({ data }) =>
   useEffect(() => {
     const discardedInvoices = data.length - filteredData.length;
     if (discardedInvoices) {
-      enqueueSnackbar(`Se encontraron ${discardedInvoices} facturas duplicadas`, {
-        variant: 'info',
-      });
+      enqueueSnackbar(
+        `Se encontraron ${discardedInvoices} facturas duplicadas`,
+        {
+          variant: 'info',
+        }
+      );
     }
   }, [data, enqueueSnackbar, filteredData]);
 
