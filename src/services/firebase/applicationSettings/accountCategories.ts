@@ -3,7 +3,7 @@ import { APPLICATION_SETTINGS, COLLECTIONS } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import { AccountCategory } from 'src/types/accountCategories';
 
-const add = async (accounts: AccountCategory[]) => {
+const upsert = async (accounts: AccountCategory[]) => {
   const docRef = doc(
     DB,
     COLLECTIONS.APPLICATION_SETTINGS,
@@ -35,6 +35,6 @@ const list = async (): Promise<AccountCategory[]> => {
 };
 
 export const AccountCategories = {
-  add,
+  upsert,
   list,
 };

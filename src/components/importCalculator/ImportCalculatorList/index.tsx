@@ -71,7 +71,7 @@ const ImportCalculatorList = () => {
           <GridActionsCellItem
             label="Borrar"
             onClick={() => alert(`Delete ${params.id}`)}
-            icon={<Iconify icon="pajamas:doc-changes" />}
+            icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],

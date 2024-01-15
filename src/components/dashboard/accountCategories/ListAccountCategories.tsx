@@ -1,15 +1,19 @@
 import { Card, CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { useEffectOnce } from 'usehooks-ts';
+import UpdateAccountCategory from './UpdateAccountCategory';
 
-const ListAccountCategories = () => {
-  const [loading, setLoading] = useState(false);
+const ListAccountCategories: FC = () => {
   const { categories, setCategories } = useAccountCategoriesStore();
+  const [loading, setLoading] = useState(false);
+  const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
+    null
+  );
 
   const fetchAccountCategories = async () => {
     setLoading(true);
@@ -27,7 +31,7 @@ const ListAccountCategories = () => {
     () => [
       {
         field: 'id',
-        type: 'text',
+        type: 'string',
         headerName: 'Número',
         flex: 1,
       },
@@ -43,14 +47,15 @@ const ListAccountCategories = () => {
         getActions: (params) => [
           <GridActionsCellItem
             label="Modificar"
-            onClick={() => alert('Modificar')}
+            onClick={() => setAccountToEdit(params.row as AccountCategory)}
             icon={<Iconify icon="pajamas:doc-changes" />}
+            disabled={!params.row.editable}
             showInMenu
           />,
           <GridActionsCellItem
             label="Borrar"
             onClick={() => alert(`Delete ${params.id}`)}
-            icon={<Iconify icon="pajamas:doc-changes" />}
+            icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],
@@ -70,13 +75,18 @@ const ListAccountCategories = () => {
           loading={loading}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'id', sort: 'desc' }],
+              sortModel: [{ field: 'id', sort: 'asc' }],
             },
           }}
           autoHeight
           disableSelectionOnClick
         />
       </CardContent>
+
+      <UpdateAccountCategory
+        accountCategory={accountToEdit}
+        onClose={() => setAccountToEdit(null)}
+      />
     </Card>
   );
 };
