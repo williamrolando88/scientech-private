@@ -1,6 +1,8 @@
-import { Card, CardContent, CardHeader } from '@mui/material';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import { FC, useMemo, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { FC, useCallback, useMemo, useState } from 'react';
+import ConfirmDialog from 'src/components/shared/confirm-dialog';
 import Iconify from 'src/components/shared/iconify';
 import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
@@ -9,9 +11,13 @@ import { useEffectOnce } from 'usehooks-ts';
 import UpdateAccountCategory from './UpdateAccountCategory';
 
 const ListAccountCategories: FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { categories, setCategories } = useAccountCategoriesStore();
   const [loading, setLoading] = useState(false);
   const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
+    null
+  );
+  const [accountIdToDelete, setAccountIdToDelete] = useState<string | null>(
     null
   );
 
@@ -26,6 +32,23 @@ const ListAccountCategories: FC = () => {
   useEffectOnce(() => {
     fetchAccountCategories();
   });
+
+  const handleDeleteAccount = useCallback(async () => {
+    const newCategories = categories.filter(
+      (category) => category.id !== accountIdToDelete
+    );
+
+    try {
+      await AccountCategories.upsert(newCategories);
+      setCategories(newCategories);
+      setAccountIdToDelete(null);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
+        variant: 'error',
+      });
+    }
+  }, [accountIdToDelete, categories, enqueueSnackbar, setCategories]);
 
   const columns: GridColumns<AccountCategory> = useMemo(
     () => [
@@ -54,14 +77,14 @@ const ListAccountCategories: FC = () => {
           />,
           <GridActionsCellItem
             label="Borrar"
-            onClick={() => alert(`Delete ${params.id}`)}
+            onClick={() => setAccountIdToDelete(params.id as string)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],
       },
     ],
-    []
+    [setAccountIdToDelete, setAccountToEdit]
   );
 
   return (
@@ -86,6 +109,18 @@ const ListAccountCategories: FC = () => {
       <UpdateAccountCategory
         accountCategory={accountToEdit}
         onClose={() => setAccountToEdit(null)}
+      />
+
+      <ConfirmDialog
+        open={Boolean(accountIdToDelete)}
+        title="Eliminar Cuenta Contable"
+        content="¿Está seguro que desea eliminar esta cuenta contable?"
+        action={
+          <Button variant="contained" onClick={handleDeleteAccount}>
+            Eliminar
+          </Button>
+        }
+        onClose={() => setAccountIdToDelete(null)}
       />
     </Card>
   );
