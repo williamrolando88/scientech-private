@@ -62,7 +62,12 @@ const ListAccountCategories: FC = () => {
       {
         field: 'name',
         headerName: 'Nombre',
-        flex: 3,
+        flex: 2,
+      },
+      {
+        field: 'description',
+        headerName: 'Descripción',
+        flex: 5,
       },
       {
         field: 'actions',
@@ -106,6 +111,7 @@ const ListAccountCategories: FC = () => {
           }}
           autoHeight
           disableSelectionOnClick
+          density="compact"
         />
       </CardContent>
 
