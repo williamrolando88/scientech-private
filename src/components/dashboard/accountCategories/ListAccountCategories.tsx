@@ -34,13 +34,14 @@ const ListAccountCategories: FC = () => {
   });
 
   const handleDeleteAccount = useCallback(async () => {
-    const newCategories = categories.filter(
-      (category) => category.id !== accountIdToDelete
-    );
+    if (!accountIdToDelete) return;
+
+    delete categories[accountIdToDelete];
 
     try {
-      await AccountCategories.upsert(newCategories);
-      setCategories(newCategories);
+      await AccountCategories.upsert(categories);
+
+      setCategories(categories);
       setAccountIdToDelete(null);
     } catch (error) {
       console.error(error);
@@ -87,6 +88,8 @@ const ListAccountCategories: FC = () => {
     [setAccountIdToDelete, setAccountToEdit]
   );
 
+  const categoriesList = Object.values(categories);
+
   return (
     <Card>
       <CardHeader title="Listado de Cuentas Contables" />
@@ -94,7 +97,7 @@ const ListAccountCategories: FC = () => {
       <CardContent>
         <DataGrid
           columns={columns}
-          rows={categories}
+          rows={categoriesList}
           loading={loading}
           initialState={{
             sorting: {

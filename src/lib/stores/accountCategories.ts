@@ -1,26 +1,14 @@
-import { AccountCategory } from 'src/types/accountCategories';
+import { AccountCategoryRecord } from 'src/types/accountCategories';
 import { create } from 'zustand';
 
 interface AccountCategoriesStore {
-  categories: AccountCategory[];
-  setCategories: (categories: AccountCategory[]) => void;
-  updateCategory: (category: AccountCategory) => void;
-  deleteCategory: (category: AccountCategory) => void;
+  categories: AccountCategoryRecord;
+  setCategories: (categories: AccountCategoryRecord) => void;
 }
 
 export const useAccountCategoriesStore = create<AccountCategoriesStore>()(
   (set) => ({
-    categories: [],
+    categories: {},
     setCategories: (categories) => set(() => ({ categories })),
-    updateCategory: (category) =>
-      set((state) => ({
-        categories: state.categories.map((c) =>
-          c.id === category.id ? category : c
-        ),
-      })),
-    deleteCategory: (category) =>
-      set((state) => ({
-        categories: state.categories.filter((c) => c.id !== category.id),
-      })),
   })
 );
