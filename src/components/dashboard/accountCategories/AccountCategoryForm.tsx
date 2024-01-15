@@ -63,7 +63,7 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
             través de toda la aplicación
           </Alert>
 
-          <Grid container columns={3} columnSpacing={2}>
+          <Grid container columns={3} columnSpacing={2} rowSpacing={2}>
             <Grid item xs={1}>
               <TextField
                 fullWidth
@@ -76,6 +76,7 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
                 error={touched.id && !!errors.id}
                 helperText={touched.id && errors.id}
                 disabled={isUpdating}
+                required
               />
             </Grid>
 
@@ -90,6 +91,23 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
                 id="name"
                 error={touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                multiline
+                rows={2}
+                fullWidth
+                onFocus={(e) => e.target.select()}
+                label="Descripcion"
+                onChange={handleChange}
+                value={values.description}
+                name="description"
+                id="description"
+                error={touched.description && !!errors.description}
+                helperText={touched.description && errors.description}
               />
             </Grid>
           </Grid>
