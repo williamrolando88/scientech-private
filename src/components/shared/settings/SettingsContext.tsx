@@ -1,6 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 // utils
-import localStorageAvailable from '../../../utils/localStorageAvailable';
+import localStorageAvailable from '../../../lib/utils/localStorageAvailable';
 //
 import { defaultSettings } from './config-setting';
 import { defaultPreset, getPresets, presetsOption } from './presets';
@@ -48,7 +55,8 @@ export const SettingsContext = createContext(initialState);
 export const useSettingsContext = () => {
   const context = useContext(SettingsContext);
 
-  if (!context) throw new Error('useSettingsContext must be use inside SettingsProvider');
+  if (!context)
+    throw new Error('useSettingsContext must be use inside SettingsProvider');
 
   return context;
 };
@@ -62,10 +70,18 @@ type SettingsProviderProps = {
 export function SettingsProvider({ children }: SettingsProviderProps) {
   const [themeMode, setThemeMode] = useState(defaultSettings.themeMode);
   const [themeLayout, setThemeLayout] = useState(defaultSettings.themeLayout);
-  const [themeStretch, setThemeStretch] = useState(defaultSettings.themeStretch);
-  const [themeContrast, setThemeContrast] = useState(defaultSettings.themeContrast);
-  const [themeDirection, setThemeDirection] = useState(defaultSettings.themeDirection);
-  const [themeColorPresets, setThemeColorPresets] = useState(defaultSettings.themeColorPresets);
+  const [themeStretch, setThemeStretch] = useState(
+    defaultSettings.themeStretch
+  );
+  const [themeContrast, setThemeContrast] = useState(
+    defaultSettings.themeContrast
+  );
+  const [themeDirection, setThemeDirection] = useState(
+    defaultSettings.themeDirection
+  );
+  const [themeColorPresets, setThemeColorPresets] = useState(
+    defaultSettings.themeColorPresets
+  );
 
   const storageAvailable = localStorageAvailable();
 
@@ -74,9 +90,12 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
       const mode = getCookie('themeMode') || defaultSettings.themeMode;
       const layout = getCookie('themeLayout') || defaultSettings.themeLayout;
       const stretch = getCookie('themeStretch') || defaultSettings.themeStretch;
-      const contrast = getCookie('themeContrast') || defaultSettings.themeContrast;
-      const direction = getCookie('themeDirection') || defaultSettings.themeDirection;
-      const colorPresets = getCookie('themeColorPresets') || defaultSettings.themeColorPresets;
+      const contrast =
+        getCookie('themeContrast') || defaultSettings.themeContrast;
+      const direction =
+        getCookie('themeDirection') || defaultSettings.themeDirection;
+      const colorPresets =
+        getCookie('themeColorPresets') || defaultSettings.themeColorPresets;
 
       setThemeMode(mode as ThemeModeValue);
       setThemeLayout(layout as ThemeLayoutValue);
@@ -94,11 +113,14 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     setCookie('themeMode', value);
   }, [themeMode]);
 
-  const onChangeMode = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ThemeModeValue;
-    setThemeMode(value);
-    setCookie('themeMode', value);
-  }, []);
+  const onChangeMode = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value as ThemeModeValue;
+      setThemeMode(value);
+      setCookie('themeMode', value);
+    },
+    []
+  );
 
   // Direction
   const onToggleDirection = useCallback(() => {
@@ -107,11 +129,14 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     setCookie('themeDirection', value);
   }, [themeDirection]);
 
-  const onChangeDirection = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ThemeDirectionValue;
-    setThemeDirection(value);
-    setCookie('themeDirection', value);
-  }, []);
+  const onChangeDirection = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value as ThemeDirectionValue;
+      setThemeDirection(value);
+      setCookie('themeDirection', value);
+    },
+    []
+  );
 
   const onChangeDirectionByLang = useCallback((lang: string) => {
     const value = lang === 'ar' ? 'rtl' : 'ltr';
@@ -126,11 +151,14 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     setCookie('themeLayout', value);
   }, [themeLayout]);
 
-  const onChangeLayout = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ThemeLayoutValue;
-    setThemeLayout(value);
-    setCookie('themeLayout', value);
-  }, []);
+  const onChangeLayout = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value as ThemeLayoutValue;
+      setThemeLayout(value);
+      setCookie('themeLayout', value);
+    },
+    []
+  );
 
   // Contrast
   const onToggleContrast = useCallback(() => {
@@ -139,18 +167,24 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     setCookie('themeContrast', value);
   }, [themeContrast]);
 
-  const onChangeContrast = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ThemeContrastValue;
-    setThemeContrast(value);
-    setCookie('themeContrast', value);
-  }, []);
+  const onChangeContrast = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value as ThemeContrastValue;
+      setThemeContrast(value);
+      setCookie('themeContrast', value);
+    },
+    []
+  );
 
   // Color
-  const onChangeColorPresets = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as ThemeColorPresetsValue;
-    setThemeColorPresets(value);
-    setCookie('themeColorPresets', value);
-  }, []);
+  const onChangeColorPresets = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value as ThemeColorPresetsValue;
+      setThemeColorPresets(value);
+      setCookie('themeColorPresets', value);
+    },
+    []
+  );
 
   // Stretch
   const onToggleStretch = useCallback(() => {
@@ -234,7 +268,11 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     ]
   );
 
-  return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;
+  return (
+    <SettingsContext.Provider value={memoizedValue}>
+      {children}
+    </SettingsContext.Provider>
+  );
 }
 
 // ----------------------------------------------------------------------

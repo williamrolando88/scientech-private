@@ -1,6 +1,9 @@
 import { round } from 'mathjs';
-import { ImportCalculator, ItemCalculationValues } from 'src/@types/importCalculator';
-import { parseSafeNumber } from '../helpers/number';
+import {
+  ImportCalculator,
+  ItemCalculationValues,
+} from 'src/types/importCalculator';
+import { parseSafeNumber } from '../utils/number';
 
 export const calculateImportation = (inputs: ImportCalculator) => {
   // todo: store these values on the server
@@ -60,21 +63,26 @@ export const calculateImportation = (inputs: ImportCalculator) => {
   });
 
   // Calculate total weight
-  const totalWeight = articles.reduce((acc, row) => (row.EXW ? acc + row.rowWeight : 0), 0);
+  const totalWeight = articles.reduce(
+    (acc, row) => (row.EXW ? acc + row.rowWeight : 0),
+    0
+  );
 
   // Calculate international fleet
   const internationalFleet = totalWeight * importFleetPerLibreSafe;
 
   articles.forEach((row) => {
     // Calculate weight fraction
-    row.weightFraction = row.EXW > 0 && totalWeight > 0 ? row.rowWeight / totalWeight : 0;
+    row.weightFraction =
+      row.EXW > 0 && totalWeight > 0 ? row.rowWeight / totalWeight : 0;
 
     // Calculate aux FOB item values
     row.FOB = originFleetSafe * row.weightFraction + row.EXW;
     row.ISD = row.FOB * ISDTax;
 
     // Calculate aux CIF item values
-    row.CIF = (row.FOB + internationalFleet * row.weightFraction) * (1 + insuranceRate);
+    row.CIF =
+      (row.FOB + internationalFleet * row.weightFraction) * (1 + insuranceRate);
 
     // Calculate item taxes
     row.FODINFA = row.CIF * fodinfaTax;
@@ -91,7 +99,8 @@ export const calculateImportation = (inputs: ImportCalculator) => {
     const FOBFraction = row.FOB / totalFOB;
 
     // Group item cost related to payments and taxes in origin
-    const originCosts = totalFOB > 0 ? row.FOB + bankExpensesSafe * FOBFraction : 0;
+    const originCosts =
+      totalFOB > 0 ? row.FOB + bankExpensesSafe * FOBFraction : 0;
 
     // Group item taxes paid locally
     const itemTaxes = row.ISD + row.FODINFA + row.tariff;
@@ -111,7 +120,8 @@ export const calculateImportation = (inputs: ImportCalculator) => {
         : (itemCost * row.margin) / 100;
 
     // Calculate item unit price
-    row.unitPrice = row.quantity > 0 ? round((profit + itemCost) / row.quantity, 2) : 0;
+    row.unitPrice =
+      row.quantity > 0 ? round((profit + itemCost) / row.quantity, 2) : 0;
 
     // Calculate item unit details
     row.unitOriginCosts = round(originCosts / row.quantity, 2);
@@ -127,12 +137,20 @@ export const calculateImportation = (inputs: ImportCalculator) => {
   };
 };
 
-export const getImportReport = (articlesReport: ItemCalculationValues[]): ApexAxisChartSeries => {
+export const getImportReport = (
+  articlesReport: ItemCalculationValues[]
+): ApexAxisChartSeries => {
   const originCosts = articlesReport.map((article) => article.unitOriginCosts);
-  const unitImportCost = articlesReport.map((article) => article.unitImportCost);
+  const unitImportCost = articlesReport.map(
+    (article) => article.unitImportCost
+  );
   const unitTaxesFee = articlesReport.map((article) => article.unitTaxesFee);
-  const unitItemProfit = articlesReport.map((article) => article.unitItemProfit);
-  const unitLocalFleetCost = articlesReport.map((article) => article.unitLocalFleetCost);
+  const unitItemProfit = articlesReport.map(
+    (article) => article.unitItemProfit
+  );
+  const unitLocalFleetCost = articlesReport.map(
+    (article) => article.unitLocalFleetCost
+  );
 
   return [
     {

@@ -20,7 +20,7 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/styles.css';
 import ProgressBar from '../components/shared/progress-bar';
 import { SettingsProvider, ThemeSettings } from '../components/shared/settings';
-import createEmotionCache from '../utils/createEmotionCache';
+import createEmotionCache from '../lib/utils/createEmotionCache';
 
 const clientSideEmotionCache = createEmotionCache();
 

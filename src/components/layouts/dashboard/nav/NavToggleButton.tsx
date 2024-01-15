@@ -3,8 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import Iconify from 'src/components/shared/iconify';
 import { useSettingsContext } from 'src/components/shared/settings';
 import useResponsive from 'src/hooks/useResponsive';
+import { bgBlur } from 'src/lib/utils/cssStyles';
 import { NAV } from 'src/settings/global';
-import { bgBlur } from 'src/utils/cssStyles';
 
 export default function NavToggleButton({ sx, ...other }: IconButtonProps) {
   const theme = useTheme();
@@ -36,7 +36,11 @@ export default function NavToggleButton({ sx, ...other }: IconButtonProps) {
     >
       <Iconify
         width={16}
-        icon={themeLayout === 'vertical' ? 'eva:arrow-ios-back-fill' : 'eva:arrow-ios-forward-fill'}
+        icon={
+          themeLayout === 'vertical'
+            ? 'eva:arrow-ios-back-fill'
+            : 'eva:arrow-ios-forward-fill'
+        }
       />
     </IconButton>
   );

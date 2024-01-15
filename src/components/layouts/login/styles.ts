@@ -1,5 +1,5 @@
 import { alpha, styled } from '@mui/material/styles';
-import { bgGradient } from 'src/utils/cssStyles';
+import { bgGradient } from 'src/lib/utils/cssStyles';
 
 export const StyledRoot = styled('main')(() => ({
   height: '100%',
@@ -21,7 +21,10 @@ export const StyledSection = styled('div')(({ theme }) => ({
 
 export const StyledSectionBg = styled('div')(({ theme }) => ({
   ...bgGradient({
-    color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
+    color: alpha(
+      theme.palette.background.default,
+      theme.palette.mode === 'light' ? 0.9 : 0.94
+    ),
     imgUrl: '/assets/background/overlay_2.jpg',
   }),
   top: 0,

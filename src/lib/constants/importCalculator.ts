@@ -1,5 +1,8 @@
-import { ImportCalculator, ImportCalculatorItems } from 'src/@types/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
+import {
+  ImportCalculator,
+  ImportCalculatorItems,
+} from 'src/types/importCalculator';
 
 export const IMPORT_CALCULATOR_NEW_ROW: ImportCalculatorItems = {
   margin: 0,

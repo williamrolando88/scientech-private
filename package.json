@@ -62,7 +62,8 @@
     "yet-another-react-lightbox": "^2.2.7",
     "yup": "^0.32.11",
     "zod": "^3.22.4",
-    "zod-formik-adapter": "^1.2.0"
+    "zod-formik-adapter": "^1.2.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

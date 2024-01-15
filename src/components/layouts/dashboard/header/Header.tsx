@@ -5,8 +5,8 @@ import Logo from 'src/components/shared/logo';
 import { useSettingsContext } from 'src/components/shared/settings';
 import useOffSetTop from 'src/hooks/useOffSetTop';
 import useResponsive from 'src/hooks/useResponsive';
+import { bgBlur } from 'src/lib/utils/cssStyles';
 import { HEADER, NAV } from 'src/settings/global';
-import { bgBlur } from 'src/utils/cssStyles';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 

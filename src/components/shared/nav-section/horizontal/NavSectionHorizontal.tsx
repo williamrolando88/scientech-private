@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material';
 import { memo } from 'react';
-import { hideScrollbarY } from '../../../../utils/cssStyles';
+import { hideScrollbarY } from '../../../../lib/utils/cssStyles';
 import { NavListProps, NavSectionProps } from '../types';
 import NavList from './NavList';
 
@@ -33,7 +33,12 @@ function Items({ items }: ItemsProps) {
   return (
     <>
       {items.map((list) => (
-        <NavList key={list.title + list.path} data={list} depth={1} hasChild={!!list.children} />
+        <NavList
+          key={list.title + list.path}
+          data={list}
+          depth={1}
+          hasChild={!!list.children}
+        />
       ))}
     </>
   );

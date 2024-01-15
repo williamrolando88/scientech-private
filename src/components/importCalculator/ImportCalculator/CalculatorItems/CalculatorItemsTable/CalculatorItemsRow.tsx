@@ -1,9 +1,9 @@
 import { Button, InputAdornment, Stack, TextField } from '@mui/material';
 import { FC } from 'react';
-import { ImportCalculatorItems } from 'src/@types/importCalculator';
 import { AutoCalculateInput } from 'src/components/shared/AutoCalculateInput';
 import Iconify from 'src/components/shared/iconify';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
+import { ImportCalculatorItems } from 'src/types/importCalculator';
 
 interface Props extends Partial<ImportCalculatorItems> {
   index: number;
@@ -11,7 +11,8 @@ interface Props extends Partial<ImportCalculatorItems> {
 }
 
 const CalculatorItemsRow: FC<Props> = ({ index, onDelete }) => {
-  const { values, errors, touched, handleChange, setFieldValue } = useImportCalculatorContext();
+  const { values, errors, touched, handleChange, setFieldValue } =
+    useImportCalculatorContext();
 
   const getError = (fieldName: keyof Partial<ImportCalculatorItems>) => {
     if (
@@ -132,7 +133,12 @@ const CalculatorItemsRow: FC<Props> = ({ index, onDelete }) => {
         readOnly
       />
 
-      <Button sx={{ width: '4rem' }} color="error" variant="outlined" onClick={onDelete}>
+      <Button
+        sx={{ width: '4rem' }}
+        color="error"
+        variant="outlined"
+        onClick={onDelete}
+      >
         <Iconify icon="pajamas:remove" />
       </Button>
     </Stack>

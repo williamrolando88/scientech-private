@@ -3,7 +3,7 @@ import { AnimatePresence, m } from 'framer-motion';
 import { IconButton, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 // utils
-import { fData } from '../../../../utils/formatNumber';
+import { fData } from '../../../../lib/utils/formatNumber';
 //
 import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
@@ -13,7 +13,12 @@ import { UploadProps } from '../types';
 
 // ----------------------------------------------------------------------
 
-export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {
+export default function MultiFilePreview({
+  thumbnail,
+  files,
+  onRemove,
+  sx,
+}: UploadProps) {
   if (!files?.length) {
     return null;
   }
@@ -106,7 +111,11 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
             </Stack>
 
             {onRemove && (
-              <IconButton edge="end" size="small" onClick={() => onRemove(file)}>
+              <IconButton
+                edge="end"
+                size="small"
+                onClick={() => onRemove(file)}
+              >
                 <Iconify icon="eva:close-fill" />
               </IconButton>
             )}

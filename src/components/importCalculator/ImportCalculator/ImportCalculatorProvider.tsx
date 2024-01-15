@@ -1,15 +1,26 @@
 import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { FC, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { ImportCalculator } from 'src/@types/importCalculator';
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   IMPORT_CALCULATOR_INITIAL_VALUE,
   IMPORT_CALCULATOR_NEW_ROW,
 } from 'src/lib/constants/importCalculator';
-import { calculateImportation, getImportReport } from 'src/lib/modules/importCalculator';
+import {
+  calculateImportation,
+  getImportReport,
+} from 'src/lib/modules/importCalculator';
 import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
+import { ImportCalculator } from 'src/types/importCalculator';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 interface Context {
@@ -40,7 +51,10 @@ interface Props {
   children: ReactNode;
 }
 
-export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues }) => {
+export const ImportCalculatorProvider: FC<Props> = ({
+  children,
+  fetchedValues,
+}) => {
   const { push } = useRouter();
   const [reportValues, setReportValues] = useState<ApexAxisChartSeries>([]);
   const [totalFOB, setTotalFOB] = useState(0);
@@ -75,7 +89,9 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
   } = useFormik<ImportCalculator>({
     initialValues: IMPORT_CALCULATOR_INITIAL_VALUE,
     onSubmit: handleSubmitForm,
-    validationSchema: toFormikValidationSchema(ImportCalculatorValidationSchema),
+    validationSchema: toFormikValidationSchema(
+      ImportCalculatorValidationSchema
+    ),
   });
 
   const addRow = useCallback(() => {
@@ -123,7 +139,10 @@ export const ImportCalculatorProvider: FC<Props> = ({ children, fetchedValues })
 
     setValues((prevValue) => ({
       ...prevValue,
-      items: prevValue.items.map((item, index) => ({ ...item, unitPrice: pricesArray[index] })),
+      items: prevValue.items.map((item, index) => ({
+        ...item,
+        unitPrice: pricesArray[index],
+      })),
     }));
   }, [setValues, values]);
 

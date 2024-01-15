@@ -1,8 +1,8 @@
 import { AppBar, Box, BoxProps, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Logo from 'src/components/shared/logo';
+import { bgBlur } from 'src/lib/utils/cssStyles';
 import { HEADER } from 'src/settings/global';
-import { bgBlur } from 'src/utils/cssStyles';
 
 type Props = {
   isOffset: boolean;

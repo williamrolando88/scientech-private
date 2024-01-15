@@ -2,9 +2,9 @@ import { AppBar, Box, BoxProps, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { memo } from 'react';
 import { NavSectionHorizontal } from 'src/components/shared/nav-section';
+import { bgBlur } from 'src/lib/utils/cssStyles';
 import { HEADER } from 'src/settings/global';
 import navConfig from 'src/settings/navigation';
-import { bgBlur } from 'src/utils/cssStyles';
 
 function NavHorizontal() {
   const theme = useTheme();

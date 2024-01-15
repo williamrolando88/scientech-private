@@ -1,4 +1,4 @@
-import { Invoice } from 'src/@types/invoiceParsers';
+import { Invoice } from 'src/types/invoiceParsers';
 import { xml2js } from 'xml-js';
 import { InvoiceParser } from '../parsers/invoiceParsers';
 

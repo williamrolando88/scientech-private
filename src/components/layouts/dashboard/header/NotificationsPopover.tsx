@@ -16,12 +16,12 @@ import {
 } from '@mui/material';
 import { noCase } from 'change-case';
 import { useState } from 'react';
-import { Notification } from 'src/@types/notifications';
 import { IconButtonAnimate } from 'src/components/shared/animate';
 import Iconify from 'src/components/shared/iconify';
 import MenuPopover from 'src/components/shared/menu-popover';
 import Scrollbar from 'src/components/shared/scrollbar';
-import { fToNow } from 'src/utils/formatTime';
+import { fToNow } from 'src/lib/utils/formatTime';
+import { Notification } from 'src/types/notifications';
 
 const _notifications: Notification[] = [];
 
@@ -30,7 +30,9 @@ export default function NotificationsPopover() {
 
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const totalUnRead = notifications.filter(
+    (item) => item.isUnRead === true
+  ).length;
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
     setOpenPopover(event.currentTarget);
@@ -61,7 +63,11 @@ export default function NotificationsPopover() {
         </Badge>
       </IconButtonAnimate>
 
-      <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 360, p: 0 }}>
+      <MenuPopover
+        open={openPopover}
+        onClose={handleClosePopover}
+        sx={{ width: 360, p: 0 }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
@@ -86,26 +92,38 @@ export default function NotificationsPopover() {
           <List
             disablePadding
             subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+              <ListSubheader
+                disableSticky
+                sx={{ py: 1, px: 2.5, typography: 'overline' }}
+              >
                 New
               </ListSubheader>
             }
           >
             {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+              />
             ))}
           </List>
 
           <List
             disablePadding
             subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+              <ListSubheader
+                disableSticky
+                sx={{ py: 1, px: 2.5, typography: 'overline' }}
+              >
                 Before that
               </ListSubheader>
             }
           >
             {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+              />
             ))}
           </List>
         </Scrollbar>
@@ -132,7 +150,11 @@ type NotificationItemProps = {
   isUnRead: boolean;
 };
 
-function NotificationItem({ notification }: { notification: NotificationItemProps }) {
+function NotificationItem({
+  notification,
+}: {
+  notification: NotificationItemProps;
+}) {
   const { avatar, title } = renderContent(notification);
 
   return (
@@ -154,9 +176,14 @@ function NotificationItem({ notification }: { notification: NotificationItemProp
         disableTypography
         primary={title}
         secondary={
-          <Stack direction="row" sx={{ mt: 0.5, typography: 'caption', color: 'text.disabled' }}>
+          <Stack
+            direction="row"
+            sx={{ mt: 0.5, typography: 'caption', color: 'text.disabled' }}
+          >
             <Iconify icon="eva:clock-fill" width={16} sx={{ mr: 0.5 }} />
-            <Typography variant="caption">{fToNow(notification.createdAt)}</Typography>
+            <Typography variant="caption">
+              {fToNow(notification.createdAt)}
+            </Typography>
           </Stack>
         }
       />
@@ -168,7 +195,11 @@ function renderContent(notification: NotificationItemProps) {
   const title = (
     <Typography variant="subtitle2">
       {notification.title}
-      <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography
+        component="span"
+        variant="body2"
+        sx={{ color: 'text.secondary' }}
+      >
         &nbsp; {noCase(notification.description)}
       </Typography>
     </Typography>
@@ -176,30 +207,52 @@ function renderContent(notification: NotificationItemProps) {
 
   if (notification.type === 'order_placed') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_package.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/notification/ic_package.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'order_shipped') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_shipping.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/notification/ic_shipping.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'mail') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_mail.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/notification/ic_mail.svg"
+        />
+      ),
       title,
     };
   }
   if (notification.type === 'chat_message') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_chat.svg" />,
+      avatar: (
+        <img
+          alt={notification.title}
+          src="/assets/icons/notification/ic_chat.svg"
+        />
+      ),
       title,
     };
   }
   return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
+    avatar: notification.avatar ? (
+      <img alt={notification.title} src={notification.avatar} />
+    ) : null,
     title,
   };
 }

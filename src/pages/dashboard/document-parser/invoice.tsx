@@ -1,13 +1,15 @@
 import { Button } from '@mui/material';
 import { useState } from 'react';
-import { Invoice } from 'src/@types/invoiceParsers';
 import { DropdownSection } from 'src/components/documentParser/InvoiceParser/DropdownSection';
 import { InvoiceDetailsViewer } from 'src/components/documentParser/InvoiceParser/InvoiceDetailsViewer';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import { parseFactura } from 'src/lib/modules/invoiceParser';
+import { Invoice } from 'src/types/invoiceParsers';
 
-Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 function Page() {
   const [files, setFiles] = useState<(File | string)[]>([]);
@@ -53,7 +55,11 @@ function Page() {
       {parsedData.length ? (
         <InvoiceDetailsViewer data={parsedData} />
       ) : (
-        <DropdownSection files={files} setFiles={setFiles} handleUpload={handleUpload} />
+        <DropdownSection
+          files={files}
+          setFiles={setFiles}
+          handleUpload={handleUpload}
+        />
       )}
     </DashboardTemplate>
   );

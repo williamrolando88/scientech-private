@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { ImportCalculator } from 'src/@types/importCalculator';
 import ImportCalculatorComponent from 'src/components/importCalculator/ImportCalculator';
 import CalculatorControllers from 'src/components/importCalculator/ImportCalculator/CalculatorControllers';
 import { ImportCalculatorProvider } from 'src/components/importCalculator/ImportCalculator/ImportCalculatorProvider';
@@ -8,8 +7,11 @@ import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplat
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
+import { ImportCalculator } from 'src/types/importCalculator';
 
-Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Page() {
   const {
