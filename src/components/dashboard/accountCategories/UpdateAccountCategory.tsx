@@ -60,6 +60,7 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
         onSubmit={handleSubmitForm}
         onClose={onClose}
         isUpdating
+        infoText="Unicamente puedes editar el nombre y descripción de la cuenta contable."
       />
     </Dialog>
   );

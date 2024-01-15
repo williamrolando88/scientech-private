@@ -65,6 +65,8 @@ const AddAccountCategory: FC = () => {
           onClose={closeModal}
           multiple={multiple}
           handleMultiple={toogleMultiple}
+          infoText="Aquí podrás agregar una cuenta contable que estará disponible a
+            través de toda la aplicación"
         />
       </Dialog>
     </>
