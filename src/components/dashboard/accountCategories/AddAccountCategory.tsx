@@ -22,17 +22,13 @@ const AddAccountCategory: FC = () => {
     formData,
     actions
   ) => {
-    const isDuplicated = categories.some(
-      (account) => account.id === formData.id
-    );
-
-    if (isDuplicated) {
+    if (formData.id in categories) {
       actions.setFieldError('id', 'Ya existe una cuenta con ese número');
       return;
     }
 
     actions.setSubmitting(true);
-    const accountsCollection = [...categories, formData];
+    const accountsCollection = { ...categories, [formData.id]: formData };
 
     try {
       await AccountCategories.upsert(accountsCollection);

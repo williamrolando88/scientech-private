@@ -25,9 +25,7 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
   ) => {
     actions.setSubmitting(true);
 
-    const accountsCollection = categories.map((account) =>
-      account.id === formData.id ? formData : account
-    );
+    const accountsCollection = { ...categories, [formData.id]: formData };
 
     try {
       await AccountCategories.upsert(accountsCollection);
