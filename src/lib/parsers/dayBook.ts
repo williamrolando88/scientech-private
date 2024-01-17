@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const TransactionDetailsParser = z.object({
+export const DayBookTransactionDetailsParser = z.object({
   account_id: z.string(),
   debit: z.number().optional(),
   credit: z.number().optional(),
@@ -12,5 +12,5 @@ const TransactionDetailsParser = z.object({
 export const DayBookTransactionParser = z.object({
   id: z.string(),
   date: z.number(),
-  transaction: TransactionDetailsParser.array(),
+  transaction: DayBookTransactionDetailsParser.array(),
 });
