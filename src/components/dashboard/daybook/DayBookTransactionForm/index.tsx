@@ -1,18 +1,15 @@
 import {
   Alert,
-  Box,
   Button,
-  Card,
   DialogActions,
   DialogContent,
   Stack,
-  TextField,
 } from '@mui/material';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { FormikTextField } from 'src/components/shared/formik-components';
-import Iconify from 'src/components/shared/iconify';
 import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
 type FormikProps = Pick<
   FormikConfig<DayBookTransaction>,
@@ -43,38 +40,15 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
             <Alert severity="info">
               Aqui va el formulario de asiento contable
             </Alert>
-
             <Stack>
-              <TextField label="Fecha" />
+              <FormikTextField
+                name="date"
+                label="Fecha"
+                type="datetime-local"
+              />
             </Stack>
 
-            <Stack component={Card} variant="outlined" p={2}>
-              <Stack direction="row">
-                <Box>Cuenta</Box>
-                <Box>Descripción cuenta</Box>
-                <Box>Debe</Box>
-                <Box>Haber</Box>
-                <Box>Descripción de la Transacción</Box>
-                <Box>Cotización</Box>
-                <Box>Factura</Box>
-              </Stack>
-
-              <Stack direction="row">
-                <FormikTextField name="account" />
-                <TextField />
-                <TextField />
-                <TextField />
-                <TextField />
-                <TextField />
-                <TextField />
-                <TextField />
-                <Button variant="outlined" color="error">
-                  <Iconify icon="pajamas:remove" />
-                </Button>
-              </Stack>
-
-              <Button variant="soft">Agregar</Button>
-            </Stack>
+            <DayBookTransactionsTable />
           </Stack>
 
           <DialogActions>

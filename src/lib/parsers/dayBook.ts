@@ -12,5 +12,5 @@ export const DayBookTransactionDetailsParser = z.object({
 export const DayBookTransactionParser = z.object({
   id: z.string(),
   date: z.coerce.date(),
-  transaction: DayBookTransactionDetailsParser.array(),
+  transactions: DayBookTransactionDetailsParser.array(),
 });

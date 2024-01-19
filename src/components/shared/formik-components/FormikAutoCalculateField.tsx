@@ -7,7 +7,10 @@ import {
 } from '../AutoCalculateInput';
 
 interface FormikAutoCalculateFieldProps
-  extends Omit<AutoCalculateInputProps, 'value' | 'error' | 'helperText'> {
+  extends Omit<
+    AutoCalculateInputProps,
+    'value' | 'error' | 'helperText' | 'onChange'
+  > {
   name: string;
 }
 

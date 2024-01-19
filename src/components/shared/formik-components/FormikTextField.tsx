@@ -9,7 +9,7 @@ interface FormikTextFieldProps
 }
 
 export const FormikTextField: FC<FormikTextFieldProps> = (props) => {
-  const { name } = props;
+  const { name, select } = props;
   const { values, errors, touched, handleChange } = useFormikContext();
 
   const fieldValue = get(values, name, '');
@@ -19,7 +19,7 @@ export const FormikTextField: FC<FormikTextFieldProps> = (props) => {
   return (
     <TextField
       {...props}
-      onFocus={(e) => e.target.select()}
+      onFocus={!select ? (e) => e.target.select() : undefined}
       value={fieldValue}
       onChange={handleChange}
       error={fieldTouched && !!fieldError}
