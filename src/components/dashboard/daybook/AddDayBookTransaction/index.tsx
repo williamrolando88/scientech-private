@@ -21,7 +21,7 @@ const AddDayBookTransaction: FC = () => {
       >
         <DialogTitle>Nuevo asiento contable</DialogTitle>
 
-        <AddDayBookTransactionForm />
+        <AddDayBookTransactionForm onClose={handleCloseModal} />
       </Dialog>
     </>
   );

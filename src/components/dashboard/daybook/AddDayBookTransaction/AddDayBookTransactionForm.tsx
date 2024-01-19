@@ -1,15 +1,20 @@
 import { FormikConfig } from 'formik';
+import { FC } from 'react';
 import { DAYBOOK_TRANSACTION_INITIAL_VALUE } from 'src/lib/constants/dayBook';
 import { DayBookTransactionParser } from 'src/lib/parsers/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from '../DayBookTransactionForm';
 
-export const AddDayBookTransactionForm = () => {
-  console.log('first');
+interface AddDayBookTransactionFormProps {
+  onClose: VoidFunction;
+}
 
-  const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = () => {
-    console.log('second');
+export const AddDayBookTransactionForm: FC<AddDayBookTransactionFormProps> = ({
+  onClose,
+}) => {
+  const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (values) => {
+    alert(values);
   };
 
   return (
@@ -17,6 +22,7 @@ export const AddDayBookTransactionForm = () => {
       initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
       onSubmit={onSubmit}
       validationSchema={toFormikValidationSchema(DayBookTransactionParser)}
+      onClose={onClose}
     />
   );
 };

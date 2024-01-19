@@ -20,8 +20,11 @@ export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
   const fieldError = get(errors, name, '');
 
   const handleChange = (value: string | null) => {
-    setFieldValue(name, value);
+    if (value) {
+      setFieldValue(name, new Date(value));
+    }
   };
+
   return (
     <DatePicker
       value={fieldValue}
