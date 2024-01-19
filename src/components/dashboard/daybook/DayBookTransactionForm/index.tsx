@@ -4,10 +4,12 @@ import {
   DialogActions,
   DialogContent,
   Stack,
+  TextField,
 } from '@mui/material';
-import { Form, Formik, FormikConfig } from 'formik';
+import { DatePicker, DatePickerProps } from '@mui/x-date-pickers';
+import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
+import { get } from 'lodash';
 import { FC } from 'react';
-import { FormikTextField } from 'src/components/shared/formik-components';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
@@ -40,12 +42,9 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
             <Alert severity="info">
               Aqui va el formulario de asiento contable
             </Alert>
-            <Stack>
-              <FormikTextField
-                name="date"
-                label="Fecha"
-                type="datetime-local"
-              />
+
+            <Stack width="30%">
+              <FormikDatePicker name="date" label="Fecha" />
             </Stack>
 
             <DayBookTransactionsTable />
@@ -58,5 +57,35 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
         </Form>
       )}
     </Formik>
+  );
+};
+
+interface FormikDatePickerProps
+  extends Omit<
+    DatePickerProps<null, null>,
+    'value' | 'onChange' | 'renderInput'
+  > {
+  name: string;
+}
+
+const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
+  const { name } = props;
+  const { values, touched, errors, setFieldValue } = useFormikContext();
+
+  const fieldValue = get(values, name, '');
+  const fieldTouched = get(touched, name, false);
+  const fieldError = get(errors, name, '');
+
+  const handleChange = (value: string | null) => {
+    setFieldValue(name, value);
+  };
+  return (
+    <DatePicker
+      value={fieldValue}
+      onChange={handleChange}
+      renderInput={(params) => (
+        <TextField {...params} error={fieldTouched} helperText={fieldError} />
+      )}
+    />
   );
 };
