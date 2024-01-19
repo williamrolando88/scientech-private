@@ -3,50 +3,40 @@ import {
   Box,
   Button,
   Card,
-  Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Stack,
   TextField,
 } from '@mui/material';
-import { Form, Formik } from 'formik';
-import { FC, useState } from 'react';
+import { Form, Formik, FormikConfig } from 'formik';
+import { FC } from 'react';
 import { FormikTextField } from 'src/components/shared/formik-components';
 import Iconify from 'src/components/shared/iconify';
+import { DayBookTransaction } from 'src/types/dayBook';
 
-const AddDayBookTransaction: FC = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+type FormikProps = Pick<
+  FormikConfig<DayBookTransaction>,
+  'initialValues' | 'validationSchema'
+>;
 
-  return (
-    <>
-      <Button variant="contained" onClick={handleOpenModal}>
-        Nuevo
-      </Button>
+interface DayBookTransactionFormProps extends FormikProps {
+  onSubmit: FormikConfig<DayBookTransaction>['onSubmit'];
+}
 
-      <Dialog
-        fullWidth
-        maxWidth="lg"
-        open={openModal}
-        onClose={handleCloseModal}
-      >
-        <DialogTitle>Nuevo asiento contable</DialogTitle>
+export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
+  props
+) => {
+  const { onSubmit } = props;
 
-        <AddDayBookTransactionForm />
-      </Dialog>
-    </>
-  );
-};
-
-export default AddDayBookTransaction;
-
-const AddDayBookTransactionForm = () => {
-  console.log('first');
+  const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
+    values,
+    helpers
+  ) => {
+    onSubmit(values, helpers);
+  };
 
   return (
-    <Formik initialValues={{}} onSubmit={() => {}}>
+    <Formik {...props} onSubmit={handleSubmit}>
       {() => (
         <Form>
           <Stack component={DialogContent} gap={2}>

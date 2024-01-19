@@ -11,7 +11,9 @@ interface FormikAutoCalculateFieldProps
   name: string;
 }
 
-const FormikAutoCalculateField: FC<FormikAutoCalculateFieldProps> = (props) => {
+export const FormikAutoCalculateField: FC<FormikAutoCalculateFieldProps> = (
+  props
+) => {
   const { name } = props;
   const { values, errors, touched, setFieldValue } = useFormikContext();
 
@@ -34,5 +36,3 @@ const FormikAutoCalculateField: FC<FormikAutoCalculateFieldProps> = (props) => {
     />
   );
 };
-
-export default FormikAutoCalculateField;

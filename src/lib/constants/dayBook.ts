@@ -1,4 +1,7 @@
-import { DayBookTransactionDetail } from 'src/types/dayBook';
+import {
+  DayBookTransaction,
+  DayBookTransactionDetail,
+} from 'src/types/dayBook';
 
 export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail =
   {
@@ -9,3 +12,9 @@ export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail 
     invoice_id: '' as unknown as number,
     quotation_id: '' as unknown as number,
   };
+
+export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
+  id: '',
+  date: new Date(),
+  transaction: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
+};
