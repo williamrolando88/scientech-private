@@ -1,6 +1,7 @@
 import { Button, Grid } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { useMemo } from 'react';
+import Iconify from 'src/components/shared/iconify';
 import {
   DAYBOOK_FORM_GRID_LAYOUT,
   DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
@@ -35,7 +36,7 @@ export const DayBookTransactionsTableHeader = () => {
       color="success"
       onClick={handleAddRow}
     >
-      Agregar
+      <Iconify icon="pajamas:plus" />
     </Button>,
   ];
 

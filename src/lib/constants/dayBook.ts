@@ -21,11 +21,11 @@ export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
 };
 
 export const DAYBOOK_FORM_GRID_LAYOUT = [
-  { name: 'account_id', value: 2 },
-  { name: 'debit', value: 1 },
-  { name: 'credit', value: 1 },
-  { name: 'description', value: 2 },
-  { name: 'invoice_id', value: 1 },
-  { name: 'quotation_id', value: 1 },
-  { name: 'action', value: 1 },
+  { name: 'account_id', value: 6 },
+  { name: 'debit', value: 3 },
+  { name: 'credit', value: 3 },
+  { name: 'description', value: 6 },
+  { name: 'invoice_id', value: 3 },
+  { name: 'quotation_id', value: 3 },
+  { name: 'action', value: 2 },
 ];
