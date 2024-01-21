@@ -2,17 +2,17 @@ import { DayBookCollection, DayBookTransaction } from 'src/types/dayBook';
 import { create } from 'zustand';
 
 interface DayBookStore {
-  dayBook: DayBookCollection;
-  addDayBookEntry: (dayBookEntry: DayBookTransaction) => void;
+  transactions: DayBookCollection;
+  addTransaction: (dayBookEntry: DayBookTransaction) => void;
 }
 
 export const useDayBookStore = create<DayBookStore>()((set) => ({
-  dayBook: {},
-  addDayBookEntry: (dayBookEntry) => {
+  transactions: {},
+  addTransaction: (transaction) => {
     set((state) => ({
-      dayBook: {
-        ...state.dayBook,
-        [dayBookEntry.id]: dayBookEntry,
+      transactions: {
+        ...state.transactions,
+        [transaction.id || '']: transaction,
       },
     }));
   },
