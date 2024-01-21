@@ -1,36 +1,27 @@
-// @mui
+import { CalendarPicker } from '@mui/lab';
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormHelperText,
-    Paper,
-    Stack,
-    TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  Paper,
+  Stack,
 } from '@mui/material';
-import { CalendarPicker, DatePicker } from '@mui/x-date-pickers';
-// hooks
+import { DatePicker } from '@mui/x-date-pickers';
 import useResponsive from '../../../hooks/useResponsive';
-//
 import { DateRangePickerProps } from './types';
-
-// ----------------------------------------------------------------------
 
 export default function DateRangePicker({
   title = 'Select date range',
   variant = 'input',
-  //
   startDate,
   endDate,
-  //
   onChangeStartDate,
   onChangeEndDate,
-  //
   open,
   onClose,
-  //
   isError,
 }: DateRangePickerProps) {
   const isDesktop = useResponsive('up', 'md');
@@ -78,14 +69,22 @@ export default function DateRangePicker({
             <>
               <Paper
                 variant="outlined"
-                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
+                sx={{
+                  borderRadius: 2,
+                  borderColor: 'divider',
+                  borderStyle: 'dashed',
+                }}
               >
                 <CalendarPicker date={startDate} onChange={onChangeStartDate} />
               </Paper>
 
               <Paper
                 variant="outlined"
-                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
+                sx={{
+                  borderRadius: 2,
+                  borderColor: 'divider',
+                  borderStyle: 'dashed',
+                }}
               >
                 <CalendarPicker date={endDate} onChange={onChangeEndDate} />
               </Paper>
@@ -96,14 +95,12 @@ export default function DateRangePicker({
                 label="Start date"
                 value={startDate}
                 onChange={onChangeStartDate}
-                renderInput={(params) => <TextField {...params} />}
               />
 
               <DatePicker
                 label="End date"
                 value={endDate}
                 onChange={onChangeEndDate}
-                renderInput={(params) => <TextField {...params} />}
               />
             </>
           )}
