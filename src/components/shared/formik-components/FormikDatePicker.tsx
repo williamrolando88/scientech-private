@@ -1,14 +1,10 @@
-import { TextField } from '@mui/material';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { FC } from 'react';
 
 interface FormikDatePickerProps
-  extends Omit<
-    DatePickerProps<null, null>,
-    'value' | 'onChange' | 'renderInput'
-  > {
+  extends Omit<DatePickerProps<any>, 'value' | 'onChange' | 'renderInput'> {
   name: string;
 }
 export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
@@ -27,11 +23,15 @@ export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
 
   return (
     <DatePicker
+      {...props}
       value={fieldValue}
       onChange={handleChange}
-      renderInput={(params) => (
-        <TextField {...params} error={fieldTouched} helperText={fieldError} />
-      )}
+      slotProps={{
+        textField: {
+          helperText: fieldTouched && fieldError,
+          error: fieldTouched && !!fieldError,
+        },
+      }}
     />
   );
 };

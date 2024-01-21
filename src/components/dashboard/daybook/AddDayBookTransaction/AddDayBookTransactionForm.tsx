@@ -14,7 +14,7 @@ export const AddDayBookTransactionForm: FC<AddDayBookTransactionFormProps> = ({
   onClose,
 }) => {
   const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (values) => {
-    alert(values);
+    alert(JSON.stringify(values, null, 2));
   };
 
   return (

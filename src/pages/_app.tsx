@@ -1,6 +1,6 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
