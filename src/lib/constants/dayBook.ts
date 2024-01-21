@@ -14,7 +14,6 @@ export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail 
   };
 
 export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
-  id: '__new__',
   date: new Date(),
   transactions: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
 };
