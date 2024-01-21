@@ -1,6 +1,8 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
@@ -38,6 +40,10 @@ export default function MyApp(props: MyAppProps) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { staleTime: 12 * 60 * 60 * 1000 } },
+  });
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -51,9 +57,15 @@ export default function MyApp(props: MyAppProps) {
               <ThemeProvider>
                 <ThemeSettings>
                   <SnackbarProvider>
-                    <StyledChart />
-                    <ProgressBar />
-                    {getLayout(<Component {...pageProps} />)}
+                    <QueryClientProvider client={queryClient}>
+                      <StyledChart />
+
+                      <ProgressBar />
+
+                      {getLayout(<Component {...pageProps} />)}
+
+                      <ReactQueryDevtools buttonPosition="bottom-left" />
+                    </QueryClientProvider>
                   </SnackbarProvider>
                 </ThemeSettings>
               </ThemeProvider>

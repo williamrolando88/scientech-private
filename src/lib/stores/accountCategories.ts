@@ -1,9 +1,9 @@
-import { AccountCategoryRecord } from 'src/types/accountCategories';
+import { AccountCategoryDict } from 'src/types/accountCategories';
 import { create } from 'zustand';
 
 interface AccountCategoriesStore {
-  categories: AccountCategoryRecord;
-  setCategories: (categories: AccountCategoryRecord) => void;
+  categories: AccountCategoryDict;
+  setCategories: (categories: AccountCategoryDict) => void;
 }
 
 export const useAccountCategoriesStore = create<AccountCategoriesStore>()(

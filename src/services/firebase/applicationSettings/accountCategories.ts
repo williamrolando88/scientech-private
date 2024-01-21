@@ -2,11 +2,11 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { APPLICATION_SETTINGS, COLLECTIONS } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import {
+  AccountCategoryDict,
   AccountCategoryDoc,
-  AccountCategoryRecord,
 } from 'src/types/accountCategories';
 
-const upsert = async (accounts: AccountCategoryRecord) => {
+const upsert = async (accounts: AccountCategoryDict) => {
   const docRef = doc(
     DB,
     COLLECTIONS.APPLICATION_SETTINGS,
@@ -22,7 +22,7 @@ const upsert = async (accounts: AccountCategoryRecord) => {
   return docRef.id;
 };
 
-const list = async (): Promise<AccountCategoryRecord> => {
+const list = async (): Promise<AccountCategoryDict> => {
   const docRef = doc(
     DB,
     COLLECTIONS.APPLICATION_SETTINGS,
@@ -31,7 +31,7 @@ const list = async (): Promise<AccountCategoryRecord> => {
 
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
-    return docSnap.data().accounts as AccountCategoryRecord;
+    return docSnap.data().accounts as AccountCategoryDict;
   }
 
   return {};
