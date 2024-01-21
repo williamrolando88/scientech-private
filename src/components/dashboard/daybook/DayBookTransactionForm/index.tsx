@@ -6,8 +6,9 @@ import {
   Stack,
 } from '@mui/material';
 import { Form, Formik, FormikConfig } from 'formik';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { FormikDatePicker } from 'src/components/shared/formik-components';
+import { dayBookTransactionsValidatior } from 'src/lib/modules/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
@@ -26,11 +27,21 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
   props
 ) => {
   const { onSubmit, onClose, infoText } = props;
+  const [formError, setFormError] = useState('');
 
   const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
     values,
     helpers
   ) => {
+    const error = dayBookTransactionsValidatior(values);
+
+    if (error) {
+      setFormError(error);
+      return;
+    }
+
+    setFormError('');
+
     onSubmit(values, helpers);
   };
 
@@ -46,6 +57,8 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
             </Stack>
 
             <DayBookTransactionsTable />
+
+            {formError && <Alert severity="error">{formError}</Alert>}
           </Stack>
 
           <DialogActions>
