@@ -19,12 +19,13 @@ type FormikProps = Pick<
 interface DayBookTransactionFormProps extends FormikProps {
   onSubmit: FormikConfig<DayBookTransaction>['onSubmit'];
   onClose: VoidFunction;
+  infoText?: string;
 }
 
 export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
   props
 ) => {
-  const { onSubmit, onClose } = props;
+  const { onSubmit, onClose, infoText } = props;
 
   const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
     values,
@@ -38,9 +39,7 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
       {() => (
         <Form>
           <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">
-              Aqui va el formulario de asiento contable
-            </Alert>
+            <Alert severity="info">{infoText}</Alert>
 
             <Stack width="30%">
               <FormikDatePicker name="date" label="Fecha" />

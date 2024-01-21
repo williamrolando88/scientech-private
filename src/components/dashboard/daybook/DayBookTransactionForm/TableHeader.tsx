@@ -14,6 +14,7 @@ export const TableHeader: FC<TableHeaderProps> = ({ children }) => (
     width={1}
     height={1}
     textAlign="center"
+    color="white"
   >
     <Typography fontWeight={700}>{children}</Typography>
   </Box>

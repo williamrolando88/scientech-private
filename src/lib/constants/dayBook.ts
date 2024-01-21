@@ -19,3 +19,13 @@ export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
   date: new Date(),
   transactions: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
 };
+
+export const DAYBOOK_FORM_GRID_LAYOUT = [
+  { name: 'account_id', value: 2 },
+  { name: 'debit', value: 1 },
+  { name: 'credit', value: 1 },
+  { name: 'description', value: 2 },
+  { name: 'invoice_id', value: 1 },
+  { name: 'quotation_id', value: 1 },
+  { name: 'action', value: 1 },
+];
