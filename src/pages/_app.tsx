@@ -41,7 +41,9 @@ export default function MyApp(props: MyAppProps) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { staleTime: 12 * 60 * 60 * 1000 } },
+    defaultOptions: {
+      queries: { staleTime: 6 * 60 * 60 * 1000 },
+    },
   });
 
   return (

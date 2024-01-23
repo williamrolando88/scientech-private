@@ -2,7 +2,10 @@ import { Dialog, DialogTitle } from '@mui/material';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
+import {
+  useListAccountCategories,
+  useMutateAccountCategories,
+} from 'src/hooks/cache/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
@@ -16,7 +19,9 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
   accountCategory,
   onClose,
 }) => {
-  const { categories, setCategories } = useAccountCategoriesStore();
+  const [categories] = useListAccountCategories();
+  const { mutate: setCategories } = useMutateAccountCategories();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmitForm: FormikConfig<AccountCategory>['onSubmit'] = async (

@@ -2,15 +2,19 @@ import { Button, Dialog, DialogTitle } from '@mui/material';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import {
+  useListAccountCategories,
+  useMutateAccountCategories,
+} from 'src/hooks/cache/accountCategories';
 import { ACCOUNT_CATEGORY_INITIAL_VALUE } from 'src/lib/constants/accountCategories';
-import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
 
 const AddAccountCategory: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { categories, setCategories } = useAccountCategoriesStore();
+  const [categories] = useListAccountCategories();
+  const { mutate: setCategories } = useMutateAccountCategories();
   const [modalOpen, setModalOpen] = useState(false);
   const [multiple, setMultiple] = useState(false);
 

@@ -6,7 +6,7 @@ import {
   FormikTextField,
 } from 'src/components/shared/formik-components';
 import Iconify from 'src/components/shared/iconify';
-import { useAccountCategories } from 'src/hooks/cache/useAccountCategories';
+import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
 import { DAYBOOK_FORM_GRID_LAYOUT } from 'src/lib/constants/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 
@@ -16,7 +16,7 @@ interface DayBookTransactionsTableRowProps {
 export const DayBookTransactionsTableRow: FC<
   DayBookTransactionsTableRowProps
 > = ({ index }) => {
-  const [categories] = useAccountCategories();
+  const [categories] = useListAccountCategories();
 
   const { values, setValues } = useFormikContext<DayBookTransaction>();
 

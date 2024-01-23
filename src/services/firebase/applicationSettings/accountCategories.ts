@@ -19,7 +19,7 @@ const upsert = async (accounts: AccountCategoryDict) => {
   };
 
   await setDoc(docRef, docBody);
-  return docRef.id;
+  return accounts;
 };
 
 const list = async (): Promise<AccountCategoryDict> => {
