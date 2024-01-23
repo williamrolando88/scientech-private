@@ -27,7 +27,7 @@ export const DayBookTransactionsTableRow: FC<
     });
   };
 
-  const accountCategories = Object.values(categories || {}).sort((a, b) =>
+  const accountCategories = Object.values(categories).sort((a, b) =>
     a.id.localeCompare(b.id)
   );
 

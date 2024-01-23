@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { FC, useCallback, useMemo, useState } from 'react';
 import ConfirmDialog from 'src/components/shared/confirm-dialog';
 import Iconify from 'src/components/shared/iconify';
+import { useAccountCategories } from 'src/hooks/cache/useAccountCategories';
 import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
@@ -12,7 +13,8 @@ import UpdateAccountCategory from './UpdateAccountCategory';
 
 const ListAccountCategories: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { categories, setCategories } = useAccountCategoriesStore();
+  const [categories] = useAccountCategories();
+  const { setCategories } = useAccountCategoriesStore();
   const [loading, setLoading] = useState(false);
   const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
     null
@@ -32,24 +34,6 @@ const ListAccountCategories: FC = () => {
   useEffectOnce(() => {
     fetchAccountCategories();
   });
-
-  const handleDeleteAccount = useCallback(async () => {
-    if (!accountIdToDelete) return;
-
-    delete categories[accountIdToDelete];
-
-    try {
-      await AccountCategories.upsert(categories);
-
-      setCategories(categories);
-      setAccountIdToDelete(null);
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
-        variant: 'error',
-      });
-    }
-  }, [accountIdToDelete, categories, enqueueSnackbar, setCategories]);
 
   const columns: GridColumns<AccountCategory> = useMemo(
     () => [
@@ -93,7 +77,28 @@ const ListAccountCategories: FC = () => {
     [setAccountIdToDelete, setAccountToEdit]
   );
 
-  const categoriesList = Object.values(categories);
+  const handleDeleteAccount = useCallback(async () => {
+    if (!accountIdToDelete) return;
+
+    delete categories[accountIdToDelete];
+
+    try {
+      await AccountCategories.upsert(categories);
+
+      setCategories(categories);
+      setAccountIdToDelete(null);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
+        variant: 'error',
+      });
+    }
+  }, [accountIdToDelete, categories, enqueueSnackbar, setCategories]);
+
+  const categoriesList = useMemo(
+    () => Object.values(categories || {}),
+    [categories]
+  );
 
   return (
     <Card>
