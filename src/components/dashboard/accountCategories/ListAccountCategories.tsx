@@ -1,55 +1,20 @@
-import { Button, Card, CardContent, CardHeader } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import { useSnackbar } from 'notistack';
-import { FC, useCallback, useMemo, useState } from 'react';
-import ConfirmDialog from 'src/components/shared/confirm-dialog';
+import { FC, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
-import { useAccountCategoriesStore } from 'src/lib/stores/accountCategories';
-import { AccountCategories } from 'src/services/firebase/applicationSettings';
+import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
 import { AccountCategory } from 'src/types/accountCategories';
-import { useEffectOnce } from 'usehooks-ts';
+import { DeleteAccountCategory } from './DeleteAccountCategory';
 import UpdateAccountCategory from './UpdateAccountCategory';
 
 const ListAccountCategories: FC = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const { categories, setCategories } = useAccountCategoriesStore();
-  const [loading, setLoading] = useState(false);
+  const [categories, { isLoading }] = useListAccountCategories();
   const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
     null
   );
   const [accountIdToDelete, setAccountIdToDelete] = useState<string | null>(
     null
   );
-
-  const fetchAccountCategories = async () => {
-    setLoading(true);
-    const accountCategories = await AccountCategories.list();
-
-    setCategories(accountCategories);
-    setLoading(false);
-  };
-
-  useEffectOnce(() => {
-    fetchAccountCategories();
-  });
-
-  const handleDeleteAccount = useCallback(async () => {
-    if (!accountIdToDelete) return;
-
-    delete categories[accountIdToDelete];
-
-    try {
-      await AccountCategories.upsert(categories);
-
-      setCategories(categories);
-      setAccountIdToDelete(null);
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
-        variant: 'error',
-      });
-    }
-  }, [accountIdToDelete, categories, enqueueSnackbar, setCategories]);
 
   const columns: GridColumns<AccountCategory> = useMemo(
     () => [
@@ -93,7 +58,10 @@ const ListAccountCategories: FC = () => {
     [setAccountIdToDelete, setAccountToEdit]
   );
 
-  const categoriesList = Object.values(categories);
+  const categoriesList = useMemo(
+    () => Object.values(categories || {}),
+    [categories]
+  );
 
   return (
     <Card>
@@ -103,7 +71,7 @@ const ListAccountCategories: FC = () => {
         <DataGrid
           columns={columns}
           rows={categoriesList}
-          loading={loading}
+          loading={isLoading}
           initialState={{
             sorting: {
               sortModel: [{ field: 'id', sort: 'asc' }],
@@ -120,16 +88,9 @@ const ListAccountCategories: FC = () => {
         onClose={() => setAccountToEdit(null)}
       />
 
-      <ConfirmDialog
-        open={Boolean(accountIdToDelete)}
-        title="Eliminar Cuenta Contable"
-        content="¿Está seguro que desea eliminar esta cuenta contable?"
-        action={
-          <Button variant="contained" onClick={handleDeleteAccount}>
-            Eliminar
-          </Button>
-        }
-        onClose={() => setAccountIdToDelete(null)}
+      <DeleteAccountCategory
+        accountIdToDelete={accountIdToDelete}
+        setAccountIdToDelete={setAccountIdToDelete}
       />
     </Card>
   );
