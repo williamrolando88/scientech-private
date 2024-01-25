@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { FC, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
@@ -8,7 +8,7 @@ import { DeleteAccountCategory } from './DeleteAccountCategory';
 import UpdateAccountCategory from './UpdateAccountCategory';
 
 const ListAccountCategories: FC = () => {
-  const [categories, { isLoading }] = useListAccountCategories();
+  const { data: categories, isLoading } = useListAccountCategories();
   const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
     null
   );
@@ -16,7 +16,7 @@ const ListAccountCategories: FC = () => {
     null
   );
 
-  const columns: GridColumns<AccountCategory> = useMemo(
+  const columns: GridColDef<AccountCategory>[] = useMemo(
     () => [
       {
         field: 'id',
@@ -78,7 +78,7 @@ const ListAccountCategories: FC = () => {
             },
           }}
           autoHeight
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           density="compact"
         />
       </CardContent>

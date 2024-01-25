@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@mui/material';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridToolbarContainer,
   GridToolbarExport,
 } from '@mui/x-data-grid';
@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
 import { Invoice } from 'src/types/invoiceParsers';
 
-const columns: GridColumns<Invoice> = [
+const columns: GridColDef<Invoice>[] = [
   {
     field: 'issueDate',
     headerName: 'Fecha de Emisión',

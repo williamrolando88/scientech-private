@@ -16,7 +16,7 @@ export const DeleteAccountCategory: FC<DeleteAccountCategoryProps> = ({
   setAccountIdToDelete,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [categories] = useListAccountCategories();
+  const { data: categories } = useListAccountCategories();
   const { mutate: setCategories } = useMutateAccountCategories();
 
   const handleDeleteAccount = useCallback(async () => {

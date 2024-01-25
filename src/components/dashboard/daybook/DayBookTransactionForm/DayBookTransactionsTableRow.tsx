@@ -16,7 +16,7 @@ interface DayBookTransactionsTableRowProps {
 export const DayBookTransactionsTableRow: FC<
   DayBookTransactionsTableRowProps
 > = ({ index }) => {
-  const [categories] = useListAccountCategories();
+  const { data: categories } = useListAccountCategories();
 
   const { values, setValues } = useFormikContext<DayBookTransaction>();
 

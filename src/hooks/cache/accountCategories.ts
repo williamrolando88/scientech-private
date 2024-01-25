@@ -1,9 +1,4 @@
-import {
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { APPLICATION_SETTINGS, COLLECTIONS } from 'src/lib/enums/collections';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategoryDict } from 'src/types/accountCategories';
@@ -13,16 +8,13 @@ const queryKey = [
   APPLICATION_SETTINGS.ACCOUNT_CATEGORIES,
 ];
 
-export const useListAccountCategories = (): [
-  AccountCategoryDict,
-  Omit<UseQueryResult<AccountCategoryDict, unknown>, 'data'>
-] => {
-  const { data, ...rest } = useQuery<AccountCategoryDict>({
+export const useListAccountCategories = () => {
+  const query = useQuery<AccountCategoryDict>({
     queryKey,
     queryFn: AccountCategories.list,
   });
 
-  return [data || {}, rest];
+  return { ...query, data: query.data ?? {} };
 };
 
 export const useMutateAccountCategories = () => {

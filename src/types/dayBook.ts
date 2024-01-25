@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 import {
   DayBookTransactionDetailsParser,
   DayBookTransactionParser,
@@ -10,3 +11,10 @@ export type DayBookTransactionDetail = z.infer<
 >;
 
 export type DayBookCollection = Record<string, DayBookTransaction>;
+
+export interface DayBookTransactionFirestore
+  extends Omit<DayBookTransaction, 'createdAt' | 'updatedAt' | 'date'> {
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  date: Timestamp;
+}

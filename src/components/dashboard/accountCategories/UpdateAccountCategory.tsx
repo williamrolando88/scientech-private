@@ -19,7 +19,7 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
   accountCategory,
   onClose,
 }) => {
-  const [categories] = useListAccountCategories();
+  const { data: categories } = useListAccountCategories();
   const { mutate: setCategories } = useMutateAccountCategories();
 
   const { enqueueSnackbar } = useSnackbar();
