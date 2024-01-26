@@ -18,3 +18,6 @@ export interface DayBookTransactionFirestore
   updatedAt: Timestamp;
   date: Timestamp;
 }
+
+export type DayBookTableEntry = DayBookTransactionDetail &
+  Pick<DayBookTransaction, 'id' | 'date'>;
