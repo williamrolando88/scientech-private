@@ -36,8 +36,7 @@ const ImportCalculatorList = () => {
         resizable: false,
         type: 'date',
         width: 180,
-        valueGetter: (params) =>
-          new Date(params.row.metadata.createdAt || '').toLocaleString('es-ES'),
+        valueGetter: (params) => new Date(params.row.metadata.createdAt || ''),
       },
       {
         field: 'updated_at',
@@ -46,14 +45,7 @@ const ImportCalculatorList = () => {
         resizable: false,
         type: 'date',
         width: 180,
-        valueGetter: (params) =>
-          new Date(params.row.metadata.updatedAt || '').toLocaleString('es-ES'),
-      },
-      {
-        field: 'sortable_updated_at',
-        resizable: false,
-        hide: true,
-        valueGetter: (params) => params.row.metadata.updatedAt,
+        valueGetter: (params) => new Date(params.row.metadata.updatedAt || ''),
       },
       {
         field: 'actions',
@@ -103,7 +95,7 @@ const ImportCalculatorList = () => {
         loading={loading}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'sortable_updated_at', sort: 'desc' }],
+            sortModel: [{ field: 'updated_at', sort: 'desc' }],
           },
         }}
         slots={{ toolbar: SearchToolbar }}
