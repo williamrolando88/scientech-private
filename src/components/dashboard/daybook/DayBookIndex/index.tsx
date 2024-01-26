@@ -1,16 +1,26 @@
 import { Card, CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { FC, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
-import { DayBookTableEntry } from 'src/types/dayBook';
+import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
 const DayBookIndex: FC = () => {
-  const [transactionIdToDelete, setTransactionIdToDelete] = useState<
-    string | null
-  >(null);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<DayBookTransaction | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
+
+  const getTransactionData = useCallback(
+    (detailId: string) => {
+      const [transactionId] = detailId.split(':');
+      const transaction = dayBookTransactions?.find(
+        (entry) => entry.id === transactionId
+      );
+      setTransactionToDelete(transaction || null);
+    },
+    [dayBookTransactions]
+  );
 
   const columns: GridColDef<DayBookTableEntry>[] = useMemo(
     () => [
@@ -85,14 +95,14 @@ const DayBookIndex: FC = () => {
           />,
           <GridActionsCellItem
             label="Borrar"
-            onClick={() => setTransactionIdToDelete(params.id as string)}
+            onClick={() => getTransactionData(params.id as string)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],
       },
     ],
-    []
+    [getTransactionData]
   );
 
   const rows: DayBookTableEntry[] = useMemo(
@@ -130,8 +140,8 @@ const DayBookIndex: FC = () => {
       </CardContent>
 
       <DeleteDayBookTransaction
-        id={transactionIdToDelete}
-        setId={setTransactionIdToDelete}
+        transaction={transactionToDelete}
+        setTransaction={setTransactionToDelete}
       />
     </Card>
   );
