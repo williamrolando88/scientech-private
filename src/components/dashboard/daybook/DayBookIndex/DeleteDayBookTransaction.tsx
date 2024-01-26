@@ -129,6 +129,11 @@ export const DeleteDayBookTransaction: FC<DeleteDayBookTransactionProps> = ({
                 sortModel: [{ field: 'date', sort: 'asc' }],
               },
             }}
+            sx={{
+              '& .MuiDataGrid-columnHeader': {
+                bgcolor: (theme) => theme.palette.action.selected,
+              },
+            }}
             autoHeight
             disableRowSelectionOnClick
             hideFooter
@@ -145,6 +150,7 @@ export const DeleteDayBookTransaction: FC<DeleteDayBookTransactionProps> = ({
           variant="contained"
           onClick={handleConfirm}
           loading={isPending}
+          color="error"
         >
           Eliminar
         </LoadingButton>

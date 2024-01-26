@@ -134,6 +134,11 @@ const DayBookIndex: FC = () => {
               sortModel: [{ field: 'date', sort: 'asc' }],
             },
           }}
+          sx={{
+            '& .MuiDataGrid-columnHeader': {
+              bgcolor: (theme) => theme.palette.action.selected,
+            },
+          }}
           autoHeight
           disableRowSelectionOnClick
         />
