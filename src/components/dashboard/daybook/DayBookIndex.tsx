@@ -86,6 +86,13 @@ const DayBookIndex: FC = () => {
         rows={rows}
         loading={isLoading}
         density="compact"
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'date', sort: 'asc' }],
+          },
+        }}
+        autoHeight
+        disableRowSelectionOnClick
       />
     </Card>
   );
