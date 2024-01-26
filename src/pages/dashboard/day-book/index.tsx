@@ -1,5 +1,6 @@
 import React from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
+import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 
@@ -14,7 +15,7 @@ function Page() {
       heading="Libro Diario"
       action={<AddDayBookTransaction />}
     >
-      Aqui viene la tabla de asientos contables
+      <DayBookIndex />
     </DashboardTemplate>
   );
 }

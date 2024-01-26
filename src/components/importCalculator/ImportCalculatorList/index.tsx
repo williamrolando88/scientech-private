@@ -1,5 +1,5 @@
 import { Card } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
@@ -18,7 +18,7 @@ const ImportCalculatorList = () => {
     []
   );
 
-  const columns: GridColumns<ImportCalculator> = useMemo(
+  const columns: GridColDef<ImportCalculator>[] = useMemo(
     () => [
       {
         field: 'description',
@@ -106,12 +106,12 @@ const ImportCalculatorList = () => {
             sortModel: [{ field: 'sortable_updated_at', sort: 'desc' }],
           },
         }}
-        components={{ Toolbar: SearchToolbar }}
-        componentsProps={{
+        slots={{ toolbar: SearchToolbar }}
+        slotProps={{
           toolbar: { value: searchText, handleChange: setSearchText },
         }}
         autoHeight
-        disableSelectionOnClick
+        disableRowSelectionOnClick
       />
     </Card>
   );

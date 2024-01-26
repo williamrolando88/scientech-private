@@ -13,7 +13,7 @@ import { AccountCategoryForm } from './AccountCategoryForm';
 
 const AddAccountCategory: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [categories] = useListAccountCategories();
+  const { data: categories } = useListAccountCategories();
   const { mutate: setCategories } = useMutateAccountCategories();
   const [modalOpen, setModalOpen] = useState(false);
   const [multiple, setMultiple] = useState(false);

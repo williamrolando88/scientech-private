@@ -1,22 +1,20 @@
-import {
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { APPLICATION_SETTINGS, COLLECTIONS } from 'src/lib/enums/collections';
 import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategoryDict } from 'src/types/accountCategories';
 
-export const useListAccountCategories = (): [
-  AccountCategoryDict,
-  Omit<UseQueryResult<AccountCategoryDict, unknown>, 'data'>
-] => {
-  const { data, ...rest } = useQuery<AccountCategoryDict>({
-    queryKey: ['accountCategories'],
+const queryKey = [
+  COLLECTIONS.APPLICATION_SETTINGS,
+  APPLICATION_SETTINGS.ACCOUNT_CATEGORIES,
+];
+
+export const useListAccountCategories = () => {
+  const query = useQuery<AccountCategoryDict>({
+    queryKey,
     queryFn: AccountCategories.list,
   });
 
-  return [data || {}, rest];
+  return { ...query, data: query.data ?? {} };
 };
 
 export const useMutateAccountCategories = () => {
@@ -24,10 +22,10 @@ export const useMutateAccountCategories = () => {
   const mutation = useMutation({
     mutationFn: AccountCategories.upsert,
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['accountCategories'] });
+      await queryClient.cancelQueries({ queryKey });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['accountCategories'], () => data);
+      queryClient.setQueryData(queryKey, () => data);
     },
   });
 
