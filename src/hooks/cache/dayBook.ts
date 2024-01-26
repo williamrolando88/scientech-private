@@ -31,3 +31,20 @@ export const useAddDayBookTransactions = () => {
 
   return mutation;
 };
+
+export const useDeleteDayBookTransaction = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: DayBookTransactions.remove,
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey });
+    },
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) =>
+        prevData.filter((transaction) => transaction.id !== id)
+      );
+    },
+  });
+
+  return mutation;
+};

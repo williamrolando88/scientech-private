@@ -2,6 +2,7 @@ import {
   FirestoreDataConverter,
   QueryDocumentSnapshot,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -69,7 +70,19 @@ const list = async (): Promise<DayBookTransaction[]> => {
   return transactions;
 };
 
+const remove = async (id: string) => {
+  const docRef = doc(
+    collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS),
+    id
+  ).withConverter(DayBookTransactionConverter);
+
+  await deleteDoc(docRef);
+
+  return id;
+};
+
 export const DayBookTransactions = {
   upsert,
   list,
+  remove,
 };
