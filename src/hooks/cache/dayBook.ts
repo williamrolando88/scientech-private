@@ -21,7 +21,7 @@ export const useAddDayBookTransactions = () => {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
-    onSuccess: (inputs) => {
+    onSuccess: (_, inputs) => {
       queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) => [
         ...prevData,
         inputs,
