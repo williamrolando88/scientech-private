@@ -1,6 +1,6 @@
 import { Card } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
 import { DayBookTableEntry } from 'src/types/dayBook';
 
@@ -68,16 +68,19 @@ const DayBookIndex: FC = () => {
     },
   ];
 
-  const rows: DayBookTableEntry[] =
-    dayBookTransactions
-      ?.map((entry) =>
-        entry.transactions.map((detail, index) => ({
-          ...detail,
-          id: `${entry.id}:${index}`,
-          date: entry.date,
-        }))
-      )
-      .flat() || [];
+  const rows: DayBookTableEntry[] = useMemo(
+    () =>
+      (dayBookTransactions || [])
+        .map((entry) =>
+          (entry.transactions || []).map((detail, index) => ({
+            ...detail,
+            id: `${entry.id}:${index}`,
+            date: entry.date,
+          }))
+        )
+        .flat(),
+    [dayBookTransactions]
+  );
 
   return (
     <Card>
