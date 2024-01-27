@@ -55,7 +55,7 @@ const AddDayBookTransaction: FC = () => {
         <DialogTitle>Agregar Transacción</DialogTitle>
 
         <DayBookTransactionForm
-          infoText="Aquí puedes agregar nuevas transacciones"
+          infoText="Aquí puedes agregar nuevas transacciones, en los campos de débito y crédito puedes usar operaciones matemáticas básicas (+, -, *, /) para calcular el valor de la transacción. El color de los campos indica incremento (verde) o decremento (rojo)."
           initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
           onSubmit={onSubmit}
           validationSchema={toFormikValidationSchema(DayBookTransactionParser)}

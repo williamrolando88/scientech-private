@@ -62,3 +62,21 @@ export const getTransactionDataByDetailId = (
 
   return transaction || null;
 };
+
+export const getInputColorById = (accountId: string) => {
+  const [root] = accountId.split('.');
+
+  if (['1', '5'].includes(root)) {
+    return 'text-green-500';
+  }
+
+  if (root === '2') {
+    return 'text-red-500';
+  }
+
+  if (root === '3') {
+    return 'text-blue-500';
+  }
+
+  return 'text-gray-500';
+};
