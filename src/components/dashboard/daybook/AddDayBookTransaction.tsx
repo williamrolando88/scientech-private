@@ -1,21 +1,20 @@
+import { Button, Dialog, DialogTitle } from '@mui/material';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useAddDayBookTransactions } from 'src/hooks/cache/dayBook';
 import { DAYBOOK_TRANSACTION_INITIAL_VALUE } from 'src/lib/constants/dayBook';
 import { DayBookTransactionParser } from 'src/lib/parsers/dayBook';
 import { DayBookTransactions } from 'src/services/firebase/dayBookTransactions';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { DayBookTransactionForm } from '../DayBookTransactionForm';
+import { DayBookTransactionForm } from './DayBookTransactionForm';
 
-interface AddDayBookTransactionFormProps {
-  onClose: VoidFunction;
-}
+const AddDayBookTransaction: FC = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
-export const AddDayBookTransactionForm: FC<AddDayBookTransactionFormProps> = ({
-  onClose,
-}) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutate: addTransaction } = useAddDayBookTransactions();
 
@@ -26,7 +25,7 @@ export const AddDayBookTransactionForm: FC<AddDayBookTransactionFormProps> = ({
     try {
       const id = await DayBookTransactions.upsert(values);
       resetForm();
-      onClose();
+      handleCloseModal();
       enqueueSnackbar('Transacción guardada exitosamente');
       addTransaction({ ...values, id });
     } catch (error) {
@@ -38,11 +37,28 @@ export const AddDayBookTransactionForm: FC<AddDayBookTransactionFormProps> = ({
   };
 
   return (
-    <DayBookTransactionForm
-      initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
-      onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(DayBookTransactionParser)}
-      onClose={onClose}
-    />
+    <>
+      <Button variant="contained" onClick={handleOpenModal}>
+        Nuevo
+      </Button>
+
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={openModal}
+        onClose={handleCloseModal}
+      >
+        <DialogTitle>Nueva transacción</DialogTitle>
+
+        <DayBookTransactionForm
+          initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
+          onSubmit={onSubmit}
+          validationSchema={toFormikValidationSchema(DayBookTransactionParser)}
+          onClose={handleCloseModal}
+        />
+      </Dialog>
+    </>
   );
 };
+
+export default AddDayBookTransaction;
