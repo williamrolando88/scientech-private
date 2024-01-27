@@ -6,8 +6,11 @@ interface SearchToolbarProps {
   value: string;
   handleChange: (value: string) => void;
 }
-export const SearchToolbar: FC<SearchToolbarProps> = ({ handleChange, value }) => (
-  <GridToolbarContainer>
+export const SearchToolbar: FC<SearchToolbarProps> = ({
+  handleChange,
+  value,
+}) => (
+  <GridToolbarContainer sx={{ bgcolor: 'transparent' }}>
     <TextField
       name="search"
       label="Buscar"

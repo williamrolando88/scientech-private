@@ -136,7 +136,8 @@ const DayBookIndex: FC = () => {
 
   return (
     <Card>
-      <CardHeader title="Libro Diario" />
+      <CardHeader title="Listado de Transacciones" />
+
       <CardContent>
         <DataGrid
           columns={columns}

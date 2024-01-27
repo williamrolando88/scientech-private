@@ -51,7 +51,7 @@ export const UpdateDayBookTransactionForm: FC<
       open={Boolean(transaction)}
       onClose={handleCloseModal}
     >
-      <DialogTitle>Modificar transacción</DialogTitle>
+      <DialogTitle>Actualizar Transacción</DialogTitle>
 
       <DayBookTransactionForm
         infoText="Aquí puedes modificar los datos de la transacción"
