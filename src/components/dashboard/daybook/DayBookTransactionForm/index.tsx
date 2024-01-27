@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import {
   Alert,
   Button,
@@ -23,10 +24,12 @@ interface DayBookTransactionFormProps extends FormikProps {
   infoText?: string;
 }
 
-export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
-  props
-) => {
-  const { onSubmit, onClose, infoText } = props;
+export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
+  onSubmit,
+  onClose,
+  infoText,
+  ...formikProps
+}) => {
   const [formError, setFormError] = useState('');
 
   const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
@@ -46,8 +49,8 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
   };
 
   return (
-    <Formik {...props} onSubmit={handleSubmit}>
-      {() => (
+    <Formik {...formikProps} onSubmit={handleSubmit}>
+      {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
@@ -62,8 +65,17 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
           </Stack>
 
           <DialogActions>
-            <Button onClick={onClose}>Cancelar</Button>
-            <Button type="submit">Guardar</Button>
+            <Button onClick={onClose} disabled={isSubmitting}>
+              Cancelar
+            </Button>
+
+            <LoadingButton
+              variant="contained"
+              type="submit"
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
           </DialogActions>
         </Form>
       )}

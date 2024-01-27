@@ -15,23 +15,28 @@ const AddDayBookTransaction: FC = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   const { enqueueSnackbar } = useSnackbar();
-  const { mutate: addTransaction } = useAddDayBookTransactions();
+  const { mutateAsync: addTransaction } = useAddDayBookTransactions();
 
   const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = async (
     values,
     { setSubmitting, resetForm }
   ) => {
-    try {
-      addTransaction(values);
-      resetForm();
-      handleCloseModal();
-      enqueueSnackbar('Transacción guardada exitosamente');
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Error al guardar la transacción', { variant: 'error' });
-    } finally {
-      setSubmitting(false);
-    }
+    setSubmitting(true);
+
+    addTransaction(values)
+      .then(() => {
+        resetForm();
+        handleCloseModal();
+        enqueueSnackbar('Transacción guardada exitosamente');
+      })
+      .catch(() => {
+        enqueueSnackbar('Error al guardar la transacción', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
