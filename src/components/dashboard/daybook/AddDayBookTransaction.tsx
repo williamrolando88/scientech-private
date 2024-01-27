@@ -26,10 +26,11 @@ const AddDayBookTransaction: FC = () => {
     addTransaction(values)
       .then(() => {
         resetForm();
-        handleCloseModal();
         enqueueSnackbar('Transacción guardada exitosamente');
+        handleCloseModal();
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         enqueueSnackbar('Error al guardar la transacción', {
           variant: 'error',
         });

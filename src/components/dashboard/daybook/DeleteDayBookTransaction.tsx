@@ -10,6 +10,7 @@ import {
   Stack,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 import { FC, useMemo } from 'react';
 import { useDeleteDayBookTransaction } from 'src/hooks/cache/dayBook';
 import {
@@ -27,15 +28,25 @@ export const DeleteDayBookTransaction: FC<DeleteDayBookTransactionProps> = ({
   transaction,
   setTransaction,
 }) => {
-  const { mutate: handleDeleteAccount, isPending } =
+  const { enqueueSnackbar } = useSnackbar();
+  const { mutateAsync: handleDeleteAccount, isPending } =
     useDeleteDayBookTransaction();
   const handleClose = () => setTransaction(null);
 
   const transactionId = transaction?.id || '';
 
   const handleConfirm = () => {
-    handleDeleteAccount(transactionId);
-    handleClose();
+    handleDeleteAccount(transactionId)
+      .then(() => {
+        enqueueSnackbar('Transacción eliminada exitosamente');
+        handleClose();
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar('Ocurrió un error al eliminar la transacción', {
+          variant: 'error',
+        });
+      });
   };
 
   const columns: GridColDef<DayBookTransactionDetail>[] = [

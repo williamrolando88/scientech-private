@@ -28,10 +28,11 @@ export const UpdateDayBookTransactionForm: FC<
     updateTransaction(values)
       .then(() => {
         resetForm();
-        handleCloseModal();
         enqueueSnackbar('Transacción actualizada exitosamente');
+        handleCloseModal();
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         enqueueSnackbar('Error al guardar la transacción', {
           variant: 'error',
         });
