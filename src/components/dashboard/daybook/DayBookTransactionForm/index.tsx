@@ -8,7 +8,7 @@ import {
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
 import { FormikDatePicker } from 'src/components/shared/formik-components';
-import { dayBookTransactionsValidatior } from 'src/lib/modules/dayBook';
+import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
@@ -33,7 +33,7 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
     values,
     helpers
   ) => {
-    const error = dayBookTransactionsValidatior(values);
+    const error = dayBookTransactionsValidator(values);
 
     if (error) {
       setFormError(error);

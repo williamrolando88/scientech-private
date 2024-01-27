@@ -3,21 +3,29 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
+import { getTransactionDataById } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
 const DayBookIndex: FC = () => {
   const [transactionToDelete, setTransactionToDelete] =
     useState<DayBookTransaction | null>(null);
+  const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DayBookTransaction | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
 
-  const getTransactionData = useCallback(
+  const getTransactionToDelete = useCallback(
     (detailId: string) => {
-      const [transactionId] = detailId.split(':');
-      const transaction = dayBookTransactions?.find(
-        (entry) => entry.id === transactionId
-      );
-      setTransactionToDelete(transaction || null);
+      const transaction = getTransactionDataById(detailId, dayBookTransactions);
+      setTransactionToDelete(transaction);
+    },
+    [dayBookTransactions]
+  );
+
+  const getTransactionToUpdate = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataById(detailId, dayBookTransactions);
+      setTransactionToUpdate(transaction);
     },
     [dayBookTransactions]
   );
@@ -89,20 +97,20 @@ const DayBookIndex: FC = () => {
         getActions: (params) => [
           <GridActionsCellItem
             label="Modificar"
-            onClick={() => alert(params.row as DayBookTableEntry)}
+            onClick={() => getTransactionToUpdate(params.id as string)}
             icon={<Iconify icon="pajamas:doc-changes" />}
             showInMenu
           />,
           <GridActionsCellItem
             label="Borrar"
-            onClick={() => getTransactionData(params.id as string)}
+            onClick={() => getTransactionToDelete(params.id as string)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
         ],
       },
     ],
-    [getTransactionData]
+    [getTransactionToDelete, getTransactionToUpdate]
   );
 
   const rows: DayBookTableEntry[] = useMemo(
