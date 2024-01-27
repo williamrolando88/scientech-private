@@ -6,7 +6,6 @@ import {
   useListAccountCategories,
   useMutateAccountCategories,
 } from 'src/hooks/cache/accountCategories';
-import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
 
@@ -20,33 +19,33 @@ const UpdateAccountCategory: FC<UpdateAccountCategoryProps> = ({
   onClose,
 }) => {
   const { data: categories } = useListAccountCategories();
-  const { mutate: setCategories } = useMutateAccountCategories();
+  const { mutateAsync: setCategories } = useMutateAccountCategories();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmitForm: FormikConfig<AccountCategory>['onSubmit'] = async (
     formData,
-    actions
+    { setSubmitting, resetForm }
   ) => {
-    actions.setSubmitting(true);
+    setSubmitting(true);
 
     const accountsCollection = { ...categories, [formData.id]: formData };
 
-    try {
-      await AccountCategories.upsert(accountsCollection);
-
-      setCategories(accountsCollection);
-      actions.resetForm();
-      onClose();
-    } catch (error) {
-      console.error(error);
-
-      enqueueSnackbar('Ocurrió un error al actualizar la cuenta', {
-        variant: 'error',
+    setCategories(accountsCollection)
+      .then(() => {
+        resetForm();
+        enqueueSnackbar('Cuenta actualizada exitosamente');
+        onClose();
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar('Ocurrió un error al actualizar la cuenta', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
-    } finally {
-      actions.setSubmitting(false);
-    }
   };
 
   if (!accountCategory) return null;

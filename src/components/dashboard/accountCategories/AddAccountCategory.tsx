@@ -7,14 +7,13 @@ import {
   useMutateAccountCategories,
 } from 'src/hooks/cache/accountCategories';
 import { ACCOUNT_CATEGORY_INITIAL_VALUE } from 'src/lib/constants/accountCategories';
-import { AccountCategories } from 'src/services/firebase/applicationSettings';
 import { AccountCategory } from 'src/types/accountCategories';
 import { AccountCategoryForm } from './AccountCategoryForm';
 
 const AddAccountCategory: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: categories } = useListAccountCategories();
-  const { mutate: setCategories } = useMutateAccountCategories();
+  const { mutateAsync: setCategories } = useMutateAccountCategories();
   const [modalOpen, setModalOpen] = useState(false);
   const [multiple, setMultiple] = useState(false);
 
@@ -24,34 +23,34 @@ const AddAccountCategory: FC = () => {
 
   const handleSubmitForm: FormikConfig<AccountCategory>['onSubmit'] = async (
     formData,
-    actions
+    { setSubmitting, resetForm, setFieldError }
   ) => {
     if (formData.id in categories) {
-      actions.setFieldError('id', 'Ya existe una cuenta con ese número');
+      setFieldError('id', 'Ya existe una cuenta con ese número');
       return;
     }
 
-    actions.setSubmitting(true);
+    setSubmitting(true);
     const accountsCollection = { ...categories, [formData.id]: formData };
 
-    try {
-      await AccountCategories.upsert(accountsCollection);
+    setCategories(accountsCollection)
+      .then(() => {
+        resetForm();
+        enqueueSnackbar('Cuenta agregada exitosamente');
 
-      setCategories(accountsCollection);
-      actions.resetForm();
-
-      if (!multiple) {
-        closeModal();
-      }
-    } catch (error) {
-      console.error(error);
-
-      enqueueSnackbar('Ocurrió un error al guardar la cuenta', {
-        variant: 'error',
+        if (!multiple) {
+          closeModal();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar('Ocurrió un error al guardar la cuenta', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
-    } finally {
-      actions.setSubmitting(false);
-    }
   };
 
   return (
