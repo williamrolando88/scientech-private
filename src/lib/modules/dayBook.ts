@@ -53,7 +53,7 @@ export const dayBookTransactionsValidator = (
   return null;
 };
 
-export const getTransactionDataById = (
+export const getTransactionDataByDetailId = (
   detailId: string,
   transactions: DayBookTransaction[]
 ): DayBookTransaction | null => {

@@ -3,7 +3,7 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
-import { getTransactionDataById } from 'src/lib/modules/dayBook';
+import { getTransactionDataByDetailId } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
@@ -16,7 +16,10 @@ const DayBookIndex: FC = () => {
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
-      const transaction = getTransactionDataById(detailId, dayBookTransactions);
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        dayBookTransactions
+      );
       setTransactionToDelete(transaction);
     },
     [dayBookTransactions]
@@ -24,7 +27,10 @@ const DayBookIndex: FC = () => {
 
   const getTransactionToUpdate = useCallback(
     (detailId: string) => {
-      const transaction = getTransactionDataById(detailId, dayBookTransactions);
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        dayBookTransactions
+      );
       setTransactionToUpdate(transaction);
     },
     [dayBookTransactions]
