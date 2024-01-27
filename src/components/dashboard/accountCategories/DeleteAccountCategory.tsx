@@ -17,24 +17,24 @@ export const DeleteAccountCategory: FC<DeleteAccountCategoryProps> = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: categories } = useListAccountCategories();
-  const { mutate: setCategories } = useMutateAccountCategories();
+  const { mutateAsync: setCategories } = useMutateAccountCategories();
 
   const handleDeleteAccount = useCallback(async () => {
     if (!accountIdToDelete) return;
 
     delete categories[accountIdToDelete];
 
-    try {
-      setCategories(categories);
-
-      setCategories(categories);
-      setAccountIdToDelete(null);
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
-        variant: 'error',
+    setCategories(categories)
+      .then(() => {
+        setAccountIdToDelete(null);
+        enqueueSnackbar('Cuenta eliminada correctamente');
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar('Ocurrió un error al eliminar la cuenta', {
+          variant: 'error',
+        });
       });
-    }
   }, [
     accountIdToDelete,
     categories,

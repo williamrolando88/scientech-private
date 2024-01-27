@@ -1,6 +1,6 @@
 import { DayBookTransaction } from 'src/types/dayBook';
 
-export const dayBookTransactionsValidatior = (
+export const dayBookTransactionsValidator = (
   entry: DayBookTransaction
 ): string | null => {
   if (entry.transactions.length < 2) {
@@ -51,4 +51,14 @@ export const dayBookTransactionsValidatior = (
   }
 
   return null;
+};
+
+export const getTransactionDataByDetailId = (
+  detailId: string,
+  transactions: DayBookTransaction[]
+): DayBookTransaction | null => {
+  const [transactionId] = detailId.split(':');
+  const transaction = transactions?.find((entry) => entry.id === transactionId);
+
+  return transaction || null;
 };

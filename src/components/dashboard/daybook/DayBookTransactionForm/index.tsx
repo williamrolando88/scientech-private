@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import {
   Alert,
   Button,
@@ -8,7 +9,7 @@ import {
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
 import { FormikDatePicker } from 'src/components/shared/formik-components';
-import { dayBookTransactionsValidatior } from 'src/lib/modules/dayBook';
+import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
@@ -23,17 +24,19 @@ interface DayBookTransactionFormProps extends FormikProps {
   infoText?: string;
 }
 
-export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
-  props
-) => {
-  const { onSubmit, onClose, infoText } = props;
+export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
+  onSubmit,
+  onClose,
+  infoText,
+  ...formikProps
+}) => {
   const [formError, setFormError] = useState('');
 
   const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
     values,
     helpers
   ) => {
-    const error = dayBookTransactionsValidatior(values);
+    const error = dayBookTransactionsValidator(values);
 
     if (error) {
       setFormError(error);
@@ -46,8 +49,8 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
   };
 
   return (
-    <Formik {...props} onSubmit={handleSubmit}>
-      {() => (
+    <Formik {...formikProps} onSubmit={handleSubmit}>
+      {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
@@ -62,8 +65,17 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = (
           </Stack>
 
           <DialogActions>
-            <Button onClick={onClose}>Cancelar</Button>
-            <Button type="submit">Guardar</Button>
+            <Button onClick={onClose} disabled={isSubmitting}>
+              Cancelar
+            </Button>
+
+            <LoadingButton
+              variant="contained"
+              type="submit"
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
           </DialogActions>
         </Form>
       )}
