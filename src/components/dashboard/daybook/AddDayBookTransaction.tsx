@@ -54,6 +54,7 @@ const AddDayBookTransaction: FC = () => {
         <DialogTitle>Nueva transacción</DialogTitle>
 
         <DayBookTransactionForm
+          infoText="Aquí puedes agregar nuevas transacciones"
           initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
           onSubmit={onSubmit}
           validationSchema={toFormikValidationSchema(DayBookTransactionParser)}

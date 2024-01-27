@@ -222,10 +222,16 @@ const UpdateDayBookTransactionForm: FC<UpdateDayBookTransactionFormProps> = ({
   if (!transaction) return null;
 
   return (
-    <Dialog open={Boolean(transaction)} onClose={handleCloseModal}>
+    <Dialog
+      fullWidth
+      maxWidth="lg"
+      open={Boolean(transaction)}
+      onClose={handleCloseModal}
+    >
       <DialogTitle>Modificar transacción</DialogTitle>
 
       <DayBookTransactionForm
+        infoText="Aquí puedes modificar los datos de la transacción"
         initialValues={transaction}
         onSubmit={onSubmit}
         onClose={handleCloseModal}
