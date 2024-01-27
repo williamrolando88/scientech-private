@@ -1,10 +1,24 @@
-import { Card, CardContent, CardHeader } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogTitle,
+} from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
-import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
+import {
+  useListDayBookTransactions,
+  useUpdateDayBookTransaction,
+} from 'src/hooks/cache/dayBook';
 import { getTransactionDataByDetailId } from 'src/lib/modules/dayBook';
+import { DayBookTransactionParser } from 'src/lib/parsers/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { DayBookTransactionForm } from './DayBookTransactionForm';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
 const DayBookIndex: FC = () => {
@@ -136,7 +150,6 @@ const DayBookIndex: FC = () => {
   return (
     <Card>
       <CardHeader title="Libro Diario" />
-
       <CardContent>
         <DataGrid
           columns={columns}
@@ -157,7 +170,10 @@ const DayBookIndex: FC = () => {
           disableRowSelectionOnClick
         />
       </CardContent>
-
+      <UpdateDayBookTransactionForm
+        setTransaction={setTransactionToUpdate}
+        transaction={transactionToUpdate}
+      />
       <DeleteDayBookTransaction
         transaction={transactionToDelete}
         setTransaction={setTransactionToDelete}
@@ -167,3 +183,54 @@ const DayBookIndex: FC = () => {
 };
 
 export default DayBookIndex;
+
+interface UpdateDayBookTransactionFormProps {
+  transaction: DayBookTransaction | null;
+  setTransaction: (transaction: DayBookTransaction | null) => void;
+}
+
+const UpdateDayBookTransactionForm: FC<UpdateDayBookTransactionFormProps> = ({
+  setTransaction,
+  transaction,
+}) => {
+  const handleCloseModal = () => setTransaction(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const { mutateAsync: updateTransaction } = useUpdateDayBookTransaction();
+
+  const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = async (
+    values,
+    { setSubmitting, resetForm }
+  ) => {
+    setSubmitting(true);
+
+    updateTransaction(values)
+      .then(() => {
+        resetForm();
+        handleCloseModal();
+        enqueueSnackbar('Transacción actualizada exitosamente');
+      })
+      .catch(() => {
+        enqueueSnackbar('Error al guardar la transacción', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
+
+  if (!transaction) return null;
+
+  return (
+    <Dialog open={Boolean(transaction)} onClose={handleCloseModal}>
+      <DialogTitle>Modificar transacción</DialogTitle>
+
+      <DayBookTransactionForm
+        initialValues={transaction}
+        onSubmit={onSubmit}
+        onClose={handleCloseModal}
+        validationSchema={toFormikValidationSchema(DayBookTransactionParser)}
+      />
+    </Dialog>
+  );
+};

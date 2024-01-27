@@ -16,15 +16,16 @@ export const useListDayBookTransactions = () => {
 
 export const useAddDayBookTransactions = () => {
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: DayBookTransactions.upsert,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
-    onSuccess: (_, inputs) => {
+    onSuccess: (id, inputs) => {
       queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) => [
         ...prevData,
-        inputs,
+        { ...inputs, id },
       ]);
     },
   });
@@ -34,6 +35,7 @@ export const useAddDayBookTransactions = () => {
 
 export const useDeleteDayBookTransaction = () => {
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: DayBookTransactions.remove,
     onMutate: async (id: string) => {
@@ -42,6 +44,26 @@ export const useDeleteDayBookTransaction = () => {
     onSuccess: (_, id) => {
       queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) =>
         prevData.filter((transaction) => transaction.id !== id)
+      );
+    },
+  });
+
+  return mutation;
+};
+
+export const useUpdateDayBookTransaction = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: DayBookTransactions.upsert,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+    },
+    onSuccess: (id, input) => {
+      queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) =>
+        prevData.map((transaction) =>
+          transaction.id === id ? input : transaction
+        )
       );
     },
   });
