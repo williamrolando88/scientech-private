@@ -7,7 +7,7 @@ import { AccountCategory } from 'src/types/accountCategories';
 import { DeleteAccountCategory } from './DeleteAccountCategory';
 import UpdateAccountCategory from './UpdateAccountCategory';
 
-const ListAccountCategories: FC = () => {
+const AccountCategoriesIndex: FC = () => {
   const { data: categories, isLoading } = useListAccountCategories();
   const [accountToEdit, setAccountToEdit] = useState<AccountCategory | null>(
     null
@@ -96,4 +96,4 @@ const ListAccountCategories: FC = () => {
   );
 };
 
-export default ListAccountCategories;
+export default AccountCategoriesIndex;
