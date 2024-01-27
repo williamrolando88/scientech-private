@@ -52,7 +52,7 @@ const AddDayBookTransaction: FC = () => {
         open={openModal}
         onClose={handleCloseModal}
       >
-        <DialogTitle>Nueva transacción</DialogTitle>
+        <DialogTitle>Agregar Transacción</DialogTitle>
 
         <DayBookTransactionForm
           infoText="Aquí puedes agregar nuevas transacciones"

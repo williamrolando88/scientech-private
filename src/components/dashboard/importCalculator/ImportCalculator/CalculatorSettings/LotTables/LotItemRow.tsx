@@ -1,8 +1,14 @@
 import { Grid, InputAdornment, Typography } from '@mui/material';
 import { FC } from 'react';
-import { AutoCalculateInput, AutoCalculateInputProps } from '../../../../shared/AutoCalculateInput';
+import {
+  AutoCalculateInput,
+  AutoCalculateInputProps,
+} from 'src/components/shared/AutoCalculateInput';
 
-type LotItemRowProps = Omit<AutoCalculateInputProps, 'sx' | 'InputProps' | 'label'> & {
+type LotItemRowProps = Omit<
+  AutoCalculateInputProps,
+  'sx' | 'InputProps' | 'label'
+> & {
   label: string;
   startAdornment?: React.ReactNode;
   endAdornment?: React.ReactNode;

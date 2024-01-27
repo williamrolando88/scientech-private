@@ -1,11 +1,13 @@
-import ImportCalculatorComponent from 'src/components/importCalculator/ImportCalculator';
-import CalculatorControllers from 'src/components/importCalculator/ImportCalculator/CalculatorControllers';
-import { ImportCalculatorProvider } from 'src/components/importCalculator/ImportCalculator/ImportCalculatorProvider';
+import ImportCalculatorComponent from 'src/components/dashboard/importCalculator/ImportCalculator';
+import CalculatorControllers from 'src/components/dashboard/importCalculator/ImportCalculator/CalculatorControllers';
+import { ImportCalculatorProvider } from 'src/components/dashboard/importCalculator/ImportCalculator/ImportCalculatorProvider';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 
-Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Page() {
   return (

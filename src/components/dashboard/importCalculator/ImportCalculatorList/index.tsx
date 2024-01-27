@@ -102,8 +102,14 @@ const ImportCalculatorList = () => {
         slotProps={{
           toolbar: { value: searchText, handleChange: setSearchText },
         }}
+        sx={{
+          '& .MuiDataGrid-columnHeader': {
+            bgcolor: (theme) => theme.palette.action.selected,
+          },
+        }}
         autoHeight
         disableRowSelectionOnClick
+        density="compact"
       />
     </Card>
   );

@@ -77,6 +77,11 @@ const AccountCategoriesIndex: FC = () => {
               sortModel: [{ field: 'id', sort: 'asc' }],
             },
           }}
+          sx={{
+            '& .MuiDataGrid-columnHeader': {
+              bgcolor: (theme) => theme.palette.action.selected,
+            },
+          }}
           autoHeight
           disableRowSelectionOnClick
           density="compact"
