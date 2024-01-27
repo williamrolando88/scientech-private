@@ -1,12 +1,14 @@
 import { Button } from '@mui/material';
 import Link from 'next/link';
+import ImportCalculatorList from 'src/components/dashboard/importCalculator/ImportCalculatorList';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import ImportCalculatorList from '../../../components/importCalculator/ImportCalculatorList';
 
-Page.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default function Page() {
   return (
