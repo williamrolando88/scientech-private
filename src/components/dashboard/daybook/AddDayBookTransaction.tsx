@@ -5,7 +5,6 @@ import { FC, useState } from 'react';
 import { useAddDayBookTransactions } from 'src/hooks/cache/dayBook';
 import { DAYBOOK_TRANSACTION_INITIAL_VALUE } from 'src/lib/constants/dayBook';
 import { DayBookTransactionParser } from 'src/lib/parsers/dayBook';
-import { DayBookTransactions } from 'src/services/firebase/dayBookTransactions';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from './DayBookTransactionForm';
@@ -23,11 +22,10 @@ const AddDayBookTransaction: FC = () => {
     { setSubmitting, resetForm }
   ) => {
     try {
-      const id = await DayBookTransactions.upsert(values);
+      addTransaction(values);
       resetForm();
       handleCloseModal();
       enqueueSnackbar('Transacción guardada exitosamente');
-      addTransaction({ ...values, id });
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Error al guardar la transacción', { variant: 'error' });
