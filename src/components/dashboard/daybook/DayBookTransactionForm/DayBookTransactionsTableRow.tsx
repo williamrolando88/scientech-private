@@ -1,14 +1,12 @@
 import { Button, Grid, MenuItem } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { FC, useMemo } from 'react';
-import {
-  FormikAutoCalculateField,
-  FormikTextField,
-} from 'src/components/shared/formik-components';
+import { FormikTextField } from 'src/components/shared/formik-components';
 import Iconify from 'src/components/shared/iconify';
 import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
 import { DAYBOOK_FORM_GRID_LAYOUT } from 'src/lib/constants/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
+import { ColoredAutoCalculateFields } from './ColoredAutoCalculateFields';
 
 interface DayBookTransactionsTableRowProps {
   index: number;
@@ -44,16 +42,8 @@ export const DayBookTransactionsTableRow: FC<
         </MenuItem>
       ))}
     </FormikTextField>,
-    <FormikAutoCalculateField
-      fullWidth
-      size="small"
-      name={`transactions[${index}].debit`}
-    />,
-    <FormikAutoCalculateField
-      fullWidth
-      size="small"
-      name={`transactions[${index}].credit`}
-    />,
+    <ColoredAutoCalculateFields index={index} type="debit" />,
+    <ColoredAutoCalculateFields index={index} type="credit" />,
     <FormikTextField
       fullWidth
       size="small"

@@ -54,7 +54,7 @@ export const UpdateDayBookTransactionForm: FC<
       <DialogTitle>Actualizar Transacción</DialogTitle>
 
       <DayBookTransactionForm
-        infoText="Aquí puedes modificar los datos de la transacción"
+        infoText="Aquí puedes modificar los datos de la transacción, en los campos de débito y crédito puedes usar operaciones matemáticas básicas (+, -, *, /) para calcular el valor de la transacción. El color de los campos indica incremento (verde) o decremento (rojo)."
         initialValues={transaction}
         onSubmit={onSubmit}
         onClose={handleCloseModal}
