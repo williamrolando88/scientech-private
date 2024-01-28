@@ -52,13 +52,13 @@ export const DayBookTransactionsTableRow: FC<
     <FormikTextField
       fullWidth
       size="small"
-      name={`transactions[${index}].invoice_id`}
+      name={`transactions[${index}].quotation_id`}
       type="number"
     />,
     <FormikTextField
       fullWidth
       size="small"
-      name={`transactions[${index}].quotation_id`}
+      name={`transactions[${index}].invoice_id`}
       type="number"
     />,
     <Button
