@@ -41,6 +41,7 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
 
     if (error) {
       setFormError(error);
+      helpers.setSubmitting(false);
       return;
     }
 
