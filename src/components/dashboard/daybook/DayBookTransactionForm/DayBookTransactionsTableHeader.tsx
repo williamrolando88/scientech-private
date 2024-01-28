@@ -7,7 +7,7 @@ import {
   DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
 } from 'src/lib/constants/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
-import { TableHeader } from './TableHeader';
+import { TableCell } from './TableCell';
 
 export const DayBookTransactionsTableHeader = () => {
   const { values, setValues } = useFormikContext<DayBookTransaction>();
@@ -23,12 +23,12 @@ export const DayBookTransactionsTableHeader = () => {
   };
 
   const HeadersArray = [
-    <TableHeader>Cuenta</TableHeader>,
-    <TableHeader>Debe</TableHeader>,
-    <TableHeader>Haber</TableHeader>,
-    <TableHeader>Descripción de la Transacción</TableHeader>,
-    <TableHeader>Cotización</TableHeader>,
-    <TableHeader>Factura</TableHeader>,
+    <TableCell>Cuenta</TableCell>,
+    <TableCell>Debe</TableCell>,
+    <TableCell>Haber</TableCell>,
+    <TableCell>Descripción de la Transacción</TableCell>,
+    <TableCell>Cotización</TableCell>,
+    <TableCell>Factura</TableCell>,
     <Button
       sx={{ height: '100%', width: '100%' }}
       type="button"
