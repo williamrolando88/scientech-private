@@ -1,3 +1,4 @@
+import { round } from 'mathjs';
 import { DayBookTransaction } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
@@ -35,18 +36,16 @@ export const dayBookTransactionsValidator = (
   }
 
   const totalDebit = entry.transactions.reduce(
-    // @ts-expect-error - debit always exists
-    (acc, curr) => acc + curr.debit ?? 0,
+    (acc, curr) => acc + curr.debit! ?? 0,
     0
   );
 
   const totalCredit = entry.transactions.reduce(
-    // @ts-expect-error - credit always exists
-    (acc, curr) => acc + curr.credit ?? 0,
+    (acc, curr) => acc + curr.credit! ?? 0,
     0
   );
 
-  if (totalDebit !== totalCredit) {
+  if (round(totalDebit, 2) !== round(totalCredit, 2)) {
     return 'La transacción no está balanceada';
   }
 
