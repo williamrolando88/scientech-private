@@ -28,7 +28,7 @@ export const DayBookTransactionsTableHeader = () => {
     <TableCell>Haber</TableCell>,
     <TableCell>Descripción de la Transacción</TableCell>,
     <TableCell>Cotización</TableCell>,
-    <TableCell>Factura</TableCell>,
+    <TableCell>Factura Emitida</TableCell>,
     <Button
       sx={{ height: '100%', width: '100%' }}
       type="button"
