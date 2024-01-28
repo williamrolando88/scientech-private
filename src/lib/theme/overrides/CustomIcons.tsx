@@ -1,6 +1,5 @@
 import { SvgIcon, SvgIconProps } from '@mui/material';
 
-// CloseIcon
 export function CloseIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
@@ -9,7 +8,6 @@ export function CloseIcon(props: SvgIconProps) {
   );
 }
 
-// StarIcon
 export function StarIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
@@ -18,7 +16,6 @@ export function StarIcon(props: SvgIconProps) {
   );
 }
 
-// Using for Alert
 export function InfoIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
@@ -51,7 +48,6 @@ export function ErrorIcon(props: SvgIconProps) {
   );
 }
 
-// Using for Checkbox
 export function CheckboxIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
@@ -76,7 +72,6 @@ export function CheckboxIndeterminateIcon(props: SvgIconProps) {
   );
 }
 
-// Using for Radio Button
 export function RadioIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
@@ -93,7 +88,6 @@ export function RadioCheckedIcon(props: SvgIconProps) {
   );
 }
 
-// Using for Select Input
 export function InputSelectIcon(props: SvgIconProps) {
   return (
     <SvgIcon
@@ -110,7 +104,6 @@ export function InputSelectIcon(props: SvgIconProps) {
   );
 }
 
-//  Using for TreeView
 export function TreeViewCollapseIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>

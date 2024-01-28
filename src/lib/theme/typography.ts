@@ -1,6 +1,4 @@
-import { Public_Sans, Barlow } from '@next/font/google';
-
-// ----------------------------------------------------------------------
+import { Barlow, Inter } from '@next/font/google';
 
 export function remToPx(value: string) {
   return Math.round(parseFloat(value) * 16);
@@ -10,7 +8,15 @@ export function pxToRem(value: number) {
   return `${value / 16}rem`;
 }
 
-export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg: number }) {
+export function responsiveFontSizes({
+  sm,
+  md,
+  lg,
+}: {
+  sm: number;
+  md: number;
+  lg: number;
+}) {
   return {
     '@media (min-width:600px)': {
       fontSize: pxToRem(sm),
@@ -24,7 +30,7 @@ export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg
   };
 }
 
-export const primaryFont = Public_Sans({
+export const primaryFont = Inter({
   weight: ['400', '500', '600', '700', '800'],
   subsets: ['latin'],
   display: 'swap',

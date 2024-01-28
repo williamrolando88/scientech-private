@@ -1,7 +1,5 @@
 import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
 export type ColorSchema =
   | 'primary'
   | 'secondary'
@@ -23,8 +21,6 @@ declare module '@mui/material/styles/createPalette' {
     darker: string;
   }
 }
-
-// SETUP COLORS
 
 const GREY = {
   0: '#FFFFFF',
