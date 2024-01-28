@@ -1,8 +1,12 @@
 import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
-export type ColorSchema = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
+export type ColorSchema =
+  | 'primary'
+  | 'secondary'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error';
 
 declare module '@mui/material/styles/createPalette' {
   interface TypeBackground {
@@ -18,8 +22,6 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
-// SETUP COLORS
-
 const GREY = {
   0: '#FFFFFF',
   100: '#F9FAFB',
@@ -34,11 +36,11 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#C8FACD',
-  light: '#5BE584',
-  main: '#00AB55',
-  dark: '#007B55',
-  darker: '#005249',
+  lighter: '#00faff',
+  light: '#02d2fa',
+  main: '#03a9f4',
+  dark: '#2383af',
+  darker: '#455a64',
   contrastText: '#FFFFFF',
 };
 

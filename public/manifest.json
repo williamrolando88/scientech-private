@@ -3,7 +3,7 @@
   "short_name": "Scientech",
   "display": "standalone",
   "start_url": "/",
-  "theme_color": "#000000",
+  "theme_color": "#03a9f4",
   "background_color": "#ffffff",
   "icons": [
     {
