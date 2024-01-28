@@ -11,6 +11,7 @@ import { FC, useState } from 'react';
 import { FormikDatePicker } from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
 type FormikProps = Pick<
@@ -55,8 +56,14 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
 
-            <Stack width="30%">
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <FormikDatePicker name="date" label="Fecha" />
+
+              <DayBookTransactionSummary />
             </Stack>
 
             <DayBookTransactionsTable />
