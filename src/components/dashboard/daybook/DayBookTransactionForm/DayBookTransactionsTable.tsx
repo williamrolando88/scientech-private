@@ -12,7 +12,6 @@ export const DayBookTransactionsTable: FC = () => {
   return (
     <Stack component={Paper} variant="outlined" p={2}>
       <DayBookTransactionsTableHeader />
-
       <Box height={200}>
         <Scrollbar sx={{ display: 'flex', flexDirection: 'column' }}>
           {values.transactions.map((_, index) => (

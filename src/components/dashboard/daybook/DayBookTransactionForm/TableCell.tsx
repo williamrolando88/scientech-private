@@ -4,7 +4,7 @@ import { FC } from 'react';
 interface TableHeaderProps {
   children: React.ReactNode;
 }
-export const TableHeader: FC<TableHeaderProps> = ({ children }) => (
+export const TableCell: FC<TableHeaderProps> = ({ children }) => (
   <Box
     borderRadius={1}
     bgcolor="primary.main"
