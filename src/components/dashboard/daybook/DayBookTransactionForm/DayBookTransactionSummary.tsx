@@ -1,5 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import { useFormikContext } from 'formik';
+import { round } from 'mathjs';
 import { DayBookTransaction } from 'src/types/dayBook';
 
 export const DayBookTransactionSummary = () => {
@@ -16,9 +17,9 @@ export const DayBookTransactionSummary = () => {
 
   return (
     <Stack direction="row" gap={4} mr={2}>
-      <Box>{`Total debe: $${totalDebit}`}</Box>
+      <Box>{`Total debe: $${round(totalDebit, 2)}`}</Box>
 
-      <Box>{`Total haber: $${totalCredit}`}</Box>
+      <Box>{`Total haber: $${round(totalCredit, 2)}`}</Box>
     </Stack>
   );
 };
