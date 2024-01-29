@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { DayBookTransaction } from 'src/types/dayBook';
 
-export const DayBookTransactionSummary = () => {
+export function DayBookTransactionSummary() {
   const { values } = useFormikContext<DayBookTransaction>();
 
   const totalDebit = values.transactions.reduce(
@@ -22,4 +22,4 @@ export const DayBookTransactionSummary = () => {
       <Box>{`Total haber: $${round(totalCredit, 2)}`}</Box>
     </Stack>
   );
-};
+}

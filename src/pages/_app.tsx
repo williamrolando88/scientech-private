@@ -38,20 +38,20 @@ interface MyAppProps extends AppProps {
   Component: NextPageWithLayout;
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: REACT_QUERY.STALE_TIME,
+      gcTime: REACT_QUERY.GC,
+      networkMode: 'offlineFirst',
+    },
+  },
+});
+
 export default function MyApp(props: MyAppProps) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
-
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: REACT_QUERY.STALE_TIME,
-        gcTime: REACT_QUERY.GC,
-        networkMode: 'offlineFirst',
-      },
-    },
-  });
 
   return (
     <PersistQueryClientProvider

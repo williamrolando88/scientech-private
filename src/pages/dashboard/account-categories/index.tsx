@@ -4,10 +4,6 @@ import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import AccountCategoriesIndex from '../../../components/dashboard/accountCategories/AccountCategoriesIndex';
 
-Page.getLayout = (page: ReactElement) => (
-  <DashboardLayout>{page}</DashboardLayout>
-);
-
 function Page() {
   return (
     <DashboardTemplate
@@ -19,5 +15,9 @@ function Page() {
     </DashboardTemplate>
   );
 }
+
+Page.getLayout = (page: ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
 
 export default Page;

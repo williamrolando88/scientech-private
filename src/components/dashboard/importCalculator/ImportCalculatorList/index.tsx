@@ -9,7 +9,7 @@ import ImportCalculationsFirebase from 'src/services/firebase/importCalculations
 import { ImportCalculator } from 'src/types/importCalculator';
 import { SearchToolbar } from './SearchToolbar';
 
-const ImportCalculatorList = () => {
+function ImportCalculatorList() {
   const [searchText, setSearchText] = useState('');
   const { push } = useRouter();
 
@@ -113,6 +113,6 @@ const ImportCalculatorList = () => {
       />
     </Card>
   );
-};
+}
 
 export default ImportCalculatorList;
