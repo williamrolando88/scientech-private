@@ -8,5 +8,4 @@ export const AccountCategoryParser = z.object({
     .regex(ACCOUNT_CATEGORY_REGEX, ZOD_ERROR.ACCOUNT_CATEGORY_ID),
   name: z.string(ZOD_ERROR.REQUIRED),
   editable: z.boolean(),
-  description: z.string().optional(),
 });
