@@ -9,7 +9,7 @@ import {
 import { DayBookTransaction } from 'src/types/dayBook';
 import { TableCell } from './TableCell';
 
-export const DayBookTransactionsTableHeader = () => {
+export function DayBookTransactionsTableHeader() {
   const { values, setValues } = useFormikContext<DayBookTransaction>();
 
   const handleAddRow = () => {
@@ -54,4 +54,4 @@ export const DayBookTransactionsTableHeader = () => {
       ))}
     </Grid>
   );
-};
+}

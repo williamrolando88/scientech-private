@@ -146,7 +146,7 @@ const DayBookIndex: FC = () => {
           density="compact"
           initialState={{
             sorting: {
-              sortModel: [{ field: 'date', sort: 'asc' }],
+              sortModel: [{ field: 'date', sort: 'desc' }],
             },
           }}
           sx={{

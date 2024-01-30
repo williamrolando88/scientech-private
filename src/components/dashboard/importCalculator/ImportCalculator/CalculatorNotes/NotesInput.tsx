@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import { useRef } from 'react';
 import { useImportCalculatorContext } from 'src/hooks/useImportCalculatorContext';
 
-const NotesInput = () => {
+function NotesInput() {
   const { addNote } = useImportCalculatorContext();
   const inputRef = useRef<HTMLInputElement>();
 
@@ -33,6 +33,6 @@ const NotesInput = () => {
       helperText="Presiona ENTER para agregar, DOBLE CLICK para editar, presiona ESC para cancelar"
     />
   );
-};
+}
 
 export default NotesInput;

@@ -93,22 +93,6 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
                 required
               />
             </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                multiline
-                rows={2}
-                fullWidth
-                onFocus={(e) => e.target.select()}
-                label="Descripcion"
-                onChange={handleChange}
-                value={values.description}
-                name="description"
-                id="description"
-                error={touched.description && !!errors.description}
-                helperText={touched.description && errors.description}
-              />
-            </Grid>
           </Grid>
         </Stack>
       </DialogContent>

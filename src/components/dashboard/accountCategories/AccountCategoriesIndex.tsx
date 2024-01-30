@@ -27,12 +27,7 @@ const AccountCategoriesIndex: FC = () => {
       {
         field: 'name',
         headerName: 'Nombre',
-        flex: 2,
-      },
-      {
-        field: 'description',
-        headerName: 'Descripción',
-        flex: 5,
+        flex: 4,
       },
       {
         field: 'actions',
