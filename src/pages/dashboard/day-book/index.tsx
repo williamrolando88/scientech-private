@@ -1,4 +1,6 @@
-import React from 'react';
+import { Card, CardContent, Tab, Tabs } from '@mui/material';
+import { capitalize } from 'lodash';
+import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
@@ -9,13 +11,33 @@ Page.getLayout = (page: React.ReactElement) => (
 );
 
 function Page() {
+  const [currentTab, setCurrentTab] = useState('listado');
+
+  const TABS = [
+    { value: 'listado', component: <DayBookIndex /> },
+    { value: 'reporte', component: <div>Reporte</div> },
+  ];
+
   return (
     <DashboardTemplate
       documentTitle="Libro Diario"
       heading="Libro Diario"
       action={<AddDayBookTransaction />}
     >
-      <DayBookIndex />
+      <Card sx={{ minHeight: '60rem' }}>
+        <CardContent sx={{ py: 0 }}>
+          <Tabs
+            value={currentTab}
+            onChange={(_, newValue) => setCurrentTab(newValue)}
+          >
+            {TABS.map(({ value }) => (
+              <Tab key={value} label={capitalize(value)} value={value} />
+            ))}
+          </Tabs>
+        </CardContent>
+
+        {TABS.map(({ value, component }) => value === currentTab && component)}
+      </Card>
     </DashboardTemplate>
   );
 }

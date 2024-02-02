@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from '@mui/material';
+import { CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
@@ -135,7 +135,7 @@ const DayBookIndex: FC = () => {
   );
 
   return (
-    <Card>
+    <>
       <CardHeader title="Listado de Transacciones" />
 
       <CardContent>
@@ -166,7 +166,7 @@ const DayBookIndex: FC = () => {
         transaction={transactionToDelete}
         setTransaction={setTransactionToDelete}
       />
-    </Card>
+    </>
   );
 };
 
