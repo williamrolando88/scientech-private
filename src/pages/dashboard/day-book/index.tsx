@@ -5,15 +5,17 @@ import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTr
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import { DayBookTabs } from 'src/types/dayBook';
+import { TabInterface } from 'src/types/shared';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
 function Page() {
-  const [currentTab, setCurrentTab] = useState('listado');
+  const [currentTab, setCurrentTab] = useState<DayBookTabs>('listado');
 
-  const TABS = [
+  const TABS: TabInterface<DayBookTabs>[] = [
     { value: 'listado', component: <DayBookIndex /> },
     { value: 'reporte', component: <div>Reporte</div> },
   ];
