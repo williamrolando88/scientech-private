@@ -3,7 +3,10 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
-import { getTransactionDataByDetailId } from 'src/lib/modules/dayBook';
+import {
+  getDayBookTransactions,
+  getTransactionDataByDetailId,
+} from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 import { UpdateDayBookTransactionForm } from './UpdateDayBookTransactionForm';
@@ -121,16 +124,7 @@ const DayBookIndex: FC = () => {
   );
 
   const rows: DayBookTableEntry[] = useMemo(
-    () =>
-      (dayBookTransactions || [])
-        .map((entry) =>
-          (entry.transactions || []).map((detail, index) => ({
-            ...detail,
-            id: `${entry.id}:${index}`,
-            date: entry.date,
-          }))
-        )
-        .flat(),
+    () => getDayBookTransactions(dayBookTransactions),
     [dayBookTransactions]
   );
 
