@@ -13,6 +13,7 @@ import {
 } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
+import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
 
 interface AccountReportProps {
   account: string;
@@ -21,11 +22,21 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const { data: transactions } = useListDayBookTransactions();
   const [transactionToOpen, setTransactionToOpen] =
     useState<DayBookTransaction | null>(null);
+  const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DayBookTransaction | null>(null);
 
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(detailId, transactions);
       setTransactionToOpen(transaction);
+    },
+    [transactions]
+  );
+
+  const getTransactionToUpdate = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(detailId, transactions);
+      setTransactionToUpdate(transaction);
     },
     [transactions]
   );
@@ -82,12 +93,12 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
           icon={<Iconify icon="pajamas:doc-text" />}
           showInMenu
         />,
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => getTransactionToUpdate(params.id as string)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => getTransactionToUpdate(params.id as string)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          showInMenu
+        />,
         // <GridActionsCellItem
         //   label="Borrar"
         //   onClick={() => getTransactionToDelete(params.id as string)}
@@ -170,6 +181,11 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
       <OpenDayBookTransaction
         transaction={transactionToOpen}
         onClose={() => setTransactionToOpen(null)}
+      />
+
+      <UpdateDayBookTransaction
+        setTransaction={setTransactionToUpdate}
+        transaction={transactionToUpdate}
       />
     </>
   );
