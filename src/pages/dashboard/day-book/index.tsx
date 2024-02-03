@@ -27,7 +27,7 @@ function Page() {
       heading="Libro Diario"
       action={<AddDayBookTransaction />}
     >
-      <Card sx={{ minHeight: '60rem' }}>
+      <Card sx={{ minHeight: '20rem' }}>
         <CardContent sx={{ py: 0 }}>
           <Tabs
             value={currentTab}

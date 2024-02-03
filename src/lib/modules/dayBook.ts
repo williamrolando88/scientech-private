@@ -95,3 +95,15 @@ export const getDayBookTransactions = (
     )
     .flat();
 };
+
+export const getPositiveValueByAccount = (detail: DayBookTableEntry) => {
+  const { account_id, credit, debit } = detail;
+
+  const roundedCredit = round(credit || 0, 2);
+  const roundedDebit = round(debit || 0, 2);
+
+  if (['1', '5'].includes(account_id[0])) {
+    return roundedDebit - roundedCredit;
+  }
+  return roundedCredit - roundedDebit;
+};
