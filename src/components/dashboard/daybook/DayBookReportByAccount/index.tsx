@@ -5,7 +5,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { AccountReport } from './AccountReport';
 import { AccountSelector } from './AccountSelector';
 
-const DayBookReport: FC = () => {
+const DayBookReportByAccount: FC = () => {
   const [selectedAccount, setSelectedAccount] = useLocalStorage(
     LOCAL_STORAGE.ACCOUNT_TO_REPORT,
     ''
@@ -26,4 +26,4 @@ const DayBookReport: FC = () => {
   );
 };
 
-export default DayBookReport;
+export default DayBookReportByAccount;
