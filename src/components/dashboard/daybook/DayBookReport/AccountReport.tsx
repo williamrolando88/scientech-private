@@ -1,10 +1,12 @@
-import { Card, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { round } from 'mathjs';
 import { FC, useMemo } from 'react';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
 import {
   getDayBookTransactions,
+  getDecrementByAccount,
+  getIncrementByAccount,
   getPositiveValueByAccount,
 } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry } from 'src/types/dayBook';
@@ -75,11 +77,37 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
     [dayBookTableEntries]
   );
 
+  const totalIncrement = useMemo(
+    () =>
+      dayBookTableEntries.reduce(
+        (acc, current) => acc + getIncrementByAccount(current),
+        0
+      ),
+    [dayBookTableEntries]
+  );
+
+  const totalDecrement = useMemo(
+    () =>
+      dayBookTableEntries.reduce(
+        (acc, current) => acc + getDecrementByAccount(current),
+        0
+      ),
+    [dayBookTableEntries]
+  );
+
   return (
     <>
-      <Typography>
-        Saldo actual: <strong>${round(balanceReport, 2)}</strong>
-      </Typography>
+      <Stack justifyContent="space-between" direction="row">
+        <Typography>
+          Total increment: <strong>${round(totalIncrement, 2)}</strong>
+        </Typography>
+        <Typography>
+          Total decremento: <strong>${round(totalDecrement, 2)}</strong>
+        </Typography>
+        <Typography>
+          Saldo actual: <strong>${round(balanceReport, 2)}</strong>
+        </Typography>
+      </Stack>
 
       <Card variant="outlined">
         <DataGrid
