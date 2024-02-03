@@ -3,7 +3,7 @@ import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
-import DayBookReport from 'src/components/dashboard/daybook/DayBookReport';
+import DayBookReportByAccount from 'src/components/dashboard/daybook/DayBookReportByAccount';
 import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
 import { DayBookTabs } from 'src/types/dayBook';
@@ -18,7 +18,7 @@ function Page() {
 
   const TABS: TabInterface<DayBookTabs>[] = [
     { value: 'listado', component: <DayBookIndex /> },
-    { value: 'reporte-por-cuenta', component: <DayBookReport /> },
+    { value: 'reporte-por-cuenta', component: <DayBookReportByAccount /> },
   ];
 
   return (

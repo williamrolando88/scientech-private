@@ -107,3 +107,11 @@ export const getPositiveValueByAccount = (detail: DayBookTableEntry) => {
   }
   return roundedCredit - roundedDebit;
 };
+
+export const getIncrementByAccount = (detail: DayBookTableEntry) =>
+  (['1', '5'].includes(detail.account_id[0]) ? detail.debit : detail.credit) ||
+  0;
+
+export const getDecrementByAccount = (detail: DayBookTableEntry) =>
+  (['1', '5'].includes(detail.account_id[0]) ? detail.credit : detail.debit) ||
+  0;

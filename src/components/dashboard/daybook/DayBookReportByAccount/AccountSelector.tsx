@@ -24,7 +24,7 @@ export const AccountSelector: FC<AccountSelectorProps> = ({
 
   const uniqueAccountsObjects = uniqueAccounts.map((id) => ({
     value: id,
-    label: `${id} - ${accounts[id].name}`,
+    label: `${id} - ${accounts[id]?.name}`,
   }));
 
   return (

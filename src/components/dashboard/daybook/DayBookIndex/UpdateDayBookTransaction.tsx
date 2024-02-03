@@ -8,13 +8,14 @@ import { DayBookTransaction } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from '../DayBookTransactionForm';
 
-interface UpdateDayBookTransactionFormProps {
+interface UpdateDayBookTransactionProps {
   transaction: DayBookTransaction | null;
   setTransaction: (transaction: DayBookTransaction | null) => void;
 }
-export const UpdateDayBookTransactionForm: FC<
-  UpdateDayBookTransactionFormProps
-> = ({ setTransaction, transaction }) => {
+export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
+  setTransaction,
+  transaction,
+}) => {
   const handleCloseModal = () => setTransaction(null);
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: updateTransaction } = useUpdateDayBookTransaction();
