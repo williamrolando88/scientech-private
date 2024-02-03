@@ -1,5 +1,5 @@
 import { round } from 'mathjs';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
   entry: DayBookTransaction
@@ -78,4 +78,32 @@ export const getInputColorById = (accountId: string) => {
   }
 
   return 'text-gray-500';
+};
+
+export const getDayBookTransactions = (
+  transactions: DayBookTransaction[]
+): DayBookTableEntry[] => {
+  if (!transactions) return [];
+
+  return transactions
+    .map((entry) =>
+      (entry.transactions || []).map((detail, index) => ({
+        ...detail,
+        id: `${entry.id}:${index}`,
+        date: entry.date,
+      }))
+    )
+    .flat();
+};
+
+export const getPositiveValueByAccount = (detail: DayBookTableEntry) => {
+  const { account_id, credit, debit } = detail;
+
+  const roundedCredit = round(credit || 0, 2);
+  const roundedDebit = round(debit || 0, 2);
+
+  if (['1', '5'].includes(account_id[0])) {
+    return roundedDebit - roundedCredit;
+  }
+  return roundedCredit - roundedDebit;
 };

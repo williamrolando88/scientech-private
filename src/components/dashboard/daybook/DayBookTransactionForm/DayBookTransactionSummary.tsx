@@ -17,9 +17,13 @@ export function DayBookTransactionSummary() {
 
   return (
     <Stack direction="row" gap={4} mr={2}>
-      <Box>{`Total debe: $${round(totalDebit, 2)}`}</Box>
+      <Box>
+        Total debe: <strong>${round(totalDebit, 2)}</strong>
+      </Box>
 
-      <Box>{`Total haber: $${round(totalCredit, 2)}`}</Box>
+      <Box>
+        Total haber: <strong>${round(totalCredit, 2)}</strong>
+      </Box>
     </Stack>
   );
 }

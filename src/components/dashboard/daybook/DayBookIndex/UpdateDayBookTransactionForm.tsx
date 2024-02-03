@@ -6,7 +6,7 @@ import { useUpdateDayBookTransaction } from 'src/hooks/cache/dayBook';
 import { DayBookTransactionParser } from 'src/lib/parsers/dayBook';
 import { DayBookTransaction } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { DayBookTransactionForm } from './DayBookTransactionForm';
+import { DayBookTransactionForm } from '../DayBookTransactionForm';
 
 interface UpdateDayBookTransactionFormProps {
   transaction: DayBookTransaction | null;
