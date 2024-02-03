@@ -22,4 +22,4 @@ export interface DayBookTransactionFirestore
 export type DayBookTableEntry = DayBookTransactionDetail &
   Pick<DayBookTransaction, 'id' | 'date'>;
 
-export type DayBookTabs = 'listado' | 'reporte';
+export type DayBookTabs = 'listado' | 'reporte-por-cuenta';

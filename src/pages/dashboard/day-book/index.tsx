@@ -1,5 +1,5 @@
 import { Card, CardContent, Tab, Tabs } from '@mui/material';
-import { capitalize } from 'lodash';
+import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
@@ -18,7 +18,7 @@ function Page() {
 
   const TABS: TabInterface<DayBookTabs>[] = [
     { value: 'listado', component: <DayBookIndex /> },
-    { value: 'reporte', component: <DayBookReport /> },
+    { value: 'reporte-por-cuenta', component: <DayBookReport /> },
   ];
 
   return (
@@ -34,7 +34,7 @@ function Page() {
             onChange={(_, newValue) => setCurrentTab(newValue)}
           >
             {TABS.map(({ value }) => (
-              <Tab key={value} label={capitalize(value)} value={value} />
+              <Tab key={value} label={startCase(value)} value={value} />
             ))}
           </Tabs>
         </CardContent>
