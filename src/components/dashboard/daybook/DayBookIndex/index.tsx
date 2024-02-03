@@ -9,12 +9,15 @@ import {
 } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
-import { UpdateDayBookTransactionForm } from './UpdateDayBookTransactionForm';
+import { OpenDayBookTransaction } from './OpenDayBookTransaction';
+import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
 
 const DayBookIndex: FC = () => {
   const [transactionToDelete, setTransactionToDelete] =
     useState<DayBookTransaction | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DayBookTransaction | null>(null);
+  const [transactionToOpen, setTransactionToOpen] =
     useState<DayBookTransaction | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
 
@@ -36,6 +39,17 @@ const DayBookIndex: FC = () => {
         dayBookTransactions
       );
       setTransactionToUpdate(transaction);
+    },
+    [dayBookTransactions]
+  );
+
+  const getTransactionToOpen = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        dayBookTransactions
+      );
+      setTransactionToOpen(transaction);
     },
     [dayBookTransactions]
   );
@@ -106,6 +120,12 @@ const DayBookIndex: FC = () => {
         width: 50,
         getActions: (params) => [
           <GridActionsCellItem
+            label="Abrir"
+            onClick={() => getTransactionToOpen(params.id as string)}
+            icon={<Iconify icon="pajamas:doc-text" />}
+            showInMenu
+          />,
+          <GridActionsCellItem
             label="Modificar"
             onClick={() => getTransactionToUpdate(params.id as string)}
             icon={<Iconify icon="pajamas:doc-changes" />}
@@ -120,7 +140,7 @@ const DayBookIndex: FC = () => {
         ],
       },
     ],
-    [getTransactionToDelete, getTransactionToUpdate]
+    [getTransactionToDelete, getTransactionToUpdate, getTransactionToOpen]
   );
 
   const rows: DayBookTableEntry[] = useMemo(
@@ -152,13 +172,20 @@ const DayBookIndex: FC = () => {
           disableRowSelectionOnClick
         />
       </CardContent>
-      <UpdateDayBookTransactionForm
+
+      <OpenDayBookTransaction
+        transaction={transactionToOpen}
+        onClose={() => setTransactionToOpen(null)}
+      />
+
+      <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
         transaction={transactionToUpdate}
       />
+
       <DeleteDayBookTransaction
         transaction={transactionToDelete}
-        setTransaction={setTransactionToDelete}
+        onClose={() => setTransactionToDelete(null)}
       />
     </>
   );
