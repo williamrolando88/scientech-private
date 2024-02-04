@@ -99,12 +99,6 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
           icon={<Iconify icon="pajamas:doc-changes" />}
           showInMenu
         />,
-        // <GridActionsCellItem
-        //   label="Borrar"
-        //   onClick={() => getTransactionToDelete(params.id as string)}
-        //   icon={<Iconify icon="pajamas:remove" />}
-        //   showInMenu
-        // />,
       ],
     },
   ];
@@ -148,11 +142,13 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
     <>
       <Stack justifyContent="space-between" direction="row">
         <Typography>
-          Total increment: <strong>${round(totalIncrement, 2)}</strong>
+          Incremento total: <strong>${round(totalIncrement, 2)}</strong>
         </Typography>
+
         <Typography>
-          Total decremento: <strong>${round(totalDecrement, 2)}</strong>
+          Decremento total: <strong>${round(totalDecrement, 2)}</strong>
         </Typography>
+
         <Typography>
           Saldo actual: <strong>${round(balanceReport, 2)}</strong>
         </Typography>
