@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DayBookReportByAccount from 'src/components/dashboard/daybook/DayBookReportByAccount';
-import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
-import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { DayBookTabs } from 'src/types/dayBook';
 import { TabInterface } from 'src/types/shared';
 

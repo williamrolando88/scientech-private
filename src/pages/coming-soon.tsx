@@ -1,14 +1,18 @@
 import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
-import CompactLayout from 'src/components/layouts/compact/CompactLayout';
+import CompactLayout from 'src/components/shared/layouts/compact/CompactLayout';
 import { ComingSoonIllustration } from '../assets/illustrations';
 import { CustomTextField } from '../components/shared/custom-input';
 import useCountdown from '../hooks/useCountdown';
 
-ComingSoonPage.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
+ComingSoonPage.getLayout = (page: React.ReactElement) => (
+  <CompactLayout>{page}</CompactLayout>
+);
 
 export default function ComingSoonPage() {
-  const { days, hours, minutes, seconds } = useCountdown(new Date('07/07/2024 21:30'));
+  const { days, hours, minutes, seconds } = useCountdown(
+    new Date('07/07/2024 21:30')
+  );
 
   return (
     <>

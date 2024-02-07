@@ -71,6 +71,7 @@
     "@babel/core": "^7.20.12",
     "@tanstack/eslint-plugin-query": "^5.17.22",
     "@types/autosuggest-highlight": "^3.2.0",
+    "@types/lodash": "^4.14.202",
     "@types/mapbox-gl": "^2.7.10",
     "@types/node": "^18.11.18",
     "@types/nprogress": "^0.2.0",

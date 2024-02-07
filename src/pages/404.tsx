@@ -2,11 +2,13 @@ import { Button, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import CompactLayout from 'src/components/layouts/compact/CompactLayout';
 import { MotionContainer, varBounce } from 'src/components/shared/animate';
+import CompactLayout from 'src/components/shared/layouts/compact/CompactLayout';
 import { PageNotFoundIllustration } from '../assets/illustrations';
 
-Page404.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
+Page404.getLayout = (page: React.ReactElement) => (
+  <CompactLayout>{page}</CompactLayout>
+);
 
 export default function Page404() {
   return (
@@ -24,8 +26,8 @@ export default function Page404() {
 
         <m.div variants={varBounce().in}>
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
-            sure to check your spelling.
+            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve
+            mistyped the URL? Be sure to check your spelling.
           </Typography>
         </m.div>
 

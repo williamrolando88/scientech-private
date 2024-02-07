@@ -2,11 +2,13 @@ import { Button, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import CompactLayout from 'src/components/layouts/compact/CompactLayout';
 import { MotionContainer, varBounce } from 'src/components/shared/animate';
+import CompactLayout from 'src/components/shared/layouts/compact/CompactLayout';
 import { SeverErrorIllustration } from '../assets/illustrations';
 
-Page500.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</CompactLayout>;
+Page500.getLayout = (page: React.ReactElement) => (
+  <CompactLayout>{page}</CompactLayout>
+);
 
 export default function Page500() {
   return (
