@@ -1,13 +1,24 @@
-import { Alert, AlertProps, AlertTitle, Collapse, IconButton } from '@mui/material';
+import {
+  Alert,
+  AlertProps,
+  AlertTitle,
+  Collapse,
+  IconButton,
+} from '@mui/material';
 import { FC } from 'react';
 import Iconify from './iconify';
 
-interface Props extends Pick<AlertProps, 'severity' | 'title'> {
+interface Props extends Pick<AlertProps, 'severity' | 'title' | 'children'> {
   onClose: VoidFunction;
-  alertText: string;
   open: boolean;
 }
-const CollapsibleAlert: FC<Props> = ({ alertText, onClose, open, severity, title }) => (
+const CollapsibleAlert: FC<Props> = ({
+  children,
+  onClose,
+  open,
+  severity,
+  title,
+}) => (
   <Collapse sx={{ mt: 2 }} in={open}>
     <Alert
       severity={severity}
@@ -18,7 +29,7 @@ const CollapsibleAlert: FC<Props> = ({ alertText, onClose, open, severity, title
       }
     >
       {title && <AlertTitle>{title}</AlertTitle>}
-      {alertText}
+      {children}
     </Alert>
   </Collapse>
 );
