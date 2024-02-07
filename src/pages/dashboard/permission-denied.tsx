@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import Head from 'next/head';
 import { useState } from 'react';
-import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
+import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import RoleBasedGuard from 'src/services/auth/RoleBasedGuard';
 import CustomBreadcrumbs from '../../components/shared/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/shared/settings';
@@ -24,7 +24,10 @@ export default function PermissionDeniedPage() {
 
   const [role, setRole] = useState('admin');
 
-  const handleChangeRole = (event: React.MouseEvent<HTMLElement>, newRole: string | null) => {
+  const handleChangeRole = (
+    event: React.MouseEvent<HTMLElement>,
+    newRole: string | null
+  ) => {
     if (newRole !== null) {
       setRole(newRole);
     }
@@ -70,12 +73,15 @@ export default function PermissionDeniedPage() {
           <Box gap={3} display="grid" gridTemplateColumns="repeat(2, 1fr)">
             {[...Array(8)].map((_, index) => (
               <Card key={index}>
-                <CardHeader title={`Card ${index + 1}`} subheader="Proin viverra ligula" />
+                <CardHeader
+                  title={`Card ${index + 1}`}
+                  subheader="Proin viverra ligula"
+                />
 
                 <Typography sx={{ p: 3, color: 'text.secondary' }}>
-                  Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. In enim justo,
-                  rhoncus ut, imperdiet a, venenatis vitae, justo. Vestibulum fringilla pede sit
-                  amet augue.
+                  Aliquam lorem ante, dapibus in, viverra quis, feugiat a,
+                  tellus. In enim justo, rhoncus ut, imperdiet a, venenatis
+                  vitae, justo. Vestibulum fringilla pede sit amet augue.
                 </Typography>
               </Card>
             ))}

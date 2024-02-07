@@ -1,115 +1,97 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { Alert, IconButton, InputAdornment, Link, Stack } from '@mui/material';
-import NextLink from 'next/link';
+import { IconButton, InputAdornment, Stack } from '@mui/material';
+import { Form, Formik, FormikConfig } from 'formik';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { LOGIN_INITIAL_VALUES } from 'src/lib/constants/auth';
+import { LoginParser } from 'src/lib/parsers/auth';
 import { useAuthContext } from 'src/services/auth/useAuthContext';
-import * as Yup from 'yup';
-import { PATH_AUTH } from '../../routes/paths';
-import { RHFTextField } from '../shared/hook-form';
-import FormProvider from '../shared/hook-form/FormProvider';
+import { LoginForm } from 'src/types/auth';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
+import CollapsibleAlert from '../shared/CollapsibleAlert';
+import { FormikTextField } from '../shared/formik-components';
 import Iconify from '../shared/iconify';
-
-type FormValuesProps = {
-  email: string;
-  password: string;
-  afterSubmit?: string;
-};
 
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [showError, setShowError] = useState(false);
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
-  });
-
-  const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
-  };
-
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(LoginSchema),
-    defaultValues,
-  });
-
-  const {
-    reset,
-    setError,
-    handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = methods;
-
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit: FormikConfig<LoginForm>['onSubmit'] = async (
+    data,
+    { resetForm }
+  ) => {
     try {
       await login(data.email, data.password);
     } catch (error) {
       console.error(error);
-      reset();
-      setError('afterSubmit', {
-        ...error,
-        message: error.message || error,
-      });
+      setSubmitError(error.message);
+      setShowError(true);
+    } finally {
+      resetForm();
     }
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
-        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+    <Formik
+      initialValues={LOGIN_INITIAL_VALUES}
+      validationSchema={toFormikValidationSchema(LoginParser)}
+      onSubmit={onSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Stack component={Form} spacing={3}>
+          <CollapsibleAlert
+            open={showError}
+            onClose={() => setShowError(false)}
+            severity="error"
+          >
+            {submitError}
+          </CollapsibleAlert>
 
-        <RHFTextField name="email" label="Email address" />
+          <FormikTextField name="email" label="Email address" />
 
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link
-          component={NextLink}
-          href={PATH_AUTH.resetPassword}
-          variant="body2"
-          color="inherit"
-          underline="always"
-        >
-          Forgot password?
-        </Link>
-      </Stack>
-
-      <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
-        sx={{
-          bgcolor: 'text.primary',
-          color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-          '&:hover': {
-            bgcolor: 'text.primary',
-            color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-          },
-        }}
-      >
-        Login
-      </LoadingButton>
-    </FormProvider>
+          <FormikTextField
+            name="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify
+                      icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <LoadingButton
+            fullWidth
+            color="inherit"
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            sx={{
+              bgcolor: 'text.primary',
+              color: (theme) =>
+                theme.palette.mode === 'light' ? 'common.white' : 'grey.800',
+              '&:hover': {
+                bgcolor: 'text.primary',
+                color: (theme) =>
+                  theme.palette.mode === 'light' ? 'common.white' : 'grey.800',
+              },
+            }}
+          >
+            Login
+          </LoadingButton>
+        </Stack>
+      )}
+    </Formik>
   );
 }

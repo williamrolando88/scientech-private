@@ -2,8 +2,8 @@ import { Button } from '@mui/material';
 import { useState } from 'react';
 import { DropdownSection } from 'src/components/dashboard/documentParser/InvoiceParser/DropdownSection';
 import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/InvoiceParser/InvoiceDetailsViewer';
-import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
-import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { parseFactura } from 'src/lib/modules/invoiceParser';
 import { Invoice } from 'src/types/invoiceParsers';
 

@@ -1,8 +1,8 @@
 import { Button } from '@mui/material';
 import Link from 'next/link';
 import ImportCalculatorList from 'src/components/dashboard/importCalculator/ImportCalculatorList';
-import DashboardLayout from 'src/components/layouts/dashboard/DashboardLayout';
-import DashboardTemplate from 'src/components/layouts/dashboard/DashboardTemplate';
+import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
+import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 

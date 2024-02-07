@@ -47,7 +47,6 @@
     "react-apexcharts": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-hook-form": "^7.42.1",
     "react-lazy-load-image-component": "^1.5.6",
     "react-map-gl": "^7.0.21",
     "react-markdown": "^8.0.5",
@@ -64,7 +63,6 @@
     "usehooks-ts": "^2.9.1",
     "xml-js": "^1.6.11",
     "yet-another-react-lightbox": "^2.2.7",
-    "yup": "^0.32.11",
     "zod": "^3.22.4",
     "zod-formik-adapter": "^1.2.0",
     "zustand": "^4.4.7"
@@ -73,6 +71,7 @@
     "@babel/core": "^7.20.12",
     "@tanstack/eslint-plugin-query": "^5.17.22",
     "@types/autosuggest-highlight": "^3.2.0",
+    "@types/lodash": "^4.14.202",
     "@types/mapbox-gl": "^2.7.10",
     "@types/node": "^18.11.18",
     "@types/nprogress": "^0.2.0",
