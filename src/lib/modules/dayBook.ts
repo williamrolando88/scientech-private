@@ -1,4 +1,5 @@
 import { round } from 'mathjs';
+import { AccountCategoryDict, AccountTree } from 'src/types/accountCategories';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
@@ -115,3 +116,33 @@ export const getIncrementByAccount = (detail: DayBookTableEntry) =>
 export const getDecrementByAccount = (detail: DayBookTableEntry) =>
   (['1', '5'].includes(detail.account_id[0]) ? detail.credit : detail.debit) ||
   0;
+
+export const createAccountsTree = (
+  accounts: AccountCategoryDict
+): AccountTree[] => {
+  const tree: AccountTree[] = [];
+
+  Object.values(accounts).forEach((account) => {
+    const [root, ...rest] = account.id.split('.');
+
+    if (rest.length === 0) {
+      tree.push({
+        id: account.id,
+        name: account.name,
+        children: [],
+      });
+    } else {
+      const parent = tree.find((node) => node.id === root);
+
+      if (parent) {
+        parent.children.push({
+          id: account.id,
+          name: account.name,
+          children: [],
+        });
+      }
+    }
+  });
+
+  return tree;
+};
