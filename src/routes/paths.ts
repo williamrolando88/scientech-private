@@ -18,10 +18,10 @@ export const PATH_DASHBOARD = {
     open: (id: string) => path(ROOTS_DASHBOARD, 'import-calculator', id),
   },
   clients: {
-    root: path(ROOTS_DASHBOARD, 'client'),
-    list: path(ROOTS_DASHBOARD, 'client', 'list'),
-    new: path(ROOTS_DASHBOARD, 'client', 'new'),
-    open: (id: string) => path(ROOTS_DASHBOARD, 'client', id),
+    root: path(ROOTS_DASHBOARD, 'clients'),
+    list: path(ROOTS_DASHBOARD, 'clients', 'list'),
+    new: path(ROOTS_DASHBOARD, 'clients', 'new'),
+    open: (id: string) => path(ROOTS_DASHBOARD, 'clients', id),
   },
   projects: {
     root: path(ROOTS_DASHBOARD, 'projects'),
