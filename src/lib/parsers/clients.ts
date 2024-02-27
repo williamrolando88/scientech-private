@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CI_RUC_REGEX } from '../constants/regex';
 
-const ClientContactParser = z.object({
+export const ClientContactParser = z.object({
   name: z.string(),
   email: z.string().email(),
   phone: z.string(),

@@ -3,6 +3,7 @@ export enum COLLECTIONS {
   USERS = 'users',
   APPLICATION_SETTINGS = 'applicationSettings',
   DAY_BOOK_TRANSACTIONS = 'dayBookTransactions',
+  CLIENTS = 'clients',
 }
 
 export enum APPLICATION_SETTINGS {
