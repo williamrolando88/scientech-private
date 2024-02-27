@@ -2,7 +2,10 @@ import SvgColor from 'src/components/shared/svg-color';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 const icon = (name: string) => (
-  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  <SvgColor
+    src={`/assets/icons/navbar/${name}.svg`}
+    sx={{ width: 1, height: 1 }}
+  />
 );
 
 const ICONS = {
@@ -42,6 +45,17 @@ const navConfig = [
     ],
   },
   {
+    subheader: 'Operaciones',
+    items: [
+      { title: 'home', path: PATH_DASHBOARD.home, icon: ICONS.dashboard },
+      {
+        title: 'Calcular Importación',
+        path: PATH_DASHBOARD.calculator.root,
+        icon: ICONS.invoice,
+      },
+    ],
+  },
+  {
     subheader: 'Contabilidad',
     items: [
       {
@@ -53,7 +67,9 @@ const navConfig = [
         title: 'Lector de documentos',
         path: PATH_DASHBOARD.documentParser.root,
         icon: ICONS.file,
-        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice }],
+        children: [
+          { title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice },
+        ],
       },
       {
         title: 'Cuentas contables',

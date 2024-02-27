@@ -1,6 +1,4 @@
-function path(root: string, sublink: string) {
-  return `${root}${sublink}`;
-}
+import { path } from '@src/lib/utils/path';
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
@@ -19,6 +17,7 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/import-calculator/new'),
     view: (id: string) => path(ROOTS_DASHBOARD, `/import-calculator/${id}`),
   },
+
   dayBook: {
     root: path(ROOTS_DASHBOARD, '/day-book'),
   },
