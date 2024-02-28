@@ -1,6 +1,5 @@
 import { TextField, TextFieldProps } from '@mui/material';
-import { useFormikContext } from 'formik';
-import { get } from 'lodash';
+import { useField } from 'formik';
 import { FC } from 'react';
 
 interface FormikTextFieldProps
@@ -10,20 +9,16 @@ interface FormikTextFieldProps
 
 export const FormikTextField: FC<FormikTextFieldProps> = (props) => {
   const { name, select } = props;
-  const { values, errors, touched, handleChange } = useFormikContext();
-
-  const fieldValue = get(values, name, '');
-  const fieldError = get(errors, name, '');
-  const fieldTouched = get(touched, name, false);
+  const [{ value, onChange }, { touched, error }] = useField(name);
 
   return (
     <TextField
       {...props}
       onFocus={!select ? (e) => e.target.select() : undefined}
-      value={fieldValue}
-      onChange={handleChange}
-      error={fieldTouched && !!fieldError}
-      helperText={fieldTouched && fieldError}
+      value={value}
+      onChange={onChange}
+      error={touched && !!error}
+      helperText={touched && error}
     />
   );
 };

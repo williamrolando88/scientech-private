@@ -1,5 +1,4 @@
-import { useFormikContext } from 'formik';
-import { get } from 'lodash';
+import { useField } from 'formik';
 import { FC } from 'react';
 import {
   AutoCalculateInput,
@@ -18,24 +17,20 @@ export const FormikAutoCalculateField: FC<FormikAutoCalculateFieldProps> = (
   props
 ) => {
   const { name } = props;
-  const { values, errors, touched, setFieldValue } = useFormikContext();
+  const [{ value }, { touched, error }, { setValue }] = useField(name);
 
-  const fieldValue = get(values, name, '');
-  const fieldError = get(errors, name, '');
-  const fieldTouched = get(touched, name, false);
-
-  const handleChange = (inputName: string, inputValue: number) => {
-    setFieldValue(inputName, inputValue);
+  const handleChange = (_: string, inputValue: number) => {
+    setValue(inputValue);
   };
 
   return (
     <AutoCalculateInput
       {...props}
       onFocus={(e) => e.target.select()}
-      value={fieldValue}
+      value={value}
       onChange={handleChange}
-      error={fieldTouched && !!fieldError}
-      helperText={fieldTouched && fieldError}
+      error={touched && !!error}
+      helperText={touched && error}
     />
   );
 };
