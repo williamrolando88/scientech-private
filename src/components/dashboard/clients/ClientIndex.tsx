@@ -4,6 +4,8 @@ import { useListClients } from '@src/hooks/cache/clients';
 import { Client } from '@src/types/clients';
 import { FC } from 'react';
 
+// Todo: Add client update and delete actions
+
 const columns: GridColDef<Client>[] = [
   {
     field: 'name',
