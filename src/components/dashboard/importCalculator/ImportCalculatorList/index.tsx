@@ -55,7 +55,7 @@ function ImportCalculatorList() {
           <GridActionsCellItem
             label="Abrir"
             onClick={() =>
-              push(PATH_DASHBOARD.calculator.view(params.id.toString()))
+              push(PATH_DASHBOARD.calculator.open(params.id.toString()))
             }
             icon={<Iconify icon="pajamas:doc-text" />}
             showInMenu
@@ -90,7 +90,7 @@ function ImportCalculatorList() {
         columns={columns}
         rows={filteredCalculations}
         onRowClick={(params) =>
-          push(PATH_DASHBOARD.calculator.view(params.id.toString()))
+          push(PATH_DASHBOARD.calculator.open(params.id.toString()))
         }
         loading={loading}
         initialState={{

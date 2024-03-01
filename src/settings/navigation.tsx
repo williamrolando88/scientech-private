@@ -2,7 +2,10 @@ import SvgColor from 'src/components/shared/svg-color';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 const icon = (name: string) => (
-  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  <SvgColor
+    src={`/assets/icons/navbar/${name}.svg`}
+    sx={{ width: 1, height: 1 }}
+  />
 );
 
 const ICONS = {
@@ -31,13 +34,22 @@ const ICONS = {
 
 const navConfig = [
   {
-    subheader: 'General',
+    subheader: 'Operaciones',
     items: [
-      { title: 'home', path: PATH_DASHBOARD.home, icon: ICONS.dashboard },
       {
         title: 'Calcular Importación',
         path: PATH_DASHBOARD.calculator.root,
-        icon: ICONS.invoice,
+        icon: ICONS.ecommerce,
+      },
+      {
+        title: 'Proyectos',
+        path: PATH_DASHBOARD.projects.root,
+        icon: ICONS.folder,
+      },
+      {
+        title: 'Clientes',
+        path: PATH_DASHBOARD.clients.root,
+        icon: ICONS.user,
       },
     ],
   },
@@ -45,20 +57,42 @@ const navConfig = [
     subheader: 'Contabilidad',
     items: [
       {
+        title: 'Facturas',
+        path: PATH_DASHBOARD.invoices.root,
+        icon: ICONS.invoice,
+        children: [
+          {
+            title: 'Facturas Emitidas',
+            path: PATH_DASHBOARD.invoices.issued.root,
+          },
+          {
+            title: 'Facturas Recibidas',
+            path: PATH_DASHBOARD.invoices.received.root,
+          },
+        ],
+      },
+      {
         title: 'Libro Diario',
         path: PATH_DASHBOARD.dayBook.root,
         icon: ICONS.analytics,
       },
       {
-        title: 'Lector de documentos',
-        path: PATH_DASHBOARD.documentParser.root,
-        icon: ICONS.file,
-        children: [{ title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice }],
-      },
-      {
         title: 'Cuentas contables',
         path: PATH_DASHBOARD.accountCategories.root,
         icon: ICONS.menuItem,
+      },
+    ],
+  },
+  {
+    subheader: 'Herramientas',
+    items: [
+      {
+        title: 'Lector de documentos',
+        path: PATH_DASHBOARD.documentParser.root,
+        icon: ICONS.file,
+        children: [
+          { title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice },
+        ],
       },
     ],
   },

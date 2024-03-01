@@ -71,7 +71,7 @@ export const ImportCalculatorProvider: FC<Props> = ({
     const id = await ImportCalculationsFirebase.upsert(formData);
 
     if (id) {
-      push(PATH_DASHBOARD.calculator.view(id));
+      push(PATH_DASHBOARD.calculator.open(id));
       actions.setSubmitting(false);
     }
   };
