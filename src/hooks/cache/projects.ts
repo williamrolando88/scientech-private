@@ -44,7 +44,7 @@ export const useDeleteProject = () => {
     },
     onSuccess: (_, id) => {
       queryClient.setQueryData(queryKey, (prevData: Project[]) =>
-        prevData.filter((project) => project.id !== id)
+        prevData.filter((project) => String(project.id) !== id)
       );
     },
   });
