@@ -34,7 +34,7 @@ const ClientForm: FC<ClientFormProps> = ({
     {({ isSubmitting }) => (
       <Form>
         <Stack component={DialogContent} gap={2}>
-          <Alert severity="info">Formulario de Cliente</Alert>
+          <Alert severity="info">{infoText}</Alert>
 
           <Grid container columns={6} rowSpacing={2} columnSpacing={2}>
             <Grid item xs={2}>

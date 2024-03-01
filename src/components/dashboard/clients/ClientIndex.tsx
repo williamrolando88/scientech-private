@@ -41,7 +41,7 @@ const ClientIndex: FC = () => {
         loading={isLoading}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'updated_at', sort: 'desc' }],
+            sortModel: [{ field: 'name', sort: 'desc' }],
           },
         }}
         sx={{
