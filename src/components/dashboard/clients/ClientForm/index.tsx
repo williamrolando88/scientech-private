@@ -4,16 +4,14 @@ import {
   Button,
   DialogActions,
   DialogContent,
-  Divider,
   Grid,
   Stack,
 } from '@mui/material';
 import { FormikTextField } from '@src/components/shared/formik-components';
-import { CLIENT_CONTACT_INITIAL_VALUE } from '@src/lib/constants/client';
 import { Client } from '@src/types/clients';
-import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
+import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
-import { ContactRow } from './ContactRow';
+import { ContactForm } from './ContactForm';
 
 type FormikProps = Pick<
   FormikConfig<Client>,
@@ -91,32 +89,3 @@ const ClientForm: FC<ClientFormProps> = ({
 );
 
 export default ClientForm;
-
-const ContactForm = () => {
-  const { values, setFieldValue } = useFormikContext<Client>();
-
-  const handleAddContactRow = () => {
-    setFieldValue('contact', [...values.contact, CLIENT_CONTACT_INITIAL_VALUE]);
-  };
-
-  return (
-    <>
-      <Divider />
-
-      <Button
-        onClick={handleAddContactRow}
-        variant="contained"
-        color="success"
-        sx={{ alignSelf: 'flex-end' }}
-      >
-        Agregar contacto
-      </Button>
-
-      <Stack gap={2}>
-        {values.contact.map((_, index) => (
-          <ContactRow key={index} index={index} />
-        ))}
-      </Stack>
-    </>
-  );
-};

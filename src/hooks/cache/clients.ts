@@ -14,7 +14,7 @@ export const useListClients = () => {
   return { ...query, data: query.data ?? [] };
 };
 
-export const useAddDayBookTransactions = () => {
+export const useAddClient = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -33,7 +33,7 @@ export const useAddDayBookTransactions = () => {
   return mutation;
 };
 
-export const useDeleteDayBookTransaction = () => {
+export const useDeleteClient = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -51,7 +51,7 @@ export const useDeleteDayBookTransaction = () => {
   return mutation;
 };
 
-export const useUpdateDayBookTransaction = () => {
+export const useUpdateClient = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({

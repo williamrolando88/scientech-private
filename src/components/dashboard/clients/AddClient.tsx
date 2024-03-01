@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
+import { useAddClient } from '@src/hooks/cache/clients';
 import { CLIENT_INITIAL_VALUE } from '@src/lib/constants/client';
 import { ClientParser } from '@src/lib/parsers/clients';
 import { Client } from '@src/types/clients';
@@ -12,6 +13,7 @@ const AddClient = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const { mutateAsync: addClient } = useAddClient();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -19,9 +21,20 @@ const AddClient = () => {
     values,
     { setSubmitting }
   ) => {
-    console.log(values);
-    enqueueSnackbar('Cliente guardado exitosamente');
-    setSubmitting(false);
+    addClient(values)
+      .then(() => {
+        enqueueSnackbar('Cliente guardado exitosamente');
+        handleCloseModal();
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar('Error al guardar el cliente', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
