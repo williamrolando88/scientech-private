@@ -1,4 +1,5 @@
 import AddClient from '@src/components/dashboard/clients/AddClient';
+import ClientIndex from '@src/components/dashboard/clients/ClientIndex';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -13,7 +14,7 @@ export default function Page() {
       heading="Clientes"
       action={<AddClient />}
     >
-      Clientes
+      <ClientIndex />
     </DashboardTemplate>
   );
 }
