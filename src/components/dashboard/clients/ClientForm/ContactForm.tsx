@@ -7,6 +7,8 @@ import { ContactRow } from './ContactRow';
 export const ContactForm = () => {
   const { values, setFieldValue } = useFormikContext<Client>();
 
+  console.log(values);
+
   const handleAddContactRow = () => {
     setFieldValue('contact', [...values.contact, CLIENT_CONTACT_INITIAL_VALUE]);
   };
