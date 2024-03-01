@@ -15,7 +15,6 @@ const AddClient = () => {
   const handleCloseModal = () => setOpenModal(false);
   const { mutateAsync: addClient } = useAddClient();
   const { data: clients } = useListClients();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<Client>['onSubmit'] = (
