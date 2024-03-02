@@ -19,7 +19,7 @@ const ProjectIndex: FC = () => {
       },
       {
         field: 'name',
-        headerName: 'Nombre',
+        headerName: 'Nombre del proyecto',
         flex: 1,
         resizable: false,
         minWidth: 200,

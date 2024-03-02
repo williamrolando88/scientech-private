@@ -56,7 +56,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
               <Grid item xs={2}>
                 <FormikTextField
                   fullWidth
-                  label="Nombre"
+                  label="Nombre del Proyecto"
                   name="name"
                   required
                 />
