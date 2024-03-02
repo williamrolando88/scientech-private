@@ -15,7 +15,7 @@ const ProjectIndex: FC = () => {
         field: 'id',
         headerName: 'No.',
         resizable: false,
-        width: 40,
+        width: 80,
       },
       {
         field: 'name',
