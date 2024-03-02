@@ -2,10 +2,13 @@ import { Card } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useListClients } from '@src/hooks/cache/clients';
 import { useListProjects } from '@src/hooks/cache/projects';
+import { PATH_DASHBOARD } from '@src/routes/paths';
 import { Project } from '@src/types/projects';
+import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
 
 const ProjectIndex: FC = () => {
+  const { push } = useRouter();
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
   const { data: clients, isLoading: isLoadingClients } = useListClients();
 
@@ -55,6 +58,9 @@ const ProjectIndex: FC = () => {
             sortModel: [{ field: 'id', sort: 'desc' }],
           },
         }}
+        onRowClick={(params) =>
+          push(PATH_DASHBOARD.projects.open(params.id.toString()))
+        }
         sx={{
           '& .MuiDataGrid-columnHeader': {
             bgcolor: (theme) => theme.palette.action.selected,
