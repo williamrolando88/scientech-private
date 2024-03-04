@@ -17,7 +17,7 @@ export const PROJECTS_INITIAL_VALUE: Project = {
 
 export const EVENT_INITIAL_VALUE: Event = {
   id: '',
-  message: '',
+  action: '',
   user_id: '',
-  created_at: new Date(),
+  date: new Date(),
 };

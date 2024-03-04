@@ -130,12 +130,14 @@ const DayBookIndex: FC = () => {
             onClick={() => getTransactionToUpdate(params.id as string)}
             icon={<Iconify icon="pajamas:doc-changes" />}
             showInMenu
+            disabled={params.row.locked}
           />,
           <GridActionsCellItem
             label="Borrar"
             onClick={() => getTransactionToDelete(params.id as string)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
+            disabled={params.row.locked}
           />,
         ],
       },

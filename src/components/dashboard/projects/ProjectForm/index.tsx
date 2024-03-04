@@ -13,10 +13,8 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { useListClients } from '@src/hooks/cache/clients';
-import { useListProjects } from '@src/hooks/cache/projects';
 import { Project } from '@src/types/projects';
 import { Form, Formik, FormikConfig } from 'formik';
-import { max } from 'lodash';
 import { FC } from 'react';
 
 type FormikProps = Pick<
@@ -37,16 +35,9 @@ const ProjectForm: FC<ProjectFormProps> = ({
   ...formikProps
 }) => {
   const { data: clients } = useListClients();
-  const { data: projects } = useListProjects();
-
-  const handleSubmit: FormikConfig<Project>['onSubmit'] = (values, actions) => {
-    const lastProject = Number(max(projects.map((project) => project.id)) ?? 0);
-
-    onSubmit({ ...values, id: lastProject + 1 }, actions);
-  };
 
   return (
-    <Formik {...formikProps} onSubmit={handleSubmit}>
+    <Formik {...formikProps} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>

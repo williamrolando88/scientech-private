@@ -1,14 +1,20 @@
 import { z } from 'zod';
 
 export const ProjectStatusValues = ['active', 'inactive', 'completed'] as const;
+export const EventActionValues = [
+  'created',
+  'updated',
+  'activated',
+  'deactivated',
+] as const;
 
-export const ProjectStatusParser = z.enum(ProjectStatusValues);
+const ProjectStatusParser = z.enum(ProjectStatusValues);
+const EventActionParser = z.enum(EventActionValues);
 
 export const EventParser = z.object({
-  id: z.string(),
   user_id: z.string(),
-  message: z.string(),
-  created_at: z.coerce.date(),
+  action: EventActionParser,
+  date: z.coerce.date(),
 });
 
 export const ProjectParser = z.object({

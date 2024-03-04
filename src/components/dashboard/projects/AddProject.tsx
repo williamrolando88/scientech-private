@@ -2,6 +2,7 @@ import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddProject } from '@src/hooks/cache/projects';
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
 import { ProjectParser } from '@src/lib/parsers/projects';
+import { useAuthContext } from '@src/services/auth/useAuthContext';
 import { Project } from '@src/types/projects';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -13,6 +14,7 @@ const AddProject: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const { user } = useAuthContext();
   const { mutateAsync: addProject } = useAddProject();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -20,6 +22,10 @@ const AddProject: FC = () => {
     values,
     { setSubmitting, resetForm }
   ) => {
+    values.events = [
+      { date: new Date(), action: 'created', user_id: user?.id },
+    ];
+
     addProject(values)
       .then(() => {
         resetForm();
