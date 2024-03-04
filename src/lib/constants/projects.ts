@@ -1,4 +1,4 @@
-import { Event, Project } from '@src/types/projects';
+import { Project } from '@src/types/projects';
 
 export const PROJECTS_INITIAL_VALUE: Project = {
   id: '' as unknown as number,
@@ -13,11 +13,4 @@ export const PROJECTS_INITIAL_VALUE: Project = {
   issued_invoices_id: [],
   issued_quotations_id: [],
   received_invoices_id: [],
-};
-
-export const EVENT_INITIAL_VALUE: Event = {
-  id: '',
-  action: '',
-  user_id: '',
-  date: new Date(),
 };
