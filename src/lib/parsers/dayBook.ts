@@ -5,8 +5,16 @@ export const DayBookTransactionDetailsParser = z.object({
   debit: z.number().optional(),
   credit: z.number().optional(),
   description: z.string().optional(),
-  invoice_id: z.number().optional(),
+  project_id: z.string().optional(),
+  expense_id: z.string().optional(),
+  /**
+   * @deprecated
+   */
   quotation_id: z.number().optional(),
+  /**
+   * @deprecated
+   */
+  invoice_id: z.number().optional(),
 });
 
 export const DayBookTransactionParser = z.object({
@@ -14,5 +22,6 @@ export const DayBookTransactionParser = z.object({
   date: z.coerce.date(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  locked: z.boolean().nullish(),
   transactions: DayBookTransactionDetailsParser.array(),
 });

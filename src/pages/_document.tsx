@@ -47,13 +47,12 @@ export default class MyDocument extends Document {
           {/* Meta */}
           <meta
             name="description"
-            content="The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style"
+            content="Scientech Easy - A simple and easy app to track Scientech Operations"
           />
-          <meta
-            name="keywords"
-            content="react,material,kit,application,dashboard,admin,template"
-          />
-          <meta name="author" content="Minimal UI Kit" />
+          <meta name="keywords" content="Scientech" />
+          <meta name="author" content="Scientech" />
+
+          <title>Scientech</title>
         </Head>
 
         <body>

@@ -20,6 +20,6 @@ export interface DayBookTransactionFirestore
 }
 
 export type DayBookTableEntry = DayBookTransactionDetail &
-  Pick<DayBookTransaction, 'id' | 'date'>;
+  Pick<DayBookTransaction, 'id' | 'date' | 'locked'>;
 
 export type DayBookTabs = 'listado' | 'reporte-por-cuenta' | 'balance';

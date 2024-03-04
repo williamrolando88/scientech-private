@@ -17,5 +17,8 @@ service cloud.firestore {
     match /clients/{client} {
       allow read, write: if request.auth != null;
     }
+    match /projects/{project} {
+      allow read, write: if request.auth != null;
+    }
   }
 }
