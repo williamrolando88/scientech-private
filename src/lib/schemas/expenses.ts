@@ -7,7 +7,7 @@ const ExpenseTypeValues = [
   'No deducible',
 ] as const;
 
-const ExpenseTypeSchema = z.enum(ExpenseTypeValues);
+export const ExpenseTypeSchema = z.enum(ExpenseTypeValues);
 
 export const ExpensesCommonSchema = z.object({
   id: z.string().optional(),

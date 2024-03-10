@@ -1,5 +1,6 @@
 import {
   CustomsPaymentSchema,
+  ExpenseTypeSchema,
   ExpensesCommonSchema,
   InvoiceSchema,
 } from '@src/lib/schemas/expenses';
@@ -12,3 +13,5 @@ export type CustomsPayment = z.infer<typeof CustomsPaymentSchema>;
 export type Invoice = z.infer<typeof InvoiceSchema>;
 
 export type GeneralExpense = Expense | CustomsPayment | Invoice;
+
+export type ExpenseType = z.infer<typeof ExpenseTypeSchema>;
