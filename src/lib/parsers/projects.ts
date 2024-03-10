@@ -18,7 +18,7 @@ export const EventParser = z.object({
 });
 
 export const ProjectParser = z.object({
-  id: z.string().max(15).optional(),
+  id: z.string().optional(),
   name: z.string(),
   description: z.string(),
   status: ProjectStatusParser,
