@@ -51,8 +51,6 @@ export default class MyDocument extends Document {
           />
           <meta name="keywords" content="Scientech" />
           <meta name="author" content="Scientech" />
-
-          <title>Scientech</title>
         </Head>
 
         <body>
