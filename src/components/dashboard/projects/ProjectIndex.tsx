@@ -15,12 +15,6 @@ const ProjectIndex: FC = () => {
   const columns: GridColDef<Project>[] = useMemo(
     () => [
       {
-        field: 'id',
-        headerName: 'No.',
-        resizable: false,
-        width: 80,
-      },
-      {
         field: 'name',
         headerName: 'Nombre del proyecto',
         flex: 1,
