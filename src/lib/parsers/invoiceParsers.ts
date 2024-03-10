@@ -25,7 +25,7 @@ const InfoFacturaParser = z.object({
   }),
 });
 
-export const InvoiceParser = z.object({
+export const InvoiceReaderParser = z.object({
   infoTributaria: InvoiceInfoParser,
   infoFactura: InfoFacturaParser,
 });

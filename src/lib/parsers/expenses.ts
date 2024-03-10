@@ -26,8 +26,10 @@ export const CustomsPaymentParser = ExpensesCommonParser.extend({
   adValorem_tariff: z.number().optional(),
   specific_tariff: z.number().optional(),
   tariff: z.number(),
+  type: z.literal('Liquidación aduanera'),
 });
 
 export const InvoiceParser = ExpensesCommonParser.extend({
   issuer_id: z.string(),
+  type: z.literal('Factura'),
 });
