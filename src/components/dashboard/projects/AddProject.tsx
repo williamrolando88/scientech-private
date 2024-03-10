@@ -33,6 +33,7 @@ const AddProject: FC = () => {
         handleCloseModal();
       })
       .catch((error) => {
+        values.events = [];
         console.error(error);
         enqueueSnackbar('Error al guardar el proyecto', {
           variant: 'error',

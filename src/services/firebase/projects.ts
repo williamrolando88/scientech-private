@@ -34,9 +34,14 @@ const list = async (): Promise<Project[]> => {
 
 const upsert = async (project: Project): Promise<string> => {
   const docCollection = collection(DB, COLLECTIONS.PROJECTS);
-  const docRef = doc(docCollection, String(project.id)).withConverter(
-    ProjectConverter
-  );
+  let docRef;
+
+  if (project.id) {
+    docRef = doc(docCollection, project.id).withConverter(ProjectConverter);
+  } else {
+    docRef = doc(docCollection).withConverter(ProjectConverter);
+  }
+
   await setDoc(docRef, project);
   return docRef.id;
 };
