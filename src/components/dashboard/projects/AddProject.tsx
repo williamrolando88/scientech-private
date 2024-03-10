@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddProject } from '@src/hooks/cache/projects';
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
-import { ProjectParser } from '@src/lib/parsers/projects';
+import { ProjectSchema } from '@src/lib/schemas/projects';
 import { useAuthContext } from '@src/services/auth/useAuthContext';
 import { Project } from '@src/types/projects';
 import { FormikConfig } from 'formik';
@@ -63,7 +63,7 @@ const AddProject: FC = () => {
           initialValues={PROJECTS_INITIAL_VALUE}
           onSubmit={onSubmit}
           onClose={handleCloseModal}
-          validationSchema={toFormikValidationSchema(ProjectParser)}
+          validationSchema={toFormikValidationSchema(ProjectSchema)}
         />
       </Dialog>
     </>

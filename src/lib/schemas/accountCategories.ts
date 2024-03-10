@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ZOD_ERROR } from '../constants/errors';
 import { ACCOUNT_CATEGORY_REGEX } from '../constants/regex';
 
-export const AccountCategoryParser = z.object({
+export const AccountCategorySchema = z.object({
   id: z
     .string(ZOD_ERROR.REQUIRED)
     .regex(ACCOUNT_CATEGORY_REGEX, ZOD_ERROR.ACCOUNT_CATEGORY_ID),

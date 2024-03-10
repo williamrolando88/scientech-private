@@ -1,9 +1,9 @@
-import { z } from 'zod';
 import {
-  InvoiceReaderParser,
-  TotalTaxParser,
-} from '../lib/parsers/invoiceParsers';
+  InvoiceReaderSchema,
+  TotalTaxSchema,
+} from '@src/lib/schemas/invoiceReader';
+import { z } from 'zod';
 
-export type ParsedInvoice = z.infer<typeof InvoiceReaderParser>;
+export type ParsedInvoice = z.infer<typeof InvoiceReaderSchema>;
 
-export type TotalTax = z.infer<typeof TotalTaxParser>;
+export type TotalTax = z.infer<typeof TotalTaxSchema>;

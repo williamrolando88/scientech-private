@@ -1,9 +1,9 @@
 import { LoadingButton } from '@mui/lab';
 import { IconButton, InputAdornment, Stack } from '@mui/material';
+import { LoginSchema } from '@src/lib/schemas/auth';
 import { Form, Formik, FormikConfig } from 'formik';
 import { useState } from 'react';
 import { LOGIN_INITIAL_VALUES } from 'src/lib/constants/auth';
-import { LoginParser } from 'src/lib/parsers/auth';
 import { useAuthContext } from 'src/services/auth/useAuthContext';
 import { LoginForm } from 'src/types/auth';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -35,7 +35,7 @@ export default function AuthLoginForm() {
   return (
     <Formik
       initialValues={LOGIN_INITIAL_VALUES}
-      validationSchema={toFormikValidationSchema(LoginParser)}
+      validationSchema={toFormikValidationSchema(LoginSchema)}
       onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (

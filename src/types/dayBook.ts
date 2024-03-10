@@ -1,13 +1,13 @@
-import { Timestamp } from 'firebase/firestore';
 import {
-  DayBookTransactionDetailsParser,
-  DayBookTransactionParser,
-} from 'src/lib/parsers/dayBook';
+  DayBookTransactionDetailsSchema,
+  DayBookTransactionSchema,
+} from '@src/lib/schemas/dayBook';
+import { Timestamp } from 'firebase/firestore';
 import { z } from 'zod';
 
-export type DayBookTransaction = z.infer<typeof DayBookTransactionParser>;
+export type DayBookTransaction = z.infer<typeof DayBookTransactionSchema>;
 export type DayBookTransactionDetail = z.infer<
-  typeof DayBookTransactionDetailsParser
+  typeof DayBookTransactionDetailsSchema
 >;
 
 export type DayBookCollection = Record<string, DayBookTransaction>;

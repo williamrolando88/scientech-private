@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddClient, useListClients } from '@src/hooks/cache/clients';
 import { CLIENT_INITIAL_VALUE } from '@src/lib/constants/client';
-import { ClientParser } from '@src/lib/parsers/clients';
+import { ClientSchema } from '@src/lib/schemas/clients';
 import { Client } from '@src/types/clients';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -64,7 +64,7 @@ const AddClient = () => {
           initialValues={CLIENT_INITIAL_VALUE}
           onSubmit={onSubmit}
           onClose={handleCloseModal}
-          validationSchema={toFormikValidationSchema(ClientParser)}
+          validationSchema={toFormikValidationSchema(ClientSchema)}
         />
       </Dialog>
     </>

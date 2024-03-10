@@ -1,14 +1,14 @@
 import {
-  CustomsPaymentParser,
-  ExpensesCommonParser,
-  InvoiceParser,
-} from '@src/lib/parsers/expenses';
+  CustomsPaymentSchema,
+  ExpensesCommonSchema,
+  InvoiceSchema,
+} from '@src/lib/schemas/expenses';
 import { z } from 'zod';
 
-export type Expense = z.infer<typeof ExpensesCommonParser>;
+export type Expense = z.infer<typeof ExpensesCommonSchema>;
 
-export type CustomsPayment = z.infer<typeof CustomsPaymentParser>;
+export type CustomsPayment = z.infer<typeof CustomsPaymentSchema>;
 
-export type Invoice = z.infer<typeof InvoiceParser>;
+export type Invoice = z.infer<typeof InvoiceSchema>;
 
 export type GeneralExpense = Expense | CustomsPayment | Invoice;

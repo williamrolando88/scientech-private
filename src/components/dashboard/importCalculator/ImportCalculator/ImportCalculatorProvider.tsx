@@ -1,3 +1,4 @@
+import { ImportCalculatorValidationSchema } from '@src/lib/schemas/importCalculator';
 import { FormikErrors, FormikHelpers, FormikTouched, useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import {
@@ -17,7 +18,6 @@ import {
   calculateImportation,
   getImportReport,
 } from 'src/lib/modules/importCalculator';
-import { ImportCalculatorValidationSchema } from 'src/lib/parsers/importCalculator';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { ImportCalculator } from 'src/types/importCalculator';

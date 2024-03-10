@@ -1,7 +1,7 @@
-import { AccountCategoryParser } from 'src/lib/parsers/accountCategories';
+import { AccountCategorySchema } from '@src/lib/schemas/accountCategories';
 import { z } from 'zod';
 
-export type AccountCategory = z.infer<typeof AccountCategoryParser>;
+export type AccountCategory = z.infer<typeof AccountCategorySchema>;
 
 export type AccountCategoryDict = Record<string, AccountCategory>;
 

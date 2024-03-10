@@ -1,7 +1,7 @@
 import { Project } from '@src/types/projects';
 
 export const PROJECTS_INITIAL_VALUE: Project = {
-  id: '' as unknown as number,
+  id: '',
   name: '',
   client_id: '',
   description: '',

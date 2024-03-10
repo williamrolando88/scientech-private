@@ -8,24 +8,24 @@ export const EventActionValues = [
   'deactivated',
 ] as const;
 
-const ProjectStatusParser = z.enum(ProjectStatusValues);
-const EventActionParser = z.enum(EventActionValues);
+const ProjectStatusSchema = z.enum(ProjectStatusValues);
+const EventActionSchema = z.enum(EventActionValues);
 
-export const EventParser = z.object({
+export const EventSchema = z.object({
   user_id: z.string(),
-  action: EventActionParser,
+  action: EventActionSchema,
   date: z.coerce.date(),
 });
 
-export const ProjectParser = z.object({
+export const ProjectSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   description: z.string(),
-  status: ProjectStatusParser,
+  status: ProjectStatusSchema,
   client_id: z.string(),
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
-  events: EventParser.array(),
+  events: EventSchema.array(),
   custom_payments_id: z.string().array(),
   issued_quotations_id: z.string().array(),
   issued_invoices_id: z.string().array(),
