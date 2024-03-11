@@ -51,11 +51,14 @@ const ExpenseConverter: FirestoreDataConverter<Expense> = {
   }),
 };
 
-const converterByType = {
-  Factura: InvoiceConverter,
-  'Liquidación aduanera': CustomsPaymentConverter,
-  'Nota de venta': ExpenseConverter,
-  'No deducible': ExpenseConverter,
+const converterByType: Record<
+  ExpenseType,
+  FirestoreDataConverter<GeneralExpense>
+> = {
+  invoice: InvoiceConverter,
+  customs_payment: CustomsPaymentConverter,
+  sale_note: ExpenseConverter,
+  non_deductible: ExpenseConverter,
 };
 
 async function listByType<T>(type: ExpenseType): Promise<T[]> {

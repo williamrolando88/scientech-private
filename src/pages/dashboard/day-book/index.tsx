@@ -14,23 +14,23 @@ Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
+const TABS: TabInterface<DayBookTabs>[] = [
+  {
+    value: 'listado',
+    component: <DayBookIndex key="listado" />,
+  },
+  {
+    value: 'reporte-por-cuenta',
+    component: <DayBookReportByAccount key="reporte-por-cuenta" />,
+  },
+  {
+    value: 'balance',
+    component: <DayBookBalance key="balance" />,
+  },
+];
+
 function Page() {
   const [currentTab, setCurrentTab] = useState<DayBookTabs>('listado');
-
-  const TABS: TabInterface<DayBookTabs>[] = [
-    {
-      value: 'listado',
-      component: <DayBookIndex key="listado" />,
-    },
-    {
-      value: 'reporte-por-cuenta',
-      component: <DayBookReportByAccount key="reporte-por-cuenta" />,
-    },
-    {
-      value: 'balance',
-      component: <DayBookBalance key="balance" />,
-    },
-  ];
 
   return (
     <DashboardTemplate

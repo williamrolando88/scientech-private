@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 const ExpenseTypeValues = [
-  'Factura',
-  'Liquidación aduanera',
-  'Nota de venta',
-  'No deducible',
+  'invoice',
+  'customs_payment',
+  'sale_note',
+  'non_deductible',
 ] as const;
 
 export const ExpenseTypeSchema = z.enum(ExpenseTypeValues);
@@ -26,10 +26,10 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
   adValorem_tariff: z.number().optional(),
   specific_tariff: z.number().optional(),
   tariff: z.number(),
-  type: z.literal('Liquidación aduanera'),
+  type: z.literal('customs_payment'),
 });
 
 export const InvoiceSchema = ExpensesCommonSchema.extend({
   issuer_id: z.string(),
-  type: z.literal('Factura'),
+  type: z.literal('invoice'),
 });
