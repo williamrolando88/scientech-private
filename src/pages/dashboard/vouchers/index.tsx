@@ -12,11 +12,11 @@ export default function Page() {
   const { push, prefetch } = useRouter();
 
   useEffect(() => {
-    push(PATH_DASHBOARD.invoices.received.list);
+    push(PATH_DASHBOARD.vouchers.issued.root);
   });
 
   useEffectOnce(() => {
-    prefetch(PATH_DASHBOARD.invoices.received.list);
+    prefetch(PATH_DASHBOARD.vouchers.issued.root);
   });
 
   return null;
