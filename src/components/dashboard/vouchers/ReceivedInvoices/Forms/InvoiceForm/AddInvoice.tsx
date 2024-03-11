@@ -10,7 +10,7 @@ const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
 
   return (
     <>
-      <DialogTitle>Agregar nueva factura recibida</DialogTitle>
+      <DialogTitle>Agregar Nueva Factura</DialogTitle>
 
       <BaseInvoiceForm
         onClose={onClose}
