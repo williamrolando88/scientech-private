@@ -1,7 +1,6 @@
 import { Card, CardContent, Tab, Tabs } from '@mui/material';
 import { ExpenseType } from '@src/types/expenses';
 import { TabInterface } from '@src/types/shared';
-import { startCase } from 'lodash';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
@@ -10,18 +9,22 @@ const TABS: TabInterface<ExpenseType>[] = [
   {
     value: 'invoice',
     component: <div key="list">List</div>,
+    label: 'Facturas',
   },
   {
     value: 'customs_payment',
-    component: <div key="create">Liquidacion aduanera</div>,
+    component: <div key="1">Liquidacion aduanera</div>,
+    label: 'Liquidación aduanera',
   },
   {
     value: 'sale_note',
-    component: <div key="create">Notas de venta</div>,
+    component: <div key="2">Notas de venta</div>,
+    label: 'Notas de venta',
   },
   {
     value: 'non_deductible',
-    component: <div key="create">No deducibles</div>,
+    component: <div key="3">No deducibles</div>,
+    label: 'No deducibles',
   },
 ];
 
@@ -66,7 +69,7 @@ const ReceivedInvoices: FC = () => {
       <CardContent sx={{ py: 0 }}>
         <Tabs value={currentTab} onChange={handleTabChange}>
           {TABS.map((tab) => (
-            <Tab key={tab.value} label={startCase(tab.value)} value={tab} />
+            <Tab key={tab.value} label={tab.label} value={tab} />
           ))}
         </Tabs>
       </CardContent>

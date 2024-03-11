@@ -62,12 +62,12 @@ const navConfig = [
         icon: ICONS.invoice,
         children: [
           {
-            title: 'Facturas Emitidas',
-            path: PATH_DASHBOARD.vouchers.issued.root,
-          },
-          {
             title: 'Facturas Recibidas',
             path: PATH_DASHBOARD.vouchers.received.root,
+          },
+          {
+            title: 'Facturas Emitidas',
+            path: PATH_DASHBOARD.vouchers.issued.root,
           },
         ],
       },
