@@ -32,4 +32,7 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
 export const InvoiceSchema = ExpensesCommonSchema.extend({
   issuer_id: z.string(),
   type: z.literal('invoice'),
+  establishment: z.number(),
+  emission_point: z.number(),
+  sequential_number: z.number(),
 });

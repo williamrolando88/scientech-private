@@ -12,6 +12,9 @@ export const INVOICE_INITIAL_VALUE: Invoice = {
   taxed_subtotal: 0,
   description: '',
   project_id: '',
+  establishment: 0,
+  emission_point: 0,
+  sequential_number: 0,
 };
 
 export const NON_DEDUCTIBLE_INITIAL_VALUE: Expense = {
