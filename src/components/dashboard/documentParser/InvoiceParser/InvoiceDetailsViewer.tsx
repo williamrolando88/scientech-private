@@ -14,7 +14,7 @@ const columns: GridColDef<ParsedInvoice>[] = [
   {
     field: 'issueDate',
     headerName: 'Fecha de Emisión',
-    type: 'date',
+    type: 'string',
     width: 130,
     sortable: false,
     valueGetter: (params) => params.row.infoFactura.fechaEmision,
