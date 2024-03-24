@@ -103,7 +103,9 @@ async function listByType<T>(type: ExpenseType): Promise<T[]> {
   return expenses;
 }
 
-async function upsert(expense: ExtendedGeneralExpense): Promise<string> {
+async function upsert(
+  expense: ExtendedGeneralExpense
+): Promise<GeneralExpense> {
   const timestamp = new Date();
   const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
   const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
@@ -146,6 +148,10 @@ async function upsert(expense: ExtendedGeneralExpense): Promise<string> {
       expense_id: expenseDocRef.id,
     }));
 
+  const newExpense = ExpenseParserByType[expense.type].parse(
+    expense
+  ) as GeneralExpense;
+
   await runTransaction(DB, async (transaction) => {
     // Read operations
     const storedDayBookDoc = await transaction.get(dayBookDocRef);
@@ -177,8 +183,6 @@ async function upsert(expense: ExtendedGeneralExpense): Promise<string> {
       ];
     }
 
-    const newExpense = ExpenseParserByType[expense.type].parse(expense);
-
     // Set operations
     transaction.set(dayBookDocRef, newDayBookDoc);
     transaction.set(expenseDocRef, newExpense);
@@ -187,7 +191,7 @@ async function upsert(expense: ExtendedGeneralExpense): Promise<string> {
     }
   });
 
-  return expenseDocRef.id;
+  return newExpense;
 }
 
 // !needs update

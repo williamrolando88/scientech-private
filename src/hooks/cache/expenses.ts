@@ -1,11 +1,11 @@
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import { Expenses } from '@src/services/firebase/expenses';
-import { ExpenseType } from '@src/types/expenses';
+import { ExpenseType, GeneralExpense } from '@src/types/expenses';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const queryKeyByType = (type: ExpenseType) => [COLLECTIONS.EXPENSES];
 
-export async function useListExpensesByType<T>(type: ExpenseType) {
+export function useListExpensesByType<T>(type: ExpenseType) {
   const query = useQuery<T[]>({
     queryKey: queryKeyByType(type),
     // @ts-ignore
@@ -15,7 +15,7 @@ export async function useListExpensesByType<T>(type: ExpenseType) {
   return { ...query, data: query.data ?? [] };
 }
 
-export async function useAddExpenseByType<T>(type: ExpenseType) {
+export const useAddExpenseByType = (type: ExpenseType) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -23,39 +23,40 @@ export async function useAddExpenseByType<T>(type: ExpenseType) {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
     },
-    onSuccess: (id, inputs) => {
-      queryClient.setQueryData(queryKeyByType(type), (prevData: T[]) => [
-        ...prevData,
-        { ...inputs, id },
-      ]);
-    },
-  });
-
-  return mutation;
-}
-
-export async function useUpdateExpenseByType<T>(type: ExpenseType) {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: Expenses.upsert,
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
-    },
-    onSuccess: (id, inputs) => {
-      queryClient.setQueryData(queryKeyByType(type), (prevData: T[]) =>
-        prevData.map((expense) =>
-          // @ts-ignore
-          expense.id === id ? { ...inputs, id } : expense
-        )
+    onSuccess: (newExpense) => {
+      queryClient.setQueryData(
+        queryKeyByType(type),
+        (prevData: GeneralExpense[]) => [...prevData, newExpense]
       );
     },
   });
 
   return mutation;
-}
+};
 
-export async function useDeleteExpenseByType<T>(type: ExpenseType) {
+export const useUpdateExpenseByType = (type: ExpenseType) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: Expenses.upsert,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
+    },
+    onSuccess: (newExpense) => {
+      queryClient.setQueryData(
+        queryKeyByType(type),
+        (prevData: GeneralExpense[]) =>
+          prevData.map((expense) =>
+            expense.id === newExpense.id ? newExpense : expense
+          )
+      );
+    },
+  });
+
+  return mutation;
+};
+
+export const useDeleteExpenseByType = (type: ExpenseType) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -64,12 +65,13 @@ export async function useDeleteExpenseByType<T>(type: ExpenseType) {
       await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
     },
     onSuccess: (_, id) => {
-      queryClient.setQueryData(queryKeyByType(type), (prevData: T[]) =>
-        // @ts-ignore
-        prevData.filter((expense) => expense.id !== id)
+      queryClient.setQueryData(
+        queryKeyByType(type),
+        (prevData: GeneralExpense[]) =>
+          prevData.filter((expense) => expense.id !== id)
       );
     },
   });
 
   return mutation;
-}
+};
