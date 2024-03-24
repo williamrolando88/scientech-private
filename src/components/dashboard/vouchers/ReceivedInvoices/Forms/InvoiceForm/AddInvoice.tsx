@@ -6,7 +6,14 @@ import { FC } from 'react';
 import BaseInvoiceForm from './BaseInvoiceForm';
 
 const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
-  const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = () => {};
+  const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = (
+    values,
+    { setSubmitting }
+  ) => {
+    console.log(values);
+
+    setSubmitting(false);
+  };
 
   return (
     <>

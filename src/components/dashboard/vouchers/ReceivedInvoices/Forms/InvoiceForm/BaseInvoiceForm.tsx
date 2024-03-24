@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   Grid,
-  MenuItem,
   Stack,
 } from '@mui/material';
 import {
@@ -13,12 +12,12 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { IVA_RATE } from '@src/lib/constants/settings';
 import { AccountType } from '@src/types/accountCategories';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
+import { AccountCategorySelector } from './AccountCategorySelector';
 import { IVAField } from './IVAField';
 import { TotalField } from './TotalField';
 
@@ -116,12 +115,13 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={7}>
                 <AccountCategorySelector
                   size="small"
-                  name="transaction_details[0].account_category_id"
+                  name="transaction_details[0].account_id"
                   label="Forma de pago"
                   selectableCategories={[
                     AccountType.ASSETS,
                     AccountType.LIABILITIES,
                   ]}
+                  initialValue="1.01.01.03.01"
                 />
               </Grid>
 
@@ -139,9 +139,10 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={7}>
                 <AccountCategorySelector
                   size="small"
-                  name="transaction_details[1].account_category_id"
+                  name="transaction_details[1].account_id"
                   label="Tipo de egreso"
                   selectableCategories={[AccountType.EXPENSES]}
+                  initialValue="5.01.01.02"
                 />
               </Grid>
 
@@ -190,36 +191,3 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 };
 
 export default BaseInvoiceForm;
-
-interface AccountCategorySelectorProps {
-  name: string;
-  selectableCategories?: string[];
-  label?: string;
-  size?: 'small' | 'medium';
-}
-
-const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
-  name,
-  label = '',
-  size = 'medium',
-  selectableCategories = [],
-}) => {
-  const { data: accountCategories } = useListAccountCategories();
-
-  const filteredAccountCategories = Object.values(accountCategories)
-    .filter(
-      (category) =>
-        !selectableCategories.every((type) => !category.id.startsWith(type))
-    )
-    .sort((a, b) => a.id.localeCompare(b.id));
-
-  return (
-    <FormikTextField fullWidth size={size} select name={name} label={label}>
-      {filteredAccountCategories.map((category) => (
-        <MenuItem key={category.id} value={category.id}>
-          {`${category.id} - ${category.name}`}
-        </MenuItem>
-      ))}
-    </FormikTextField>
-  );
-};
