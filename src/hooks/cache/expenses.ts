@@ -22,6 +22,10 @@ export const useAddExpenseByType = (type: ExpenseType) => {
     mutationFn: Expenses.upsert,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
+      await queryClient.cancelQueries({ queryKey: [COLLECTIONS.PROJECTS] });
+      await queryClient.cancelQueries({
+        queryKey: [COLLECTIONS.DAY_BOOK_TRANSACTIONS],
+      });
     },
     onSuccess: (newExpense) => {
       queryClient.setQueryData(
@@ -41,6 +45,10 @@ export const useUpdateExpenseByType = (type: ExpenseType) => {
     mutationFn: Expenses.upsert,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
+      await queryClient.cancelQueries({ queryKey: [COLLECTIONS.PROJECTS] });
+      await queryClient.cancelQueries({
+        queryKey: [COLLECTIONS.DAY_BOOK_TRANSACTIONS],
+      });
     },
     onSuccess: (newExpense) => {
       queryClient.setQueryData(
