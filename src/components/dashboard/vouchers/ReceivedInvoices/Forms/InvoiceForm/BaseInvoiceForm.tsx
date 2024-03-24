@@ -12,7 +12,11 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { IVA_RATE } from '@src/lib/constants/settings';
+import {
+  DEFAULT_EXPENSE_ACCOUNT,
+  DEFAULT_PAYMENT_ACCOUNT,
+  IVA_RATE,
+} from '@src/lib/constants/settings';
 import { AccountType } from '@src/types/accountCategories';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
@@ -121,7 +125,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                     AccountType.ASSETS,
                     AccountType.LIABILITIES,
                   ]}
-                  initialValue="1.01.01.03.01"
+                  initialValue={DEFAULT_PAYMENT_ACCOUNT}
                 />
               </Grid>
 
@@ -142,7 +146,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="transaction_details[1].account_id"
                   label="Tipo de egreso"
                   selectableCategories={[AccountType.EXPENSES]}
-                  initialValue="5.01.01.02"
+                  initialValue={DEFAULT_EXPENSE_ACCOUNT}
                 />
               </Grid>
 
