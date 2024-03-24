@@ -8,12 +8,15 @@ import {
   Stack,
 } from '@mui/material';
 import {
+  FormikAutoCalculateField,
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
+import { IVA_RATE } from '@src/lib/constants/settings';
 import { Invoice } from '@src/types/expenses';
-import { Form, Formik, FormikConfig } from 'formik';
-import { FC } from 'react';
+import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
+import { get } from 'lodash';
+import { FC, useEffect } from 'react';
 
 type FormikProps = Pick<FormikConfig<Invoice>, 'initialValues' | 'onSubmit'>;
 
@@ -37,15 +40,26 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
-                <FormikTextField fullWidth name="establishment" label="Suc." />
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="establishment"
+                  label="Suc."
+                />
               </Grid>
 
               <Grid item xs={1}>
-                <FormikTextField fullWidth name="emission_point" label="Pto." />
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="emission_point"
+                  label="Pto."
+                />
               </Grid>
 
               <Grid item xs={2}>
                 <FormikTextField
+                  size="small"
                   fullWidth
                   name="sequential_number"
                   label="Nro."
@@ -56,6 +70,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={3}>
                 <FormikDatePicker
+                  size="small"
                   fullWidth
                   name="issuer_date"
                   label="Fecha de Emisión"
@@ -63,21 +78,60 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               </Grid>
 
               <Grid item xs={8}>
-                <FormikTextField fullWidth name="issuer_name" label="Emisor" />
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="issuer_name"
+                  label="Emisor"
+                />
               </Grid>
 
               <Grid item xs={4}>
-                <FormikTextField fullWidth name="issuer_id" label="RUC" />
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="issuer_id"
+                  label="RUC"
+                />
               </Grid>
 
               <Grid item xs={12}>
                 <FormikTextField
+                  size="small"
                   multiline
                   rows={3}
                   fullWidth
                   name="description"
                   label="Descripción"
                 />
+              </Grid>
+
+              <Grid item xs={8} />
+
+              <Grid item xs={4}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="taxed_subtotal"
+                  label="Subtotal IVA"
+                />
+              </Grid>
+
+              <Grid item xs={8} />
+
+              <Grid item xs={4}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="tax_exempted_subtotal"
+                  label="Subtotal 0%"
+                />
+              </Grid>
+
+              <Grid item xs={8} />
+
+              <Grid item xs={4}>
+                <IVAField />
               </Grid>
             </Grid>
           </Stack>
@@ -102,3 +156,18 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 };
 
 export default BaseInvoiceForm;
+
+const IVAField = () => {
+  const { values, setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
+    const IVAValue = (taxedSubtotal * IVA_RATE) / 100;
+
+    setFieldValue('IVA', IVAValue);
+  }, [values, setFieldValue]);
+
+  return (
+    <FormikTextField size="small" fullWidth name="IVA" label="IVA" readOnly />
+  );
+};
