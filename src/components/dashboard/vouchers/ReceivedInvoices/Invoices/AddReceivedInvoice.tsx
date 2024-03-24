@@ -2,10 +2,10 @@ import { Button, Dialog } from '@mui/material';
 import { ExpenseType } from '@src/types/expenses';
 import { useRouter } from 'next/router';
 import { FC, ReactElement, useCallback, useMemo, useState } from 'react';
-import AddCustomsPayment from './Forms/CustomsPaymentForm/AddCustomsPayment';
-import AddInvoice from './Forms/InvoiceForm/AddInvoice';
-import AddNonDeductible from './Forms/NonDeductibleForm/AddNonDeductible';
-import AddSaleNote from './Forms/SaleNoteForm/AddSaleNote';
+import AddCustomsPayment from '../Forms/CustomsPaymentForm/AddCustomsPayment';
+import AddNonDeductible from '../Forms/NonDeductibleForm/AddNonDeductible';
+import AddSaleNote from '../Forms/SaleNoteForm/AddSaleNote';
+import AddInvoice from './InvoiceForm/AddInvoice';
 
 const AddReceivedInvoice: FC = () => {
   const router = useRouter();

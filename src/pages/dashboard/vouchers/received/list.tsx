@@ -1,5 +1,5 @@
 import ReceivedInvoices from '@src/components/dashboard/vouchers/ReceivedInvoices';
-import AddReceivedInvoice from '@src/components/dashboard/vouchers/ReceivedInvoices/AddReceivedInvoice';
+import AddReceivedInvoice from '@src/components/dashboard/vouchers/ReceivedInvoices/Invoices/AddReceivedInvoice';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 

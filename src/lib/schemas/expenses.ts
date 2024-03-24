@@ -1,4 +1,4 @@
-import { ZodAny, z } from 'zod';
+import { z } from 'zod';
 import { ZOD_ERROR } from '../constants/errors';
 import { CI_RUC_REGEX } from '../constants/regex';
 
