@@ -12,7 +12,7 @@ export const IVAField = () => {
     const taxedSubtotal = get(values, 'taxed_subtotal', 0);
     const IVAValue = (taxedSubtotal * IVA_RATE) / 100;
 
-    setFieldValue('IVA', IVAValue);
+    setFieldValue('IVA', IVAValue, false);
   }, [values, setFieldValue]);
 
   return (

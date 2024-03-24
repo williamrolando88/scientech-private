@@ -14,13 +14,17 @@ import {
 } from '@src/components/shared/formik-components';
 import {
   DEFAULT_EXPENSE_ACCOUNT,
+  DEFAULT_IVA_ACCOUNT,
   DEFAULT_PAYMENT_ACCOUNT,
+  EXPENSE_ALLOWED_ACCOUNTS,
   IVA_RATE,
+  PAYMENT_ALLOWED_ACCOUNTS,
 } from '@src/lib/constants/settings';
-import { AccountType } from '@src/types/accountCategories';
+import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from './AccountCategorySelector';
 import { IVAField } from './IVAField';
 import { TotalField } from './TotalField';
@@ -30,7 +34,7 @@ type FormikProps = Pick<
   'initialValues' | 'onSubmit'
 >;
 
-interface InvoiceFormProps extends FormikProps {
+export interface InvoiceFormProps extends FormikProps {
   onClose: VoidFunction;
   infoText?: string;
 }
@@ -38,11 +42,35 @@ interface InvoiceFormProps extends FormikProps {
 const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   onClose,
   infoText,
-  ...formikProps
-  // eslint-disable-next-line arrow-body-style
+  initialValues,
+  onSubmit,
 }) => {
+  const preSubmit: InvoiceFormProps['onSubmit'] = (formData, formActions) => {
+    const transactionDescription = `${formData.issuer_id}-${formData.description}`;
+    const [payment, expense, tax] = formData.transaction_details;
+
+    payment.credit = formData.total;
+    payment.description = transactionDescription;
+
+    expense.debit =
+      (formData.taxed_subtotal ?? 0) + (formData.tax_exempted_subtotal ?? 0);
+    expense.description = transactionDescription;
+
+    tax.account_id = DEFAULT_IVA_ACCOUNT;
+    tax.debit = formData.IVA;
+    tax.description = transactionDescription;
+
+    formData.transaction_details = [payment, expense, tax];
+
+    onSubmit(formData, formActions);
+  };
+
   return (
-    <Formik {...formikProps}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={preSubmit}
+      validationSchema={toFormikValidationSchema(InvoiceSchema)}
+    >
       {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
@@ -92,7 +120,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   fullWidth
                   name="issuer_id"
-                  label="RUC"
+                  label="RUC Emisor"
                 />
               </Grid>
 
@@ -101,7 +129,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   fullWidth
                   name="issuer_name"
-                  label="Emisor"
+                  label="Razón Social Emisor"
                 />
               </Grid>
 
@@ -121,10 +149,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   name="transaction_details[0].account_id"
                   label="Forma de pago"
-                  selectableCategories={[
-                    AccountType.ASSETS,
-                    AccountType.LIABILITIES,
-                  ]}
+                  selectableCategories={PAYMENT_ALLOWED_ACCOUNTS}
                   initialValue={DEFAULT_PAYMENT_ACCOUNT}
                 />
               </Grid>
@@ -145,7 +170,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   name="transaction_details[1].account_id"
                   label="Tipo de egreso"
-                  selectableCategories={[AccountType.EXPENSES]}
+                  selectableCategories={EXPENSE_ALLOWED_ACCOUNTS}
                   initialValue={DEFAULT_EXPENSE_ACCOUNT}
                 />
               </Grid>

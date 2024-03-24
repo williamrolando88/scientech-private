@@ -10,6 +10,7 @@ const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
     values,
     { setSubmitting }
   ) => {
+    console.log('submit');
     console.log(values);
 
     setSubmitting(false);

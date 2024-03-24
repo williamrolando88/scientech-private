@@ -30,7 +30,7 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
 
   useEffect(() => {
     if (initialValue) {
-      setValue(initialValue);
+      setValue(initialValue, false);
     }
   }, [initialValue, setValue]);
 

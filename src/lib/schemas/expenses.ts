@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { ZOD_ERROR } from '../constants/errors';
+import { CI_RUC_REGEX } from '../constants/regex';
 
 const ExpenseTypeValues = [
   'invoice',
@@ -31,7 +33,7 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
 });
 
 export const InvoiceSchema = ExpensesCommonSchema.extend({
-  issuer_id: z.string(),
+  issuer_id: z.string(ZOD_ERROR.REQUIRED).regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),
   type: z.literal('invoice'),
   establishment: z.number(),
   emission_point: z.number(),

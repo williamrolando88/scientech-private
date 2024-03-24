@@ -13,7 +13,7 @@ export const TotalField = () => {
 
     const total = taxedSubtotal + taxExemptedSubtotal + IVAValue;
 
-    setFieldValue('total', total);
+    setFieldValue('total', total, false);
   }, [values, setFieldValue]);
 
   return (
