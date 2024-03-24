@@ -4,11 +4,12 @@ import { TabInterface } from '@src/types/shared';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
+import InvoiceList from './Invoices/InvoiceList';
 
 const TABS: TabInterface<ExpenseType>[] = [
   {
     value: 'invoice',
-    component: <div key="list">List</div>,
+    component: <InvoiceList key="invoice" />,
     label: 'Facturas',
   },
   {

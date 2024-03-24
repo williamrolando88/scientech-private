@@ -3,16 +3,15 @@ import { Expenses } from '@src/services/firebase/expenses';
 import { ExpenseType, GeneralExpense } from '@src/types/expenses';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const queryKeyByType = (type: ExpenseType) => [COLLECTIONS.EXPENSES];
+const queryKeyByType = (type: ExpenseType) => [COLLECTIONS.EXPENSES, type];
 
 export function useListExpensesByType<T>(type: ExpenseType) {
   const query = useQuery<T[]>({
     queryKey: queryKeyByType(type),
-    // @ts-ignore
-    queryFn: Expenses.listByType(type),
+    queryFn: Expenses.listByType<T>(type),
   });
 
-  return { ...query, data: query.data ?? [] };
+  return { ...query, data: query.data as T[] };
 }
 
 export const useAddExpenseByType = (type: ExpenseType) => {
@@ -30,7 +29,11 @@ export const useAddExpenseByType = (type: ExpenseType) => {
     onSuccess: (newExpense) => {
       queryClient.setQueryData(
         queryKeyByType(type),
-        (prevData: GeneralExpense[]) => [...prevData, newExpense]
+        (prevData: GeneralExpense[]) => {
+          console.log('prevData', prevData);
+          console.log('newExpense', newExpense);
+          return [...prevData, newExpense];
+        }
       );
     },
   });

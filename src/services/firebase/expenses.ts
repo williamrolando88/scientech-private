@@ -86,23 +86,25 @@ export const ExpenseParserByType: Record<ExpenseType, ZodSchema> = {
 };
 
 // !needs update
-async function listByType<T>(type: ExpenseType): Promise<T[]> {
-  const q = query(
-    collection(DB, COLLECTIONS.EXPENSES),
-    orderBy('issuer_date', 'desc'),
-    where('type', '==', type)
-  ).withConverter(converterByType[type]);
+function listByType<T>(type: ExpenseType) {
+  const converter = converterByType[type];
+  return async function (): Promise<T[]> {
+    const q = query(
+      collection(DB, COLLECTIONS.EXPENSES),
+      orderBy('issuer_date', 'desc'),
+      where('type', '==', type)
+    ).withConverter(converter);
 
-  const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(q);
 
-  const expenses: T[] = [];
-  querySnapshot.forEach((document) => {
-    expenses.push(document.data() as T);
-  });
+    const expenses: T[] = [];
+    querySnapshot.forEach((document) => {
+      expenses.push(document.data() as T);
+    });
 
-  return expenses;
+    return expenses;
+  };
 }
-
 async function upsert(
   expense: ExtendedGeneralExpense
 ): Promise<GeneralExpense> {
@@ -148,9 +150,11 @@ async function upsert(
       expense_id: expenseDocRef.id,
     }));
 
-  const newExpense = ExpenseParserByType[expense.type].parse(
-    expense
-  ) as GeneralExpense;
+  let newExpense: Expense = {
+    issue_date: expense.issue_date,
+    total: expense.total,
+    type: expense.type,
+  };
 
   await runTransaction(DB, async (transaction) => {
     // Read operations
@@ -182,6 +186,10 @@ async function upsert(
         },
       ];
     }
+
+    newExpense = { ...ExpenseParserByType[expense.type].parse(expense) };
+    newExpense.day_book_transaction_id = dayBookDocRef.id;
+    newExpense.id = expenseDocRef.id;
 
     // Set operations
     transaction.set(dayBookDocRef, newDayBookDoc);
