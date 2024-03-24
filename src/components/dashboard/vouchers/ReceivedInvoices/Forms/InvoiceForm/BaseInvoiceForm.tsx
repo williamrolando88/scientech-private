@@ -14,9 +14,10 @@ import {
 } from '@src/components/shared/formik-components';
 import { IVA_RATE } from '@src/lib/constants/settings';
 import { Invoice } from '@src/types/expenses';
-import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
-import { get } from 'lodash';
-import { FC, useEffect } from 'react';
+import { Form, Formik, FormikConfig } from 'formik';
+import { FC } from 'react';
+import { IVAField } from './IVAField';
+import { TotalField } from './TotalField';
 
 type FormikProps = Pick<FormikConfig<Invoice>, 'initialValues' | 'onSubmit'>;
 
@@ -162,42 +163,3 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 };
 
 export default BaseInvoiceForm;
-
-const IVAField = () => {
-  const { values, setFieldValue } = useFormikContext<Invoice>();
-
-  useEffect(() => {
-    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
-    const IVAValue = (taxedSubtotal * IVA_RATE) / 100;
-
-    setFieldValue('IVA', IVAValue);
-  }, [values, setFieldValue]);
-
-  return (
-    <FormikTextField size="small" fullWidth name="IVA" label="IVA" readOnly />
-  );
-};
-
-const TotalField = () => {
-  const { values, setFieldValue } = useFormikContext();
-
-  useEffect(() => {
-    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
-    const taxExemptedSubtotal = get(values, 'tax_exempted_subtotal', 0);
-    const IVAValue = get(values, 'IVA', 0);
-
-    const total = taxedSubtotal + taxExemptedSubtotal + IVAValue;
-
-    setFieldValue('total', total);
-  }, [values, setFieldValue]);
-
-  return (
-    <FormikTextField
-      size="small"
-      fullWidth
-      name="total"
-      label="Total"
-      readOnly
-    />
-  );
-};
