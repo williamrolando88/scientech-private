@@ -17,17 +17,17 @@ export const ExpensesCommonSchema = z.object({
   type: ExpenseTypeSchema,
   issuer_name: z.string().optional(),
   day_book_transaction_id: z.string().optional(),
-  IVA: z.number().optional(),
-  tax_exempted_subtotal: z.number().optional(),
-  taxed_subtotal: z.number().optional(),
+  IVA: z.number().nonnegative(),
+  tax_exempted_subtotal: z.number().nonnegative(),
+  taxed_subtotal: z.number().nonnegative(),
   description: z.string().optional(),
   project_id: z.string().optional(),
-  total: z.number().optional(),
+  total: z.number().positive(),
 });
 
 export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
-  adValorem_tariff: z.number().optional(),
-  specific_tariff: z.number().optional(),
+  adValorem_tariff: z.number().nonnegative(),
+  specific_tariff: z.number().nonnegative(),
   tariff: z.number(),
   type: z.literal('customs_payment'),
 });
@@ -35,7 +35,7 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
 export const InvoiceSchema = ExpensesCommonSchema.extend({
   issuer_id: z.string(ZOD_ERROR.REQUIRED).regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),
   type: z.literal('invoice'),
-  establishment: z.number(),
-  emission_point: z.number(),
-  sequential_number: z.number(),
+  establishment: z.number().positive(),
+  emission_point: z.number().positive(),
+  sequential_number: z.number().positive(),
 });

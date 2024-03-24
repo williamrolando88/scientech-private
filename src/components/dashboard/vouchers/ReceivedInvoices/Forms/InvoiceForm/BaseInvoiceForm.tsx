@@ -84,6 +84,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="establishment"
                   label="Suc."
+                  required
                 />
               </Grid>
 
@@ -93,6 +94,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="emission_point"
                   label="Pto."
+                  required
                 />
               </Grid>
 
@@ -102,6 +104,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="sequential_number"
                   label="Nro."
+                  required
                 />
               </Grid>
 
@@ -113,6 +116,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="issuer_date"
                   label="Fecha de Emisión"
+                  required
                 />
               </Grid>
 
@@ -122,6 +126,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="issuer_id"
                   label="RUC Emisor"
+                  required
                 />
               </Grid>
 
@@ -131,6 +136,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="issuer_name"
                   label="Razón Social Emisor"
+                  required
                 />
               </Grid>
 
@@ -152,6 +158,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Forma de pago"
                   selectableCategories={PAYMENT_ALLOWED_ACCOUNTS}
                   initialValue={DEFAULT_PAYMENT_ACCOUNT}
+                  required
                 />
               </Grid>
 
@@ -173,6 +180,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Tipo de egreso"
                   selectableCategories={EXPENSE_ALLOWED_ACCOUNTS}
                   initialValue={DEFAULT_EXPENSE_ACCOUNT}
+                  required
                 />
               </Grid>
 

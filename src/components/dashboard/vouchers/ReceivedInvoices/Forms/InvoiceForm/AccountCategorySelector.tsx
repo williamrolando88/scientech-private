@@ -10,10 +10,12 @@ interface AccountCategorySelectorProps {
   label?: string;
   size?: 'small' | 'medium';
   initialValue?: string;
+  required?: boolean;
 }
 export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   name,
   initialValue,
+  required,
   label = '',
   size = 'medium',
   selectableCategories = [],
@@ -35,7 +37,14 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   }, [initialValue, setValue]);
 
   return (
-    <FormikTextField fullWidth size={size} select name={name} label={label}>
+    <FormikTextField
+      select
+      fullWidth
+      size={size}
+      name={name}
+      label={label}
+      required={required}
+    >
       {filteredAccountCategories.map((category) => (
         <MenuItem key={category.id} value={category.id}>
           {`${category.id} - ${category.name}`}

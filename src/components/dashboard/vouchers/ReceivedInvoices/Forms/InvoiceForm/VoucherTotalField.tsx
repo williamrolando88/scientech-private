@@ -22,6 +22,7 @@ export const VoucherTotalField = () => {
       fullWidth
       name="total"
       label="Total"
+      required
       readOnly
     />
   );

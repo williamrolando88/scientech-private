@@ -13,9 +13,9 @@ export const INVOICE_INITIAL_VALUE: ExtendedInvoice = {
   taxed_subtotal: 0,
   description: '',
   project_id: '',
-  establishment: 0,
-  emission_point: 0,
-  sequential_number: 0,
+  establishment: 1,
+  emission_point: 1,
+  sequential_number: 1,
   total: 0,
   /**
    * This is an array of DayBookTransactionDetail objects.
