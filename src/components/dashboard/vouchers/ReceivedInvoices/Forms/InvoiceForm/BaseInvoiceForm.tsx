@@ -114,7 +114,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikDatePicker
                   size="small"
                   fullWidth
-                  name="issuer_date"
+                  name="issue_date"
                   label="Fecha de Emisión"
                   required
                 />

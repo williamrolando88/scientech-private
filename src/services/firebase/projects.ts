@@ -12,7 +12,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 
-const ProjectConverter: FirestoreDataConverter<Project> = {
+export const ProjectConverter: FirestoreDataConverter<Project> = {
   toFirestore: (project: Project) => project,
   fromFirestore: (snapshot: any) => snapshot.data(),
 };

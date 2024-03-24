@@ -3,7 +3,7 @@ import { DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE } from './dayBook';
 
 export const INVOICE_INITIAL_VALUE: ExtendedInvoice = {
   id: '',
-  issuer_date: new Date(),
+  issue_date: new Date(),
   type: 'invoice',
   issuer_name: '',
   issuer_id: '',
@@ -32,7 +32,7 @@ export const INVOICE_INITIAL_VALUE: ExtendedInvoice = {
 
 export const NON_DEDUCTIBLE_INITIAL_VALUE: Expense = {
   id: '',
-  issuer_date: new Date(),
+  issue_date: new Date(),
   type: 'non_deductible',
   issuer_name: '',
   day_book_transaction_id: '',
@@ -44,7 +44,7 @@ export const NON_DEDUCTIBLE_INITIAL_VALUE: Expense = {
 
 export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
   id: '',
-  issuer_date: new Date(),
+  issue_date: new Date(),
   type: 'customs_payment',
   day_book_transaction_id: '',
   IVA: 0,
@@ -58,7 +58,7 @@ export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
 
 export const SALE_NOTE_INITIAL_VALUE: Expense = {
   id: '',
-  issuer_date: new Date(),
+  issue_date: new Date(),
   type: 'sale_note',
   issuer_name: '',
   day_book_transaction_id: '',

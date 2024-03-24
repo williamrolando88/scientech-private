@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ExpenseTypeSchema } from './expenses';
 
 export const ProjectStatusValues = ['active', 'inactive', 'completed'] as const;
 export const EventActionValues = [
@@ -29,5 +30,10 @@ export const ProjectSchema = z.object({
   custom_payments_id: z.string().array(),
   issued_quotations_id: z.string().array(),
   issued_invoices_id: z.string().array(),
-  received_invoices_id: z.string().array(),
+  received_vouchers: z
+    .object({
+      id: z.string(),
+      type: ExpenseTypeSchema,
+    })
+    .array(),
 });

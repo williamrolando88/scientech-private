@@ -7,16 +7,23 @@ import {
 import { z } from 'zod';
 import { DayBookTransactionDetail } from './dayBook';
 
-export type Expense = z.infer<typeof ExpensesCommonSchema>;
-
-export type CustomsPayment = z.infer<typeof CustomsPaymentSchema>;
-
-export type Invoice = z.infer<typeof InvoiceSchema>;
-export type ExtendedInvoice = Invoice & {
+type TransactionDetails = {
   transaction_details: DayBookTransactionDetail[];
 };
 
+export type Expense = z.infer<typeof ExpensesCommonSchema>;
+export type ExtendedExpense = Expense & TransactionDetails;
+
+export type CustomsPayment = z.infer<typeof CustomsPaymentSchema>;
+export type ExtendedCustomsPayment = CustomsPayment & TransactionDetails;
+
+export type Invoice = z.infer<typeof InvoiceSchema>;
+export type ExtendedInvoice = Invoice & TransactionDetails;
+
 export type GeneralExpense = Expense | CustomsPayment | Invoice;
+
+export type ExtendedGeneralExpense = (Expense | CustomsPayment | Invoice) &
+  TransactionDetails;
 
 export type ExpenseType = z.infer<typeof ExpenseTypeSchema>;
 

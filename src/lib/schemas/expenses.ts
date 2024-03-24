@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { ZodAny, z } from 'zod';
 import { ZOD_ERROR } from '../constants/errors';
 import { CI_RUC_REGEX } from '../constants/regex';
 
@@ -13,7 +13,7 @@ export const ExpenseTypeSchema = z.enum(ExpenseTypeValues);
 
 export const ExpensesCommonSchema = z.object({
   id: z.string().optional(),
-  issuer_date: z.coerce.date(),
+  issue_date: z.coerce.date(),
   type: ExpenseTypeSchema,
   issuer_name: z.string().optional(),
   day_book_transaction_id: z.string().optional(),

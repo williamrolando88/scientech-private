@@ -12,5 +12,5 @@ export const PROJECTS_INITIAL_VALUE: Project = {
   events: [],
   issued_invoices_id: [],
   issued_quotations_id: [],
-  received_invoices_id: [],
+  received_vouchers: [],
 };
