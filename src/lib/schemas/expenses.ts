@@ -20,6 +20,7 @@ export const ExpensesCommonSchema = z.object({
   taxed_subtotal: z.number().optional(),
   description: z.string().optional(),
   project_id: z.string().optional(),
+  total: z.number().optional(),
 });
 
 export const CustomsPaymentSchema = ExpensesCommonSchema.extend({

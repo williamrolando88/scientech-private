@@ -38,7 +38,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
 
-            <Grid container columns={12} spacing={2}>
+            <Grid container columns={12} rowSpacing={1} columnSpacing={2}>
               <Grid item xs={1}>
                 <FormikTextField
                   size="small"
@@ -77,21 +77,21 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={8}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="issuer_name"
-                  label="Emisor"
-                />
-              </Grid>
-
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <FormikTextField
                   size="small"
                   fullWidth
                   name="issuer_id"
                   label="RUC"
+                />
+              </Grid>
+
+              <Grid item xs={9}>
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="issuer_name"
+                  label="Emisor"
                 />
               </Grid>
 
@@ -106,9 +106,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={8} />
+              <Grid item xs={9} />
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <FormikAutoCalculateField
                   size="small"
                   fullWidth
@@ -117,9 +117,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={8} />
+              <Grid item xs={9} />
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <FormikAutoCalculateField
                   size="small"
                   fullWidth
@@ -128,15 +128,15 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={8} />
+              <Grid item xs={9} />
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <IVAField />
               </Grid>
 
-              <Grid item xs={8} />
+              <Grid item xs={9} />
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TotalField />
               </Grid>
             </Grid>

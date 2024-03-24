@@ -15,6 +15,7 @@ export const INVOICE_INITIAL_VALUE: Invoice = {
   establishment: 0,
   emission_point: 0,
   sequential_number: 0,
+  total: 0,
 };
 
 export const NON_DEDUCTIBLE_INITIAL_VALUE: Expense = {
@@ -26,6 +27,7 @@ export const NON_DEDUCTIBLE_INITIAL_VALUE: Expense = {
   tax_exempted_subtotal: 0,
   description: '',
   project_id: '',
+  total: 0,
 };
 
 export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
@@ -39,6 +41,7 @@ export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
   adValorem_tariff: 0,
   specific_tariff: 0,
   tariff: 0,
+  total: 0,
 };
 
 export const SALE_NOTE_INITIAL_VALUE: Expense = {
@@ -50,4 +53,5 @@ export const SALE_NOTE_INITIAL_VALUE: Expense = {
   tax_exempted_subtotal: 0,
   description: '',
   project_id: '',
+  total: 0,
 };
