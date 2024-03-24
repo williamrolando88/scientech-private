@@ -16,3 +16,11 @@ export type AccountTree = {
   value?: number;
   children: AccountTree[];
 };
+
+export enum AccountType {
+  ASSETS = '1',
+  LIABILITIES = '2',
+  EQUITY = '3',
+  INCOME = '4',
+  EXPENSES = '5',
+}

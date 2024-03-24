@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   Grid,
+  MenuItem,
   Stack,
 } from '@mui/material';
 import {
@@ -12,14 +13,19 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
+import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { IVA_RATE } from '@src/lib/constants/settings';
-import { Invoice } from '@src/types/expenses';
+import { AccountType } from '@src/types/accountCategories';
+import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { IVAField } from './IVAField';
 import { TotalField } from './TotalField';
 
-type FormikProps = Pick<FormikConfig<Invoice>, 'initialValues' | 'onSubmit'>;
+type FormikProps = Pick<
+  FormikConfig<ExtendedInvoice>,
+  'initialValues' | 'onSubmit'
+>;
 
 interface InvoiceFormProps extends FormikProps {
   onClose: VoidFunction;
@@ -39,7 +45,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
 
-            <Grid container columns={12} rowSpacing={1} columnSpacing={2}>
+            <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
                 <FormikTextField
                   size="small"
@@ -107,7 +113,19 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={9} />
+              <Grid item xs={7}>
+                <AccountCategorySelector
+                  size="small"
+                  name="transaction_details[0].account_category_id"
+                  label="Forma de pago"
+                  selectableCategories={[
+                    AccountType.ASSETS,
+                    AccountType.LIABILITIES,
+                  ]}
+                />
+              </Grid>
+
+              <Grid item xs={2} />
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
@@ -118,7 +136,16 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={9} />
+              <Grid item xs={7}>
+                <AccountCategorySelector
+                  size="small"
+                  name="transaction_details[1].account_category_id"
+                  label="Tipo de egreso"
+                  selectableCategories={[AccountType.EXPENSES]}
+                />
+              </Grid>
+
+              <Grid item xs={2} />
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
@@ -163,3 +190,36 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 };
 
 export default BaseInvoiceForm;
+
+interface AccountCategorySelectorProps {
+  name: string;
+  selectableCategories?: string[];
+  label?: string;
+  size?: 'small' | 'medium';
+}
+
+const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
+  name,
+  label = '',
+  size = 'medium',
+  selectableCategories = [],
+}) => {
+  const { data: accountCategories } = useListAccountCategories();
+
+  const filteredAccountCategories = Object.values(accountCategories)
+    .filter(
+      (category) =>
+        !selectableCategories.every((type) => !category.id.startsWith(type))
+    )
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  return (
+    <FormikTextField fullWidth size={size} select name={name} label={label}>
+      {filteredAccountCategories.map((category) => (
+        <MenuItem key={category.id} value={category.id}>
+          {`${category.id} - ${category.name}`}
+        </MenuItem>
+      ))}
+    </FormikTextField>
+  );
+};

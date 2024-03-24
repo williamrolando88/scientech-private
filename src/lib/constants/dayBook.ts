@@ -11,6 +11,8 @@ export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail 
     description: '',
     invoice_id: '' as unknown as number,
     quotation_id: '' as unknown as number,
+    expense_id: '',
+    project_id: '',
   };
 
 export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
