@@ -26,8 +26,9 @@ import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from './AccountCategorySelector';
-import { IVAField } from './IVAField';
-import { TotalField } from './TotalField';
+import { VoucherIVAField } from './VoucherIVAField';
+import { VoucherProjectSelector } from './VoucherProjectSelector';
+import { VoucherTotalField } from './VoucherTotalField';
 
 type FormikProps = Pick<
   FormikConfig<ExtendedInvoice>,
@@ -189,13 +190,17 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={9} />
 
               <Grid item xs={3}>
-                <IVAField />
+                <VoucherIVAField />
               </Grid>
 
-              <Grid item xs={9} />
+              <Grid item xs={7}>
+                <VoucherProjectSelector />
+              </Grid>
+
+              <Grid item xs={2} />
 
               <Grid item xs={3}>
-                <TotalField />
+                <VoucherTotalField />
               </Grid>
             </Grid>
           </Stack>

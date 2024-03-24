@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { useEffect } from 'react';
 
-export const TotalField = () => {
+export const VoucherTotalField = () => {
   const { values, setFieldValue } = useFormikContext();
 
   useEffect(() => {

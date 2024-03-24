@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { useEffect } from 'react';
 
-export const IVAField = () => {
+export const VoucherIVAField = () => {
   const { values, setFieldValue } = useFormikContext<Invoice>();
 
   useEffect(() => {
