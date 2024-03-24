@@ -113,7 +113,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   fullWidth
                   name="taxed_subtotal"
-                  label="Subtotal IVA"
+                  label={`Subtotal ${IVA_RATE}%`}
                 />
               </Grid>
 
@@ -132,6 +132,12 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={4}>
                 <IVAField />
+              </Grid>
+
+              <Grid item xs={8} />
+
+              <Grid item xs={4}>
+                <TotalField />
               </Grid>
             </Grid>
           </Stack>
@@ -158,7 +164,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 export default BaseInvoiceForm;
 
 const IVAField = () => {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<Invoice>();
 
   useEffect(() => {
     const taxedSubtotal = get(values, 'taxed_subtotal', 0);
@@ -169,5 +175,29 @@ const IVAField = () => {
 
   return (
     <FormikTextField size="small" fullWidth name="IVA" label="IVA" readOnly />
+  );
+};
+
+const TotalField = () => {
+  const { values, setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
+    const taxExemptedSubtotal = get(values, 'tax_exempted_subtotal', 0);
+    const IVAValue = get(values, 'IVA', 0);
+
+    const total = taxedSubtotal + taxExemptedSubtotal + IVAValue;
+
+    setFieldValue('total', total);
+  }, [values, setFieldValue]);
+
+  return (
+    <FormikTextField
+      size="small"
+      fullWidth
+      name="total"
+      label="Total"
+      readOnly
+    />
   );
 };
