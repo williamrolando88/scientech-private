@@ -60,7 +60,7 @@ const InvoiceList: FC = () => {
     },
     {
       field: 'taxed_subtotal',
-      headerName: 'Base imponible',
+      headerName: 'Base imp.',
       type: 'number',
       sortable: false,
     },
