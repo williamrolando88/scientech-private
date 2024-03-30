@@ -14,7 +14,6 @@ import {
   CustomsPayment,
   Expense,
   ExpenseTypeValues,
-  ExtendedExpense,
   ExtendedGeneralExpense,
   GeneralExpense,
   Invoice,
@@ -84,7 +83,7 @@ export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
   sale_note: ExpensesCommonSchema,
 };
 
-const docReferencer = (expense: ExtendedGeneralExpense) => {
+const docReferencer = (expense: ExtendedGeneralExpense | GeneralExpense) => {
   const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
   const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
   const dayBookCollection = collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS);
@@ -214,7 +213,7 @@ async function upsert(
 }
 
 // !needs update, it should delete the day book transaction and filter the expenses from the project
-const remove = async (expense: ExtendedExpense) => {
+const remove = async (expense: GeneralExpense) => {
   const { dayBookDocRef, expenseDocRef, projectDocRef } =
     docReferencer(expense);
 
