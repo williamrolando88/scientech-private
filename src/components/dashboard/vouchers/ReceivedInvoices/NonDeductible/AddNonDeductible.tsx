@@ -39,6 +39,7 @@ const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
       <DialogTitle>Agregar nuevo gasto no deducible</DialogTitle>
 
       <BaseNonDeductibleForm
+        infoText="Ingrese los datos del gasto. Los campos marcados con * son obligatorios. Si el gasto esta asociado a un proyecto, selecciónelo en el campo correspondiente"
         onClose={onClose}
         initialValues={NON_DEDUCTIBLE_INITIAL_VALUE}
         onSubmit={handleSubmit}

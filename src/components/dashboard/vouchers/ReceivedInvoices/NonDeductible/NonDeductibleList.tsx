@@ -1,10 +1,13 @@
 import { CardContent } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import Iconify from '@src/components/shared/iconify';
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { Expense } from '@src/types/expenses';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import UpdateNonDeductible from './UpdateNonDeductible';
 
 const NonDeductibleList: FC = () => {
+  const [expenseToUpdate, setExpenseToUpdate] = useState<Expense | null>(null);
   const { data: nonDeductible, isLoading } =
     useListExpensesByType<Expense>('non_deductible');
 
@@ -19,7 +22,7 @@ const NonDeductibleList: FC = () => {
     {
       field: 'issuer_name',
       flex: 1,
-      headerName: 'Razón Social',
+      headerName: 'Emisor y/o motivo',
       sortable: false,
     },
     {
@@ -28,26 +31,26 @@ const NonDeductibleList: FC = () => {
       type: 'number',
       sortable: false,
     },
-    // {
-    //   field: 'actions',
-    //   type: 'actions',
-    //   width: 50,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       label="Modificar"
-    //       onClick={() => setInvoiceToUpdate(params.row)}
-    //       icon={<Iconify icon="pajamas:doc-changes" />}
-    //       showInMenu
-    //     />,
-    //     // <GridActionsCellItem
-    //     //   label="Borrar"
-    //     //   onClick={() => getTransactionToDelete(params.id as string)}
-    //     //   icon={<Iconify icon="pajamas:remove" />}
-    //     //   showInMenu
-    //     //   disabled={params.row.locked}
-    //     // />,
-    //   ],
-    // },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 50,
+      getActions: (params) => [
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => setExpenseToUpdate(params.row)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          showInMenu
+        />,
+        // <GridActionsCellItem
+        //   label="Borrar"
+        //   onClick={() => getTransactionToDelete(params.id as string)}
+        //   icon={<Iconify icon="pajamas:remove" />}
+        //   showInMenu
+        //   disabled={params.row.locked}
+        // />,
+      ],
+    },
   ];
 
   return (
@@ -67,12 +70,12 @@ const NonDeductibleList: FC = () => {
         />
       </CardContent>
 
-      {/* <UpdateInvoice
-        open={!!invoiceToUpdate}
-        initialValues={invoiceToUpdate}
-        onClose={() => setInvoiceToUpdate(null)}
-        key={invoiceToUpdate?.id}
-      /> */}
+      <UpdateNonDeductible
+        open={!!expenseToUpdate}
+        initialValues={expenseToUpdate}
+        onClose={() => setExpenseToUpdate(null)}
+        key={expenseToUpdate?.id}
+      />
     </>
   );
 };

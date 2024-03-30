@@ -1,40 +1,41 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { ExtendedInvoice, Invoice } from '@src/types/expenses';
+import { Expense, ExtendedExpense } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
+import BaseNonDeductibleForm from './NonDeductibleForm/BaseNonDeductibleForm';
 
-interface UpdateInvoiceProps {
+interface UpdateNonDeductibleProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: Invoice | null;
+  initialValues: Expense | null;
 }
 
-const UpdateInvoice: FC<UpdateInvoiceProps> = ({
+const UpdateNonDeductible: FC<UpdateNonDeductibleProps> = ({
   open,
   onClose,
   initialValues,
 }) => {
   const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateInvoice } = useUpdateExpenseByType('invoice');
+  const { mutateAsync: updateNonDeductible } =
+    useUpdateExpenseByType('non_deductible');
 
-  const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = (
+  const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    updateInvoice(values)
+    updateNonDeductible(values)
       .then(() => {
         resetForm();
-        enqueueSnackbar('Factura actualizada exitosamente');
+        enqueueSnackbar('Gasto actualizado exitosamente');
         onClose();
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al actualizar la factura', { variant: 'error' });
+        enqueueSnackbar('Error al actualizar el gasto', { variant: 'error' });
       })
       .finally(() => {
         setSubmitting(false);
@@ -47,23 +48,23 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
     (transaction) => transaction.id === initialValues.day_book_transaction_id
   );
 
-  const extendedInvoice: ExtendedInvoice = {
+  const extendedNonDeductible: ExtendedExpense = {
     ...initialValues,
     transaction_details: relatedTransaction?.transactions ?? [],
   };
 
   return (
     <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Actualizar factura</DialogTitle>
+      <DialogTitle>Actualizar gasto no deducible</DialogTitle>
 
-      <BaseInvoiceForm
-        infoText="Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios."
+      <BaseNonDeductibleForm
+        infoText="Actualiza los datos no deducibles. Los campos marcados con * son obligatorios."
         onClose={onClose}
-        initialValues={extendedInvoice}
+        initialValues={extendedNonDeductible}
         onSubmit={handleSubmit}
       />
     </Dialog>
   );
 };
 
-export default UpdateInvoice;
+export default UpdateNonDeductible;
