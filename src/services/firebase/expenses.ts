@@ -14,6 +14,7 @@ import {
   CustomsPayment,
   Expense,
   ExpenseTypeValues,
+  ExtendedExpense,
   ExtendedGeneralExpense,
   GeneralExpense,
   Invoice,
@@ -24,7 +25,6 @@ import {
   DocumentReference,
   FirestoreDataConverter,
   collection,
-  deleteDoc,
   doc,
   getDocs,
   query,
@@ -84,39 +84,14 @@ export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
   sale_note: ExpensesCommonSchema,
 };
 
-const listByType = (type: ExpenseTypeValues) => {
-  const converter = converterByType[type];
-
-  return async () => {
-    const q = query(
-      collection(DB, COLLECTIONS.EXPENSES),
-      where('type', '==', type)
-    ).withConverter(converter);
-
-    const querySnapshot = await getDocs(q);
-
-    const expenses = querySnapshot.docs.map((document) => document.data());
-
-    expenses.sort(
-      (a, b) =>
-        new Date(b.issue_date).getTime() - new Date(a.issue_date).getTime()
-    );
-
-    return expenses as unknown[];
-  };
-};
-
-async function upsert(
-  expense: ExtendedGeneralExpense
-): Promise<GeneralExpense> {
-  const timestamp = new Date();
+const docReferencer = (expense: ExtendedGeneralExpense) => {
   const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
   const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
   const dayBookCollection = collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS);
 
   let expenseDocRef: DocumentReference<GeneralExpense, DocumentData>;
   let dayBookDocRef: DocumentReference<DayBookTransaction, DocumentData>;
-  let projectDocRef: DocumentReference<Project, DocumentData>;
+  let projectDocRef: DocumentReference<Project, DocumentData> | null;
 
   if (expense.id) {
     expenseDocRef = doc(expensesCollection, expense.id).withConverter(
@@ -143,7 +118,42 @@ async function upsert(
     projectDocRef = doc(projectsCollection, expense.project_id).withConverter(
       ProjectConverter
     );
+  } else {
+    projectDocRef = null;
   }
+
+  return { expenseDocRef, dayBookDocRef, projectDocRef };
+};
+
+const listByType = (type: ExpenseTypeValues) => {
+  const converter = converterByType[type];
+
+  return async () => {
+    const q = query(
+      collection(DB, COLLECTIONS.EXPENSES),
+      where('type', '==', type)
+    ).withConverter(converter);
+
+    const querySnapshot = await getDocs(q);
+
+    const expenses = querySnapshot.docs.map((document) => document.data());
+
+    expenses.sort(
+      (a, b) =>
+        new Date(b.issue_date).getTime() - new Date(a.issue_date).getTime()
+    );
+
+    return expenses as unknown[];
+  };
+};
+
+async function upsert(
+  expense: ExtendedGeneralExpense
+): Promise<GeneralExpense> {
+  const timestamp = new Date();
+
+  const { dayBookDocRef, expenseDocRef, projectDocRef } =
+    docReferencer(expense);
 
   const transactions: DayBookTransactionDetail[] =
     expense.transaction_details.map((transaction) => ({
@@ -204,11 +214,35 @@ async function upsert(
 }
 
 // !needs update, it should delete the day book transaction and filter the expenses from the project
-const remove = async (id: string) => {
-  const docRef = doc(DB, COLLECTIONS.EXPENSES, id);
-  await deleteDoc(docRef);
+const remove = async (expense: ExtendedExpense) => {
+  const { dayBookDocRef, expenseDocRef, projectDocRef } =
+    docReferencer(expense);
 
-  return id;
+  await runTransaction(DB, async (transaction) => {
+    // Read operations
+    const storedProjectDoc =
+      projectDocRef && (await transaction.get(projectDocRef));
+
+    // Data manipulation
+    let newProject: Project = PROJECTS_INITIAL_VALUE;
+    if (projectDocRef && storedProjectDoc?.exists()) {
+      newProject = storedProjectDoc?.data();
+      newProject.received_vouchers = newProject.received_vouchers.filter(
+        (voucher) => voucher.id !== expenseDocRef.id
+      );
+    }
+
+    // Set operations
+    if (projectDocRef && storedProjectDoc?.exists()) {
+      transaction.set(projectDocRef, newProject);
+    }
+
+    // Delete operations
+    transaction.delete(dayBookDocRef);
+    transaction.delete(expenseDocRef);
+  });
+
+  return expense.id;
 };
 
 export const Expenses = {

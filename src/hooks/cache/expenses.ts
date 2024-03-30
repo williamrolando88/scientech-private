@@ -91,15 +91,24 @@ export const useDeleteExpenseByType = (type: ExpenseTypeValues) => {
 
   const mutation = useMutation({
     mutationFn: Expenses.remove,
-    onMutate: async (id: string) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKeyByType(type) });
     },
-    onSuccess: (_, id) => {
+    onSuccess: (id) => {
       queryClient.setQueryData(
         queryKeyByType(type),
         (prevData: GeneralExpense[]) =>
           prevData.filter((expense) => expense.id !== id)
       );
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeyByType(type) });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [COLLECTIONS.PROJECTS] });
+      queryClient.invalidateQueries({
+        queryKey: [COLLECTIONS.DAY_BOOK_TRANSACTIONS],
+      });
     },
   });
 
