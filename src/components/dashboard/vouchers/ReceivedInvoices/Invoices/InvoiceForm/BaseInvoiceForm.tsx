@@ -17,7 +17,6 @@ import {
   DEFAULT_IVA_ACCOUNT,
   DEFAULT_PAYMENT_ACCOUNT,
   EXPENSE_ALLOWED_ACCOUNTS,
-  IVA_RATE,
   PAYMENT_ALLOWED_ACCOUNTS,
 } from '@src/lib/constants/settings';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
@@ -178,7 +177,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   fullWidth
                   name="taxed_subtotal"
-                  label={`Subtotal ${IVA_RATE}%`}
+                  label="Base imponible"
                 />
               </Grid>
 
