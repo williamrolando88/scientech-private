@@ -54,7 +54,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
 
   return (
     <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Actualizar Factura</DialogTitle>
+      <DialogTitle>Actualizar factura</DialogTitle>
 
       <BaseInvoiceForm
         infoText="Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios."

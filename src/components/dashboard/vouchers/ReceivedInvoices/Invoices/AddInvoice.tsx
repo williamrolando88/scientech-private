@@ -35,7 +35,7 @@ const AddInvoice: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
 
   return (
     <>
-      <DialogTitle>Agregar Nueva Factura</DialogTitle>
+      <DialogTitle>Agregar nueva factura</DialogTitle>
 
       <BaseInvoiceForm
         infoText="Ingrese los datos de la factura recibida. Los campos marcados con * son obligatorios. Si la factura tiene un proyecto asociado, selecciónelo en el campo correspondiente."

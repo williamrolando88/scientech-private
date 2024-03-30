@@ -36,7 +36,7 @@ const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
 
   return (
     <>
-      <DialogTitle>Agregar Nuevo Gasto no Deducible</DialogTitle>
+      <DialogTitle>Agregar nuevo gasto no deducible</DialogTitle>
 
       <BaseNonDeductibleForm
         onClose={onClose}
