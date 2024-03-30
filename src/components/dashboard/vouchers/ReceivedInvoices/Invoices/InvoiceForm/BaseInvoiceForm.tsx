@@ -12,13 +12,7 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import {
-  DEFAULT_EXPENSE_ACCOUNT,
-  DEFAULT_IVA_ACCOUNT,
-  DEFAULT_PAYMENT_ACCOUNT,
-  EXPENSE_ALLOWED_ACCOUNTS,
-  PAYMENT_ALLOWED_ACCOUNTS,
-} from '@src/lib/constants/settings';
+import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
@@ -65,7 +59,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
       (formData.taxed_subtotal ?? 0) + (formData.tax_exempted_subtotal ?? 0);
     expense.description = transactionDescription;
 
-    tax.account_id = DEFAULT_IVA_ACCOUNT;
+    tax.account_id = DEFAULT_ACCOUNT.IVA;
     tax.debit = formData.IVA;
     tax.description = transactionDescription;
 
@@ -164,8 +158,8 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   name="transaction_details[0].account_id"
                   label="Forma de pago"
-                  selectableCategories={PAYMENT_ALLOWED_ACCOUNTS}
-                  initialValue={DEFAULT_PAYMENT_ACCOUNT}
+                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
+                  initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
                   required
                 />
               </Grid>
@@ -186,8 +180,8 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   name="transaction_details[1].account_id"
                   label="Tipo de egreso"
-                  selectableCategories={EXPENSE_ALLOWED_ACCOUNTS}
-                  initialValue={DEFAULT_EXPENSE_ACCOUNT}
+                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
+                  initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
                   required
                 />
               </Grid>
