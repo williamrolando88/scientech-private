@@ -25,7 +25,7 @@ export type GeneralExpense = Expense | CustomsPayment | Invoice;
 export type ExtendedGeneralExpense = (Expense | CustomsPayment | Invoice) &
   TransactionDetails;
 
-export type ExpenseType = z.infer<typeof ExpenseTypeSchema>;
+export type ExpenseTypeValues = z.infer<typeof ExpenseTypeSchema>;
 
 export type AddReceivedInvoiceProps = {
   onClose: VoidFunction;

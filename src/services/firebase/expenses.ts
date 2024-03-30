@@ -13,7 +13,7 @@ import {
 import {
   CustomsPayment,
   Expense,
-  ExpenseType,
+  ExpenseTypeValues,
   ExtendedGeneralExpense,
   GeneralExpense,
   Invoice,
@@ -27,7 +27,6 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  orderBy,
   query,
   runTransaction,
   where,
@@ -40,7 +39,7 @@ const GeneralExpenseConverter: FirestoreDataConverter<GeneralExpense> = {
   toFirestore: (expense: GeneralExpense) => expense,
   fromFirestore: (snapshot: any) => ({
     ...snapshot.data(),
-    issue_date: snapshot.data().issuer_date.toDate(),
+    issue_date: snapshot.data().issue_date.toDate(),
   }),
 };
 
@@ -48,7 +47,7 @@ const InvoiceConverter: FirestoreDataConverter<Invoice> = {
   toFirestore: (expense: Invoice) => expense,
   fromFirestore: (snapshot: any) => ({
     ...snapshot.data(),
-    issue_date: snapshot.data().issuer_date.toDate(),
+    issue_date: snapshot.data().issue_date.toDate(),
   }),
 };
 
@@ -56,7 +55,7 @@ const CustomsPaymentConverter: FirestoreDataConverter<CustomsPayment> = {
   toFirestore: (expense: CustomsPayment) => expense,
   fromFirestore: (snapshot: any) => ({
     ...snapshot.data(),
-    issue_date: snapshot.data().issuer_date.toDate(),
+    issue_date: snapshot.data().issue_date.toDate(),
   }),
 };
 
@@ -64,12 +63,12 @@ const ExpenseConverter: FirestoreDataConverter<Expense> = {
   toFirestore: (expense: Expense) => expense,
   fromFirestore: (snapshot: any) => ({
     ...snapshot.data(),
-    issue_date: snapshot.data().issuer_date.toDate(),
+    issue_date: snapshot.data().issue_date.toDate(),
   }),
 };
 
 const converterByType: Record<
-  ExpenseType,
+  ExpenseTypeValues,
   FirestoreDataConverter<GeneralExpense>
 > = {
   invoice: InvoiceConverter,
@@ -78,7 +77,7 @@ const converterByType: Record<
   non_deductible: ExpenseConverter,
 };
 
-export const ExpenseParserByType: Record<ExpenseType, ZodSchema> = {
+export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
   invoice: InvoiceSchema,
   customs_payment: CustomsPaymentSchema,
   non_deductible: ExpensesCommonSchema,
@@ -86,25 +85,28 @@ export const ExpenseParserByType: Record<ExpenseType, ZodSchema> = {
 };
 
 // !needs update
-function listByType<T>(type: ExpenseType) {
+function listByType(type: ExpenseTypeValues) {
   const converter = converterByType[type];
-  return async function (): Promise<T[]> {
+
+  return async function getList() {
     const q = query(
       collection(DB, COLLECTIONS.EXPENSES),
-      orderBy('issuer_date', 'desc'),
       where('type', '==', type)
     ).withConverter(converter);
 
     const querySnapshot = await getDocs(q);
 
-    const expenses: T[] = [];
-    querySnapshot.forEach((document) => {
-      expenses.push(document.data() as T);
-    });
+    const expenses = querySnapshot.docs.map((document) => document.data());
 
-    return expenses;
+    expenses.sort(
+      (a, b) =>
+        new Date(b.issue_date).getTime() - new Date(a.issue_date).getTime()
+    );
+
+    return expenses as unknown[];
   };
 }
+
 async function upsert(
   expense: ExtendedGeneralExpense
 ): Promise<GeneralExpense> {

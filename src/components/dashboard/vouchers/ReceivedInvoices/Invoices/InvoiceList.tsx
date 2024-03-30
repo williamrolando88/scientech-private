@@ -1,7 +1,8 @@
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { Invoice } from '@src/types/expenses';
+import { FC } from 'react';
 
-const InvoiceList = () => {
+const InvoiceList: FC = () => {
   const { data: invoices } = useListExpensesByType<Invoice>('invoice');
 
   return (

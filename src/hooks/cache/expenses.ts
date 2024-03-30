@@ -1,20 +1,25 @@
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import { Expenses } from '@src/services/firebase/expenses';
-import { ExpenseType, GeneralExpense } from '@src/types/expenses';
+import { ExpenseTypeValues, GeneralExpense } from '@src/types/expenses';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const queryKeyByType = (type: ExpenseType) => [COLLECTIONS.EXPENSES, type];
+const queryKeyByType = (type: ExpenseTypeValues) => [
+  COLLECTIONS.EXPENSES,
+  type,
+];
 
-export function useListExpensesByType<T>(type: ExpenseType) {
-  const query = useQuery<T[]>({
+export function useListExpensesByType<T>(type: ExpenseTypeValues) {
+  const getterFunction = Expenses.listByType(type);
+
+  const query = useQuery({
     queryKey: queryKeyByType(type),
-    queryFn: Expenses.listByType<T>(type),
+    queryFn: getterFunction,
   });
 
   return { ...query, data: query.data as T[] };
 }
 
-export const useAddExpenseByType = (type: ExpenseType) => {
+export const useAddExpenseByType = (type: ExpenseTypeValues) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -29,11 +34,7 @@ export const useAddExpenseByType = (type: ExpenseType) => {
     onSuccess: (newExpense) => {
       queryClient.setQueryData(
         queryKeyByType(type),
-        (prevData: GeneralExpense[]) => {
-          console.log('prevData', prevData);
-          console.log('newExpense', newExpense);
-          return [...prevData, newExpense];
-        }
+        (prevData: GeneralExpense[]) => [...prevData, newExpense]
       );
     },
   });
@@ -41,7 +42,7 @@ export const useAddExpenseByType = (type: ExpenseType) => {
   return mutation;
 };
 
-export const useUpdateExpenseByType = (type: ExpenseType) => {
+export const useUpdateExpenseByType = (type: ExpenseTypeValues) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -67,7 +68,7 @@ export const useUpdateExpenseByType = (type: ExpenseType) => {
   return mutation;
 };
 
-export const useDeleteExpenseByType = (type: ExpenseType) => {
+export const useDeleteExpenseByType = (type: ExpenseTypeValues) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({

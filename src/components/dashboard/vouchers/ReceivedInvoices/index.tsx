@@ -1,12 +1,12 @@
 import { Card, CardContent, Tab, Tabs } from '@mui/material';
-import { ExpenseType } from '@src/types/expenses';
+import { ExpenseTypeValues } from '@src/types/expenses';
 import { TabInterface } from '@src/types/shared';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
 import InvoiceList from './Invoices/InvoiceList';
 
-const TABS: TabInterface<ExpenseType>[] = [
+const TABS: TabInterface<ExpenseTypeValues>[] = [
   {
     value: 'invoice',
     component: <InvoiceList key="invoice" />,
@@ -31,11 +31,11 @@ const TABS: TabInterface<ExpenseType>[] = [
 
 const ReceivedInvoices: FC = () => {
   const router = useRouter();
-  const [currentTab, setCurrentTab] = useState<TabInterface<ExpenseType>>(
+  const [currentTab, setCurrentTab] = useState<TabInterface<ExpenseTypeValues>>(
     TABS[0]
   );
 
-  const pushQueryParam = (type: ExpenseType) => {
+  const pushQueryParam = (type: ExpenseTypeValues) => {
     const searchParams = new URLSearchParams();
     searchParams.set('type', type);
     router.push(
@@ -58,7 +58,7 @@ const ReceivedInvoices: FC = () => {
 
   const handleTabChange = (
     e: SyntheticEvent,
-    newTab: TabInterface<ExpenseType>
+    newTab: TabInterface<ExpenseTypeValues>
   ) => {
     setCurrentTab(newTab);
 
