@@ -158,6 +158,7 @@ async function upsert(
     expense.transaction_details.map((transaction) => ({
       ...transaction,
       expense_id: expenseDocRef.id,
+      project_id: projectDocRef?.id ?? '',
     }));
 
   let newExpense: Expense = {
