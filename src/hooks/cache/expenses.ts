@@ -37,6 +37,15 @@ export const useAddExpenseByType = (type: ExpenseTypeValues) => {
         (prevData: GeneralExpense[]) => [...prevData, newExpense]
       );
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeyByType(type) });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [COLLECTIONS.PROJECTS] });
+      queryClient.invalidateQueries({
+        queryKey: [COLLECTIONS.DAY_BOOK_TRANSACTIONS],
+      });
+    },
   });
 
   return mutation;
@@ -62,6 +71,15 @@ export const useUpdateExpenseByType = (type: ExpenseTypeValues) => {
             expense.id === newExpense.id ? newExpense : expense
           )
       );
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeyByType(type) });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [COLLECTIONS.PROJECTS] });
+      queryClient.invalidateQueries({
+        queryKey: [COLLECTIONS.DAY_BOOK_TRANSACTIONS],
+      });
     },
   });
 

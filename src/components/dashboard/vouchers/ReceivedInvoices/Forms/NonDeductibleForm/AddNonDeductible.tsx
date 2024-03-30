@@ -1,11 +1,11 @@
 import { DialogTitle } from '@mui/material';
 import { NON_DEDUCTIBLE_INITIAL_VALUE } from '@src/lib/constants/expenses';
-import { AddReceivedInvoiceProps, Expense } from '@src/types/expenses';
+import { AddReceivedVoucherModalProps, Expense } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { FC } from 'react';
 import BaseNonDeductibleForm from './BaseNonDeductibleForm';
 
-const AddNonDeductible: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
+const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
   const handleSubmit: FormikConfig<Expense>['onSubmit'] = () => {};
 
   return (

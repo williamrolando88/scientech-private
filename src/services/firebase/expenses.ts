@@ -84,11 +84,10 @@ export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
   sale_note: ExpensesCommonSchema,
 };
 
-// !needs update
-function listByType(type: ExpenseTypeValues) {
+const listByType = (type: ExpenseTypeValues) => {
   const converter = converterByType[type];
 
-  return async function getList() {
+  return async () => {
     const q = query(
       collection(DB, COLLECTIONS.EXPENSES),
       where('type', '==', type)
@@ -105,7 +104,7 @@ function listByType(type: ExpenseTypeValues) {
 
     return expenses as unknown[];
   };
-}
+};
 
 async function upsert(
   expense: ExtendedGeneralExpense
@@ -204,7 +203,7 @@ async function upsert(
   return newExpense;
 }
 
-// !needs update
+// !needs update, it should delete the day book transaction and filter the expenses from the project
 const remove = async (id: string) => {
   const docRef = doc(DB, COLLECTIONS.EXPENSES, id);
   await deleteDoc(docRef);

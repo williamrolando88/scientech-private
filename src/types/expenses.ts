@@ -27,6 +27,6 @@ export type ExtendedGeneralExpense = (Expense | CustomsPayment | Invoice) &
 
 export type ExpenseTypeValues = z.infer<typeof ExpenseTypeSchema>;
 
-export type AddReceivedInvoiceProps = {
+export type AddReceivedVoucherModalProps = {
   onClose: VoidFunction;
 };

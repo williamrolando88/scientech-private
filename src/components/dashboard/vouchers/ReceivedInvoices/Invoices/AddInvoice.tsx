@@ -1,21 +1,24 @@
 import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
-import { INVOICE_INITIAL_VALUE } from '@src/lib/constants/expenses';
-import { AddReceivedInvoiceProps, ExtendedInvoice } from '@src/types/expenses';
+import { EXTENDED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/expenses';
+import {
+  AddReceivedVoucherModalProps,
+  ExtendedInvoice,
+} from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
 
-const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
+const AddInvoice: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addExpense } = useAddExpenseByType('invoice');
+  const { mutateAsync: addInvoice } = useAddExpenseByType('invoice');
 
   const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    addExpense(values)
+    addInvoice(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura guardada exitosamente');
@@ -37,7 +40,7 @@ const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
       <BaseInvoiceForm
         infoText="Ingrese los datos de la factura recibida. Los campos marcados con * son obligatorios. Si la factura tiene un proyecto asociado, selecciónelo en el campo correspondiente."
         onClose={onClose}
-        initialValues={INVOICE_INITIAL_VALUE}
+        initialValues={EXTENDED_INVOICE_INITIAL_VALUE}
         onSubmit={handleSubmit}
       />
     </>

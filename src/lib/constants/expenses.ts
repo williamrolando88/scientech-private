@@ -1,7 +1,7 @@
 import { CustomsPayment, Expense, ExtendedInvoice } from '@src/types/expenses';
 import { DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE } from './dayBook';
 
-export const INVOICE_INITIAL_VALUE: ExtendedInvoice = {
+export const EXTENDED_INVOICE_INITIAL_VALUE: ExtendedInvoice = {
   id: '',
   issue_date: new Date(),
   type: 'invoice',
