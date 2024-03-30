@@ -149,7 +149,7 @@ const InvoiceList: FC = () => {
       <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
-        title="Borrar Factura"
+        title="Borrar factura"
         action={
           <LoadingButton
             onClick={handleDeleteExpense}

@@ -212,7 +212,6 @@ async function upsert(
   return newExpense;
 }
 
-// !needs update, it should delete the day book transaction and filter the expenses from the project
 const remove = async (expense: GeneralExpense) => {
   const { dayBookDocRef, expenseDocRef, projectDocRef } =
     docReferencer(expense);
