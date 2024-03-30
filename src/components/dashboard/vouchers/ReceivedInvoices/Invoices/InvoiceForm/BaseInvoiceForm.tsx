@@ -23,6 +23,7 @@ import {
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
+import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from './AccountCategorySelector';
@@ -46,8 +47,16 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   initialValues,
   onSubmit,
 }) => {
+  const isUpdating = Boolean(initialValues.id);
+
   const preSubmit: InvoiceFormProps['onSubmit'] = (formData, formActions) => {
-    const transactionDescription = `${formData.issuer_id}-${formData.description}`;
+    formData.tax_exempted_subtotal = round(
+      formData.tax_exempted_subtotal ?? 0,
+      2
+    );
+    formData.taxed_subtotal = round(formData.taxed_subtotal ?? 0, 2);
+
+    const transactionDescription = `Factura recibida: ${formData.issuer_id}-${formData.description}`;
     const [payment, expense, tax] = formData.transaction_details;
 
     payment.credit = formData.total;
@@ -202,7 +211,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <VoucherProjectSelector />
+                <VoucherProjectSelector disabled={isUpdating} />
               </Grid>
 
               <Grid item xs={2} />
@@ -223,7 +232,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               type="submit"
               loading={isSubmitting}
             >
-              Guardar
+              {isUpdating ? 'Actualizar' : 'Guardar'}
             </LoadingButton>
           </DialogActions>
         </Form>

@@ -18,7 +18,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
   onClose,
   initialValues,
 }) => {
-  const { data: transactions } = useListDayBookTransactions();
+  const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: updateInvoice } = useUpdateExpenseByType('invoice');
 
@@ -41,7 +41,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
       });
   };
 
-  if (!initialValues) return null;
+  if (!initialValues || isLoading) return null;
 
   const relatedTransaction = transactions?.find(
     (transaction) => transaction.id === initialValues.day_book_transaction_id
@@ -53,7 +53,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar Factura</DialogTitle>
 
       <BaseInvoiceForm

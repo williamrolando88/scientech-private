@@ -3,6 +3,7 @@ import { IVA_RATE } from '@src/lib/constants/settings';
 import { Invoice } from '@src/types/expenses';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
+import { round } from 'mathjs';
 import { useEffect } from 'react';
 
 export const VoucherIVAField = () => {
@@ -10,7 +11,7 @@ export const VoucherIVAField = () => {
 
   useEffect(() => {
     const taxedSubtotal = get(values, 'taxed_subtotal', 0);
-    const IVAValue = (taxedSubtotal * IVA_RATE) / 100;
+    const IVAValue = round((taxedSubtotal * IVA_RATE) / 100, 2);
 
     setFieldValue('IVA', IVAValue, false);
   }, [values, setFieldValue]);

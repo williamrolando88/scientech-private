@@ -35,7 +35,7 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
 export const InvoiceSchema = ExpensesCommonSchema.extend({
   issuer_id: z.string(ZOD_ERROR.REQUIRED).regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),
   type: z.literal('invoice'),
-  establishment: z.number().positive(),
-  emission_point: z.number().positive(),
-  sequential_number: z.number().positive(),
+  establishment: z.coerce.number().positive(),
+  emission_point: z.coerce.number().positive(),
+  sequential_number: z.coerce.number().positive(),
 });

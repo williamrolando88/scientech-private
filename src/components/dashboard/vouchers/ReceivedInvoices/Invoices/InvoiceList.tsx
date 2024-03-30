@@ -8,7 +8,8 @@ import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
   const [invoiceToUpdate, setInvoiceToUpdate] = useState<Invoice | null>(null);
-  const { data: invoices } = useListExpensesByType<Invoice>('invoice');
+  const { data: invoices, isLoading } =
+    useListExpensesByType<Invoice>('invoice');
 
   const columns: GridColDef<Invoice>[] = [
     {
@@ -110,6 +111,7 @@ const InvoiceList: FC = () => {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],
             },
           }}
+          loading={isLoading}
         />
       </CardContent>
 

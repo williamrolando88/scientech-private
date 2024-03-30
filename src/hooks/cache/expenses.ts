@@ -16,7 +16,7 @@ export function useListExpensesByType<T>(type: ExpenseTypeValues) {
     queryFn: getterFunction,
   });
 
-  return { ...query, data: query.data as T[] };
+  return { ...query, data: (query.data ?? []) as T[] };
 }
 
 export const useAddExpenseByType = (type: ExpenseTypeValues) => {
