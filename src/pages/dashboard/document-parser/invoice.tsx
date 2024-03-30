@@ -5,7 +5,7 @@ import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/In
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { parseFactura } from 'src/lib/modules/invoiceParser';
-import { Invoice } from 'src/types/invoiceParsers';
+import { ParsedInvoice } from 'src/types/invoiceParsers';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
@@ -13,7 +13,7 @@ Page.getLayout = (page: React.ReactElement) => (
 
 function Page() {
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [parsedData, setParsedData] = useState<Invoice[]>([]);
+  const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
 
   const handleUpload = () => {
     files.forEach((file) => {

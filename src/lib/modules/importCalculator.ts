@@ -3,14 +3,14 @@ import {
   ImportCalculator,
   ItemCalculationValues,
 } from 'src/types/importCalculator';
+import {
+  FODINFA_TAX_RATE,
+  INSURANCE_RATE,
+  ISD_TAX_RATE,
+} from '../constants/settings';
 import { parseSafeNumber } from '../utils/number';
 
 export const calculateImportation = (inputs: ImportCalculator) => {
-  // todo: store these values on the server
-  const ISDTax = 0.035;
-  const fodinfaTax = 0.005;
-  const insuranceRate = 0.01;
-
   const {
     items,
     settings: {
@@ -78,15 +78,16 @@ export const calculateImportation = (inputs: ImportCalculator) => {
 
     // Calculate aux FOB item values
     row.FOB = originFleetSafe * row.weightFraction + row.EXW;
-    row.ISD = row.FOB * ISDTax;
+    row.ISD = row.FOB * (ISD_TAX_RATE / 100);
 
     // Calculate aux CIF item values
     row.CIF =
-      (row.FOB + internationalFleet * row.weightFraction) * (1 + insuranceRate);
+      (row.FOB + internationalFleet * row.weightFraction) *
+      (1 + INSURANCE_RATE / 100);
 
     // Calculate item taxes
-    row.FODINFA = row.CIF * fodinfaTax;
-    row.tariff = (row.CIF * row.tariffRate) / 100;
+    row.FODINFA = row.CIF * (FODINFA_TAX_RATE / 100);
+    row.tariff = row.CIF * (row.tariffRate / 100);
   });
 
   // Calculate total FOB

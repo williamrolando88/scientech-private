@@ -16,7 +16,7 @@ import {
   DayBookTransactionFirestore,
 } from 'src/types/dayBook';
 
-const DayBookTransactionConverter: FirestoreDataConverter<DayBookTransaction> =
+export const DayBookTransactionConverter: FirestoreDataConverter<DayBookTransaction> =
   {
     toFirestore: (data: DayBookTransaction) => data,
     fromFirestore: (

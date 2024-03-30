@@ -10,9 +10,9 @@ import {
   Switch,
   TextField,
 } from '@mui/material';
+import { AccountCategorySchema } from '@src/lib/schemas/accountCategories';
 import { FormikConfig, useFormik } from 'formik';
 import { FC } from 'react';
-import { AccountCategoryParser } from 'src/lib/parsers/accountCategories';
 import { AccountCategory } from 'src/types/accountCategories';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
@@ -47,7 +47,7 @@ export const AccountCategoryForm: FC<AccountCategoryFormProps> = ({
     submitForm,
   } = useFormik<AccountCategory>({
     initialValues,
-    validationSchema: toFormikValidationSchema(AccountCategoryParser),
+    validationSchema: toFormikValidationSchema(AccountCategorySchema),
     onSubmit,
   });
 

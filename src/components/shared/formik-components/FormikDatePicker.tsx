@@ -7,9 +7,10 @@ interface FormikDatePickerProps
   name: string;
   fullWidth?: boolean;
   required?: boolean;
+  size?: 'small' | 'medium';
 }
 export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
-  const { name, fullWidth, required } = props;
+  const { name, fullWidth, required, size = 'medium' } = props;
   const [{ value }, { touched, error }, { setValue }] = useField(name);
 
   const handleChange = (newValue: string | null) => {
@@ -27,6 +28,7 @@ export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
         textField: {
           fullWidth,
           required,
+          size,
           helperText: touched && error,
           error: touched && !!error,
         },

@@ -1,6 +1,6 @@
-import { ClientContactParser, ClientParser } from '@src/lib/parsers/clients';
+import { ClientContactSchema, ClientSchema } from '@src/lib/schemas/clients';
 import { z } from 'zod';
 
-export type Client = z.infer<typeof ClientParser>;
+export type Client = z.infer<typeof ClientSchema>;
 
-export type ClientContact = z.infer<typeof ClientContactParser>;
+export type ClientContact = z.infer<typeof ClientContactSchema>;

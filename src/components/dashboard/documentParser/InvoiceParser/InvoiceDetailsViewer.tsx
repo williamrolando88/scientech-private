@@ -8,13 +8,13 @@ import {
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { Invoice } from 'src/types/invoiceParsers';
+import { ParsedInvoice } from 'src/types/invoiceParsers';
 
-const columns: GridColDef<Invoice>[] = [
+const columns: GridColDef<ParsedInvoice>[] = [
   {
     field: 'issueDate',
     headerName: 'Fecha de Emisión',
-    type: 'date',
+    type: 'string',
     width: 130,
     sortable: false,
     valueGetter: (params) => params.row.infoFactura.fechaEmision,
@@ -114,10 +114,10 @@ const columns: GridColDef<Invoice>[] = [
 ];
 
 interface InvoiceDetailsViewerProps {
-  data: Invoice[];
+  data: ParsedInvoice[];
 }
 
-const getUniqueInvoice = (invoices: Invoice[]) => {
+const getUniqueInvoice = (invoices: ParsedInvoice[]) => {
   const uniqueAccessKey = new Set();
   return invoices.filter((invoice) => {
     if (!uniqueAccessKey.has(invoice.infoTributaria.claveAcceso)) {
@@ -161,8 +161,8 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
               sortModel: [{ field: 'issueDate', sort: 'asc' }],
             },
           }}
-          components={{
-            Toolbar: CustomToolbar,
+          slots={{
+            toolbar: CustomToolbar,
           }}
         />
       </CardContent>

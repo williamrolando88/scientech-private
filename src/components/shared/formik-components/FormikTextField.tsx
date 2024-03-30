@@ -5,10 +5,11 @@ import { FC } from 'react';
 interface FormikTextFieldProps
   extends Omit<TextFieldProps, 'value' | 'error' | 'helperText' | 'onChange'> {
   name: string;
+  readOnly?: boolean;
 }
 
 export const FormikTextField: FC<FormikTextFieldProps> = (props) => {
-  const { name, select } = props;
+  const { name, select, readOnly } = props;
   const [{ value, onChange }, { touched, error }] = useField(name);
 
   return (
@@ -19,6 +20,9 @@ export const FormikTextField: FC<FormikTextFieldProps> = (props) => {
       onChange={onChange}
       error={touched && !!error}
       helperText={touched && error}
+      inputProps={{
+        readOnly,
+      }}
     />
   );
 };

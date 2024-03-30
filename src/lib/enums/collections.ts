@@ -5,6 +5,7 @@ export enum COLLECTIONS {
   DAY_BOOK_TRANSACTIONS = 'dayBookTransactions',
   CLIENTS = 'clients',
   PROJECTS = 'projects',
+  EXPENSES = 'expenses',
 }
 
 export enum APPLICATION_SETTINGS {

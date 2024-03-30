@@ -20,5 +20,8 @@ service cloud.firestore {
     match /projects/{project} {
       allow read, write: if request.auth != null;
     }
+    match /expenses/{expense} {
+      allow read, write: if request.auth != null;
+    }
   }
 }

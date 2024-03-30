@@ -5,11 +5,17 @@ import {
   ImportCalculatorMetadataValidationSchema,
   ImportCalculatorSettingsValidationSchema,
   ImportCalculatorValidationSchema,
-} from '../lib/parsers/importCalculator';
+} from '../lib/schemas/importCalculator';
 
-export type ImportCalculatorMetadata = z.infer<typeof ImportCalculatorMetadataValidationSchema>;
-export type ImportCalculatorSettings = z.infer<typeof ImportCalculatorSettingsValidationSchema>;
-export type ImportCalculatorItems = z.infer<typeof ImportCalculatorItemsValidationSchema>;
+export type ImportCalculatorMetadata = z.infer<
+  typeof ImportCalculatorMetadataValidationSchema
+>;
+export type ImportCalculatorSettings = z.infer<
+  typeof ImportCalculatorSettingsValidationSchema
+>;
+export type ImportCalculatorItems = z.infer<
+  typeof ImportCalculatorItemsValidationSchema
+>;
 export type ImportCalculator = z.infer<typeof ImportCalculatorValidationSchema>;
 
 export interface ItemCalculationValues extends ImportCalculatorItems {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const InvoiceInfoParser = z.object({
+const InvoiceInfoSchema = z.object({
   razonSocial: z.string(),
   ruc: z.string(),
   claveAcceso: z.string(),
@@ -9,23 +9,23 @@ const InvoiceInfoParser = z.object({
   ptoEmi: z.string(),
 });
 
-const ImpuestoParser = z.object({
+const ImpuestoSchema = z.object({
   codigoPorcentaje: z.string(),
   baseImponible: z.string(),
   valor: z.string(),
 });
 
-export const TotalTaxParser = z.union([ImpuestoParser, ImpuestoParser.array()]);
+export const TotalTaxSchema = z.union([ImpuestoSchema, ImpuestoSchema.array()]);
 
-const InfoFacturaParser = z.object({
+const InfoFacturaSchema = z.object({
   fechaEmision: z.string(),
   importeTotal: z.string(),
   totalConImpuestos: z.object({
-    totalImpuesto: TotalTaxParser,
+    totalImpuesto: TotalTaxSchema,
   }),
 });
 
-export const InvoiceParser = z.object({
-  infoTributaria: InvoiceInfoParser,
-  infoFactura: InfoFacturaParser,
+export const InvoiceReaderSchema = z.object({
+  infoTributaria: InvoiceInfoSchema,
+  infoFactura: InfoFacturaSchema,
 });

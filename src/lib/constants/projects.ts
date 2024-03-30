@@ -1,7 +1,7 @@
 import { Project } from '@src/types/projects';
 
 export const PROJECTS_INITIAL_VALUE: Project = {
-  id: '' as unknown as number,
+  id: '',
   name: '',
   client_id: '',
   description: '',
@@ -12,5 +12,5 @@ export const PROJECTS_INITIAL_VALUE: Project = {
   events: [],
   issued_invoices_id: [],
   issued_quotations_id: [],
-  received_invoices_id: [],
+  received_vouchers: [],
 };
