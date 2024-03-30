@@ -34,7 +34,7 @@ export const useAddExpenseByType = (type: ExpenseTypeValues) => {
     onSuccess: (newExpense) => {
       queryClient.setQueryData(
         queryKeyByType(type),
-        (prevData: GeneralExpense[]) => [...prevData, newExpense]
+        (prevData: GeneralExpense[]) => [...(prevData ?? []), newExpense]
       );
     },
     onError: () => {

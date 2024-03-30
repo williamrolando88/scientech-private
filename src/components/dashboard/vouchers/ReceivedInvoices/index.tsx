@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
 import InvoiceList from './Invoices/InvoiceList';
+import NonDeductibleList from './NonDeductible/NonDeductibleList';
 
 const TABS: TabInterface<ExpenseTypeValues>[] = [
   {
@@ -24,7 +25,7 @@ const TABS: TabInterface<ExpenseTypeValues>[] = [
   },
   {
     value: 'non_deductible',
-    component: <div key="3">No deducibles</div>,
+    component: <NonDeductibleList key="non_deductible" />,
     label: 'No deducibles',
   },
 ];
