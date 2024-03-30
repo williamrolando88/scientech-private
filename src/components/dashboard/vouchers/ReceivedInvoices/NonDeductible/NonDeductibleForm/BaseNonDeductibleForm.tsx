@@ -52,7 +52,7 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
 
     formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
 
-    const transactionDescription = `Gasto no deducible: ${formData.description}`;
+    const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
     const [payment, expense] = formData.transaction_details;
 
     payment.credit = formData.total;
