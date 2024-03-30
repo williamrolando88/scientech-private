@@ -22,7 +22,7 @@ export const DEFAULT_ACCOUNT = {
   },
   NON_DEDUCTIBLE: {
     PAYMENT: '1.01.01.03.01',
-    EXPENSE: '5.01.02.17',
+    EXPENSE: '5.02.01.17',
   },
   IVA: '1.01.05.01',
 };
@@ -45,6 +45,6 @@ export const ALLOWED_ACCOUNTS = {
       '2.01.04.01.01',
       '2.01.04.01.02',
     ],
-    EXPENSE: ['5.02.02', '5.02.03'],
+    EXPENSE: ['5.02.01', '5.02.02', '5.02.03'],
   },
 };
