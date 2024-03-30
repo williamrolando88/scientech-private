@@ -161,8 +161,8 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
               sortModel: [{ field: 'issueDate', sort: 'asc' }],
             },
           }}
-          components={{
-            Toolbar: CustomToolbar,
+          slots={{
+            toolbar: CustomToolbar,
           }}
         />
       </CardContent>
