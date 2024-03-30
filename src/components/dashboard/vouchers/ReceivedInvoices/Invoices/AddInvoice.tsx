@@ -5,7 +5,7 @@ import { AddReceivedInvoiceProps, ExtendedInvoice } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import BaseInvoiceForm from './BaseInvoiceForm';
+import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
 
 const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -35,6 +35,7 @@ const AddInvoice: FC<AddReceivedInvoiceProps> = ({ onClose }) => {
       <DialogTitle>Agregar Nueva Factura</DialogTitle>
 
       <BaseInvoiceForm
+        infoText="Ingrese los datos de la factura recibida. Los campos marcados con * son obligatorios. Si la factura tiene un proyecto asociado, selecciónelo en el campo correspondiente."
         onClose={onClose}
         initialValues={INVOICE_INITIAL_VALUE}
         onSubmit={handleSubmit}

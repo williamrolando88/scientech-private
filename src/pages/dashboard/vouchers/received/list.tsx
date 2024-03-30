@@ -1,5 +1,5 @@
 import ReceivedInvoices from '@src/components/dashboard/vouchers/ReceivedInvoices';
-import AddReceivedInvoice from '@src/components/dashboard/vouchers/ReceivedInvoices/Invoices/AddReceivedInvoice';
+import AddReceivedVoucher from '@src/components/dashboard/vouchers/ReceivedInvoices/AddReceivedVoucher';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -12,7 +12,7 @@ export default function Page() {
     <DashboardTemplate
       documentTitle="Facturas Recibidas"
       heading="Facturas Recibidas"
-      action={<AddReceivedInvoice />}
+      action={<AddReceivedVoucher />}
     >
       <ReceivedInvoices />
     </DashboardTemplate>
