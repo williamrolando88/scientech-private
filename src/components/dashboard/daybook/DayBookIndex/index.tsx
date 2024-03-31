@@ -127,10 +127,7 @@ const DayBookIndex: FC = () => {
           />,
           <GridActionsCellItem
             label="Modificar"
-            onClick={() => {
-              console.log(params.row);
-              getTransactionToUpdate(params.id as string);
-            }}
+            onClick={() => getTransactionToUpdate(params.id as string)}
             icon={<Iconify icon="pajamas:doc-changes" />}
             showInMenu
             disabled={params.row.locked}
