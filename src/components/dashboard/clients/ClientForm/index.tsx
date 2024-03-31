@@ -37,11 +37,11 @@ const ClientForm: FC<ClientFormProps> = ({
           <Alert severity="info">{infoText}</Alert>
 
           <Grid container columns={6} rowSpacing={2} columnSpacing={2}>
-            <Grid item xs={2}>
+            <Grid item xs={4}>
               <FormikTextField fullWidth label="Nombre" name="name" required />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <FormikTextField fullWidth label="CI/RUC" name="id" required />
             </Grid>
 
