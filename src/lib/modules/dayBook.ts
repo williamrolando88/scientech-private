@@ -92,6 +92,7 @@ export const getDayBookTransactions = (
         ...detail,
         id: `${entry.id}:${index}`,
         date: entry.date,
+        locked: entry.locked,
       }))
     )
     .flat();
