@@ -94,7 +94,6 @@ const ProjectForm: FC<ProjectFormProps> = ({
                   fullWidth
                   label="Descripción"
                   name="description"
-                  required
                 />
               </Grid>
             </Grid>
