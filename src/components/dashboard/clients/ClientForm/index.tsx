@@ -46,12 +46,7 @@ const ClientForm: FC<ClientFormProps> = ({
             </Grid>
 
             <Grid item xs={6}>
-              <FormikTextField
-                fullWidth
-                label="Dirección"
-                name="address"
-                required
-              />
+              <FormikTextField fullWidth label="Dirección" name="address" />
             </Grid>
 
             <Grid item xs={3}>
