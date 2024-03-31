@@ -23,7 +23,7 @@ const AddProject: FC = () => {
     { setSubmitting, resetForm }
   ) => {
     values.events = [
-      { date: new Date(), action: 'created', user_id: user?.id },
+      { date: new Date(), action: 'created', user_id: user?.uid },
     ];
 
     addProject(values)

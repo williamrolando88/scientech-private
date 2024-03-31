@@ -12,7 +12,7 @@ export const ClientContactSchema = z.object({
 export const ClientSchema = z.object({
   id: z.string(ZOD_ERROR.REQUIRED).regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),
   name: z.string(ZOD_ERROR.REQUIRED),
-  address: z.string(ZOD_ERROR.REQUIRED),
+  address: z.string().optional(),
   contact: ClientContactSchema.array(),
   phone: z.string().optional(),
   email: z.string().email().optional(),

@@ -21,7 +21,7 @@ export const EventSchema = z.object({
 export const ProjectSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   status: ProjectStatusSchema,
   client_id: z.string(),
   start_date: z.coerce.date(),
