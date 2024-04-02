@@ -30,7 +30,7 @@ export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
   specific_tariff: z.number().nonnegative(),
   FODINFA: z.number().positive(),
   IVA: z.number().positive(),
-  customs_payment_number: z.string(),
+  customs_payment_number: z.coerce.string(),
   type: z.literal('customs_payment'),
 });
 
