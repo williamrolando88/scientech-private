@@ -13,11 +13,10 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
+import { extendedCustomPaymentBuilder } from '@src/lib/modules/expenses';
 import { CustomsPaymentSchema } from '@src/lib/schemas/expenses';
 import { ExtendedCustomsPayment } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
-import { cloneDeep } from 'lodash';
-import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../../Invoices/InvoiceForm/AccountCategorySelector';
@@ -42,36 +41,12 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
 }) => {
   const isUpdating = Boolean(initialValues.id);
 
-  const preSubmit: BaseCustomsPaymentFormProps['onSubmit'] = (
+  const preSubmit: BaseCustomsPaymentFormProps['onSubmit'] = async (
     formData,
     formActions
   ) => {
-    formData.IVA = round(formData.IVA ?? 0, 2);
-    formData.FODINFA = round(formData.FODINFA ?? 0, 2);
-    formData.specific_tariff = round(formData.specific_tariff ?? 0, 2);
-    formData.ad_valorem_tariff = round(formData.ad_valorem_tariff ?? 0, 2);
-    formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
-
-    const transactionDescription = `Liquidación aduanera: ${formData.description}`;
-    const [payment, expense, tax] = cloneDeep(formData.transaction_details);
-
-    payment.credit = formData.total;
-    payment.debit = 0;
-    payment.description = transactionDescription;
-
-    expense.debit =
-      formData.FODINFA + formData.ad_valorem_tariff + formData.specific_tariff;
-    expense.credit = 0;
-    expense.description = transactionDescription;
-
-    tax.account_id = DEFAULT_ACCOUNT.IVA;
-    tax.debit = formData.IVA;
-    tax.credit = 0;
-    tax.description = transactionDescription;
-
-    formData.transaction_details = [payment, expense, tax];
-
-    onSubmit(formData, formActions);
+    const processedFormData = extendedCustomPaymentBuilder(formData);
+    onSubmit(processedFormData, formActions);
   };
   return (
     <Formik
@@ -83,8 +58,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
-
-            {console.log(values)}
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={3}>
@@ -125,8 +98,10 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                   size="small"
                   name="transaction_details[0].account_id"
                   label="Forma de pago"
-                  selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.PAYMENT}
-                  initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.PAYMENT}
+                  selectableCategories={
+                    ALLOWED_ACCOUNTS.CUSTOMS_PAYMENT.PAYMENT
+                  }
+                  initialValue={DEFAULT_ACCOUNT.CUSTOMS_PAYMENT.PAYMENT}
                   required
                 />
               </Grid>
