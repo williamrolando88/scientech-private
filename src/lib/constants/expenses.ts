@@ -1,6 +1,6 @@
 import {
-  CustomsPayment,
   Expense,
+  ExtendedCustomsPayment,
   ExtendedExpense,
   ExtendedInvoice,
 } from '@src/types/expenses';
@@ -57,18 +57,30 @@ export const NON_DEDUCTIBLE_INITIAL_VALUE: ExtendedExpense = {
   ),
 };
 
-export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
+export const CUSTOMS_PAYMENT_INITIAL_VALUE: ExtendedCustomsPayment = {
   id: '',
+  customs_payment_number: '',
   issue_date: new Date(),
   type: 'customs_payment',
   day_book_transaction_id: '',
   IVA: 0,
   description: '',
   project_id: '',
-  adValorem_tariff: 0,
+  ad_valorem_tariff: 0,
   specific_tariff: 0,
-  tariff: 0,
+  FODINFA: 0,
   total: 0,
+  /**
+   * This is an array of DayBookTransactionDetail objects.
+   * It is used to store the transactions related to the invoice.
+   *
+   * First element will always be the payment method.
+   * Second element will always be the sum of the subtotals.
+   * Third element will always be the IVA total.
+   */
+  transaction_details: new Array(3).fill(
+    DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE
+  ),
 };
 
 export const SALE_NOTE_INITIAL_VALUE: Expense = {

@@ -45,7 +45,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       valueGetter: (params) =>
         `
       ${params.row.account_id} -
-      ${accountCategories[params.row.account_id].name || ''},
+      ${accountCategories[params.row.account_id]?.name || ''},
       `,
     },
     {

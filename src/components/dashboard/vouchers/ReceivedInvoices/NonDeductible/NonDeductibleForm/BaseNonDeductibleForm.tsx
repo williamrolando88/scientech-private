@@ -13,11 +13,10 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
+import { extendedNonDeductibleBuilder } from '@src/lib/modules/expenses';
 import { ExpensesCommonSchema } from '@src/lib/schemas/expenses';
 import { ExtendedExpense } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
-import { cloneDeep } from 'lodash';
-import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../../Invoices/InvoiceForm/AccountCategorySelector';
@@ -46,27 +45,9 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
     formData,
     formActions
   ) => {
-    formData.tax_exempted_subtotal = round(
-      formData.tax_exempted_subtotal ?? 0,
-      2
-    );
+    const processedData = extendedNonDeductibleBuilder(formData);
 
-    formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
-
-    const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
-    const [payment, expense] = cloneDeep(formData.transaction_details);
-
-    payment.credit = formData.total;
-    payment.debit = 0;
-    payment.description = transactionDescription;
-
-    expense.debit = formData.tax_exempted_subtotal;
-    expense.credit = 0;
-    expense.description = transactionDescription;
-
-    formData.transaction_details = [payment, expense];
-
-    onSubmit(formData, formActions);
+    onSubmit(processedData, formActions);
   };
 
   return (

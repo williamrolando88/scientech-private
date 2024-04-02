@@ -13,28 +13,27 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
-import { extendedInvoiceBuilder } from '@src/lib/modules/expenses';
-import { InvoiceSchema } from '@src/lib/schemas/expenses';
-import { ExtendedInvoice } from '@src/types/expenses';
+import { extendedCustomPaymentBuilder } from '@src/lib/modules/expenses';
+import { CustomsPaymentSchema } from '@src/lib/schemas/expenses';
+import { ExtendedCustomsPayment } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { AccountCategorySelector } from './AccountCategorySelector';
-import { VoucherIVAField } from './VoucherIVAField';
-import { VoucherProjectSelector } from './VoucherProjectSelector';
-import { VoucherTotalField } from './VoucherTotalField';
+import { AccountCategorySelector } from '../../Invoices/InvoiceForm/AccountCategorySelector';
+import { VoucherProjectSelector } from '../../Invoices/InvoiceForm/VoucherProjectSelector';
+import { CustomsPaymentTotalField } from './CustomsPaymentTotalField';
 
 type FormikProps = Pick<
-  FormikConfig<ExtendedInvoice>,
+  FormikConfig<ExtendedCustomsPayment>,
   'initialValues' | 'onSubmit'
 >;
 
-export interface InvoiceFormProps extends FormikProps {
+interface BaseCustomsPaymentFormProps extends FormikProps {
   onClose: VoidFunction;
   infoText?: string;
 }
 
-const BaseInvoiceForm: FC<InvoiceFormProps> = ({
+const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
   onClose,
   infoText,
   initialValues,
@@ -42,55 +41,36 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 }) => {
   const isUpdating = Boolean(initialValues.id);
 
-  const preSubmit: InvoiceFormProps['onSubmit'] = (formData, formActions) => {
-    const processedInvoice = extendedInvoiceBuilder(formData);
-
-    onSubmit(processedInvoice, formActions);
+  const preSubmit: BaseCustomsPaymentFormProps['onSubmit'] = async (
+    formData,
+    formActions
+  ) => {
+    const processedFormData = extendedCustomPaymentBuilder(formData);
+    onSubmit(processedFormData, formActions);
   };
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={preSubmit}
-      validationSchema={toFormikValidationSchema(InvoiceSchema)}
+      validationSchema={toFormikValidationSchema(CustomsPaymentSchema)}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
 
             <Grid container columns={12} spacing={2}>
-              <Grid item xs={1}>
+              <Grid item xs={3}>
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="establishment"
-                  label="Suc."
+                  name="customs_payment_number"
+                  label="No. de liquidación"
                   required
                 />
               </Grid>
 
-              <Grid item xs={1}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="emission_point"
-                  label="Pto."
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={2}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="sequential_number"
-                  label="Nro."
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={5} />
+              <Grid item xs={6} />
 
               <Grid item xs={3}>
                 <FormikDatePicker
@@ -98,26 +78,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="issue_date"
                   label="Fecha de Emisión"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={3}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="issuer_id"
-                  label="RUC Emisor"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={9}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="issuer_name"
-                  label="Razón Social Emisor"
                   required
                 />
               </Grid>
@@ -138,8 +98,10 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   size="small"
                   name="transaction_details[0].account_id"
                   label="Forma de pago"
-                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
-                  initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
+                  selectableCategories={
+                    ALLOWED_ACCOUNTS.CUSTOMS_PAYMENT.PAYMENT
+                  }
+                  initialValue={DEFAULT_ACCOUNT.CUSTOMS_PAYMENT.PAYMENT}
                   required
                 />
               </Grid>
@@ -150,37 +112,44 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikAutoCalculateField
                   size="small"
                   fullWidth
-                  name="taxed_subtotal"
-                  label="Base imponible"
-                />
-              </Grid>
-
-              <Grid item xs={7}>
-                <AccountCategorySelector
-                  size="small"
-                  name="transaction_details[1].account_id"
-                  label="Tipo de egreso"
-                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
-                  initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={2} />
-
-              <Grid item xs={3}>
-                <FormikAutoCalculateField
-                  size="small"
-                  fullWidth
-                  name="tax_exempted_subtotal"
-                  label="Subtotal 0%"
+                  name="ad_valorem_tariff"
+                  label="Arancel Ad Valorem"
                 />
               </Grid>
 
               <Grid item xs={9} />
 
               <Grid item xs={3}>
-                <VoucherIVAField />
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="specific_tariff"
+                  label="Arancel Específico"
+                />
+              </Grid>
+
+              <Grid item xs={9} />
+
+              <Grid item xs={3}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="FODINFA"
+                  label="FODINFA"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={9} />
+
+              <Grid item xs={3}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="IVA"
+                  label="IVA"
+                  required
+                />
               </Grid>
 
               <Grid item xs={7}>
@@ -190,7 +159,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={2} />
 
               <Grid item xs={3}>
-                <VoucherTotalField />
+                <CustomsPaymentTotalField />
               </Grid>
             </Grid>
           </Stack>
@@ -205,7 +174,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               type="submit"
               loading={isSubmitting}
             >
-              {isUpdating ? 'Actualizar' : 'Guardar'}
+              Guardar
             </LoadingButton>
           </DialogActions>
         </Form>
@@ -214,4 +183,4 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   );
 };
 
-export default BaseInvoiceForm;
+export default BaseCustomsPaymentForm;
