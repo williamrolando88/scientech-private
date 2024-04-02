@@ -13,11 +13,10 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
+import { extendedInvoiceBuilder } from '@src/lib/modules/expenses';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
-import { cloneDeep } from 'lodash';
-import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from './AccountCategorySelector';
@@ -44,31 +43,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   const isUpdating = Boolean(initialValues.id);
 
   const preSubmit: InvoiceFormProps['onSubmit'] = (formData, formActions) => {
-    formData.tax_exempted_subtotal = round(
-      formData.tax_exempted_subtotal ?? 0,
-      2
-    );
-    formData.taxed_subtotal = round(formData.taxed_subtotal ?? 0, 2);
+    const processedInvoice = extendedInvoiceBuilder(formData);
 
-    const transactionDescription = `Factura recibida: ${formData.issuer_id}-${formData.description}`;
-    const [payment, expense, tax] = cloneDeep(formData.transaction_details);
-
-    payment.credit = formData.total;
-    payment.debit = 0;
-    payment.description = transactionDescription;
-
-    expense.debit = formData.taxed_subtotal + formData.tax_exempted_subtotal;
-    expense.credit = 0;
-    expense.description = transactionDescription;
-
-    tax.account_id = DEFAULT_ACCOUNT.IVA;
-    tax.debit = formData.IVA;
-    tax.credit = 0;
-    tax.description = transactionDescription;
-
-    formData.transaction_details = [payment, expense, tax];
-
-    onSubmit(formData, formActions);
+    onSubmit(processedInvoice, formActions);
   };
 
   return (
