@@ -3,7 +3,10 @@ import { round } from 'lodash';
 import { evaluate } from 'mathjs';
 import { FC, useEffect, useState } from 'react';
 
-export type AutoCalculateInputProps = Omit<TextFieldProps, 'onChange' | 'type'> & {
+export type AutoCalculateInputProps = Omit<
+  TextFieldProps,
+  'onChange' | 'type'
+> & {
   /** Use formik `setFieldValue` function for the best compatibility */
   onChange: (field: string, value: number) => void;
 };
@@ -21,7 +24,7 @@ export const AutoCalculateInput: FC<AutoCalculateInputProps> = ({
   onChange,
   ...props
 }) => {
-  const [inputValue, setInputValue] = useState((value as number).toString());
+  const [inputValue, setInputValue] = useState((value as number)?.toString());
 
   const handleBlur = () => {
     if (!name) return;
@@ -30,7 +33,7 @@ export const AutoCalculateInput: FC<AutoCalculateInputProps> = ({
       const calculate = evaluate(inputValue);
 
       if (typeof calculate === 'number') {
-        setInputValue(round(calculate, 2).toString());
+        setInputValue(round(calculate, 2)?.toString());
         onChange(name, round(calculate, 2));
       } else {
         setInputValue('0');
@@ -46,7 +49,7 @@ export const AutoCalculateInput: FC<AutoCalculateInputProps> = ({
     if (value === 0) {
       setInputValue('0');
     } else {
-      setInputValue((value as number).toString());
+      setInputValue((value as number)?.toString());
     }
   }, [value]);
 
