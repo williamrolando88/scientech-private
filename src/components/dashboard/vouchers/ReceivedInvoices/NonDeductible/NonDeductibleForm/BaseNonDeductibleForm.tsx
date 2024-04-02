@@ -16,6 +16,7 @@ import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { ExpensesCommonSchema } from '@src/lib/schemas/expenses';
 import { ExtendedExpense } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
+import { cloneDeep } from 'lodash';
 import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -53,12 +54,14 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
     formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
 
     const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
-    const [payment, expense] = formData.transaction_details;
+    const [payment, expense] = cloneDeep(formData.transaction_details);
 
     payment.credit = formData.total;
+    payment.debit = 0;
     payment.description = transactionDescription;
 
     expense.debit = formData.tax_exempted_subtotal;
+    expense.credit = 0;
     expense.description = transactionDescription;
 
     formData.transaction_details = [payment, expense];
