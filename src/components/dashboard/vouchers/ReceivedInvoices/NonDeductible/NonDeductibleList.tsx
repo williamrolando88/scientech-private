@@ -36,6 +36,12 @@ const NonDeductibleList: FC = () => {
       sortable: false,
     },
     {
+      field: 'description',
+      flex: 3,
+      headerName: 'Descripción',
+      sortable: false,
+    },
+    {
       field: 'total',
       headerName: 'Total',
       type: 'number',
