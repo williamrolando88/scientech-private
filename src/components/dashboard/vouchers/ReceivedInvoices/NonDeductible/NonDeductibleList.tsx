@@ -46,6 +46,8 @@ const NonDeductibleList: FC = () => {
       headerName: 'Total',
       type: 'number',
       sortable: false,
+      valueFormatter: ({ value }) =>
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'actions',

@@ -67,24 +67,32 @@ const InvoiceList: FC = () => {
       headerName: 'Base 0%',
       type: 'number',
       sortable: false,
+      valueFormatter: ({ value }) =>
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'taxed_subtotal',
       headerName: 'Base imp.',
       type: 'number',
       sortable: false,
+      valueFormatter: ({ value }) =>
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'IVA',
       headerName: 'IVA',
       type: 'number',
       sortable: false,
+      valueFormatter: ({ value }) =>
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'total',
       headerName: 'Total',
       type: 'number',
       sortable: false,
+      valueFormatter: ({ value }) =>
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'actions',
