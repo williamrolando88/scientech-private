@@ -28,7 +28,8 @@ export const ExpensesCommonSchema = z.object({
 export const CustomsPaymentSchema = ExpensesCommonSchema.extend({
   adValorem_tariff: z.number().nonnegative(),
   specific_tariff: z.number().nonnegative(),
-  tariff: z.number(),
+  FODINFA: z.number().nonnegative(),
+  customs_payment_number: z.string(),
   type: z.literal('customs_payment'),
 });
 

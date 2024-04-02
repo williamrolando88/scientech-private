@@ -4,6 +4,7 @@ import { TabInterface } from '@src/types/shared';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
+import CustomsPaymentsList from './CustomsPayments/CustomsPaymentsList';
 import InvoiceList from './Invoices/InvoiceList';
 import NonDeductibleList from './NonDeductible/NonDeductibleList';
 
@@ -14,19 +15,19 @@ const TABS: TabInterface<ExpenseTypeValues>[] = [
     label: 'Facturas',
   },
   {
+    value: 'non_deductible',
+    component: <NonDeductibleList key="non_deductible" />,
+    label: 'No deducibles',
+  },
+  {
     value: 'customs_payment',
-    component: <div key="1">Liquidacion aduanera</div>,
+    component: <CustomsPaymentsList key="customs_payment" />,
     label: 'Liquidación aduanera',
   },
   {
     value: 'sale_note',
     component: <div key="2">Notas de venta</div>,
     label: 'Notas de venta',
-  },
-  {
-    value: 'non_deductible',
-    component: <NonDeductibleList key="non_deductible" />,
-    label: 'No deducibles',
   },
 ];
 
