@@ -10,6 +10,7 @@ import {
   Stack,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { FC, useMemo } from 'react';
 import {
   DayBookTableEntry,
@@ -33,19 +34,26 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
   alertText = 'La transacción seleccionada contiene los siguientes detalles asociados.',
   alertSeverity = 'info',
 }) => {
+  const { data: accountCategories } = useListAccountCategories();
+
   const columns: GridColDef<DayBookTransactionDetail>[] = [
     {
       field: 'account_id',
       headerName: 'Cuenta contable',
       type: 'string',
-      flex: 3,
+      flex: 5,
+      valueGetter: (params) =>
+        `
+      ${params.row.account_id} -
+      ${accountCategories[params.row.account_id].name || ''},
+      `,
     },
     {
       field: 'debit',
       headerName: 'Debe',
       headerAlign: 'center',
       type: 'number',
-      flex: 2,
+      flex: 1,
       align: 'center',
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
@@ -55,7 +63,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       headerName: 'Haber',
       headerAlign: 'center',
       type: 'number',
-      flex: 2,
+      flex: 1,
       align: 'center',
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
@@ -71,7 +79,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       headerName: 'Cotización No.',
       headerAlign: 'center',
       type: 'number',
-      flex: 2,
+      flex: 1,
       align: 'center',
       valueFormatter: ({ value }) => value || '-',
     },
@@ -80,7 +88,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       headerName: 'Factura No.',
       headerAlign: 'center',
       type: 'number',
-      flex: 2,
+      flex: 1,
       align: 'center',
       valueFormatter: ({ value }) => value || '-',
     },

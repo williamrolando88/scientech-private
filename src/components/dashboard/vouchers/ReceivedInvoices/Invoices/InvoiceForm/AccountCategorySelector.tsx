@@ -2,26 +2,27 @@ import { MenuItem } from '@mui/material';
 import { FormikTextField } from '@src/components/shared/formik-components';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { useField } from 'formik';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
+import { useEffectOnce } from 'usehooks-ts';
 
 interface AccountCategorySelectorProps {
   name: string;
-  selectableCategories?: string[];
+  selectableCategories: string[];
+  initialValue: string;
   label?: string;
   size?: 'small' | 'medium';
-  initialValue?: string;
   required?: boolean;
 }
 export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   name,
   initialValue,
-  required,
+  selectableCategories,
   label = '',
   size = 'medium',
-  selectableCategories = [],
+  required = false,
 }) => {
   const { data: accountCategories } = useListAccountCategories();
-  const [, , { setValue }] = useField(name);
+  const [{ value }, , { setValue }] = useField(name);
 
   const filteredAccountCategories = Object.values(accountCategories)
     .filter(
@@ -30,11 +31,13 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
     )
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  useEffect(() => {
-    if (initialValue) {
+  useEffectOnce(() => {
+    if (value) {
+      setValue(value, false);
+    } else {
       setValue(initialValue, false);
     }
-  }, [initialValue, setValue]);
+  });
 
   return (
     <FormikTextField
