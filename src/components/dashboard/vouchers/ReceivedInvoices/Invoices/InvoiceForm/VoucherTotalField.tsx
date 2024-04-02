@@ -1,21 +1,26 @@
 import { FormikTextField } from '@src/components/shared/formik-components';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
-import { round } from 'mathjs';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
-export const VoucherTotalField = () => {
+interface VoucherTotalFieldProps {
+  fields?: string[];
+}
+
+export const VoucherTotalField: FC<VoucherTotalFieldProps> = ({
+  fields = ['taxed_subtotal', 'tax_exempted_subtotal', 'IVA'],
+}) => {
   const { values, setFieldValue } = useFormikContext();
 
   useEffect(() => {
-    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
-    const taxExemptedSubtotal = get(values, 'tax_exempted_subtotal', 0);
-    const IVAValue = get(values, 'IVA', 0);
+    let total = 0;
 
-    const total = round(taxedSubtotal + taxExemptedSubtotal + IVAValue, 2);
+    fields.forEach((field) => {
+      total += get(values, field, 0);
+    });
 
     setFieldValue('total', total, false);
-  }, [values, setFieldValue]);
+  }, [values, setFieldValue, fields]);
 
   return (
     <FormikTextField
