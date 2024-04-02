@@ -1,3 +1,4 @@
+import { DayBookTransactionDetail } from '@src/types/dayBook';
 import {
   ExtendedCustomsPayment,
   ExtendedExpense,
@@ -18,22 +19,28 @@ export const extendedCustomPaymentBuilder = (
   formData.total = round(formData.total ?? 0, 2);
 
   const transactionDescription = `Liquidación aduanera: ${formData.description}`;
-  const [payment, expense, tax] = formData.transaction_details;
 
-  payment.credit = formData.total;
-  payment.debit = 0;
-  payment.description = transactionDescription;
+  const payment: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[0].account_id,
+    debit: 0,
+    credit: formData.total,
+    description: transactionDescription,
+  };
 
-  expense.account_id = DEFAULT_ACCOUNT.CUSTOMS_PAYMENT.EXPENSE;
-  expense.debit =
-    formData.FODINFA + formData.ad_valorem_tariff + formData.specific_tariff;
-  expense.credit = 0;
-  expense.description = transactionDescription;
+  const expense: DayBookTransactionDetail = {
+    account_id: DEFAULT_ACCOUNT.CUSTOMS_PAYMENT.EXPENSE,
+    debit:
+      formData.FODINFA + formData.ad_valorem_tariff + formData.specific_tariff,
+    credit: 0,
+    description: transactionDescription,
+  };
 
-  tax.account_id = DEFAULT_ACCOUNT.IVA;
-  tax.debit = formData.IVA;
-  tax.credit = 0;
-  tax.description = transactionDescription;
+  const tax: DayBookTransactionDetail = {
+    account_id: DEFAULT_ACCOUNT.IVA,
+    debit: formData.IVA,
+    credit: 0,
+    description: transactionDescription,
+  };
 
   formData.transaction_details = [payment, expense, tax];
 
@@ -52,20 +59,27 @@ export const extendedInvoiceBuilder = (
   formData.taxed_subtotal = round(formData.taxed_subtotal ?? 0, 2);
 
   const transactionDescription = `Factura recibida: ${formData.issuer_id}-${formData.description}`;
-  const [payment, expense, tax] = formData.transaction_details;
 
-  payment.credit = formData.total;
-  payment.debit = 0;
-  payment.description = transactionDescription;
+  const payment: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[0].account_id,
+    debit: 0,
+    credit: formData.total,
+    description: transactionDescription,
+  };
 
-  expense.debit = formData.taxed_subtotal + formData.tax_exempted_subtotal;
-  expense.credit = 0;
-  expense.description = transactionDescription;
+  const expense: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[1].account_id,
+    debit: formData.taxed_subtotal + formData.tax_exempted_subtotal,
+    credit: 0,
+    description: transactionDescription,
+  };
 
-  tax.account_id = DEFAULT_ACCOUNT.IVA;
-  tax.debit = formData.IVA;
-  tax.credit = 0;
-  tax.description = transactionDescription;
+  const tax: DayBookTransactionDetail = {
+    account_id: DEFAULT_ACCOUNT.IVA,
+    debit: formData.IVA,
+    credit: 0,
+    description: transactionDescription,
+  };
 
   formData.transaction_details = [payment, expense, tax];
 
@@ -85,15 +99,20 @@ export const extendedNonDeductibleBuilder = (
   formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
 
   const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
-  const [payment, expense] = formData.transaction_details;
 
-  payment.credit = formData.total;
-  payment.debit = 0;
-  payment.description = transactionDescription;
+  const payment: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[0].account_id,
+    debit: 0,
+    credit: formData.total,
+    description: transactionDescription,
+  };
 
-  expense.debit = formData.tax_exempted_subtotal;
-  expense.credit = 0;
-  expense.description = transactionDescription;
+  const expense: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[1].account_id,
+    debit: formData.tax_exempted_subtotal,
+    credit: 0,
+    description: transactionDescription,
+  };
 
   formData.transaction_details = [payment, expense];
 

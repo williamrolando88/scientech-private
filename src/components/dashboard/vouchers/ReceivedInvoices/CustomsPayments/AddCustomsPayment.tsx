@@ -15,8 +15,6 @@ const AddCustomsPayment: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
   const { mutateAsync: addCustomsPayment } =
     useAddExpenseByType('customs_payment');
 
-  console.log(CUSTOMS_PAYMENT_INITIAL_VALUE);
-
   const handleSubmit: FormikConfig<ExtendedCustomsPayment>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }

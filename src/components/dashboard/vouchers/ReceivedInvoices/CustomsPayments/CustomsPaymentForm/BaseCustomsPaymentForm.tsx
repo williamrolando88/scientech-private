@@ -21,7 +21,7 @@ import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../../Invoices/InvoiceForm/AccountCategorySelector';
 import { VoucherProjectSelector } from '../../Invoices/InvoiceForm/VoucherProjectSelector';
-import { CustomsPaymentTotalField } from './VoucherTotalField';
+import { CustomsPaymentTotalField } from './CustomsPaymentTotalField';
 
 type FormikProps = Pick<
   FormikConfig<ExtendedCustomsPayment>,
