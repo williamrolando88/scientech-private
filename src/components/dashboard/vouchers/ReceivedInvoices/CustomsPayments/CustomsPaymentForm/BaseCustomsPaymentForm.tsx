@@ -22,7 +22,7 @@ import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../../Invoices/InvoiceForm/AccountCategorySelector';
 import { VoucherProjectSelector } from '../../Invoices/InvoiceForm/VoucherProjectSelector';
-import { VoucherTotalField } from '../../Invoices/InvoiceForm/VoucherTotalField';
+import { CustomsPaymentTotalField } from './VoucherTotalField';
 
 type FormikProps = Pick<
   FormikConfig<ExtendedCustomsPayment>,
@@ -46,25 +46,30 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
     formData,
     formActions
   ) => {
-    formData.tax_exempted_subtotal = round(
-      formData.tax_exempted_subtotal ?? 0,
-      2
-    );
-
+    formData.IVA = round(formData.IVA ?? 0, 2);
+    formData.FODINFA = round(formData.FODINFA ?? 0, 2);
+    formData.specific_tariff = round(formData.specific_tariff ?? 0, 2);
+    formData.ad_valorem_tariff = round(formData.ad_valorem_tariff ?? 0, 2);
     formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
 
-    const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
-    const [payment, expense] = cloneDeep(formData.transaction_details);
+    const transactionDescription = `Liquidación aduanera: ${formData.description}`;
+    const [payment, expense, tax] = cloneDeep(formData.transaction_details);
 
     payment.credit = formData.total;
     payment.debit = 0;
     payment.description = transactionDescription;
 
-    expense.debit = formData.tax_exempted_subtotal;
+    expense.debit =
+      formData.FODINFA + formData.ad_valorem_tariff + formData.specific_tariff;
     expense.credit = 0;
     expense.description = transactionDescription;
 
-    formData.transaction_details = [payment, expense];
+    tax.account_id = DEFAULT_ACCOUNT.IVA;
+    tax.debit = formData.IVA;
+    tax.credit = 0;
+    tax.description = transactionDescription;
+
+    formData.transaction_details = [payment, expense, tax];
 
     onSubmit(formData, formActions);
   };
@@ -74,10 +79,12 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
       onSubmit={preSubmit}
       validationSchema={toFormikValidationSchema(CustomsPaymentSchema)}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
+
+            {console.log(values)}
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={3}>
@@ -154,6 +161,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                   fullWidth
                   name="FODINFA"
                   label="FODINFA"
+                  required
                 />
               </Grid>
 
@@ -165,6 +173,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                   fullWidth
                   name="IVA"
                   label="IVA"
+                  required
                 />
               </Grid>
 
@@ -175,14 +184,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
               <Grid item xs={2} />
 
               <Grid item xs={3}>
-                <VoucherTotalField
-                  fields={[
-                    'ad_valorem_tariff',
-                    'specific_tariff',
-                    'FODINFA',
-                    'IVA',
-                  ]}
-                />
+                <CustomsPaymentTotalField />
               </Grid>
             </Grid>
           </Stack>

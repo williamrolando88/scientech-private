@@ -24,6 +24,10 @@ export const DEFAULT_ACCOUNT = {
     PAYMENT: '1.01.01.03.01',
     EXPENSE: '5.02.01.17',
   },
+  CUSTOMS_PAYMENT: {
+    PAYMENT: '',
+    EXPENSE: '',
+  },
   IVA: '1.01.05.01',
 };
 
