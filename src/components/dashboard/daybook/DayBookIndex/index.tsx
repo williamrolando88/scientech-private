@@ -1,5 +1,6 @@
 import { CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
@@ -20,6 +21,7 @@ const DayBookIndex: FC = () => {
   const [transactionToOpen, setTransactionToOpen] =
     useState<DayBookTransaction | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
+  const { data: accountCategories } = useListAccountCategories();
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
@@ -59,7 +61,7 @@ const DayBookIndex: FC = () => {
       {
         field: 'date',
         headerName: 'Fecha',
-        flex: 2,
+        flex: 1,
         type: 'date',
         valueFormatter: ({ value }) =>
           new Date(value as string).toLocaleDateString(),
@@ -68,14 +70,19 @@ const DayBookIndex: FC = () => {
         field: 'account_id',
         headerName: 'Cuenta contable',
         type: 'string',
-        flex: 3,
+        flex: 4,
+        valueGetter: (params) =>
+          `
+      ${params.row.account_id} -
+      ${accountCategories[params.row.account_id].name || ''}
+      `,
       },
       {
         field: 'debit',
         headerName: 'Debe',
         headerAlign: 'center',
         type: 'number',
-        flex: 2,
+        flex: 1,
         align: 'center',
         valueFormatter: ({ value }) =>
           value ? `$${Number(value).toFixed(2)}` : '-',
@@ -85,7 +92,7 @@ const DayBookIndex: FC = () => {
         headerName: 'Haber',
         headerAlign: 'center',
         type: 'number',
-        flex: 2,
+        flex: 1,
         align: 'center',
         valueFormatter: ({ value }) =>
           value ? `$${Number(value).toFixed(2)}` : '-',
@@ -95,24 +102,6 @@ const DayBookIndex: FC = () => {
         headerName: 'Descripción',
         type: 'string',
         flex: 6,
-      },
-      {
-        field: 'quotation_id',
-        headerName: 'Cotización No.',
-        headerAlign: 'center',
-        type: 'number',
-        flex: 2,
-        align: 'center',
-        valueFormatter: ({ value }) => value || '-',
-      },
-      {
-        field: 'invoice_id',
-        headerName: 'Factura No.',
-        headerAlign: 'center',
-        type: 'number',
-        flex: 2,
-        align: 'center',
-        valueFormatter: ({ value }) => value || '-',
       },
       {
         field: 'actions',
@@ -142,7 +131,12 @@ const DayBookIndex: FC = () => {
         ],
       },
     ],
-    [getTransactionToDelete, getTransactionToUpdate, getTransactionToOpen]
+    [
+      accountCategories,
+      getTransactionToOpen,
+      getTransactionToUpdate,
+      getTransactionToDelete,
+    ]
   );
 
   const rows: DayBookTableEntry[] = useMemo(

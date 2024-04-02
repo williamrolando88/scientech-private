@@ -16,6 +16,7 @@ import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
+import { cloneDeep } from 'lodash';
 import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -50,17 +51,19 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
     formData.taxed_subtotal = round(formData.taxed_subtotal ?? 0, 2);
 
     const transactionDescription = `Factura recibida: ${formData.issuer_id}-${formData.description}`;
-    const [payment, expense, tax] = formData.transaction_details;
+    const [payment, expense, tax] = cloneDeep(formData.transaction_details);
 
     payment.credit = formData.total;
+    payment.debit = 0;
     payment.description = transactionDescription;
 
-    expense.debit =
-      (formData.taxed_subtotal ?? 0) + (formData.tax_exempted_subtotal ?? 0);
+    expense.debit = formData.taxed_subtotal + formData.tax_exempted_subtotal;
+    expense.credit = 0;
     expense.description = transactionDescription;
 
     tax.account_id = DEFAULT_ACCOUNT.IVA;
     tax.debit = formData.IVA;
+    tax.credit = 0;
     tax.description = transactionDescription;
 
     formData.transaction_details = [payment, expense, tax];
