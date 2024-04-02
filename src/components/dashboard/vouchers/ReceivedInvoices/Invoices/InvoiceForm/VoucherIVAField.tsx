@@ -2,7 +2,6 @@ import { FormikTextField } from '@src/components/shared/formik-components';
 import { IVA_RATE_12, IVA_RATE_15 } from '@src/lib/constants/settings';
 import { Invoice } from '@src/types/expenses';
 import { useFormikContext } from 'formik';
-import { get } from 'lodash';
 import { round } from 'mathjs';
 import { useEffect, useMemo } from 'react';
 
@@ -16,11 +15,11 @@ export const VoucherIVAField = () => {
   );
 
   useEffect(() => {
-    const taxedSubtotal = get(values, 'taxed_subtotal', 0);
+    const taxedSubtotal = values.taxed_subtotal || 0;
     const IVAValue = round((taxedSubtotal * IVA_RATE) / 100, 2);
 
     setFieldValue('IVA', IVAValue, false);
-  }, [values, setFieldValue, IVA_RATE]);
+  }, [values.taxed_subtotal, setFieldValue, IVA_RATE]);
 
   return (
     <FormikTextField
@@ -28,7 +27,7 @@ export const VoucherIVAField = () => {
       fullWidth
       name="IVA"
       label={`IVA ${IVA_RATE}%`}
-      readOnly
+      disabled
     />
   );
 };

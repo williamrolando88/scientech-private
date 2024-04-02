@@ -1,26 +1,26 @@
 import { FormikTextField } from '@src/components/shared/formik-components';
+import { ExtendedGeneralExpense } from '@src/types/expenses';
 import { useFormikContext } from 'formik';
-import { get } from 'lodash';
+import { round } from 'mathjs';
 import { FC, useEffect } from 'react';
 
-interface VoucherTotalFieldProps {
-  fields?: string[];
-}
-
-export const VoucherTotalField: FC<VoucherTotalFieldProps> = ({
-  fields = ['taxed_subtotal', 'tax_exempted_subtotal', 'IVA'],
-}) => {
-  const { values, setFieldValue } = useFormikContext();
+export const VoucherTotalField: FC = () => {
+  const { values, setFieldValue } = useFormikContext<ExtendedGeneralExpense>();
 
   useEffect(() => {
-    let total = 0;
+    const taxedSubtotal = values.taxed_subtotal || 0;
+    const taxExemptedSubtotal = values.tax_exempted_subtotal || 0;
+    const IVAValue = values.IVA || 0;
 
-    fields.forEach((field) => {
-      total += get(values, field, 0);
-    });
+    const total = round(taxedSubtotal + taxExemptedSubtotal + IVAValue, 2);
 
     setFieldValue('total', total, false);
-  }, [values, setFieldValue, fields]);
+  }, [
+    setFieldValue,
+    values.tax_exempted_subtotal,
+    values.IVA,
+    values.taxed_subtotal,
+  ]);
 
   return (
     <FormikTextField
@@ -29,7 +29,7 @@ export const VoucherTotalField: FC<VoucherTotalFieldProps> = ({
       name="total"
       label="Total"
       required
-      readOnly
+      disabled
     />
   );
 };
