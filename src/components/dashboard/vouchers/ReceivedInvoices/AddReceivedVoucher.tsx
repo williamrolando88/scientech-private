@@ -2,7 +2,7 @@ import { Button, Dialog } from '@mui/material';
 import { ExpenseTypeValues } from '@src/types/expenses';
 import { useRouter } from 'next/router';
 import { FC, ReactElement, useCallback, useMemo, useState } from 'react';
-import AddCustomsPayment from './Forms/CustomsPaymentForm/AddCustomsPayment';
+import AddCustomsPayment from './CustomsPayments/AddCustomsPayment';
 import AddSaleNote from './Forms/SaleNoteForm/AddSaleNote';
 import AddInvoice from './Invoices/AddInvoice';
 import AddNonDeductible from './NonDeductible/AddNonDeductible';
