@@ -19,13 +19,6 @@ const AddCustomsPayment: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    console.log(values);
-
-    setSubmitting(true);
-    onClose();
-
-    return;
-
     addCustomsPayment(values)
       .then(() => {
         resetForm();
