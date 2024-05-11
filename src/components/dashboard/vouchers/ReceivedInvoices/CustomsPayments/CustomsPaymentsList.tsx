@@ -108,6 +108,7 @@ const CustomsPaymentsList: FC = () => {
           columns={columns}
           rows={customsPayments}
           disableColumnFilter
+          disableRowSelectionOnClick
           initialState={{
             sorting: {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],

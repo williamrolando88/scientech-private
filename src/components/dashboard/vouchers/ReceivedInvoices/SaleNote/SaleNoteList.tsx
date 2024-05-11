@@ -7,21 +7,21 @@ import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
-import { Invoice } from '@src/types/expenses';
+import { Expense } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
-import UpdateInvoice from './UpdateInvoice';
+import UpdateSaleNote from './UpdateSaleNote';
 
-const InvoiceList: FC = () => {
+const SaleNoteList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] = useState<Invoice | null>(null);
-  const [expenseToUpdate, setExpenseToUpdate] = useState<Invoice | null>(null);
-  const { mutateAsync: deleteInvoice, isPending } =
-    useDeleteExpenseByType('invoice');
-  const { data: invoices, isLoading } =
-    useListExpensesByType<Invoice>('invoice');
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
+  const [expenseToUpdate, setExpenseToUpdate] = useState<Expense | null>(null);
+  const { mutateAsync: deleteExpense, isPending } =
+    useDeleteExpenseByType('sale_note');
+  const { data: saleNote, isLoading } =
+    useListExpensesByType<Expense>('sale_note');
 
-  const columns: GridColDef<Invoice>[] = [
+  const columns: GridColDef<Expense>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',
@@ -30,61 +30,16 @@ const InvoiceList: FC = () => {
       sortable: false,
     },
     {
-      field: 'establishment',
-      headerName: 'Suc.',
-      type: 'number',
-      width: 50,
-      sortable: false,
-    },
-    {
-      field: 'emission_point',
-      headerName: 'Pto.',
-      type: 'number',
-      width: 50,
-      sortable: false,
-    },
-    {
-      field: 'sequential_number',
-      headerName: 'Nro.',
-      type: 'number',
-      width: 100,
-      sortable: false,
-    },
-    {
-      field: 'issuer_id',
-      headerName: 'RUC',
-      width: 180,
-      sortable: false,
-    },
-    {
       field: 'issuer_name',
       flex: 1,
-      headerName: 'Razón Social',
+      headerName: 'Emisor y/o motivo',
       sortable: false,
     },
     {
-      field: 'tax_exempted_subtotal',
-      headerName: 'Base 0%',
-      type: 'number',
+      field: 'description',
+      flex: 3,
+      headerName: 'Descripción',
       sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
-    },
-    {
-      field: 'taxed_subtotal',
-      headerName: 'Base imp.',
-      type: 'number',
-      sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
-    },
-    {
-      field: 'IVA',
-      headerName: 'IVA',
-      type: 'number',
-      sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'total',
@@ -118,12 +73,14 @@ const InvoiceList: FC = () => {
   const handleDeleteExpense = async () => {
     if (!expenseToDelete) return;
 
-    deleteInvoice(expenseToDelete)
+    deleteExpense(expenseToDelete)
       .then(() => {
-        enqueueSnackbar('Factura eliminada exitosamente');
+        enqueueSnackbar('Nota de venta eliminada exitosamente');
       })
       .catch(() => {
-        enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
+        enqueueSnackbar('Error al eliminar la nota de venta', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setExpenseToDelete(null);
@@ -136,7 +93,7 @@ const InvoiceList: FC = () => {
         <DataGrid
           autoHeight
           columns={columns}
-          rows={invoices}
+          rows={saleNote}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{
@@ -148,7 +105,7 @@ const InvoiceList: FC = () => {
         />
       </CardContent>
 
-      <UpdateInvoice
+      <UpdateSaleNote
         open={!!expenseToUpdate}
         initialValues={expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
@@ -158,7 +115,7 @@ const InvoiceList: FC = () => {
       <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
-        title="Borrar factura"
+        title="Borrar nota de venta"
         action={
           <LoadingButton
             onClick={handleDeleteExpense}
@@ -173,4 +130,4 @@ const InvoiceList: FC = () => {
   );
 };
 
-export default InvoiceList;
+export default SaleNoteList;

@@ -118,3 +118,36 @@ export const extendedNonDeductibleBuilder = (
 
   return formData;
 };
+
+export const extendedSaleNoteBuilder = (
+  source: ExtendedExpense
+): ExtendedExpense => {
+  const formData = cloneDeep(source);
+
+  formData.tax_exempted_subtotal = round(
+    formData.tax_exempted_subtotal ?? 0,
+    2
+  );
+
+  formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
+
+  const transactionDescription = `Nota de venta: ${formData.issuer_name} ${formData.description}`;
+
+  const payment: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[0].account_id,
+    debit: 0,
+    credit: formData.total,
+    description: transactionDescription,
+  };
+
+  const expense: DayBookTransactionDetail = {
+    account_id: formData.transaction_details[1].account_id,
+    debit: formData.tax_exempted_subtotal,
+    credit: 0,
+    description: transactionDescription,
+  };
+
+  formData.transaction_details = [payment, expense];
+
+  return formData;
+};
