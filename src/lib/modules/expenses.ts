@@ -131,7 +131,7 @@ export const extendedSaleNoteBuilder = (
 
   formData.total = round(formData.tax_exempted_subtotal ?? 0, 2);
 
-  const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
+  const transactionDescription = `Nota de venta: ${formData.issuer_name} ${formData.description}`;
 
   const payment: DayBookTransactionDetail = {
     account_id: formData.transaction_details[0].account_id,

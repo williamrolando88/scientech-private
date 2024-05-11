@@ -5,7 +5,7 @@ import { Expense, ExtendedExpense } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import BaseNonDeductibleForm from './SaleNoteForm/SaleNoteForm';
+import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 
 interface UpdateSaleNoteProps {
   open: boolean;
@@ -20,22 +20,23 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
 }) => {
   const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateSaleNote } =
-    useUpdateExpenseByType('non_deductible');
+  const { mutateAsync: updateExpense } = useUpdateExpenseByType('sale_note');
 
   const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    updateSaleNote(values)
+    updateExpense(values)
       .then(() => {
         resetForm();
-        enqueueSnackbar('Gasto actualizado exitosamente');
+        enqueueSnackbar('Nota de venta actualizada exitosamente');
         onClose();
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al actualizar el gasto', { variant: 'error' });
+        enqueueSnackbar('Error al actualizar la nota de venta', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setSubmitting(false);
@@ -48,7 +49,7 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
     (transaction) => transaction.id === initialValues.day_book_transaction_id
   );
 
-  const extendedNonDeductible: ExtendedExpense = {
+  const extendedSaleNote: ExtendedExpense = {
     ...initialValues,
     transaction_details: relatedTransaction?.transactions ?? [],
   };
@@ -57,10 +58,10 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
     <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar nota de venta</DialogTitle>
 
-      <BaseNonDeductibleForm
+      <BaseSaleNoteForm
         infoText="Actualiza los datos de la nota de venta. Los campos marcados con * son obligatorios."
         onClose={onClose}
-        initialValues={extendedNonDeductible}
+        initialValues={extendedSaleNote}
         onSubmit={handleSubmit}
       />
     </Dialog>

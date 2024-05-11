@@ -1,6 +1,6 @@
 import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
-import { NON_DEDUCTIBLE_INITIAL_VALUE } from '@src/lib/constants/expenses';
+import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/expenses';
 import {
   AddReceivedVoucherModalProps,
   ExtendedExpense,
@@ -8,26 +8,27 @@ import {
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import BaseNonDeductibleForm from './SaleNoteForm/SaleNoteForm';
+import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 
-const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
+const AddSaleNote: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addNonDeductible } =
-    useAddExpenseByType('non_deductible');
+  const { mutateAsync: addExpense } = useAddExpenseByType('non_deductible');
 
   const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    addNonDeductible(values)
+    addExpense(values)
       .then(() => {
         resetForm();
-        enqueueSnackbar('Gasto guardado exitosamente');
+        enqueueSnackbar('Nota de venta guardada exitosamente');
         onClose();
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al guardar el gasto', { variant: 'error' });
+        enqueueSnackbar('Error al guardar la nota de venta', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setSubmitting(false);
@@ -36,16 +37,16 @@ const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
 
   return (
     <>
-      <DialogTitle>Agregar nuevo gasto no deducible</DialogTitle>
+      <DialogTitle>Agregar nueva nota de venta</DialogTitle>
 
-      <BaseNonDeductibleForm
-        infoText="Ingrese los datos del gasto. Los campos marcados con * son obligatorios. Si el gasto esta asociado a un proyecto, selecciónelo en el campo correspondiente"
+      <BaseSaleNoteForm
+        infoText="Ingrese los datos de la nota de venta. Los campos marcados con * son obligatorios. Si la nota de venta esta asociada a un proyecto, selecciónelo en el campo correspondiente"
         onClose={onClose}
-        initialValues={NON_DEDUCTIBLE_INITIAL_VALUE}
+        initialValues={SALE_NOTE_INITIAL_VALUE}
         onSubmit={handleSubmit}
       />
     </>
   );
 };
 
-export default AddNonDeductible;
+export default AddSaleNote;
