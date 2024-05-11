@@ -24,6 +24,10 @@ export const DEFAULT_ACCOUNT = {
     PAYMENT: '1.01.01.03.01',
     EXPENSE: '5.02.01.17',
   },
+  SALE_NOTE: {
+    PAYMENT: '1.01.01.03.01',
+    EXPENSE: '5.02.01.17',
+  },
   CUSTOMS_PAYMENT: {
     PAYMENT: '2.01.04.01.01',
     EXPENSE: '5.02.02.20',
@@ -43,6 +47,15 @@ export const ALLOWED_ACCOUNTS = {
     EXPENSE: ['5.01.01', '5.02.01', '5.02.02'],
   },
   NON_DEDUCTIBLE: {
+    PAYMENT: [
+      '1.01.01.03.01',
+      '1.01.02.05.02.02',
+      '2.01.04.01.01',
+      '2.01.04.01.02',
+    ],
+    EXPENSE: ['5.01.01', '5.02.01', '5.02.02', '5.02.03'],
+  },
+  SALE_NOTE: {
     PAYMENT: [
       '1.01.01.03.01',
       '1.01.02.05.02.02',

@@ -7,6 +7,7 @@ import { useEffectOnce } from 'usehooks-ts';
 import CustomsPaymentsList from './CustomsPayments/CustomsPaymentsList';
 import InvoiceList from './Invoices/InvoiceList';
 import NonDeductibleList from './NonDeductible/NonDeductibleList';
+import SaleNoteList from './SaleNote/SaleNoteList';
 
 const TABS: TabInterface<ExpenseTypeValues>[] = [
   {
@@ -26,7 +27,7 @@ const TABS: TabInterface<ExpenseTypeValues>[] = [
   },
   {
     value: 'sale_note',
-    component: <div key="2">Notas de venta</div>,
+    component: <SaleNoteList key="sale_note" />,
     label: 'Notas de venta',
   },
 ];

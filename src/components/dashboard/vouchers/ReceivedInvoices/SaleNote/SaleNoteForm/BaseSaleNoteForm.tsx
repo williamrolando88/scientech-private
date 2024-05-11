@@ -100,8 +100,8 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   size="small"
                   name="transaction_details[0].account_id"
                   label="Forma de pago"
-                  selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.PAYMENT}
-                  initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.PAYMENT}
+                  selectableCategories={ALLOWED_ACCOUNTS.SALE_NOTE.PAYMENT}
+                  initialValue={DEFAULT_ACCOUNT.SALE_NOTE.PAYMENT}
                   required
                 />
               </Grid>
@@ -122,8 +122,8 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   size="small"
                   name="transaction_details[1].account_id"
                   label="Tipo de egreso"
-                  selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.EXPENSE}
-                  initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.EXPENSE}
+                  selectableCategories={ALLOWED_ACCOUNTS.SALE_NOTE.EXPENSE}
+                  initialValue={DEFAULT_ACCOUNT.SALE_NOTE.EXPENSE}
                   required
                 />
               </Grid>

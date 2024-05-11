@@ -10,7 +10,7 @@ import {
 import { Expense } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
-import UpdateNonDeductible from './UpdateSaleNote';
+import UpdateSaleNote from './UpdateSaleNote';
 
 const SaleNoteList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -18,7 +18,7 @@ const SaleNoteList: FC = () => {
   const [expenseToUpdate, setExpenseToUpdate] = useState<Expense | null>(null);
   const { mutateAsync: deleteExpense, isPending } =
     useDeleteExpenseByType('sale_note');
-  const { data: nonDeductible, isLoading } =
+  const { data: saleNote, isLoading } =
     useListExpensesByType<Expense>('sale_note');
 
   const columns: GridColDef<Expense>[] = [
@@ -75,10 +75,12 @@ const SaleNoteList: FC = () => {
 
     deleteExpense(expenseToDelete)
       .then(() => {
-        enqueueSnackbar('Gasto eliminado exitosamente');
+        enqueueSnackbar('Nota de venta eliminada exitosamente');
       })
       .catch(() => {
-        enqueueSnackbar('Error al eliminar el gasto', { variant: 'error' });
+        enqueueSnackbar('Error al eliminar la nota de venta', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setExpenseToDelete(null);
@@ -91,7 +93,7 @@ const SaleNoteList: FC = () => {
         <DataGrid
           autoHeight
           columns={columns}
-          rows={nonDeductible}
+          rows={saleNote}
           disableColumnFilter
           initialState={{
             sorting: {
@@ -102,7 +104,7 @@ const SaleNoteList: FC = () => {
         />
       </CardContent>
 
-      <UpdateNonDeductible
+      <UpdateSaleNote
         open={!!expenseToUpdate}
         initialValues={expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
@@ -112,7 +114,7 @@ const SaleNoteList: FC = () => {
       <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
-        title="Borrar gasto"
+        title="Borrar nota de venta"
         action={
           <LoadingButton
             onClick={handleDeleteExpense}
