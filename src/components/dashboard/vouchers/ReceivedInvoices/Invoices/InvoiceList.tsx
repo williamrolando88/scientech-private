@@ -138,6 +138,7 @@ const InvoiceList: FC = () => {
           columns={columns}
           rows={invoices}
           disableColumnFilter
+          disableRowSelectionOnClick
           initialState={{
             sorting: {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],

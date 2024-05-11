@@ -93,6 +93,7 @@ const NonDeductibleList: FC = () => {
           columns={columns}
           rows={nonDeductible}
           disableColumnFilter
+          disableRowSelectionOnClick
           initialState={{
             sorting: {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],

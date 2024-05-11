@@ -95,6 +95,7 @@ const SaleNoteList: FC = () => {
           columns={columns}
           rows={saleNote}
           disableColumnFilter
+          disableRowSelectionOnClick
           initialState={{
             sorting: {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],
