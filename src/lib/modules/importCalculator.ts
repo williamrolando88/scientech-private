@@ -1,5 +1,6 @@
 import { round } from 'mathjs';
 import {
+  CalculateImportationResult,
   ImportCalculator,
   ItemCalculationValues,
 } from 'src/types/importCalculator';
@@ -10,7 +11,9 @@ import {
 } from '../constants/settings';
 import { parseSafeNumber } from '../utils/number';
 
-export const calculateImportation = (inputs: ImportCalculator) => {
+export const calculateImportation = (
+  inputs: ImportCalculator
+): CalculateImportationResult => {
   const {
     items,
     settings: {
@@ -53,78 +56,68 @@ export const calculateImportation = (inputs: ImportCalculator) => {
   const originFleetSafe = parseSafeNumber(originFleet);
   const originTaxesSafe = parseSafeNumber(originTaxes);
 
+  // !---------------------------------------------------------
   articles.forEach((row) => {
-    // Calculate row weight
+    if (row.quantity <= 0 || row.unitWeight <= 0 || row.unitCost <= 0) return;
+
     row.rowWeight = row.quantity * row.unitWeight;
 
-    // Calculate EXW item values
     const EXW = (row.quantity * row.unitCost * (100 + originTaxesSafe)) / 100;
     row.EXW = parseSafeNumber(EXW);
   });
 
-  // Calculate total weight
-  const totalWeight = articles.reduce(
-    (acc, row) => (row.EXW ? acc + row.rowWeight : 0),
-    0
-  );
+  const totalWeight = articles.reduce((acc, row) => acc + row.rowWeight, 0);
 
-  // Calculate international fleet
   const internationalFleet = totalWeight * importFleetPerLibreSafe;
 
+  // !---------------------------------------------------------
   articles.forEach((row) => {
-    // Calculate weight fraction
-    row.weightFraction =
-      row.EXW > 0 && totalWeight > 0 ? row.rowWeight / totalWeight : 0;
+    if (row.quantity <= 0 || row.unitWeight <= 0 || row.unitCost <= 0) return;
 
-    // Calculate aux FOB item values
-    row.FOB = originFleetSafe * row.weightFraction + row.EXW;
-    row.ISD = row.FOB * (ISD_TAX_RATE / 100);
+    row.weightFraction = round(row.rowWeight / totalWeight, 5);
 
-    // Calculate aux CIF item values
-    row.CIF =
+    row.FOB = round(originFleetSafe * row.weightFraction + row.EXW, 2);
+    row.ISD = round(row.FOB * (ISD_TAX_RATE / 100), 2);
+
+    row.CIF = round(
       (row.FOB + internationalFleet * row.weightFraction) *
-      (1 + INSURANCE_RATE / 100);
+        (1 + INSURANCE_RATE / 100),
+      2
+    );
 
-    // Calculate item taxes
-    row.FODINFA = row.CIF * (FODINFA_TAX_RATE / 100);
-    row.tariff = row.CIF * (row.tariffRate / 100);
+    row.FODINFA = round(row.CIF * (FODINFA_TAX_RATE / 100), 2);
+    row.tariff = round(row.CIF * (row.tariffRate / 100), 2);
   });
 
-  // Calculate total FOB
   const totalFOB = articles.reduce((acc, row) => acc + row.FOB, 0);
 
-  // Calculate base courier cost
   const baseCourier = importProcedureSafe + internationalFleet;
 
+  // !---------------------------------------------------------
   articles.forEach((row) => {
+    if (row.quantity <= 0 || row.unitWeight <= 0 || row.unitCost <= 0) return;
+
     const FOBFraction = row.FOB / totalFOB;
 
-    // Group item cost related to payments and taxes in origin
     const originCosts =
       totalFOB > 0 ? row.FOB + bankExpensesSafe * FOBFraction : 0;
 
-    // Group item taxes paid locally
     const itemTaxes = row.ISD + row.FODINFA + row.tariff;
 
-    // Calculate item importation costs
     const importCost = baseCourier * row.weightFraction;
 
-    // Calculate item local fleet costs
     const localFleetCost = localFleetSafe * row.weightFraction;
 
     const itemCost = originCosts + itemTaxes + importCost + localFleetCost;
 
-    // Calculate item profit
     const profit =
       row.margin < 100
         ? itemCost / (1 - row.margin / 100) - itemCost
         : (itemCost * row.margin) / 100;
 
-    // Calculate item unit price
     row.unitPrice =
       row.quantity > 0 ? round((profit + itemCost) / row.quantity, 2) : 0;
 
-    // Calculate item unit details
     row.unitOriginCosts = round(originCosts / row.quantity, 2);
     row.unitTaxesFee = round(itemTaxes / row.quantity, 2);
     row.unitImportCost = round(importCost / row.quantity, 2);
@@ -133,7 +126,7 @@ export const calculateImportation = (inputs: ImportCalculator) => {
   });
 
   return {
-    pricesArray: articles.map((article) => article.unitPrice),
+    pricesArray: articles.map((article) => article.unitPrice) as number[],
     articlesReport: articles,
   };
 };

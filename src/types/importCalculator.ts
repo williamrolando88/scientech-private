@@ -40,3 +40,8 @@ export type StoredImportCalculator = ImportCalculator & {
     updatedAt: Timestamp;
   };
 };
+
+export type CalculateImportationResult = {
+  pricesArray: number[];
+  articlesReport: ItemCalculationValues[];
+};
