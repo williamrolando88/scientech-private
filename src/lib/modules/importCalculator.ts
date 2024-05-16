@@ -1,5 +1,6 @@
 import { round } from 'mathjs';
 import {
+  CalculateImportationResult,
   ImportCalculator,
   ItemCalculationValues,
 } from 'src/types/importCalculator';
@@ -10,7 +11,9 @@ import {
 } from '../constants/settings';
 import { parseSafeNumber } from '../utils/number';
 
-export const calculateImportation = (inputs: ImportCalculator) => {
+export const calculateImportation = (
+  inputs: ImportCalculator
+): CalculateImportationResult => {
   const {
     items,
     settings: {
@@ -133,7 +136,7 @@ export const calculateImportation = (inputs: ImportCalculator) => {
   });
 
   return {
-    pricesArray: articles.map((article) => article.unitPrice),
+    pricesArray: articles.map((article) => article.unitPrice) as number[],
     articlesReport: articles,
   };
 };
