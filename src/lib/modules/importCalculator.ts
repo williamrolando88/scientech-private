@@ -81,16 +81,18 @@ export const calculateImportation = (
 
     // Calculate aux FOB item values
     row.FOB = originFleetSafe * row.weightFraction + row.EXW;
-    row.ISD = row.FOB * (ISD_TAX_RATE / 100);
+    row.ISD = round(row.FOB * (ISD_TAX_RATE / 100), 2);
 
     // Calculate aux CIF item values
-    row.CIF =
+    row.CIF = round(
       (row.FOB + internationalFleet * row.weightFraction) *
-      (1 + INSURANCE_RATE / 100);
+        (1 + INSURANCE_RATE / 100),
+      2
+    );
 
     // Calculate item taxes
-    row.FODINFA = row.CIF * (FODINFA_TAX_RATE / 100);
-    row.tariff = row.CIF * (row.tariffRate / 100);
+    row.FODINFA = round(row.CIF * (FODINFA_TAX_RATE / 100), 2);
+    row.tariff = round(row.CIF * (row.tariffRate / 100), 2);
   });
 
   // Calculate total FOB

@@ -13,7 +13,7 @@ export const _mockedEmptySingleItemImportation: ImportCalculator = {
     },
   ],
   metadata: {
-    description: 'mocked single item importation',
+    description: 'mocked empty item importation',
   },
   settings: {
     bankExpenses: 0,
@@ -22,6 +22,31 @@ export const _mockedEmptySingleItemImportation: ImportCalculator = {
     localFleet: 0,
     originFleet: 0,
     originTaxes: 0,
+  },
+};
+
+export const _mockedSingleItemImportation: ImportCalculator = {
+  items: [
+    {
+      margin: 10,
+      name: 'mocked-item',
+      quantity: 1,
+      tariffRate: 20,
+      unitCost: 530,
+      unitPrice: 0,
+      unitWeight: 10,
+    },
+  ],
+  metadata: {
+    description: 'mocked single item importation',
+  },
+  settings: {
+    bankExpenses: 160,
+    fleetCostPerLibre: 6,
+    importProcedure: 80,
+    localFleet: 10,
+    originFleet: 45,
+    originTaxes: 7,
   },
 };
 
@@ -65,7 +90,7 @@ export const _mockedEmptyMultiItemImportation: ImportCalculator = {
     },
   ],
   metadata: {
-    description: 'mocked single item importation',
+    description: 'mocked empty items importation',
   },
   settings: {
     bankExpenses: 0,

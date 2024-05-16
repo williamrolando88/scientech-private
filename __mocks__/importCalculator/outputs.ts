@@ -28,6 +28,34 @@ export const _expectedEmptySingleItemImportation: CalculateImportationResult = {
   ],
 };
 
+export const _expectedSingleItemImportation: CalculateImportationResult = {
+  pricesArray: [1213.18],
+  articlesReport: [
+    {
+      quantity: 1,
+      unitWeight: 10,
+      unitCost: 530,
+      tariffRate: 20,
+      margin: 10,
+      unitPrice: 1213.18,
+      CIF: 678.82,
+      EXW: 567.1,
+      FOB: 612.1,
+      FODINFA: 3.39,
+      tariff: 135.76,
+      ISD: 30.61,
+      name: 'mocked-item',
+      rowWeight: 10,
+      weightFraction: 1,
+      unitOriginCosts: 772.1,
+      unitTaxesFee: 169.76,
+      unitImportCost: 140,
+      unitLocalFleetCost: 10,
+      unitItemProfit: 121.32,
+    },
+  ],
+};
+
 export const _expectedEmptyMultiItemImportation: CalculateImportationResult = {
   pricesArray: [0, 0, 0, 0],
   articlesReport: [
