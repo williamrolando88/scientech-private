@@ -1,11 +1,17 @@
 import {
   _mockedEmptyMultiItemImportation,
   _mockedEmptySingleItemImportation,
+  _mockedMultiItemImportation,
+  _mockedMultiItemNoSettingsImportation,
+  _mockedSelectedSingleItemImportation,
   _mockedSingleItemImportation,
 } from '@mocks/importCalculator/inputs';
 import {
   _expectedEmptyMultiItemImportation,
   _expectedEmptySingleItemImportation,
+  _expectedMultiItemImportation,
+  _expectedMultiItemNoSettingsImportation,
+  _expectedSelectedSingleItemImportation,
   _expectedSingleItemImportation,
 } from '@mocks/importCalculator/outputs';
 import { calculateImportation } from '@src/lib/modules/importCalculator';
@@ -27,5 +33,23 @@ describe('calculateImportation', () => {
     const result = calculateImportation(_mockedSingleItemImportation);
 
     expect(result).toEqual(_expectedSingleItemImportation);
+  });
+
+  test('should calculate the importation value of multiple items', () => {
+    const result = calculateImportation(_mockedMultiItemImportation);
+
+    expect(result).toEqual(_expectedMultiItemImportation);
+  });
+
+  test('should calculate the importation value of a single item if multiple items has quantity of 0', () => {
+    const result = calculateImportation(_mockedSelectedSingleItemImportation);
+
+    expect(result).toEqual(_expectedSelectedSingleItemImportation);
+  });
+
+  test('should calculate the importation value if no settings value is provided', () => {
+    const result = calculateImportation(_mockedMultiItemNoSettingsImportation);
+
+    expect(result).toEqual(_expectedMultiItemNoSettingsImportation);
   });
 });
