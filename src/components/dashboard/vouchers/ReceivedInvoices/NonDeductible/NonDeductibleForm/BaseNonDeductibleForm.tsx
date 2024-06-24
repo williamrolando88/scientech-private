@@ -135,7 +135,7 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <VoucherProjectSelector disabled={isUpdating} />
+                <VoucherProjectSelector />
               </Grid>
 
               <Grid item xs={5} />

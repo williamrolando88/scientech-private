@@ -3,13 +3,7 @@ import { FormikTextField } from '@src/components/shared/formik-components';
 import { useListProjects } from '@src/hooks/cache/projects';
 import { FC } from 'react';
 
-interface VoucherProjectSelectorProps {
-  disabled?: boolean;
-}
-
-export const VoucherProjectSelector: FC<VoucherProjectSelectorProps> = ({
-  disabled,
-}) => {
+export const VoucherProjectSelector: FC = () => {
   const { data: projects, isLoading } = useListProjects();
 
   const filteredProjects = projects.filter(
@@ -23,7 +17,6 @@ export const VoucherProjectSelector: FC<VoucherProjectSelectorProps> = ({
       size="small"
       name="project_id"
       label="Proyecto asociado"
-      disabled={disabled}
     >
       <MenuItem sx={{ fontStyle: 'italic' }} key="void" value="">
         Ninguno
