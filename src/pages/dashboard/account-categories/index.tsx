@@ -7,8 +7,8 @@ import AccountCategoriesIndex from '../../../components/dashboard/accountCategor
 function Page() {
   return (
     <DashboardTemplate
-      documentTitle="Cuentas Contables"
-      heading="Cuentas Contables"
+      documentTitle="Administrador de Cuentas Contables"
+      heading="Administrador de Cuentas Contables"
       action={<AddAccountCategory />}
     >
       <AccountCategoriesIndex />
