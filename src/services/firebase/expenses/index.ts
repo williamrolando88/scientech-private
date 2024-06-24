@@ -1,128 +1,27 @@
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
 import { COLLECTIONS } from '@src/lib/enums/collections';
-import {
-  CustomsPaymentSchema,
-  ExpensesCommonSchema,
-  InvoiceSchema,
-} from '@src/lib/schemas/expenses';
+import { converterByType } from '@src/services/firebase/expenses/converters';
+import { docReferencer } from '@src/services/firebase/expenses/docReferencer';
+import { ExpenseParserByType } from '@src/services/firebase/expenses/parsers';
 import { DB } from '@src/settings/firebase';
 import {
   DayBookTransaction,
   DayBookTransactionDetail,
 } from '@src/types/dayBook';
 import {
-  CustomsPayment,
   Expense,
   ExpenseTypeValues,
   ExtendedGeneralExpense,
   GeneralExpense,
-  Invoice,
 } from '@src/types/expenses';
 import { Project } from '@src/types/projects';
 import {
-  DocumentData,
-  DocumentReference,
-  FirestoreDataConverter,
   collection,
-  doc,
   getDocs,
   query,
   runTransaction,
   where,
 } from 'firebase/firestore';
-import { ZodSchema } from 'zod';
-import { DayBookTransactionConverter } from './dayBookTransactions';
-import { ProjectConverter } from './projects';
-
-const GeneralExpenseConverter: FirestoreDataConverter<GeneralExpense> = {
-  toFirestore: (expense: GeneralExpense) => expense,
-  fromFirestore: (snapshot: any) => ({
-    ...snapshot.data(),
-    issue_date: snapshot.data().issue_date.toDate(),
-  }),
-};
-
-const InvoiceConverter: FirestoreDataConverter<Invoice> = {
-  toFirestore: (expense: Invoice) => expense,
-  fromFirestore: (snapshot: any) => ({
-    ...snapshot.data(),
-    issue_date: snapshot.data().issue_date.toDate(),
-  }),
-};
-
-const CustomsPaymentConverter: FirestoreDataConverter<CustomsPayment> = {
-  toFirestore: (expense: CustomsPayment) => expense,
-  fromFirestore: (snapshot: any) => ({
-    ...snapshot.data(),
-    issue_date: snapshot.data().issue_date.toDate(),
-  }),
-};
-
-const ExpenseConverter: FirestoreDataConverter<Expense> = {
-  toFirestore: (expense: Expense) => expense,
-  fromFirestore: (snapshot: any) => ({
-    ...snapshot.data(),
-    issue_date: snapshot.data().issue_date.toDate(),
-  }),
-};
-
-const converterByType: Record<
-  ExpenseTypeValues,
-  FirestoreDataConverter<GeneralExpense>
-> = {
-  invoice: InvoiceConverter,
-  customs_payment: CustomsPaymentConverter,
-  sale_note: ExpenseConverter,
-  non_deductible: ExpenseConverter,
-};
-
-export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
-  invoice: InvoiceSchema,
-  customs_payment: CustomsPaymentSchema,
-  non_deductible: ExpensesCommonSchema,
-  sale_note: ExpensesCommonSchema,
-};
-
-const docReferencer = (expense: ExtendedGeneralExpense | GeneralExpense) => {
-  const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
-  const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
-  const dayBookCollection = collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS);
-
-  let expenseDocRef: DocumentReference<GeneralExpense, DocumentData>;
-  let dayBookDocRef: DocumentReference<DayBookTransaction, DocumentData>;
-  let projectDocRef: DocumentReference<Project, DocumentData> | null;
-
-  if (expense.id) {
-    expenseDocRef = doc(expensesCollection, expense.id).withConverter(
-      GeneralExpenseConverter
-    );
-  } else {
-    expenseDocRef = doc(expensesCollection).withConverter(
-      GeneralExpenseConverter
-    );
-  }
-
-  if (expense.day_book_transaction_id) {
-    dayBookDocRef = doc(
-      dayBookCollection,
-      expense.day_book_transaction_id
-    ).withConverter(DayBookTransactionConverter);
-  } else {
-    dayBookDocRef = doc(dayBookCollection).withConverter(
-      DayBookTransactionConverter
-    );
-  }
-
-  if (expense.project_id) {
-    projectDocRef = doc(projectsCollection, expense.project_id).withConverter(
-      ProjectConverter
-    );
-  } else {
-    projectDocRef = null;
-  }
-
-  return { expenseDocRef, dayBookDocRef, projectDocRef };
-};
 
 const listByType = (type: ExpenseTypeValues) => {
   const converter = converterByType[type];
@@ -173,7 +72,11 @@ async function upsert(
     const storedProjectDoc =
       projectDocRef && (await transaction.get(projectDocRef));
 
-    // Data manipulation
+    /*
+     * Data manipulation
+     */
+
+    // Daybook manipulation
     const newDayBookDoc: DayBookTransaction = {
       date: expense.issue_date,
       transactions,
@@ -182,10 +85,12 @@ async function upsert(
       locked: true,
       updatedAt: timestamp,
     };
+
     if (storedDayBookDoc.exists()) {
       newDayBookDoc.createdAt = storedDayBookDoc.data().createdAt;
     }
 
+    // Project manipulation
     let newProject: Project = PROJECTS_INITIAL_VALUE;
     if (projectDocRef && storedProjectDoc?.exists()) {
       newProject = storedProjectDoc?.data();
