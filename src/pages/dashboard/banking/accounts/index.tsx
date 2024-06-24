@@ -8,8 +8,8 @@ Page.getLayout = (page: React.ReactElement) => (
 export default function Page() {
   return (
     <DashboardTemplate
-      documentTitle="Tarjetas de crédito"
-      heading="Tarjetas de crédito"
+      documentTitle="Cuentas bancarias"
+      heading="Cuentas bancarias"
     >
       TBD
     </DashboardTemplate>
