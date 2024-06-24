@@ -1,7 +1,10 @@
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import { converterByType } from '@src/services/firebase/expenses/converters';
-import { docReferencer } from '@src/services/firebase/expenses/docReferencer';
+import {
+  docReferencer,
+  previousProjectReferencer,
+} from '@src/services/firebase/expenses/docReferencer';
 import { ExpenseParserByType } from '@src/services/firebase/expenses/parsers';
 import { DB } from '@src/settings/firebase';
 import {
@@ -71,6 +74,10 @@ async function upsert(
     const storedDayBookDoc = await transaction.get(dayBookDocRef);
     const storedProjectDoc =
       projectDocRef && (await transaction.get(projectDocRef));
+    const { previousProjectDoc } = await previousProjectReferencer(
+      transaction,
+      expenseDocRef
+    );
 
     /*
      * Data manipulation
@@ -88,6 +95,16 @@ async function upsert(
 
     if (storedDayBookDoc.exists()) {
       newDayBookDoc.createdAt = storedDayBookDoc.data().createdAt;
+    }
+
+    // Previous project manipulation
+    let previousProject: Project = PROJECTS_INITIAL_VALUE;
+    if (previousProjectDoc) {
+      previousProject = previousProjectDoc.data();
+      previousProject.received_vouchers =
+        previousProject.received_vouchers.filter(
+          (voucher) => voucher.id !== expenseDocRef.id
+        );
     }
 
     // Project manipulation
@@ -112,6 +129,9 @@ async function upsert(
     transaction.set(expenseDocRef, newExpense);
     if (projectDocRef && storedProjectDoc?.exists()) {
       transaction.set(projectDocRef, newProject);
+    }
+    if (previousProjectDoc) {
+      transaction.set(previousProjectDoc.ref, previousProject);
     }
   });
 

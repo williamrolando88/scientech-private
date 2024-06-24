@@ -67,8 +67,16 @@ export const previousProjectReferencer = async (
     return {};
   }
 
-  const previousProjectRef = doc(DB, COLLECTIONS.PROJECTS, previousProjectId);
+  const previousProjectRef = doc(
+    DB,
+    COLLECTIONS.PROJECTS,
+    previousProjectId
+  ).withConverter(ProjectConverter);
   const previousProjectDoc = await transaction.get(previousProjectRef);
 
-  return {};
+  if (!previousProjectDoc.exists()) {
+    return {};
+  }
+
+  return { previousProjectDoc };
 };
