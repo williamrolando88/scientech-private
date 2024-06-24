@@ -39,8 +39,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
   initialValues,
   onSubmit,
 }) => {
-  const isUpdating = Boolean(initialValues.id);
-
   const preSubmit: BaseCustomsPaymentFormProps['onSubmit'] = async (
     formData,
     formActions
