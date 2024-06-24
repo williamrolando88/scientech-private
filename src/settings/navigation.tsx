@@ -77,15 +77,30 @@ const navConfig = [
         icon: ICONS.analytics,
       },
       {
-        title: 'Cuentas contables',
-        path: PATH_DASHBOARD.accountCategories.root,
-        icon: ICONS.menuItem,
+        title: 'Banca',
+        path: PATH_DASHBOARD.banking.root,
+        icon: ICONS.banking,
+        children: [
+          {
+            title: 'Tarjetas de crédito',
+            path: PATH_DASHBOARD.banking.creditCards.root,
+          },
+          {
+            title: 'Cuentas bancarias',
+            path: PATH_DASHBOARD.banking.accounts.root,
+          },
+        ],
       },
     ],
   },
   {
     subheader: 'Herramientas',
     items: [
+      {
+        title: 'Administrador de cuentas contables',
+        path: PATH_DASHBOARD.accountCategories.root,
+        icon: ICONS.menuItem,
+      },
       {
         title: 'Lector de documentos',
         path: PATH_DASHBOARD.documentParser.root,

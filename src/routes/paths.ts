@@ -47,6 +47,19 @@ export const PATH_DASHBOARD = {
   dayBook: {
     root: path(ROOTS_DASHBOARD, 'day-book'),
   },
+  banking: {
+    root: path(ROOTS_DASHBOARD, 'banking'),
+    accounts: {
+      root: path(ROOTS_DASHBOARD, 'banking', 'accounts'),
+      open: (id: string) => path(ROOTS_DASHBOARD, 'banking', 'accounts', id),
+    },
+
+    creditCards: {
+      root: path(ROOTS_DASHBOARD, 'banking', 'credit-cards'),
+      open: (id: string) =>
+        path(ROOTS_DASHBOARD, 'banking', 'credit-cards', id),
+    },
+  },
   accountCategories: {
     root: path(ROOTS_DASHBOARD, 'account-categories'),
   },
