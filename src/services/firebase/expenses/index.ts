@@ -69,71 +69,75 @@ async function upsert(
     type: expense.type,
   };
 
-  await runTransaction(DB, async (transaction) => {
-    // Read operations
-    const storedDayBookDoc = await transaction.get(dayBookDocRef);
-    const storedProjectDoc =
-      projectDocRef && (await transaction.get(projectDocRef));
-    const { previousProjectDoc } = await previousProjectReferencer(
-      transaction,
-      expenseDocRef
-    );
+  try {
+    await runTransaction(DB, async (transaction) => {
+      // Read operations
+      const storedDayBookDoc = await transaction.get(dayBookDocRef);
+      const storedProjectDoc =
+        projectDocRef && (await transaction.get(projectDocRef));
+      const { previousProjectDoc } = await previousProjectReferencer(
+        transaction,
+        expenseDocRef
+      );
 
-    /*
-     * Data manipulation
-     */
+      /*
+       * Data manipulation
+       */
 
-    // Daybook manipulation
-    const newDayBookDoc: DayBookTransaction = {
-      date: expense.issue_date,
-      transactions,
-      createdAt: timestamp,
-      id: dayBookDocRef.id,
-      locked: true,
-      updatedAt: timestamp,
-    };
+      // Daybook manipulation
+      const newDayBookDoc: DayBookTransaction = {
+        date: expense.issue_date,
+        transactions,
+        createdAt: timestamp,
+        id: dayBookDocRef.id,
+        locked: true,
+        updatedAt: timestamp,
+      };
 
-    if (storedDayBookDoc.exists()) {
-      newDayBookDoc.createdAt = storedDayBookDoc.data().createdAt;
-    }
+      if (storedDayBookDoc.exists()) {
+        newDayBookDoc.createdAt = storedDayBookDoc.data().createdAt;
+      }
 
-    // Previous project manipulation
-    let previousProject: Project = PROJECTS_INITIAL_VALUE;
-    if (previousProjectDoc) {
-      previousProject = previousProjectDoc.data();
-      previousProject.received_vouchers =
-        previousProject.received_vouchers.filter(
-          (voucher) => voucher.id !== expenseDocRef.id
-        );
-    }
+      // Previous project manipulation
+      let previousProject: Project = PROJECTS_INITIAL_VALUE;
+      if (previousProjectDoc) {
+        previousProject = previousProjectDoc.data();
+        previousProject.received_vouchers =
+          previousProject.received_vouchers.filter(
+            (voucher) => voucher.id !== expenseDocRef.id
+          );
+      }
 
-    // Project manipulation
-    let newProject: Project = PROJECTS_INITIAL_VALUE;
-    if (projectDocRef && storedProjectDoc?.exists()) {
-      newProject = storedProjectDoc?.data();
-      newProject.received_vouchers = [
-        ...newProject.received_vouchers,
-        {
-          id: expenseDocRef.id,
-          type: expense.type,
-        },
-      ];
-    }
+      // Project manipulation
+      let newProject: Project = PROJECTS_INITIAL_VALUE;
+      if (projectDocRef && storedProjectDoc?.exists()) {
+        newProject = storedProjectDoc?.data();
+        newProject.received_vouchers = [
+          ...newProject.received_vouchers,
+          {
+            id: expenseDocRef.id,
+            type: expense.type,
+          },
+        ];
+      }
 
-    newExpense = { ...ExpenseParserByType[expense.type].parse(expense) };
-    newExpense.day_book_transaction_id = dayBookDocRef.id;
-    newExpense.id = expenseDocRef.id;
+      newExpense = { ...ExpenseParserByType[expense.type].parse(expense) };
+      newExpense.day_book_transaction_id = dayBookDocRef.id;
+      newExpense.id = expenseDocRef.id;
 
-    // Set operations
-    transaction.set(dayBookDocRef, newDayBookDoc);
-    transaction.set(expenseDocRef, newExpense);
-    if (projectDocRef && storedProjectDoc?.exists()) {
-      transaction.set(projectDocRef, newProject);
-    }
-    if (previousProjectDoc) {
-      transaction.set(previousProjectDoc.ref, previousProject);
-    }
-  });
+      // Set operations
+      transaction.set(dayBookDocRef, newDayBookDoc);
+      transaction.set(expenseDocRef, newExpense);
+      if (projectDocRef && storedProjectDoc?.exists()) {
+        transaction.set(projectDocRef, newProject);
+      }
+      if (previousProjectDoc) {
+        transaction.set(previousProjectDoc.ref, previousProject);
+      }
+    });
+  } catch (error) {
+    console.error('Error upserting expense', error);
+  }
 
   return newExpense;
 }
