@@ -184,7 +184,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <VoucherProjectSelector disabled={isUpdating} />
+                <VoucherProjectSelector />
               </Grid>
 
               <Grid item xs={2} />

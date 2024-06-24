@@ -39,8 +39,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
   initialValues,
   onSubmit,
 }) => {
-  const isUpdating = Boolean(initialValues.id);
-
   const preSubmit: BaseCustomsPaymentFormProps['onSubmit'] = async (
     formData,
     formActions
@@ -153,7 +151,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <VoucherProjectSelector disabled={isUpdating} />
+                <VoucherProjectSelector />
               </Grid>
 
               <Grid item xs={2} />
