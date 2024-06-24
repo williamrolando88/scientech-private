@@ -77,9 +77,19 @@ const navConfig = [
         icon: ICONS.analytics,
       },
       {
-        title: 'Tarjetas de crédito',
-        path: PATH_DASHBOARD.creditCards.root,
+        title: 'Banca',
+        path: PATH_DASHBOARD.banking.root,
         icon: ICONS.banking,
+        children: [
+          {
+            title: 'Tarjetas de crédito',
+            path: PATH_DASHBOARD.banking.creditCards.root,
+          },
+          {
+            title: 'Cuentas bancarias',
+            path: PATH_DASHBOARD.banking.accounts.root,
+          },
+        ],
       },
     ],
   },
