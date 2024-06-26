@@ -12,7 +12,7 @@ import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 
 const AddSaleNote: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addExpense } = useAddExpenseByType('non_deductible');
+  const { mutateAsync: addExpense } = useAddExpenseByType('sale_note');
 
   const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
     values,
