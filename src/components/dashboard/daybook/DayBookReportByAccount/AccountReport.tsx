@@ -12,6 +12,7 @@ import {
   getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
 import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+import { DeleteDayBookTransaction } from '../DayBookIndex/DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
 
@@ -23,6 +24,8 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const [transactionToOpen, setTransactionToOpen] =
     useState<DayBookTransaction | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DayBookTransaction | null>(null);
+  const [transactionToDelete, setTransactionToDelete] =
     useState<DayBookTransaction | null>(null);
 
   const getTransactionToOpen = useCallback(
@@ -37,6 +40,14 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(detailId, transactions);
       setTransactionToUpdate(transaction);
+    },
+    [transactions]
+  );
+
+  const getTransactionToDelete = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(detailId, transactions);
+      setTransactionToDelete(transaction);
     },
     [transactions]
   );
@@ -98,6 +109,13 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
           onClick={() => getTransactionToUpdate(params.id as string)}
           icon={<Iconify icon="pajamas:doc-changes" />}
           showInMenu
+        />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => getTransactionToDelete(params.id as string)}
+          icon={<Iconify icon="pajamas:remove" />}
+          showInMenu
+          disabled={params.row.locked}
         />,
       ],
     },
@@ -182,6 +200,11 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
       <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
         transaction={transactionToUpdate}
+      />
+
+      <DeleteDayBookTransaction
+        transaction={transactionToDelete}
+        onClose={() => setTransactionToDelete(null)}
       />
     </>
   );
