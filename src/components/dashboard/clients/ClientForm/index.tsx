@@ -23,18 +23,20 @@ interface ClientFormProps extends FormikProps {
   onSubmit: FormikConfig<Client>['onSubmit'];
   onClose: VoidFunction;
   infoText?: string;
+  isUpdating?: boolean;
 }
 
 const ClientForm: FC<ClientFormProps> = ({
   onClose,
   onSubmit,
   infoText,
+  isUpdating,
   ...formikProps
 }) => {
   const { data: clients } = useListClients();
 
   const handleSubmit: FormikConfig<Client>['onSubmit'] = (values, helpers) => {
-    if (clients?.find((client) => client.id === values.id)) {
+    if (!isUpdating && clients?.find((client) => client.id === values.id)) {
       helpers.setErrors({ id: 'El cliente ya existe' });
       helpers.setSubmitting(false);
       return;
@@ -61,7 +63,13 @@ const ClientForm: FC<ClientFormProps> = ({
               </Grid>
 
               <Grid item xs={2}>
-                <FormikTextField fullWidth label="CI/RUC" name="id" required />
+                <FormikTextField
+                  fullWidth
+                  label="CI/RUC"
+                  name="id"
+                  disabled={isUpdating}
+                  required
+                />
               </Grid>
 
               <Grid item xs={6}>

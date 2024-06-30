@@ -14,10 +14,10 @@ export const useListClients = () => {
   return { ...query, data: query.data ?? [] };
 };
 
-export const useAddClient = () => {
+export const useUpsertClient = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: Clients.upsert,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
@@ -28,9 +28,10 @@ export const useAddClient = () => {
         inputs,
       ]);
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
-
-  return mutation;
 };
 
 export const useDeleteClient = () => {

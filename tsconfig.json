@@ -2,7 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "strict": true,
     "noEmit": true,
     "allowJs": true,
@@ -22,11 +25,20 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@src/*": ["src/*"],
-      "@mocks/*": ["__mocks__/*"]
+      "@src/*": [
+        "src/*"
+      ],
+      "@mocks/*": [
+        "__mocks__/*"
+      ]
     }
   },
-
-  "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
