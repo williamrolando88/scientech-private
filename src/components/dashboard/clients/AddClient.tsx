@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
-import { useAddClient, useListClients } from '@src/hooks/cache/clients';
+import { useAddClient } from '@src/hooks/cache/clients';
 import { CLIENT_INITIAL_VALUE } from '@src/lib/constants/client';
 import { ClientSchema } from '@src/lib/schemas/clients';
 import { Client } from '@src/types/clients';
@@ -14,21 +14,12 @@ const AddClient = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const { mutateAsync: addClient } = useAddClient();
-  const { data: clients } = useListClients();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<Client>['onSubmit'] = (
     values,
     { setSubmitting }
   ) => {
-    if (clients?.find((client) => client.id === values.id)) {
-      enqueueSnackbar('El cliente ya existe', {
-        variant: 'error',
-      });
-      setSubmitting(false);
-      return;
-    }
-
     addClient(values)
       .then(() => {
         enqueueSnackbar('Cliente guardado exitosamente');
