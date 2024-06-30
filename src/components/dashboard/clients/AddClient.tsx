@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
-import { useUpsertClient } from '@src/hooks/cache/clients';
+import { useAddClient } from '@src/hooks/cache/clients';
 import { CLIENT_INITIAL_VALUE } from '@src/lib/constants/client';
 import { ClientSchema } from '@src/lib/schemas/clients';
 import { Client } from '@src/types/clients';
@@ -13,7 +13,7 @@ const AddClient = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const { mutateAsync: addClient } = useUpsertClient();
+  const { mutateAsync: addClient } = useAddClient();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<Client>['onSubmit'] = (

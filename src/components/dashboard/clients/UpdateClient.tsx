@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { useUpsertClient } from '@src/hooks/cache/clients';
+import { useUpdateClient } from '@src/hooks/cache/clients';
 import { ClientSchema } from '@src/lib/schemas/clients';
 import { Client } from '@src/types/clients';
 import { FormikConfig } from 'formik';
@@ -19,21 +19,21 @@ const UpdateClient: FC<UpdateClientProps> = ({
   open,
   onClose,
 }) => {
-  const { mutateAsync: addClient } = useUpsertClient();
+  const { mutateAsync: updateClient } = useUpdateClient();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<Client>['onSubmit'] = (
     values,
     { setSubmitting }
   ) => {
-    addClient(values)
+    updateClient(values)
       .then(() => {
-        enqueueSnackbar('Cliente guardado exitosamente');
+        enqueueSnackbar('Cliente actualizado exitosamente');
         onClose();
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al guardar el cliente', {
+        enqueueSnackbar('Error al actualizar el cliente', {
           variant: 'error',
         });
       })
@@ -49,7 +49,7 @@ const UpdateClient: FC<UpdateClientProps> = ({
       <DialogTitle>Agregar Cliente</DialogTitle>
 
       <ClientForm
-        infoText="Aquí puedes agregar nuevos clientes"
+        infoText="Aquí puedes modificar un cliente, si necesitas modificar el RUC/CI deberás crear un nuevo cliente"
         initialValues={initialValues}
         onSubmit={onSubmit}
         onClose={onClose}

@@ -14,7 +14,7 @@ export const useListClients = () => {
   return { ...query, data: query.data ?? [] };
 };
 
-export const useUpsertClient = () => {
+export const useAddClient = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -34,10 +34,29 @@ export const useUpsertClient = () => {
   });
 };
 
+export const useUpdateClient = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: Clients.upsert,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+    },
+    onSuccess: (id, inputs) => {
+      queryClient.setQueryData(queryKey, (prevData: Client[]) =>
+        prevData.map((client) => (client.id === id ? inputs : client))
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
 export const useDeleteClient = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: Clients.remove,
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey });
@@ -47,25 +66,8 @@ export const useDeleteClient = () => {
         prevData.filter((client) => client.id !== id)
       );
     },
-  });
-
-  return mutation;
-};
-
-export const useUpdateClient = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: Clients.upsert,
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey });
-    },
-    onSuccess: (id, input) => {
-      queryClient.setQueryData(queryKey, (prevData: Client[]) =>
-        prevData.map((client) => (client.id === id ? input : client))
-      );
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   });
-
-  return mutation;
 };
