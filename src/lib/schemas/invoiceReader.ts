@@ -23,6 +23,7 @@ const InfoFacturaSchema = z.object({
   totalConImpuestos: z.object({
     totalImpuesto: TotalTaxSchema,
   }),
+  totalSinImpuestos: z.string(),
 });
 
 export const InvoiceReaderSchema = z.object({
