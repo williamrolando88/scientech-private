@@ -88,6 +88,26 @@ const columns: GridColDef<ParsedInvoice>[] = [
     },
   },
   {
+    field: 'baseFifteen',
+    headerName: 'Base 15%',
+    sortable: false,
+    valueGetter: (params) => {
+      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
+      let result = 0;
+
+      if (Array.isArray(value)) {
+        const baseTwelve = value.find((tax) => tax.codigoPorcentaje === '4');
+        result = Number(baseTwelve?.baseImponible || 0);
+      } else {
+        result = Number(
+          value.codigoPorcentaje === '4' ? value.baseImponible : 0
+        );
+      }
+
+      return round(result, 2);
+    },
+  },
+  {
     field: 'tax',
     headerName: 'IVA',
     sortable: false,
@@ -96,10 +116,14 @@ const columns: GridColDef<ParsedInvoice>[] = [
       let result = 0;
 
       if (Array.isArray(value)) {
-        const taxValue = value.find((tax) => tax.codigoPorcentaje === '2');
+        const taxValue = value.find(
+          (tax) => tax.codigoPorcentaje === '2' || tax.codigoPorcentaje === '4'
+        );
         result = Number(taxValue?.valor);
       } else {
-        result = Number(value.codigoPorcentaje === '2' ? value.valor : 0);
+        result =
+          Number(value.codigoPorcentaje === '2' ? value.valor : 0) ||
+          Number(value.codigoPorcentaje === '4' ? value.valor : 0);
       }
 
       return round(result, 2);

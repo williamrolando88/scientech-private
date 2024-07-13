@@ -49,7 +49,11 @@ export const parseFactura = (xmlText: string): ParsedInvoice | null => {
   const convertedFactura = facturaXmlToJs(xmlText);
   const cleanFactura = cleanObjectTree(convertedFactura);
 
+  console.log(cleanFactura);
+
   const parsedFactura = InvoiceReaderSchema.safeParse(cleanFactura);
+
+  console.log(parsedFactura);
 
   if (parsedFactura.success) {
     return parsedFactura.data;
