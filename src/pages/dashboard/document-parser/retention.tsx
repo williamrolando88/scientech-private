@@ -6,6 +6,7 @@ import DashboardTemplate from 'src/components/shared/layouts/dashboard/Dashboard
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseRetencion } from '@src/lib/modules/documentParser/holdingParser';
 import { ParsedHolding } from '@src/types/documentParsers';
+import { HoldingDetailsViewer } from '@src/components/dashboard/documentParser/HoldingDetailsViewer';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
@@ -52,7 +53,7 @@ function Page() {
       }
     >
       {parsedData.length ? (
-        <p>here comes the data</p>
+        <HoldingDetailsViewer data={parsedData} />
       ) : (
         <DropdownSection
           files={files}

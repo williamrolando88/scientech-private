@@ -4,7 +4,7 @@ import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
 import { ParsedInvoice } from '@src/types/documentParsers';
-import { DocumentViewerCustomToolbar } from '../DocumentViewerCustomToolbar';
+import { DocumentViewerCustomToolbar } from './DocumentViewerCustomToolbar';
 
 const columns: GridColDef<ParsedInvoice>[] = [
   {

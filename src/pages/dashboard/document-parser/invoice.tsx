@@ -1,7 +1,7 @@
 import { Button, Stack } from '@mui/material';
 import { useState } from 'react';
 import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
-import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/InvoiceParser/InvoiceDetailsViewer';
+import { InvoiceDetailsViewer } from '@src/components/dashboard/documentParser/InvoiceDetailsViewer';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { ParsedInvoice } from '@src/types/documentParsers';
