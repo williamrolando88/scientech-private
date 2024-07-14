@@ -5,26 +5,25 @@ import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/In
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { ParsedInvoice } from 'src/types/invoiceParsers';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
+import { parseRetencion } from '@src/lib/modules/documentParser/holdingParser';
+import { singleFileReader } from '@src/lib/modules/documentParser/documentReader';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
 function Page() {
-  const [files, setFiles] = useState<(string | File)[]>([]);
+  const [files, setFiles] = useState<(File | string)[]>([]);
   const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
 
-  const handleUpload = async () => {
-    const documentParsedData = await xmlFileReader<ParsedInvoice>(
+  const handleUpload = () => {
+    const documentParsedData = singleFileReader<ParsedInvoice>(
       files,
-      parseFactura
+      parseRetencion
     );
 
     setParsedData(documentParsedData);
   };
-
   const handleReset = () => {
     setFiles([]);
     setParsedData([]);
@@ -32,8 +31,8 @@ function Page() {
 
   return (
     <DashboardTemplate
-      documentTitle="Lector de Facturas"
-      heading="Lector de Facturas"
+      documentTitle="Lector de Retenciones"
+      heading="Lector de Retenciones"
       action={
         parsedData.length ? (
           <Button onClick={handleReset} variant="contained">
