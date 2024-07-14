@@ -13,6 +13,7 @@ Page.getLayout = (page: React.ReactElement) => (
 );
 
 function Page() {
+  const buttonText = 'Leer Facturas';
   const [files, setFiles] = useState<(string | File)[]>([]);
   const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
 
@@ -48,7 +49,7 @@ function Page() {
             variant="contained"
             disabled={!files.length}
           >
-            Leer Facturas
+            {buttonText}
           </Button>
         </Stack>
       }
@@ -60,7 +61,7 @@ function Page() {
           files={files}
           setFiles={setFiles}
           handleUpload={handleUpload}
-          uploadButtonText="Leer Facturas"
+          uploadButtonText={buttonText}
         />
       )}
     </DashboardTemplate>

@@ -107,6 +107,7 @@ const navConfig = [
         icon: ICONS.file,
         children: [
           { title: 'Facturas', path: PATH_DASHBOARD.documentParser.invoice },
+          { title: 'Retenciones', path: PATH_DASHBOARD.documentParser.holding },
         ],
       },
     ],
