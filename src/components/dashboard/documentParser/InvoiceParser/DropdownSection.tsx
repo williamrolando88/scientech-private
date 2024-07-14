@@ -6,8 +6,15 @@ interface DropdownSectionProps {
   files: (File | string)[];
   setFiles: (files: (File | string)[]) => void;
   handleUpload: VoidFunction;
+  uploadButtonText?: string;
 }
-export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles, handleUpload }) => {
+
+export const DropdownSection: FC<DropdownSectionProps> = ({
+  files,
+  setFiles,
+  handleUpload,
+  uploadButtonText,
+}) => {
   const handleRemoveFile = (inputFile: File | string) => {
     const filtered = files.filter((file) => file !== inputFile);
     setFiles(filtered);
@@ -42,6 +49,7 @@ export const DropdownSection: FC<DropdownSectionProps> = ({ files, setFiles, han
           onRemove={handleRemoveFile}
           onRemoveAll={handleRemoveAllFiles}
           onUpload={handleUpload}
+          uploadButtonText={uploadButtonText}
         />
       </CardContent>
     </Card>

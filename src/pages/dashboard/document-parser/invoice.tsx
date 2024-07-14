@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useState } from 'react';
 import { DropdownSection } from 'src/components/dashboard/documentParser/InvoiceParser/DropdownSection';
 import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/InvoiceParser/InvoiceDetailsViewer';
@@ -35,11 +35,22 @@ function Page() {
       documentTitle="Lector de Facturas"
       heading="Lector de Facturas"
       action={
-        parsedData.length ? (
-          <Button onClick={handleReset} variant="contained">
+        <Stack direction="row" gap={1}>
+          <Button
+            onClick={handleReset}
+            variant="contained"
+            disabled={!files.length && !parsedData.length}
+          >
             Reset
           </Button>
-        ) : undefined
+          <Button
+            onClick={handleUpload}
+            variant="contained"
+            disabled={!files.length}
+          >
+            Leer Facturas
+          </Button>
+        </Stack>
       }
     >
       {parsedData.length ? (
@@ -49,6 +60,7 @@ function Page() {
           files={files}
           setFiles={setFiles}
           handleUpload={handleUpload}
+          uploadButtonText="Leer Facturas"
         />
       )}
     </DashboardTemplate>

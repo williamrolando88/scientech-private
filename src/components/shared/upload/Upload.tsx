@@ -1,6 +1,13 @@
 import { useDropzone } from 'react-dropzone';
 // @mui
-import { Box, Button, IconButton, Stack, StackProps, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  StackProps,
+  Typography,
+} from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 // assets
 import { UploadIllustration } from '../../../assets/illustrations';
@@ -46,9 +53,16 @@ export default function Upload({
   onRemove,
   onRemoveAll,
   sx,
+  uploadButtonText,
   ...other
 }: UploadProps) {
-  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isDragReject,
+    fileRejections,
+  } = useDropzone({
     multiple,
     disabled,
     ...other,
@@ -122,19 +136,28 @@ export default function Upload({
       {hasFiles && (
         <>
           <Box sx={{ my: 3 }}>
-            <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+            <MultiFilePreview
+              files={files}
+              thumbnail={thumbnail}
+              onRemove={onRemove}
+            />
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
             {onRemoveAll && (
-              <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
+              <Button
+                color="inherit"
+                variant="outlined"
+                size="small"
+                onClick={onRemoveAll}
+              >
                 Remove all
               </Button>
             )}
 
             {onUpload && (
               <Button size="small" variant="contained" onClick={onUpload}>
-                Upload files
+                {uploadButtonText ?? 'Upload files'}
               </Button>
             )}
           </Stack>
