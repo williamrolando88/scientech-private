@@ -1,5 +1,5 @@
 export const singleFileReader = async (file: string | File): Promise<string> =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result;
