@@ -1,14 +1,24 @@
 import { Card, CardContent } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbarContainer,
-  GridToolbarExport,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { ParsedInvoice } from 'src/types/invoiceParsers';
+import { ParsedInvoice } from '@src/types/documentParsers';
+import { DocumentViewerCustomToolbar } from './DocumentViewerCustomToolbar';
+
+const baseTaxValueGetter = (docData: ParsedInvoice, code: number): number => {
+  const value = docData.infoFactura.totalConImpuestos.totalImpuesto;
+  let result: number;
+
+  if (Array.isArray(value)) {
+    const base = value.find((tax) => tax.codigoPorcentaje === code);
+    result = base?.baseImponible || 0;
+  } else {
+    result = value.codigoPorcentaje === code ? value.baseImponible : 0;
+  }
+
+  return result ? round(result, 2) : 0;
+};
 
 const columns: GridColDef<ParsedInvoice>[] = [
   {
@@ -51,61 +61,19 @@ const columns: GridColDef<ParsedInvoice>[] = [
     field: 'baseCero',
     headerName: 'Base 0%',
     sortable: false,
-    valueGetter: (params) => {
-      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
-      let result = 0;
-
-      if (Array.isArray(value)) {
-        const baseCero = value.find((tax) => tax.codigoPorcentaje === '0');
-        result = Number(baseCero?.baseImponible || 0);
-      } else {
-        result = Number(
-          value.codigoPorcentaje === '0' ? value.baseImponible : 0
-        );
-      }
-
-      return round(result, 2);
-    },
+    valueGetter: (params) => baseTaxValueGetter(params.row, 0),
   },
   {
     field: 'baseTwelve',
     headerName: 'Base 12%',
     sortable: false,
-    valueGetter: (params) => {
-      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
-      let result = 0;
-
-      if (Array.isArray(value)) {
-        const baseTwelve = value.find((tax) => tax.codigoPorcentaje === '2');
-        result = Number(baseTwelve?.baseImponible || 0);
-      } else {
-        result = Number(
-          value.codigoPorcentaje === '2' ? value.baseImponible : 0
-        );
-      }
-
-      return round(result, 2);
-    },
+    valueGetter: (params) => baseTaxValueGetter(params.row, 2),
   },
   {
     field: 'baseFifteen',
     headerName: 'Base 15%',
     sortable: false,
-    valueGetter: (params) => {
-      const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
-      let result = 0;
-
-      if (Array.isArray(value)) {
-        const baseTwelve = value.find((tax) => tax.codigoPorcentaje === '4');
-        result = Number(baseTwelve?.baseImponible || 0);
-      } else {
-        result = Number(
-          value.codigoPorcentaje === '4' ? value.baseImponible : 0
-        );
-      }
-
-      return round(result, 2);
-    },
+    valueGetter: (params) => baseTaxValueGetter(params.row, 4),
   },
   {
     field: 'tax',
@@ -113,17 +81,13 @@ const columns: GridColDef<ParsedInvoice>[] = [
     sortable: false,
     valueGetter: (params) => {
       const value = params.row.infoFactura.totalConImpuestos.totalImpuesto;
-      let result = 0;
+      let result: number;
 
       if (Array.isArray(value)) {
-        const taxValue = value.find(
-          (tax) => tax.codigoPorcentaje === '2' || tax.codigoPorcentaje === '4'
-        );
-        result = Number(taxValue?.valor);
+        const taxValue = value.find((tax) => tax.codigoPorcentaje !== 0);
+        result = taxValue?.valor || 0;
       } else {
-        result =
-          Number(value.codigoPorcentaje === '2' ? value.valor : 0) ||
-          Number(value.codigoPorcentaje === '4' ? value.valor : 0);
+        result = value.codigoPorcentaje !== 0 ? value.valor : 0;
       }
 
       return round(result, 2);
@@ -186,18 +150,10 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
             },
           }}
           slots={{
-            toolbar: CustomToolbar,
+            toolbar: DocumentViewerCustomToolbar,
           }}
         />
       </CardContent>
     </Card>
   );
 };
-
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
