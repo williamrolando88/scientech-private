@@ -1,12 +1,11 @@
 import { Button, Stack } from '@mui/material';
 import { useState } from 'react';
-import { DropdownSection } from 'src/components/dashboard/documentParser/InvoiceParser/DropdownSection';
-import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/InvoiceParser/InvoiceDetailsViewer';
+import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
-import { ParsedInvoice } from 'src/types/invoiceParsers';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
+import { parseRetencion } from '@src/lib/modules/documentParser/holdingParser';
+import { ParsedHolding } from '@src/types/documentParsers';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
@@ -14,12 +13,12 @@ Page.getLayout = (page: React.ReactElement) => (
 
 function Page() {
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
+  const [parsedData, setParsedData] = useState<ParsedHolding[]>([]);
 
   const handleUpload = async () => {
-    const documentParsedData = await xmlFileReader<ParsedInvoice>(
+    const documentParsedData = await xmlFileReader<ParsedHolding>(
       files,
-      parseFactura
+      parseRetencion
     );
 
     setParsedData(documentParsedData);
@@ -53,7 +52,7 @@ function Page() {
       }
     >
       {parsedData.length ? (
-        <InvoiceDetailsViewer data={parsedData} />
+        <p>here comes the data</p>
       ) : (
         <DropdownSection
           files={files}

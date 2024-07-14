@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@mui/material';
 import { FC, useCallback } from 'react';
-import { Upload } from 'src/components/shared/upload';
+import { Upload } from '@src/components/shared/upload';
 
 interface DropdownSectionProps {
   files: (File | string)[];

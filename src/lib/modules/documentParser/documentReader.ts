@@ -20,6 +20,7 @@ export async function xmlFileReader<T>(
   await Promise.all(
     files.map(async (file) => {
       const readedFile = await singleFileReader(file);
+
       const parsedFactura = parser(readedFile);
 
       if (parsedFactura) {

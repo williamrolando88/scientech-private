@@ -1,10 +1,10 @@
 import { Button, Stack } from '@mui/material';
 import { useState } from 'react';
-import { DropdownSection } from 'src/components/dashboard/documentParser/InvoiceParser/DropdownSection';
+import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import { InvoiceDetailsViewer } from 'src/components/dashboard/documentParser/InvoiceParser/InvoiceDetailsViewer';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
-import { ParsedInvoice } from 'src/types/invoiceParsers';
+import { ParsedInvoice } from '@src/types/documentParsers';
 import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 

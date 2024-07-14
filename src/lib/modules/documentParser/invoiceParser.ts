@@ -1,4 +1,4 @@
-import { ParsedInvoice } from '@src/types/invoiceParsers';
+import { ParsedInvoice } from '@src/types/documentParsers';
 import { documentParser } from '@src/lib/modules/documentParser/xmlParser';
 import { DOCUMENT_TYPE } from '@src/lib/enums/documentParser';
 import { InvoiceReaderSchema } from '../../schemas/documentParser/invoiceReader';

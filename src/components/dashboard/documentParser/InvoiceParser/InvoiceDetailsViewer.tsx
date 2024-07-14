@@ -1,14 +1,10 @@
 import { Card, CardContent } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbarContainer,
-  GridToolbarExport,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { ParsedInvoice } from 'src/types/invoiceParsers';
+import { ParsedInvoice } from '@src/types/documentParsers';
+import { DocumentViewerCustomToolbar } from '../DocumentViewerCustomToolbar';
 
 const columns: GridColDef<ParsedInvoice>[] = [
   {
@@ -186,18 +182,10 @@ export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
             },
           }}
           slots={{
-            toolbar: CustomToolbar,
+            toolbar: DocumentViewerCustomToolbar,
           }}
         />
       </CardContent>
     </Card>
   );
 };
-
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}

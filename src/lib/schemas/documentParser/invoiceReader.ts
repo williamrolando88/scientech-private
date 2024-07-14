@@ -1,13 +1,5 @@
 import { z } from 'zod';
-
-const InvoiceInfoSchema = z.object({
-  razonSocial: z.string(),
-  ruc: z.string(),
-  claveAcceso: z.string(),
-  secuencial: z.string(),
-  estab: z.string(),
-  ptoEmi: z.string(),
-});
+import { InvoiceInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
 
 const ImpuestoSchema = z.object({
   codigoPorcentaje: z.string(),
