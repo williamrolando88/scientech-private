@@ -4,6 +4,7 @@ export const IVA_RATE_15 = 15;
 export const ISD_TAX_RATE = 5;
 export const FODINFA_TAX_RATE = 0.5;
 export const INSURANCE_RATE = 1;
+export const TAX_PERCENTAGE_CODES = [2, 4];
 export const DEFAULT_INVOICE_PAYMENT_ACCOUNT = '1.01.01.03.01';
 export const DEFAULT_INVOICE_EXPENSE_ACCOUNT = '5.01.01.02';
 export const PAYMENT_INVOICE_ALLOWED_ACCOUNTS = [

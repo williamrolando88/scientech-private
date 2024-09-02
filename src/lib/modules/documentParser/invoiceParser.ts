@@ -16,5 +16,9 @@ export const parseFactura = (xmlText: string): ParsedInvoice | null => {
     return parsedFactura.data;
   }
 
+  if (parsedFactura.error) {
+    console.error('Error parsing factura:', parsedFactura.error);
+  }
+
   return null;
 };
