@@ -21,7 +21,7 @@ import {
 import { extendedInvoiceBuilder } from '@src/lib/modules/expenses';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
-import { Form, Formik, FormikConfig } from 'formik';
+import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { UploadBox } from '@src/components/shared/upload';
@@ -56,6 +56,78 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
     onSubmit(processedInvoice, formActions);
   };
+
+  const handleOnDropAccepted =
+    (setValues: FormikHelpers<ExtendedInvoice>['setValues']) =>
+    async (files: File[]) => {
+      const documentParsedData = await xmlFileReader<ParsedInvoice>(
+        files,
+        parseFactura
+      );
+
+      if (!documentParsedData || !documentParsedData.length) {
+        return;
+      }
+
+      const invoice = documentParsedData[0];
+
+      let description = '';
+      if (Array.isArray(invoice.detalles.detalle)) {
+        description = invoice.detalles.detalle
+          .map((detalle) => `${detalle.cantidad} - ${detalle.descripcion}`)
+          .join('\n');
+      } else {
+        description = `${invoice.detalles.detalle.cantidad} - ${invoice.detalles.detalle.descripcion}`;
+      }
+
+      const { totalImpuesto } = invoice.infoFactura.totalConImpuestos;
+
+      let taxed_subtotal = 0;
+      if (Array.isArray(totalImpuesto)) {
+        taxed_subtotal =
+          totalImpuesto.find((impuesto) =>
+            TAX_PERCENTAGE_CODES.includes(impuesto.codigoPorcentaje)
+          )?.baseImponible || 0;
+      } else {
+        taxed_subtotal = TAX_PERCENTAGE_CODES.includes(
+          totalImpuesto.codigoPorcentaje
+        )
+          ? totalImpuesto.baseImponible
+          : 0;
+      }
+
+      let tax_exempted_subtotal = 0;
+      if (Array.isArray(totalImpuesto)) {
+        tax_exempted_subtotal =
+          totalImpuesto.find((impuesto) => impuesto.codigoPorcentaje === 0)
+            ?.baseImponible || 0;
+      } else {
+        tax_exempted_subtotal =
+          totalImpuesto.codigoPorcentaje === 0
+            ? totalImpuesto.baseImponible
+            : 0;
+      }
+
+      const issue_date = new Date(
+        `${invoice.infoFactura.fechaEmision
+          .split('/')
+          .reverse()
+          .join('-')}T12:00:00-05:00`
+      );
+
+      setValues({
+        ...initialValues,
+        description,
+        issuer_id: invoice.infoTributaria.ruc,
+        issuer_name: invoice.infoTributaria.razonSocial,
+        establishment: Number(invoice.infoTributaria.estab),
+        emission_point: Number(invoice.infoTributaria.ptoEmi),
+        sequential_number: Number(invoice.infoTributaria.secuencial),
+        issue_date,
+        taxed_subtotal,
+        tax_exempted_subtotal,
+      });
+    };
 
   return (
     <Formik
@@ -220,89 +292,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                     Leer XML
                   </Typography>
                 }
+                accept={{ 'text/xml': [] }}
                 sx={{ height: '36px', width: '100%' }}
-                onDropAccepted={async (files) => {
-                  const documentParsedData = await xmlFileReader<ParsedInvoice>(
-                    files,
-                    parseFactura
-                  );
-
-                  console.log(`documentParsedData`, documentParsedData);
-
-                  if (!documentParsedData) {
-                    return;
-                  }
-
-                  const invoice = documentParsedData[0];
-
-                  let description = '';
-
-                  if (Array.isArray(invoice.detalles.detalle)) {
-                    description = invoice.detalles.detalle
-                      .map(
-                        (detalle) =>
-                          `${detalle.cantidad} - ${detalle.descripcion}`
-                      )
-                      .join('\n');
-                  } else {
-                    description = `${invoice.detalles.detalle.cantidad} - ${invoice.detalles.detalle.descripcion}`;
-                  }
-
-                  const { totalImpuesto } =
-                    invoice.infoFactura.totalConImpuestos;
-                  console.log(`totalImpuesto`, totalImpuesto);
-                  // taxed_subtotal
-                  let taxed_subtotal = 0;
-
-                  if (Array.isArray(totalImpuesto)) {
-                    taxed_subtotal =
-                      totalImpuesto.find((impuesto) =>
-                        TAX_PERCENTAGE_CODES.includes(impuesto.codigoPorcentaje)
-                      )?.baseImponible || 0;
-                  } else {
-                    taxed_subtotal = TAX_PERCENTAGE_CODES.includes(
-                      totalImpuesto.codigoPorcentaje
-                    )
-                      ? totalImpuesto.baseImponible
-                      : 0;
-                  }
-                  // tax_exempted_subtotal
-                  let tax_exempted_subtotal = 0;
-
-                  if (Array.isArray(totalImpuesto)) {
-                    tax_exempted_subtotal =
-                      totalImpuesto.find(
-                        (impuesto) => impuesto.codigoPorcentaje === 0
-                      )?.baseImponible || 0;
-                  } else {
-                    tax_exempted_subtotal =
-                      totalImpuesto.codigoPorcentaje === 0
-                        ? totalImpuesto.baseImponible
-                        : 0;
-                  }
-
-                  const issue_date = new Date(
-                    `${invoice.infoFactura.fechaEmision
-                      .split('/')
-                      .reverse()
-                      .join('-')}T12:00:00-05:00`
-                  );
-
-                  setValues({
-                    ...initialValues,
-                    description,
-                    issuer_id: invoice.infoTributaria.ruc,
-                    issuer_name: invoice.infoTributaria.razonSocial,
-                    establishment: Number(invoice.infoTributaria.estab),
-                    emission_point: Number(invoice.infoTributaria.ptoEmi),
-                    sequential_number: Number(
-                      invoice.infoTributaria.secuencial
-                    ),
-                    issue_date,
-                    taxed_subtotal,
-                    tax_exempted_subtotal,
-                  });
-                }}
+                onDropAccepted={handleOnDropAccepted(setValues)}
               />
             </Stack>
 

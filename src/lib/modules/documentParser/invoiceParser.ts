@@ -10,8 +10,6 @@ export const parseFactura = (xmlText: string): ParsedInvoice | null => {
     return null;
   }
 
-  console.log('raw document data:', documentData);
-
   const parsedFactura = InvoiceReaderSchema.safeParse(documentData);
 
   if (parsedFactura.success) {
