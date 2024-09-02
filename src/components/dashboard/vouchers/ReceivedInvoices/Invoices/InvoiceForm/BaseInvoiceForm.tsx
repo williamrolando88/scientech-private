@@ -6,19 +6,28 @@ import {
   DialogContent,
   Grid,
   Stack,
+  Typography,
 } from '@mui/material';
 import {
   FormikAutoCalculateField,
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
+import {
+  ALLOWED_ACCOUNTS,
+  DEFAULT_ACCOUNT,
+  TAX_PERCENTAGE_CODES,
+} from '@src/lib/constants/settings';
 import { extendedInvoiceBuilder } from '@src/lib/modules/expenses';
 import { InvoiceSchema } from '@src/lib/schemas/expenses';
 import { ExtendedInvoice } from '@src/types/expenses';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { UploadBox } from '@src/components/shared/upload';
+import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
+import { ParsedInvoice } from '@src/types/documentParsers';
+import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
 import { AccountCategorySelector } from './AccountCategorySelector';
 import { VoucherIVAField } from './VoucherIVAField';
 import { VoucherProjectSelector } from './VoucherProjectSelector';
@@ -54,7 +63,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
       onSubmit={preSubmit}
       validationSchema={toFormikValidationSchema(InvoiceSchema)}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setValues }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
@@ -195,18 +204,127 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
             </Grid>
           </Stack>
 
-          <DialogActions>
-            <Button onClick={onClose} disabled={isSubmitting}>
-              Cancelar
-            </Button>
-
-            <LoadingButton
-              variant="contained"
-              type="submit"
-              loading={isSubmitting}
+          <DialogActions
+            sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+              sx={{ alignSelf: 'flex-start' }}
             >
-              {isUpdating ? 'Actualizar' : 'Guardar'}
-            </LoadingButton>
+              <UploadBox
+                placeholder={
+                  <Typography variant="button" color="primary">
+                    Leer XML
+                  </Typography>
+                }
+                sx={{ height: '36px', width: '100%' }}
+                onDropAccepted={async (files) => {
+                  const documentParsedData = await xmlFileReader<ParsedInvoice>(
+                    files,
+                    parseFactura
+                  );
+
+                  console.log(`documentParsedData`, documentParsedData);
+
+                  if (!documentParsedData) {
+                    return;
+                  }
+
+                  const invoice = documentParsedData[0];
+
+                  let description = '';
+
+                  if (Array.isArray(invoice.detalles.detalle)) {
+                    description = invoice.detalles.detalle
+                      .map(
+                        (detalle) =>
+                          `${detalle.cantidad} - ${detalle.descripcion}`
+                      )
+                      .join('\n');
+                  } else {
+                    description = `${invoice.detalles.detalle.cantidad} - ${invoice.detalles.detalle.descripcion}`;
+                  }
+
+                  const { totalImpuesto } =
+                    invoice.infoFactura.totalConImpuestos;
+                  console.log(`totalImpuesto`, totalImpuesto);
+                  // taxed_subtotal
+                  let taxed_subtotal = 0;
+
+                  if (Array.isArray(totalImpuesto)) {
+                    taxed_subtotal =
+                      totalImpuesto.find((impuesto) =>
+                        TAX_PERCENTAGE_CODES.includes(impuesto.codigoPorcentaje)
+                      )?.baseImponible || 0;
+                  } else {
+                    taxed_subtotal = TAX_PERCENTAGE_CODES.includes(
+                      totalImpuesto.codigoPorcentaje
+                    )
+                      ? totalImpuesto.baseImponible
+                      : 0;
+                  }
+                  // tax_exempted_subtotal
+                  let tax_exempted_subtotal = 0;
+
+                  if (Array.isArray(totalImpuesto)) {
+                    tax_exempted_subtotal =
+                      totalImpuesto.find(
+                        (impuesto) => impuesto.codigoPorcentaje === 0
+                      )?.baseImponible || 0;
+                  } else {
+                    tax_exempted_subtotal =
+                      totalImpuesto.codigoPorcentaje === 0
+                        ? totalImpuesto.baseImponible
+                        : 0;
+                  }
+
+                  const issue_date = new Date(
+                    `${invoice.infoFactura.fechaEmision
+                      .split('/')
+                      .reverse()
+                      .join('-')}T12:00:00-05:00`
+                  );
+
+                  setValues({
+                    ...initialValues,
+                    description,
+                    issuer_id: invoice.infoTributaria.ruc,
+                    issuer_name: invoice.infoTributaria.razonSocial,
+                    establishment: Number(invoice.infoTributaria.estab),
+                    emission_point: Number(invoice.infoTributaria.ptoEmi),
+                    sequential_number: Number(
+                      invoice.infoTributaria.secuencial
+                    ),
+                    issue_date,
+                    taxed_subtotal,
+                    tax_exempted_subtotal,
+                  });
+                }}
+              />
+            </Stack>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              <Button onClick={onClose} disabled={isSubmitting}>
+                Cancelar
+              </Button>
+
+              <LoadingButton
+                variant="contained"
+                type="submit"
+                loading={isSubmitting}
+              >
+                {isUpdating ? 'Actualizar' : 'Guardar'}
+              </LoadingButton>
+            </Stack>
           </DialogActions>
         </Form>
       )}

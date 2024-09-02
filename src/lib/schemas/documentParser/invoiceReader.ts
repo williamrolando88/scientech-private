@@ -18,7 +18,15 @@ const InfoFacturaSchema = z.object({
   totalSinImpuestos: z.coerce.number(),
 });
 
+const DetalleSchema = z.object({
+  cantidad: z.coerce.number(),
+  descripcion: z.string().optional(),
+});
+
 export const InvoiceReaderSchema = z.object({
   infoTributaria: InvoiceInfoSchema,
   infoFactura: InfoFacturaSchema,
+  detalles: z.object({
+    detalle: DetalleSchema.array().or(DetalleSchema),
+  }),
 });
