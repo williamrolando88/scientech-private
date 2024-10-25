@@ -72,24 +72,43 @@ const navConfig = [
         ],
       },
       {
-        title: 'Libro Diario',
-        path: PATH_DASHBOARD.dayBook.root,
-        icon: ICONS.analytics,
-      },
-      {
-        title: 'Banca',
-        path: PATH_DASHBOARD.banking.root,
-        icon: ICONS.banking,
+        title: 'Compras',
+        path: PATH_DASHBOARD.purchases.root,
+        icon: ICONS.cart,
         children: [
           {
-            title: 'Tarjetas de crédito',
-            path: PATH_DASHBOARD.banking.creditCards.root,
+            title: 'Facturas',
+            path: PATH_DASHBOARD.purchases.invoices,
           },
           {
-            title: 'Cuentas bancarias',
-            path: PATH_DASHBOARD.banking.accounts.root,
+            title: 'Declaraciones de Aduana',
+            path: PATH_DASHBOARD.purchases.customsPayments,
+          },
+          {
+            title: 'Notas de Venta',
+            path: PATH_DASHBOARD.purchases.sellNote,
+          },
+          {
+            title: 'Gastos no Deducibles',
+            path: PATH_DASHBOARD.purchases.nonDeductibles,
           },
         ],
+      },
+      {
+        title: 'Ventas',
+        path: PATH_DASHBOARD.sells.root,
+        icon: ICONS.analytics,
+        children: [
+          {
+            title: 'Facturas',
+            path: PATH_DASHBOARD.sells.invoices,
+          },
+        ],
+      },
+      {
+        title: 'Libro Diario',
+        path: PATH_DASHBOARD.dayBook.root,
+        icon: ICONS.lock,
       },
     ],
   },

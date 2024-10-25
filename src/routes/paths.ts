@@ -44,6 +44,17 @@ export const PATH_DASHBOARD = {
       open: (id: string) => path(ROOTS_DASHBOARD, 'vouchers', 'issued', id),
     },
   },
+  purchases: {
+    root: path(ROOTS_DASHBOARD, 'purchases'),
+    invoices: path(ROOTS_DASHBOARD, 'purchases', 'invoices'),
+    customsPayments: path(ROOTS_DASHBOARD, 'purchases', 'customs-payments'),
+    sellNote: path(ROOTS_DASHBOARD, 'purchases', 'sell-note'),
+    nonDeductibles: path(ROOTS_DASHBOARD, 'purchases', 'non-deductibles'),
+  },
+  sells: {
+    root: path(ROOTS_DASHBOARD, 'sells'),
+    invoices: path(ROOTS_DASHBOARD, 'sells', 'invoices'),
+  },
   dayBook: {
     root: path(ROOTS_DASHBOARD, 'day-book'),
   },

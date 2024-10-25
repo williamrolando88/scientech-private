@@ -7,7 +7,6 @@ import Scrollbar from 'src/components/shared/scrollbar';
 import useResponsive from 'src/hooks/useResponsive';
 import { NAV } from 'src/settings/global';
 import navConfig from 'src/settings/navigation';
-import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
 
 type Props = {
@@ -48,8 +47,6 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         }}
       >
         <Logo />
-
-        <NavAccount />
       </Stack>
 
       <NavSectionVertical data={navConfig} />

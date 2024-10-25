@@ -9,18 +9,25 @@ import MenuPopover from 'src/components/shared/menu-popover';
 import { PATH_AUTH } from 'src/routes/paths';
 import { useAuthContext } from 'src/services/auth/useAuthContext';
 
-const OPTIONS = [
-  {
-    label: 'Home',
-    linkTo: '/',
-  },
-];
-
 export default function AccountPopover() {
   const { replace, push } = useRouter();
   const { user, logout } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
+
+  const OPTIONS = [
+    {
+      label: 'Home',
+      linkTo: '/',
+    },
+  ];
+
+  if (user?.role === 'admin') {
+    OPTIONS.push({
+      label: 'Admin',
+      linkTo: '/dashboard/admin',
+    });
+  }
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
     setOpenPopover(event.currentTarget);
@@ -65,10 +72,18 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
+        <CustomAvatar
+          src={user?.photoURL}
+          alt={user?.displayName}
+          name={user?.displayName}
+        />
       </IconButtonAnimate>
 
-      <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
+      <MenuPopover
+        open={openPopover}
+        onClose={handleClosePopover}
+        sx={{ width: 200, p: 0 }}
+      >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {user?.displayName}
@@ -83,7 +98,10 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
+            <MenuItem
+              key={option.label}
+              onClick={() => handleClickItem(option.linkTo)}
+            >
               {option.label}
             </MenuItem>
           ))}
