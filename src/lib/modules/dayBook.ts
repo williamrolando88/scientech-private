@@ -1,9 +1,9 @@
 import { round } from 'mathjs';
 import { AccountCategoryDict, AccountTree } from 'src/types/accountCategories';
-import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
-  entry: DayBookTransaction
+  entry: DayBookTransactionOld
 ): string | null => {
   if (entry.transactions.length < 2) {
     return 'La transacción debe tener al menos dos movimientos';
@@ -55,8 +55,8 @@ export const dayBookTransactionsValidator = (
 
 export const getTransactionDataByDetailId = (
   detailId: string,
-  transactions: DayBookTransaction[]
-): DayBookTransaction | null => {
+  transactions: DayBookTransactionOld[]
+): DayBookTransactionOld | null => {
   const [transactionId] = detailId.split(':');
   const transaction = transactions?.find((entry) => entry.id === transactionId);
 
@@ -82,8 +82,8 @@ export const getInputColorById = (accountId: string) => {
 };
 
 export const getDayBookTransactions = (
-  transactions: DayBookTransaction[]
-): DayBookTableEntry[] => {
+  transactions: DayBookTransactionOld[]
+): DayBookTableEntryOld[] => {
   if (!transactions) return [];
 
   return transactions
@@ -98,7 +98,7 @@ export const getDayBookTransactions = (
     .flat();
 };
 
-export const getPositiveValueByAccount = (detail: DayBookTableEntry) => {
+export const getPositiveValueByAccount = (detail: DayBookTableEntryOld) => {
   const { account_id, credit, debit } = detail;
 
   const roundedCredit = round(credit || 0, 2);
@@ -110,11 +110,11 @@ export const getPositiveValueByAccount = (detail: DayBookTableEntry) => {
   return roundedCredit - roundedDebit;
 };
 
-export const getIncrementByAccount = (detail: DayBookTableEntry) =>
+export const getIncrementByAccount = (detail: DayBookTableEntryOld) =>
   (['1', '5'].includes(detail.account_id[0]) ? detail.debit : detail.credit) ||
   0;
 
-export const getDecrementByAccount = (detail: DayBookTableEntry) =>
+export const getDecrementByAccount = (detail: DayBookTableEntryOld) =>
   (['1', '5'].includes(detail.account_id[0]) ? detail.credit : detail.debit) ||
   0;
 

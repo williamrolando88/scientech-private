@@ -3,7 +3,10 @@ import { DayBookTransactionConverter } from '@src/services/firebase/dayBookTrans
 import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
 import { ProjectConverter } from '@src/services/firebase/projects';
 import { DB } from '@src/settings/firebase';
-import { ExtendedGeneralExpense, GeneralExpense } from '@src/types/expenses';
+import {
+  ExtendedGeneralExpenseOld,
+  GeneralExpenseOld,
+} from '@src/types/expenses';
 import { Project } from '@src/types/projects';
 import {
   DocumentReference,
@@ -13,7 +16,7 @@ import {
 } from 'firebase/firestore';
 
 export const docReferencer = (
-  expense: ExtendedGeneralExpense | GeneralExpense
+  expense: ExtendedGeneralExpenseOld | GeneralExpenseOld
 ) => {
   const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
   const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
@@ -52,7 +55,7 @@ export const docReferencer = (
 
 export const previousProjectReferencer = async (
   transaction: Transaction,
-  expenseDocRef: DocumentReference<GeneralExpense>
+  expenseDocRef: DocumentReference<GeneralExpenseOld>
 ) => {
   // Check for previous linked projects
   const storedExpenseDoc = await transaction.get(expenseDocRef);

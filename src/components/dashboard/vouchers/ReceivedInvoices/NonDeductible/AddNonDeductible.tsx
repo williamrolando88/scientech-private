@@ -2,7 +2,7 @@ import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
 import { NON_DEDUCTIBLE_INITIAL_VALUE } from '@src/lib/constants/expenses';
 import {
-  AddReceivedVoucherModalProps,
+  AddReceivedVoucherModalPropsOld,
   ExtendedExpense,
 } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import BaseNonDeductibleForm from './NonDeductibleForm/BaseNonDeductibleForm';
 
-const AddNonDeductible: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
+const AddNonDeductible: FC<AddReceivedVoucherModalPropsOld> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addNonDeductible } =
     useAddExpenseByType('non_deductible');

@@ -8,18 +8,18 @@ import {
   getDayBookTransactions,
   getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
-import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
 
 const DayBookIndex: FC = () => {
   const [transactionToDelete, setTransactionToDelete] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
   const [transactionToOpen, setTransactionToOpen] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
   const { data: accountCategories } = useListAccountCategories();
 
@@ -56,7 +56,7 @@ const DayBookIndex: FC = () => {
     [dayBookTransactions]
   );
 
-  const columns: GridColDef<DayBookTableEntry>[] = useMemo(
+  const columns: GridColDef<DayBookTableEntryOld>[] = useMemo(
     () => [
       {
         field: 'date',
@@ -139,7 +139,7 @@ const DayBookIndex: FC = () => {
     ]
   );
 
-  const rows: DayBookTableEntry[] = useMemo(
+  const rows: DayBookTableEntryOld[] = useMemo(
     () => getDayBookTransactions(dayBookTransactions),
     [dayBookTransactions]
   );

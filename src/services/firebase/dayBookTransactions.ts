@@ -12,17 +12,17 @@ import {
 import { COLLECTIONS } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import {
-  DayBookTransaction,
-  DayBookTransactionFirestore,
+  DayBookTransactionFirestoreOld,
+  DayBookTransactionOld,
 } from 'src/types/dayBook';
 
-export const DayBookTransactionConverter: FirestoreDataConverter<DayBookTransaction> =
+export const DayBookTransactionConverter: FirestoreDataConverter<DayBookTransactionOld> =
   {
-    toFirestore: (data: DayBookTransaction) => data,
+    toFirestore: (data: DayBookTransactionOld) => data,
     fromFirestore: (
       snap: QueryDocumentSnapshot<
-        DayBookTransactionFirestore,
-        DayBookTransaction
+        DayBookTransactionFirestoreOld,
+        DayBookTransactionOld
       >
     ) => ({
       ...snap.data(),
@@ -32,7 +32,7 @@ export const DayBookTransactionConverter: FirestoreDataConverter<DayBookTransact
     }),
   };
 
-const upsert = async (transaction: DayBookTransaction): Promise<string> => {
+const upsert = async (transaction: DayBookTransactionOld): Promise<string> => {
   const date = new Date();
   const { id } = transaction;
   let docRef;
@@ -53,7 +53,7 @@ const upsert = async (transaction: DayBookTransaction): Promise<string> => {
   return docRef.id;
 };
 
-const list = async (): Promise<DayBookTransaction[]> => {
+const list = async (): Promise<DayBookTransactionOld[]> => {
   const q = query(
     collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS).withConverter(
       DayBookTransactionConverter
@@ -62,7 +62,7 @@ const list = async (): Promise<DayBookTransaction[]> => {
   );
   const querySnapshot = await getDocs(q);
 
-  const transactions: DayBookTransaction[] = [];
+  const transactions: DayBookTransactionOld[] = [];
   querySnapshot.forEach((document) => {
     transactions.push(document.data());
   });

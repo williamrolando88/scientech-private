@@ -13,13 +13,13 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { FC, useMemo } from 'react';
 import {
-  DayBookTableEntry,
-  DayBookTransaction,
-  DayBookTransactionDetail,
+  DayBookTableEntryOld,
+  DayBookTransactionDetailOld,
+  DayBookTransactionOld,
 } from 'src/types/dayBook';
 
 interface OpenDayBookTransactionProps {
-  transaction: DayBookTransaction | null;
+  transaction: DayBookTransactionOld | null;
   onClose: () => void;
   actions?: React.ReactNode;
   alertText?: string;
@@ -36,7 +36,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
 }) => {
   const { data: accountCategories } = useListAccountCategories();
 
-  const columns: GridColDef<DayBookTransactionDetail>[] = [
+  const columns: GridColDef<DayBookTransactionDetailOld>[] = [
     {
       field: 'account_id',
       headerName: 'Cuenta contable',
@@ -94,7 +94,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
     },
   ];
 
-  const rows: DayBookTableEntry[] = useMemo(
+  const rows: DayBookTableEntryOld[] = useMemo(
     () =>
       transaction?.transactions.map((t) => ({
         ...t,

@@ -5,28 +5,43 @@ import {
   InvoiceSchema,
 } from '@src/lib/schemas/expenses';
 import { z } from 'zod';
-import { DayBookTransactionDetail } from './dayBook';
+import { DayBookTransactionDetailOld } from './dayBook';
 
-type TransactionDetails = {
-  transaction_details: DayBookTransactionDetail[];
+/** @deprecated */
+type TransactionDetailsOld = {
+  transaction_details: DayBookTransactionDetailOld[];
 };
 
-export type Expense = z.infer<typeof ExpensesCommonSchema>;
-export type ExtendedExpense = Expense & TransactionDetails;
+/** @deprecated */
+export type ExpenseOld = z.infer<typeof ExpensesCommonSchema>;
+/** @deprecated */
+export type ExtendedExpense = ExpenseOld & TransactionDetailsOld;
 
-export type CustomsPayment = z.infer<typeof CustomsPaymentSchema>;
-export type ExtendedCustomsPayment = CustomsPayment & TransactionDetails;
+/** @deprecated */
+export type CustomsPaymentOld = z.infer<typeof CustomsPaymentSchema>;
+/** @deprecated */
+export type ExtendedCustomsPayment = CustomsPaymentOld & TransactionDetailsOld;
 
-export type Invoice = z.infer<typeof InvoiceSchema>;
-export type ExtendedInvoice = Invoice & TransactionDetails;
+/** @deprecated */
+export type InvoiceOld = z.infer<typeof InvoiceSchema>;
+/** @deprecated */
+export type ExtendedInvoice = InvoiceOld & TransactionDetailsOld;
 
-export type GeneralExpense = Expense | CustomsPayment | Invoice;
+/** @deprecated */
+export type GeneralExpenseOld = ExpenseOld | CustomsPaymentOld | InvoiceOld;
 
-export type ExtendedGeneralExpense = (Expense | CustomsPayment | Invoice) &
-  TransactionDetails;
+/** @deprecated */
+export type ExtendedGeneralExpenseOld = (
+  | ExpenseOld
+  | CustomsPaymentOld
+  | InvoiceOld
+) &
+  TransactionDetailsOld;
 
-export type ExpenseTypeValues = z.infer<typeof ExpenseTypeSchema>;
+/** @deprecated */
+export type ExpenseTypeValuesOld = z.infer<typeof ExpenseTypeSchema>;
 
-export type AddReceivedVoucherModalProps = {
+/** @deprecated */
+export type AddReceivedVoucherModalPropsOld = {
   onClose: VoidFunction;
 };

@@ -1,9 +1,9 @@
 import {
-  DayBookTransaction,
-  DayBookTransactionDetail,
+  DayBookTransactionDetailOld,
+  DayBookTransactionOld,
 } from 'src/types/dayBook';
 
-export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail =
+export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetailOld =
   {
     account_id: '',
     debit: 0,
@@ -15,7 +15,7 @@ export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail 
     project_id: '',
   };
 
-export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
+export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransactionOld = {
   date: new Date(),
   transactions: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
 };

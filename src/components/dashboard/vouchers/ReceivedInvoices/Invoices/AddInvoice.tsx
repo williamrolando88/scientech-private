@@ -2,7 +2,7 @@ import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
 import { EXTENDED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/expenses';
 import {
-  AddReceivedVoucherModalProps,
+  AddReceivedVoucherModalPropsOld,
   ExtendedInvoice,
 } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
 
-const AddInvoice: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
+const AddInvoice: FC<AddReceivedVoucherModalPropsOld> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addInvoice } = useAddExpenseByType('invoice');
 

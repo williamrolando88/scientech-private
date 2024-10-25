@@ -8,25 +8,26 @@ import {
 import { ExpenseParserByType } from '@src/services/firebase/expenses/parsers';
 import { DB } from '@src/settings/firebase';
 import {
-  DayBookTransaction,
-  DayBookTransactionDetail,
+  DayBookTransactionDetailOld,
+  DayBookTransactionOld,
 } from '@src/types/dayBook';
 import {
-  Expense,
-  ExpenseTypeValues,
-  ExtendedGeneralExpense,
-  GeneralExpense,
+  ExpenseOld,
+  ExpenseTypeValuesOld,
+  ExtendedGeneralExpenseOld,
+  GeneralExpenseOld,
 } from '@src/types/expenses';
 import { Project } from '@src/types/projects';
 import {
   collection,
   getDocs,
+  orderBy,
   query,
   runTransaction,
   where,
 } from 'firebase/firestore';
 
-const listByType = (type: ExpenseTypeValues) => {
+const listByType = (type: ExpenseTypeValuesOld) => {
   const converter = converterByType[type];
 
   return async () => {
@@ -39,31 +40,26 @@ const listByType = (type: ExpenseTypeValues) => {
 
     const expenses = querySnapshot.docs.map((document) => document.data());
 
-    expenses.sort(
-      (a, b) =>
-        new Date(b.issue_date).getTime() - new Date(a.issue_date).getTime()
-    );
-
     return expenses as unknown[];
   };
 };
 
 async function upsert(
-  expense: ExtendedGeneralExpense
-): Promise<GeneralExpense> {
+  expense: ExtendedGeneralExpenseOld
+): Promise<GeneralExpenseOld> {
   const timestamp = new Date();
 
   const { dayBookDocRef, expenseDocRef, projectDocRef } =
     docReferencer(expense);
 
-  const transactions: DayBookTransactionDetail[] =
+  const transactions: DayBookTransactionDetailOld[] =
     expense.transaction_details.map((transaction) => ({
       ...transaction,
       expense_id: expenseDocRef.id,
       project_id: projectDocRef?.id ?? '',
     }));
 
-  let newExpense: Expense = {
+  let newExpense: ExpenseOld = {
     issue_date: expense.issue_date,
     total: expense.total,
     type: expense.type,
@@ -85,7 +81,7 @@ async function upsert(
        */
 
       // Daybook manipulation
-      const newDayBookDoc: DayBookTransaction = {
+      const newDayBookDoc: DayBookTransactionOld = {
         date: expense.issue_date,
         transactions,
         createdAt: timestamp,
@@ -142,7 +138,7 @@ async function upsert(
   return newExpense;
 }
 
-const remove = async (expense: GeneralExpense) => {
+const remove = async (expense: GeneralExpenseOld) => {
   const { dayBookDocRef, expenseDocRef, projectDocRef } =
     docReferencer(expense);
 

@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { COLLECTIONS } from 'src/lib/enums/collections';
 import { DayBookTransactions } from 'src/services/firebase/dayBookTransactions';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 
 const queryKey = [COLLECTIONS.DAY_BOOK_TRANSACTIONS];
 
 export const useListDayBookTransactions = () => {
-  const query = useQuery<DayBookTransaction[]>({
+  const query = useQuery<DayBookTransactionOld[]>({
     queryKey,
     queryFn: DayBookTransactions.list,
   });
@@ -23,10 +23,10 @@ export const useAddDayBookTransactions = () => {
       await queryClient.cancelQueries({ queryKey });
     },
     onSuccess: (id, inputs) => {
-      queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) => [
-        ...prevData,
-        { ...inputs, id },
-      ]);
+      queryClient.setQueryData(
+        queryKey,
+        (prevData: DayBookTransactionOld[]) => [...prevData, { ...inputs, id }]
+      );
     },
   });
 
@@ -42,7 +42,7 @@ export const useDeleteDayBookTransaction = () => {
       await queryClient.cancelQueries({ queryKey });
     },
     onSuccess: (_, id) => {
-      queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) =>
+      queryClient.setQueryData(queryKey, (prevData: DayBookTransactionOld[]) =>
         prevData.filter((transaction) => transaction.id !== id)
       );
     },
@@ -60,7 +60,7 @@ export const useUpdateDayBookTransaction = () => {
       await queryClient.cancelQueries({ queryKey });
     },
     onSuccess: (id, input) => {
-      queryClient.setQueryData(queryKey, (prevData: DayBookTransaction[]) =>
+      queryClient.setQueryData(queryKey, (prevData: DayBookTransactionOld[]) =>
         prevData.map((transaction) =>
           transaction.id === id ? input : transaction
         )

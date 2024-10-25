@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { DocumentRefSchema } from '../documentRef';
 
-export const CustomPaymentSchema = z.object({
+export const CustomsPaymentSchema = z.object({
   id: z.string().optional(),
   issueDate: z.coerce.date(),
   customsPaymentNumber: z.coerce.string(),

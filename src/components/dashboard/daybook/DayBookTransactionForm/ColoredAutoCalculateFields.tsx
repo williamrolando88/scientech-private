@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { FC } from 'react';
 import { FormikAutoCalculateField } from 'src/components/shared/formik-components';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 
 interface ColoredAutoCalculateFieldsProps {
   index: number;
@@ -15,7 +15,7 @@ export const ColoredAutoCalculateFields: FC<
   const positiveCredit = ['2', '3', '4'];
 
   const theme = useTheme();
-  const { values } = useFormikContext<DayBookTransaction>();
+  const { values } = useFormikContext<DayBookTransactionOld>();
 
   const accountValue = values.transactions[index].account_id[0];
 

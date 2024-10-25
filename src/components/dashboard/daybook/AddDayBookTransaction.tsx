@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { useAddDayBookTransactions } from 'src/hooks/cache/dayBook';
 import { DAYBOOK_TRANSACTION_INITIAL_VALUE } from 'src/lib/constants/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from './DayBookTransactionForm';
 
@@ -17,7 +17,7 @@ const AddDayBookTransaction: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addTransaction } = useAddDayBookTransactions();
 
-  const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = async (
+  const onSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'] = async (
     values,
     { setSubmitting, resetForm }
   ) => {

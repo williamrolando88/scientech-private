@@ -10,17 +10,17 @@ import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
 import { FormikDatePicker } from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
 type FormikProps = Pick<
-  FormikConfig<DayBookTransaction>,
+  FormikConfig<DayBookTransactionOld>,
   'initialValues' | 'validationSchema'
 >;
 
 interface DayBookTransactionFormProps extends FormikProps {
-  onSubmit: FormikConfig<DayBookTransaction>['onSubmit'];
+  onSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'];
   onClose: VoidFunction;
   infoText?: string;
 }
@@ -33,7 +33,7 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
 }) => {
   const [formError, setFormError] = useState('');
 
-  const handleSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = (
+  const handleSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'] = (
     values,
     helpers
   ) => {

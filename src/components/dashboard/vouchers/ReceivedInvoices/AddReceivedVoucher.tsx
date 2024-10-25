@@ -1,5 +1,5 @@
 import { Button, Dialog } from '@mui/material';
-import { ExpenseTypeValues } from '@src/types/expenses';
+import { ExpenseTypeValuesOld } from '@src/types/expenses';
 import { useRouter } from 'next/router';
 import { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 import AddCustomsPayment from './CustomsPayments/AddCustomsPayment';
@@ -13,7 +13,7 @@ const AddReceivedVoucher: FC = () => {
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
-  const FormSelector: Record<ExpenseTypeValues, ReactElement> = useMemo(
+  const FormSelector: Record<ExpenseTypeValuesOld, ReactElement> = useMemo(
     () => ({
       invoice: <AddInvoice onClose={handleModalClose} />,
       customs_payment: <AddCustomsPayment onClose={handleModalClose} />,
@@ -24,7 +24,7 @@ const AddReceivedVoucher: FC = () => {
   );
 
   const FormComponent = useCallback(
-    () => FormSelector[router.query.type as ExpenseTypeValues],
+    () => FormSelector[router.query.type as ExpenseTypeValuesOld],
     [FormSelector, router.query.type]
   );
 

@@ -6,11 +6,11 @@ import {
   DAYBOOK_FORM_GRID_LAYOUT,
   DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
 } from 'src/lib/constants/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { TableCell } from './TableCell';
 
 export function DayBookTransactionsTableHeader() {
-  const { values, setValues } = useFormikContext<DayBookTransaction>();
+  const { values, setValues } = useFormikContext<DayBookTransactionOld>();
 
   const handleAddRow = () => {
     setValues({

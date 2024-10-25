@@ -1,10 +1,10 @@
 import { Box, Stack } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 
 export function DayBookTransactionSummary() {
-  const { values } = useFormikContext<DayBookTransaction>();
+  const { values } = useFormikContext<DayBookTransactionOld>();
 
   const totalDebit = values.transactions.reduce(
     (acc, curr) => acc + curr.debit!,

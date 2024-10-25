@@ -1,11 +1,11 @@
 import { dayBookTransactionsValidator } from '@src/lib/modules/dayBook';
-import { DayBookTransaction } from '@src/types/dayBook';
+import { DayBookTransactionOld } from '@src/types/dayBook';
 
 describe('dayBookTransactionsValidator', () => {
   test('should return error if transactions length is less than 2', () => {
     const entry = {
       transactions: [{ debit: 100, credit: null, description: 'Test' }],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBe(
       'La transacción debe tener al menos dos movimientos'
     );
@@ -17,7 +17,7 @@ describe('dayBookTransactionsValidator', () => {
         { debit: null, credit: null, description: 'Test' },
         { debit: 100, credit: null, description: 'Test' },
       ],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBe(
       'Toda transacción debe tener al menos un movimiento en "DEBE" o "HABER"'
     );
@@ -29,7 +29,7 @@ describe('dayBookTransactionsValidator', () => {
         { debit: 100, credit: 100, description: 'Test' },
         { debit: 100, credit: null, description: 'Test' },
       ],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBe(
       'Toda transacción solo puede tener un movimiento en "DEBE" o "HABER"'
     );
@@ -47,7 +47,7 @@ describe('dayBookTransactionsValidator', () => {
         },
         { debit: 100, credit: null, description: 'Test' },
       ],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBe(
       'Toda transacción debe tener al menos una descripción, factura o cotización'
     );
@@ -59,7 +59,7 @@ describe('dayBookTransactionsValidator', () => {
         { debit: 100, credit: null, description: 'Test' },
         { debit: null, credit: 200, description: 'Test' },
       ],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBe(
       'La transacción no está balanceada'
     );
@@ -71,7 +71,7 @@ describe('dayBookTransactionsValidator', () => {
         { debit: 100, credit: null, description: 'Test' },
         { debit: null, credit: 100, description: 'Test' },
       ],
-    } as unknown as DayBookTransaction;
+    } as unknown as DayBookTransactionOld;
     expect(dayBookTransactionsValidator(entry)).toBeNull();
   });
 });

@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { Expense, ExtendedExpense } from '@src/types/expenses';
+import { ExpenseOld, ExtendedExpense } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +10,7 @@ import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 interface UpdateSaleNoteProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: Expense | null;
+  initialValues: ExpenseOld | null;
 }
 
 const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({

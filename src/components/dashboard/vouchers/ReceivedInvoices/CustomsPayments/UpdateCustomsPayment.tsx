@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { CustomsPayment, ExtendedCustomsPayment } from '@src/types/expenses';
+import { CustomsPaymentOld, ExtendedCustomsPayment } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +10,7 @@ import BaseCustomsPaymentForm from './CustomsPaymentForm/BaseCustomsPaymentForm'
 interface UpdateCustomsPaymentProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: CustomsPayment | null;
+  initialValues: CustomsPaymentOld | null;
 }
 
 const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({

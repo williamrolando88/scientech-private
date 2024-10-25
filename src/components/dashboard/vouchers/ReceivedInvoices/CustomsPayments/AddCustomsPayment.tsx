@@ -2,7 +2,7 @@ import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
 import { CUSTOMS_PAYMENT_INITIAL_VALUE } from '@src/lib/constants/expenses';
 import {
-  AddReceivedVoucherModalProps,
+  AddReceivedVoucherModalPropsOld,
   ExtendedCustomsPayment,
 } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
@@ -10,7 +10,9 @@ import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import BaseCustomsPaymentForm from './CustomsPaymentForm/BaseCustomsPaymentForm';
 
-const AddCustomsPayment: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
+const AddCustomsPayment: FC<AddReceivedVoucherModalPropsOld> = ({
+  onClose,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addCustomsPayment } =
     useAddExpenseByType('customs_payment');

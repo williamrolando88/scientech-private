@@ -1,5 +1,5 @@
 import { Card, CardContent, Tab, Tabs } from '@mui/material';
-import { ExpenseTypeValues } from '@src/types/expenses';
+import { ExpenseTypeValuesOld } from '@src/types/expenses';
 import { TabInterface } from '@src/types/shared';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
@@ -9,7 +9,7 @@ import CustomsPaymentsList from './CustomsPayments/CustomsPaymentsList';
 import NonDeductibleList from './NonDeductible/NonDeductibleList';
 import SaleNoteList from './SaleNote/SaleNoteList';
 
-const TABS: TabInterface<ExpenseTypeValues>[] = [
+const TABS: TabInterface<ExpenseTypeValuesOld>[] = [
   {
     value: 'invoice',
     component: <InvoiceList key="invoice" />,
@@ -34,11 +34,11 @@ const TABS: TabInterface<ExpenseTypeValues>[] = [
 
 const ReceivedInvoices: FC = () => {
   const router = useRouter();
-  const [currentTab, setCurrentTab] = useState<TabInterface<ExpenseTypeValues>>(
-    TABS[0]
-  );
+  const [currentTab, setCurrentTab] = useState<
+    TabInterface<ExpenseTypeValuesOld>
+  >(TABS[0]);
 
-  const pushQueryParam = (type: ExpenseTypeValues) => {
+  const pushQueryParam = (type: ExpenseTypeValuesOld) => {
     const searchParams = new URLSearchParams();
     searchParams.set('type', type);
     router.push(
@@ -61,7 +61,7 @@ const ReceivedInvoices: FC = () => {
 
   const handleTabChange = (
     e: SyntheticEvent,
-    newTab: TabInterface<ExpenseTypeValues>
+    newTab: TabInterface<ExpenseTypeValuesOld>
   ) => {
     setCurrentTab(newTab);
 

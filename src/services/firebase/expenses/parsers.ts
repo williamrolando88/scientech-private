@@ -1,12 +1,12 @@
-import { ExpenseTypeValues } from '@src/types/expenses';
-import { ZodSchema } from 'zod';
 import {
   CustomsPaymentSchema,
   ExpensesCommonSchema,
   InvoiceSchema,
 } from '@src/lib/schemas/expenses';
+import { ExpenseTypeValuesOld } from '@src/types/expenses';
+import { ZodSchema } from 'zod';
 
-export const ExpenseParserByType: Record<ExpenseTypeValues, ZodSchema> = {
+export const ExpenseParserByType: Record<ExpenseTypeValuesOld, ZodSchema> = {
   invoice: InvoiceSchema,
   customs_payment: CustomsPaymentSchema,
   non_deductible: ExpensesCommonSchema,

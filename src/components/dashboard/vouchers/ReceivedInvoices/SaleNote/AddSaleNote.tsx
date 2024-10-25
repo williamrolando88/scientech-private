@@ -2,7 +2,7 @@ import { DialogTitle } from '@mui/material';
 import { useAddExpenseByType } from '@src/hooks/cache/expenses';
 import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/expenses';
 import {
-  AddReceivedVoucherModalProps,
+  AddReceivedVoucherModalPropsOld,
   ExtendedExpense,
 } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 
-const AddSaleNote: FC<AddReceivedVoucherModalProps> = ({ onClose }) => {
+const AddSaleNote: FC<AddReceivedVoucherModalPropsOld> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addExpense } = useAddExpenseByType('sale_note');
 

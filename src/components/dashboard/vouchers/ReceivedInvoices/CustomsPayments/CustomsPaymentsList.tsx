@@ -7,25 +7,23 @@ import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
-import { CustomsPayment } from '@src/types/expenses';
+import { CustomsPaymentOld } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import UpdateCustomsPayment from './UpdateCustomsPayment';
 
 const CustomsPaymentsList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
-    null
-  );
-  const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
-    null
-  );
+  const [expenseToDelete, setExpenseToDelete] =
+    useState<CustomsPaymentOld | null>(null);
+  const [expenseToUpdate, setExpenseToUpdate] =
+    useState<CustomsPaymentOld | null>(null);
   const { mutateAsync: deleteCustomsPayment, isPending } =
     useDeleteExpenseByType('customs_payment');
   const { data: customsPayments, isLoading } =
-    useListExpensesByType<CustomsPayment>('customs_payment');
+    useListExpensesByType<CustomsPaymentOld>('customs_payment');
 
-  const columns: GridColDef<CustomsPayment>[] = [
+  const columns: GridColDef<CustomsPaymentOld>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',

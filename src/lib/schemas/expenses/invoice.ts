@@ -12,7 +12,7 @@ export const InvoiceSchema = z.object({
   emissionPoint: z.coerce.number().positive(),
   sequentialNumber: z.coerce.number().positive(),
   description: z.string(),
-  IVA: z.number(),
+  IVA: z.number().optional(),
   noTaxSubtotal: z.number(),
   taxedSubtotal: z.number(),
   total: z.number().positive(),

@@ -2,12 +2,12 @@ import { Box, Paper, Stack } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { FC } from 'react';
 import Scrollbar from 'src/components/shared/scrollbar';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { DayBookTransactionsTableHeader } from './DayBookTransactionsTableHeader';
 import { DayBookTransactionsTableRow } from './DayBookTransactionsTableRow';
 
 export const DayBookTransactionsTable: FC = () => {
-  const { values } = useFormikContext<DayBookTransaction>();
+  const { values } = useFormikContext<DayBookTransactionOld>();
 
   return (
     <Stack component={Paper} variant="outlined" p={2}>

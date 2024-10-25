@@ -5,7 +5,7 @@ import { FormikTextField } from 'src/components/shared/formik-components';
 import Iconify from 'src/components/shared/iconify';
 import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
 import { DAYBOOK_FORM_GRID_LAYOUT } from 'src/lib/constants/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { ColoredAutoCalculateFields } from './ColoredAutoCalculateFields';
 
 interface DayBookTransactionsTableRowProps {
@@ -16,7 +16,7 @@ export const DayBookTransactionsTableRow: FC<
 > = ({ index }) => {
   const { data: categories } = useListAccountCategories();
 
-  const { values, setValues } = useFormikContext<DayBookTransaction>();
+  const { values, setValues } = useFormikContext<DayBookTransactionOld>();
 
   const handleDeleteRow = (rowIndex: number) => {
     setValues({

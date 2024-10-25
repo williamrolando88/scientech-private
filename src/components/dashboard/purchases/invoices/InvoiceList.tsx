@@ -7,21 +7,25 @@ import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
-import { Invoice } from '@src/types/expenses';
+import { InvoiceOld } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import UpdateInvoice from '../../vouchers/ReceivedInvoices/Invoices/UpdateInvoice';
 
 const InvoiceList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] = useState<Invoice | null>(null);
-  const [expenseToUpdate, setExpenseToUpdate] = useState<Invoice | null>(null);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceOld | null>(
+    null
+  );
+  const [invoiceToUpdate, setInvoiceToUpdate] = useState<InvoiceOld | null>(
+    null
+  );
   const { mutateAsync: deleteInvoice, isPending } =
     useDeleteExpenseByType('invoice');
   const { data: invoices, isLoading } =
-    useListExpensesByType<Invoice>('invoice');
+    useListExpensesByType<InvoiceOld>('invoice');
 
-  const columns: GridColDef<Invoice>[] = [
+  const columns: GridColDef<InvoiceOld>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',
@@ -101,13 +105,13 @@ const InvoiceList: FC = () => {
       getActions: (params) => [
         <GridActionsCellItem
           label="Modificar"
-          onClick={() => setExpenseToUpdate(params.row)}
+          onClick={() => setInvoiceToUpdate(params.row)}
           icon={<Iconify icon="pajamas:doc-changes" />}
           showInMenu
         />,
         <GridActionsCellItem
           label="Borrar"
-          onClick={() => setExpenseToDelete(params.row)}
+          onClick={() => setInvoiceToDelete(params.row)}
           icon={<Iconify icon="pajamas:remove" />}
           showInMenu
         />,
@@ -116,9 +120,9 @@ const InvoiceList: FC = () => {
   ];
 
   const handleDeleteExpense = async () => {
-    if (!expenseToDelete) return;
+    if (!invoiceToDelete) return;
 
-    deleteInvoice(expenseToDelete)
+    deleteInvoice(invoiceToDelete)
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })
@@ -126,7 +130,7 @@ const InvoiceList: FC = () => {
         enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
       })
       .finally(() => {
-        setExpenseToDelete(null);
+        setInvoiceToDelete(null);
       });
   };
 
@@ -149,15 +153,15 @@ const InvoiceList: FC = () => {
       </CardContent>
 
       <UpdateInvoice
-        open={!!expenseToUpdate}
-        initialValues={expenseToUpdate}
-        onClose={() => setExpenseToUpdate(null)}
-        key={expenseToUpdate?.id}
+        open={!!invoiceToUpdate}
+        initialValues={invoiceToUpdate}
+        onClose={() => setInvoiceToUpdate(null)}
+        key={invoiceToUpdate?.id}
       />
 
       <ConfirmDialog
-        onClose={() => setExpenseToDelete(null)}
-        open={!!expenseToDelete}
+        onClose={() => setInvoiceToDelete(null)}
+        open={!!invoiceToDelete}
         title="Borrar factura"
         action={
           <LoadingButton

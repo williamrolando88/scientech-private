@@ -7,21 +7,25 @@ import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
-import { Invoice } from '@src/types/expenses';
+import { InvoiceOld } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] = useState<Invoice | null>(null);
-  const [expenseToUpdate, setExpenseToUpdate] = useState<Invoice | null>(null);
+  const [expenseToDelete, setExpenseToDelete] = useState<InvoiceOld | null>(
+    null
+  );
+  const [expenseToUpdate, setExpenseToUpdate] = useState<InvoiceOld | null>(
+    null
+  );
   const { mutateAsync: deleteInvoice, isPending } =
     useDeleteExpenseByType('invoice');
   const { data: invoices, isLoading } =
-    useListExpensesByType<Invoice>('invoice');
+    useListExpensesByType<InvoiceOld>('invoice');
 
-  const columns: GridColDef<Invoice>[] = [
+  const columns: GridColDef<InvoiceOld>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',

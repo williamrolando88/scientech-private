@@ -7,21 +7,25 @@ import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
-import { Expense } from '@src/types/expenses';
+import { ExpenseOld } from '@src/types/expenses';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import UpdateNonDeductible from './UpdateNonDeductible';
 
 const NonDeductibleList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
-  const [expenseToUpdate, setExpenseToUpdate] = useState<Expense | null>(null);
+  const [expenseToDelete, setExpenseToDelete] = useState<ExpenseOld | null>(
+    null
+  );
+  const [expenseToUpdate, setExpenseToUpdate] = useState<ExpenseOld | null>(
+    null
+  );
   const { mutateAsync: deleteExpense, isPending } =
     useDeleteExpenseByType('non_deductible');
   const { data: nonDeductible, isLoading } =
-    useListExpensesByType<Expense>('non_deductible');
+    useListExpensesByType<ExpenseOld>('non_deductible');
 
-  const columns: GridColDef<Expense>[] = [
+  const columns: GridColDef<ExpenseOld>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',

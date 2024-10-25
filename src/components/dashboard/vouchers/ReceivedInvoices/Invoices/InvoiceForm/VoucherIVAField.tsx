@@ -1,12 +1,12 @@
 import { FormikTextField } from '@src/components/shared/formik-components';
 import { IVA_RATE_12, IVA_RATE_15 } from '@src/lib/constants/settings';
-import { Invoice } from '@src/types/expenses';
+import { InvoiceOld } from '@src/types/expenses';
 import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { useEffect, useMemo } from 'react';
 
 export const VoucherIVAField = () => {
-  const { values, setFieldValue } = useFormikContext<Invoice>();
+  const { values, setFieldValue } = useFormikContext<InvoiceOld>();
 
   const IVA_RATE = useMemo(
     () =>

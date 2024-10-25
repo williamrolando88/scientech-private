@@ -1,11 +1,12 @@
 import { FormikTextField } from '@src/components/shared/formik-components';
-import { ExtendedGeneralExpense } from '@src/types/expenses';
+import { ExtendedGeneralExpenseOld } from '@src/types/expenses';
 import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { FC, useEffect } from 'react';
 
 export const VoucherTotalField: FC = () => {
-  const { values, setFieldValue } = useFormikContext<ExtendedGeneralExpense>();
+  const { values, setFieldValue } =
+    useFormikContext<ExtendedGeneralExpenseOld>();
 
   useEffect(() => {
     const taxedSubtotal = values.taxed_subtotal || 0;

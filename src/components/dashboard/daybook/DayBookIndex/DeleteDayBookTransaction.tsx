@@ -3,11 +3,11 @@ import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import { useDeleteDayBookTransaction } from 'src/hooks/cache/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 
 interface DeleteDayBookTransactionProps {
-  transaction: DayBookTransaction | null;
+  transaction: DayBookTransactionOld | null;
   onClose: () => void;
 }
 

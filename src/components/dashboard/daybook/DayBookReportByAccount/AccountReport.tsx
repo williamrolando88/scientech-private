@@ -11,7 +11,7 @@ import {
   getPositiveValueByAccount,
   getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
-import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from '../DayBookIndex/DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
@@ -22,11 +22,11 @@ interface AccountReportProps {
 export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const { data: transactions } = useListDayBookTransactions();
   const [transactionToOpen, setTransactionToOpen] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
   const [transactionToDelete, setTransactionToDelete] =
-    useState<DayBookTransaction | null>(null);
+    useState<DayBookTransactionOld | null>(null);
 
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
@@ -52,7 +52,7 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
     [transactions]
   );
 
-  const columns: GridColDef<DayBookTableEntry>[] = [
+  const columns: GridColDef<DayBookTableEntryOld>[] = [
     {
       field: 'date',
       headerName: 'Fecha',

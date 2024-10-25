@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { ExtendedInvoice, Invoice } from '@src/types/expenses';
+import { ExtendedInvoice, InvoiceOld } from '@src/types/expenses';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +10,7 @@ import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
 interface UpdateInvoiceProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: Invoice | null;
+  initialValues: InvoiceOld | null;
 }
 
 const UpdateInvoice: FC<UpdateInvoiceProps> = ({

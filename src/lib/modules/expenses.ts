@@ -1,4 +1,4 @@
-import { DayBookTransactionDetail } from '@src/types/dayBook';
+import { DayBookTransactionDetailOld } from '@src/types/dayBook';
 import {
   ExtendedCustomsPayment,
   ExtendedExpense,
@@ -20,14 +20,14 @@ export const extendedCustomPaymentBuilder = (
 
   const transactionDescription = `Liquidación aduanera: ${formData.description}`;
 
-  const payment: DayBookTransactionDetail = {
+  const payment: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[0].account_id,
     debit: 0,
     credit: formData.total,
     description: transactionDescription,
   };
 
-  const expense: DayBookTransactionDetail = {
+  const expense: DayBookTransactionDetailOld = {
     account_id: DEFAULT_ACCOUNT.CUSTOMS_PAYMENT.EXPENSE,
     debit:
       formData.FODINFA + formData.ad_valorem_tariff + formData.specific_tariff,
@@ -35,7 +35,7 @@ export const extendedCustomPaymentBuilder = (
     description: transactionDescription,
   };
 
-  const tax: DayBookTransactionDetail = {
+  const tax: DayBookTransactionDetailOld = {
     account_id: DEFAULT_ACCOUNT.IVA,
     debit: formData.IVA,
     credit: 0,
@@ -60,21 +60,21 @@ export const extendedInvoiceBuilder = (
 
   const transactionDescription = `Factura recibida: ${formData.issuer_id}-${formData.description}`;
 
-  const payment: DayBookTransactionDetail = {
+  const payment: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[0].account_id,
     debit: 0,
     credit: formData.total,
     description: transactionDescription,
   };
 
-  const expense: DayBookTransactionDetail = {
+  const expense: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[1].account_id,
     debit: formData.taxed_subtotal + formData.tax_exempted_subtotal,
     credit: 0,
     description: transactionDescription,
   };
 
-  const tax: DayBookTransactionDetail = {
+  const tax: DayBookTransactionDetailOld = {
     account_id: DEFAULT_ACCOUNT.IVA,
     debit: formData.IVA,
     credit: 0,
@@ -100,14 +100,14 @@ export const extendedNonDeductibleBuilder = (
 
   const transactionDescription = `Gasto no deducible: ${formData.issuer_name} ${formData.description}`;
 
-  const payment: DayBookTransactionDetail = {
+  const payment: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[0].account_id,
     debit: 0,
     credit: formData.total,
     description: transactionDescription,
   };
 
-  const expense: DayBookTransactionDetail = {
+  const expense: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[1].account_id,
     debit: formData.tax_exempted_subtotal,
     credit: 0,
@@ -133,14 +133,14 @@ export const extendedSaleNoteBuilder = (
 
   const transactionDescription = `Nota de venta: ${formData.issuer_name} ${formData.description}`;
 
-  const payment: DayBookTransactionDetail = {
+  const payment: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[0].account_id,
     debit: 0,
     credit: formData.total,
     description: transactionDescription,
   };
 
-  const expense: DayBookTransactionDetail = {
+  const expense: DayBookTransactionDetailOld = {
     account_id: formData.transaction_details[1].account_id,
     debit: formData.tax_exempted_subtotal,
     credit: 0,
