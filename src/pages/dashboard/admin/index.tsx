@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { COLLECTIONS } from '@src/lib/enums/collections';
@@ -104,6 +104,7 @@ const ExportInvoicesNewFormat: FC = () => {
       IVA: data.IVA,
       total: data.total,
       ref,
+      paid: true,
     };
   };
 
@@ -401,11 +402,13 @@ Page.getLayout = (page: React.ReactElement) => (
 export default function Page() {
   return (
     <DashboardTemplate documentTitle="Admin" heading="Admin Tools">
-      <ExportCustomsPaymentsNewFormat />
-      <ExportNonDeductiblesNewFormat />
-      <ExportSaleNotesNewFormat />
-      <ExportInvoicesNewFormat />
-      <ExportDayBookNewFormat />
+      <Stack>
+        <ExportCustomsPaymentsNewFormat />
+        <ExportNonDeductiblesNewFormat />
+        <ExportSaleNotesNewFormat />
+        <ExportInvoicesNewFormat />
+        <ExportDayBookNewFormat />
+      </Stack>
     </DashboardTemplate>
   );
 }
