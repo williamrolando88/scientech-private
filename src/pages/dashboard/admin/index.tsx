@@ -1,7 +1,11 @@
-import { Button, Stack } from '@mui/material';
+import { Button } from '@mui/material';
+import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { COLLECTIONS } from '@src/lib/enums/collections';
+import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
 import { DB } from '@src/settings/firebase';
+import { DayBookTransactionOld } from '@src/types/dayBook';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { CustomsPaymentOld, ExpenseOld, InvoiceOld } from '@src/types/expenses';
 import {
   CustomsPayment,
@@ -9,8 +13,9 @@ import {
   NonDeductible,
   SaleNote,
 } from '@src/types/purchases';
-import { doc, writeBatch } from 'firebase/firestore';
-import { FC } from 'react';
+import { doc, getDoc, writeBatch } from 'firebase/firestore';
+import { camelCase } from 'lodash';
+import { FC, useEffect, useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -66,19 +71,11 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
   }
 
   return (
-    <>
-      <Button onClick={execute} disabled={isLoading || !oldData.length}>
-        {!oldData.length
-          ? 'No hay datos'
-          : 'Exportar Liquidaciones en Nuevo Formato'}
-      </Button>
-
-      <Stack direction="row" gap={1} flexWrap="wrap">
-        {oldData.map((data) => (
-          <div>{data.id}</div>
-        ))}
-      </Stack>
-    </>
+    <Button onClick={execute} disabled={isLoading || !oldData.length}>
+      {!oldData.length
+        ? 'No hay datos'
+        : 'Exportar Liquidaciones en Nuevo Formato'}
+    </Button>
   );
 };
 
@@ -137,19 +134,9 @@ const ExportInvoicesNewFormat: FC = () => {
   }
 
   return (
-    <>
-      <Button onClick={execute} disabled={isLoading || !oldData.length}>
-        {!oldData.length
-          ? 'No hay datos'
-          : 'Exportar facturas en Nuevo Formato'}
-      </Button>
-
-      <Stack direction="row" gap={1} flexWrap="wrap">
-        {oldData.map((data) => (
-          <div>{data.id}</div>
-        ))}
-      </Stack>
-    </>
+    <Button onClick={execute} disabled={isLoading || !oldData.length}>
+      {!oldData.length ? 'No hay datos' : 'Exportar facturas en Nuevo Formato'}
+    </Button>
   );
 };
 
@@ -205,19 +192,11 @@ const ExportSaleNotesNewFormat: FC = () => {
   }
 
   return (
-    <>
-      <Button onClick={execute} disabled={isLoading || !oldData.length}>
-        {!oldData.length
-          ? 'No hay datos'
-          : 'Exportar notas de venta en Nuevo Formato'}
-      </Button>
-
-      <Stack direction="row" gap={1} flexWrap="wrap">
-        {oldData.map((data) => (
-          <div>{data.id}</div>
-        ))}
-      </Stack>
-    </>
+    <Button onClick={execute} disabled={isLoading || !oldData.length}>
+      {!oldData.length
+        ? 'No hay datos'
+        : 'Exportar notas de venta en Nuevo Formato'}
+    </Button>
   );
 };
 
@@ -269,19 +248,149 @@ const ExportNonDeductiblesNewFormat: FC = () => {
   }
 
   return (
-    <>
-      <Button onClick={execute} disabled={isLoading || !oldData.length}>
-        {!oldData.length
-          ? 'No hay datos'
-          : 'Exportar no deducibles en Nuevo Formato'}
-      </Button>
+    <Button onClick={execute} disabled={isLoading || !oldData.length}>
+      {!oldData.length
+        ? 'No hay datos'
+        : 'Exportar no deducibles en Nuevo Formato'}
+    </Button>
+  );
+};
 
-      <Stack direction="row" gap={1} flexWrap="wrap">
-        {oldData.map((data) => (
-          <div>{data.id}</div>
-        ))}
-      </Stack>
-    </>
+const existingProjects: Record<string, string> = {
+  885: 'nOPC8LoXorcemFVO8ZcZ',
+  809: 'gsrd25reZ4ziIQYSLelz',
+  877: 'fUeg7iVoS62Z9I2tfw5W',
+  673: 'Q7rkr4Cen5aJieFf3Brk',
+  896: 'NJqGL2fDDKW28QCzvMHN',
+  829: 'M68lnROy56aCUgiog214',
+};
+
+const ExportDayBookNewFormat: FC = () => {
+  const { data, isLoading } = useListDayBookTransactions();
+  const [linkedTransactions, setLinkedTransactions] = useState<
+    Record<string, Record<string, string>>
+  >({});
+
+  const getExpenseKeyType = async (id: string) => {
+    const docRef = doc(DB, COLLECTIONS.EXPENSES, id).withConverter(
+      GeneralExpenseConverter
+    );
+
+    const docData = (await getDoc(docRef)).data();
+
+    const type = docData?.type;
+    return `${camelCase(type)}Id`;
+  };
+
+  useEffect(() => {
+    if (data.length) {
+      Promise.all(
+        data.map(async (transaction) => {
+          Promise.all(
+            transaction.transactions.map(async (details) => {
+              if (transaction.id) {
+                if (details.project_id) {
+                  setLinkedTransactions((prev) => ({
+                    ...prev,
+                    [String(transaction.id)]: {
+                      ...(prev[String(transaction.id)] ?? {}),
+                      projectId: details.project_id!,
+                    },
+                  }));
+                }
+
+                if (details.expense_id) {
+                  const expenseKey = await getExpenseKeyType(
+                    details.expense_id
+                  );
+
+                  setLinkedTransactions((prev) => ({
+                    ...prev,
+                    [String(transaction.id)]: {
+                      ...(prev[String(transaction.id)] ?? {}),
+                      [expenseKey]: details.expense_id!,
+                    },
+                  }));
+                }
+
+                const quotation_id = String(details.quotation_id);
+
+                if (
+                  quotation_id &&
+                  Object.keys(existingProjects).includes(quotation_id)
+                ) {
+                  setLinkedTransactions((prev) => ({
+                    ...prev,
+                    [String(transaction.id)]: {
+                      ...(prev[String(transaction.id)] ?? {}),
+                      projectId: existingProjects[quotation_id] as string,
+                    },
+                  }));
+                }
+              }
+            })
+          );
+        })
+      );
+    }
+  }, [data]);
+
+  const converter = (
+    oldData: DayBookTransactionOld
+  ): DoubleEntryAccounting => ({
+    id: oldData.id || '',
+    issueDate: oldData.createdAt || new Date(),
+    description: oldData.transactions[0].description || '',
+    ref: linkedTransactions[oldData.id!] || {},
+    transactions: oldData.transactions.map((transaction) => ({
+      accountId: transaction.account_id,
+      credit: transaction.credit || 0,
+      debit: transaction.debit || 0,
+    })),
+    locked: oldData.locked || false,
+    createdAt: oldData.createdAt || new Date(),
+    updatedAt: oldData.updatedAt || new Date(),
+  });
+
+  const execute = async () => {
+    if (Object.keys(linkedTransactions).length === 0) {
+      alert('Cargando datos...');
+      return;
+    }
+
+    console.log('Started batch creation');
+    const batch = writeBatch(DB);
+
+    data.forEach((document) => {
+      const docRef = doc(
+        DB,
+        COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+        document.id ?? ''
+      );
+
+      const convertedData = converter(document);
+      batch.set(docRef, convertedData);
+      console.log('Added document with ID: ', docRef.id, ' to batch');
+    });
+
+    console.log('Committing batch');
+    await batch.commit();
+    console.log('Batch committed');
+  };
+
+  if (isLoading) {
+    return <p>Cargando datos...</p>;
+  }
+
+  return (
+    <Button
+      onClick={execute}
+      disabled={isLoading || !Object.keys(linkedTransactions).length}
+    >
+      {!Object.keys(linkedTransactions).length
+        ? 'No hay datos'
+        : 'Exportar libro diario en Nuevo Formato'}
+    </Button>
   );
 };
 
@@ -296,6 +405,7 @@ export default function Page() {
       <ExportNonDeductiblesNewFormat />
       <ExportSaleNotesNewFormat />
       <ExportInvoicesNewFormat />
+      <ExportDayBookNewFormat />
     </DashboardTemplate>
   );
 }

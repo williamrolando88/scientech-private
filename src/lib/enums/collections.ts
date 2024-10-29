@@ -10,6 +10,7 @@ export enum COLLECTIONS {
   CUSTOMS_PAYMENTS = 'customsPayments',
   NON_DEDUCTIBLEs = 'nonDeductibles',
   SALE_NOTES = 'saleNotes',
+  DOUBLE_ENTRY_ACCOUNTING = 'doubleEntryAccounting',
 }
 
 export enum APPLICATION_SETTINGS {
