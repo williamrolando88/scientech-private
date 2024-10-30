@@ -4,7 +4,8 @@ import { z } from 'zod';
 import { DocumentRefSchema } from '../documentRef';
 
 export const ReceivedInvoiceSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
+  paid: z.boolean().default(false),
   issueDate: z.coerce.date(),
   issuerName: z.string(),
   issuerId: z.string(ZOD_ERROR.REQUIRED).regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),
@@ -17,5 +18,4 @@ export const ReceivedInvoiceSchema = z.object({
   taxedSubtotal: z.number(),
   total: z.number().positive(),
   ref: DocumentRefSchema,
-  paid: z.boolean().default(false),
 });

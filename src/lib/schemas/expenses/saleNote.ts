@@ -5,6 +5,7 @@ import { DocumentRefSchema } from '../documentRef';
 
 export const SaleNoteSchema = z.object({
   id: z.string().optional(),
+  paid: z.boolean().default(false),
   issueDate: z.coerce.date(),
   issuerName: z.string(),
   issuerId: z.string().regex(CI_RUC_REGEX, ZOD_ERROR.CI_RUC),

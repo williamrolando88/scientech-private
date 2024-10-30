@@ -32,6 +32,7 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
 
     return {
       id: data.id || '',
+      paid: true,
       description: data.description || '',
       issueDate: data.issue_date,
       IVA: data.IVA,
@@ -92,8 +93,9 @@ const ExportInvoicesNewFormat: FC = () => {
 
     return {
       id: data.id || '',
-      description: data.description || '',
+      paid: true,
       issueDate: data.issue_date,
+      description: data.description || '',
       emissionPoint: data.emission_point,
       establishment: data.establishment,
       sequentialNumber: data.sequential_number,
@@ -104,7 +106,6 @@ const ExportInvoicesNewFormat: FC = () => {
       IVA: data.IVA,
       total: data.total,
       ref,
-      paid: true,
     };
   };
 
@@ -154,6 +155,7 @@ const ExportSaleNotesNewFormat: FC = () => {
 
     return {
       id: data.id || '',
+      paid: true,
       description: data.description || '',
       issueDate: data.issue_date,
       total: data.total,
@@ -214,6 +216,7 @@ const ExportNonDeductiblesNewFormat: FC = () => {
 
     return {
       id: data.id || '',
+      paid: true,
       description: data.description || '',
       issueDate: data.issue_date,
       issuerName: data.issuer_name || '',

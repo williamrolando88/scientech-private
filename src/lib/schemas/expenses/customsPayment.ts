@@ -3,6 +3,7 @@ import { DocumentRefSchema } from '../documentRef';
 
 export const CustomsPaymentSchema = z.object({
   id: z.string().optional(),
+  paid: z.boolean().default(false),
   issueDate: z.coerce.date(),
   customsPaymentNumber: z.coerce.string(),
   description: z.string(),
