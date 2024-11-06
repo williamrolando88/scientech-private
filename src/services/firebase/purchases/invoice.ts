@@ -6,7 +6,10 @@ import {
   deleteDoc,
   doc,
   FirestoreDataConverter,
+  getDocs,
+  query,
   setDoc,
+  where,
 } from 'firebase/firestore';
 
 export const receivedInvoiceConverter: FirestoreDataConverter<ReceivedInvoice> =
@@ -18,11 +21,38 @@ export const receivedInvoiceConverter: FirestoreDataConverter<ReceivedInvoice> =
     }),
   };
 
-const upsert = async (invoice: ReceivedInvoice): Promise<string> => {
+const checkDuplicated = async (invoice: ReceivedInvoice) => {
+  if (invoice.id) return;
+
   const docCollection = collection(DB, COLLECTIONS.INVOICES);
-  const docRef = doc(docCollection, invoice.id).withConverter(
-    receivedInvoiceConverter
+  const querySnapshot = query(
+    docCollection,
+    where('issuerId', '==', invoice.issuerId),
+    where('sequentialNumber', '==', invoice.sequentialNumber),
+    where('emissionPoint', '==', invoice.emissionPoint),
+    where('establishment', '==', invoice.establishment)
   );
+
+  if (!(await getDocs(querySnapshot)).empty) {
+    throw new Error('Factura duplicada');
+  }
+};
+
+const upsert = async (invoice: ReceivedInvoice): Promise<string> => {
+  await checkDuplicated(invoice);
+
+  const docCollection = collection(DB, COLLECTIONS.INVOICES);
+
+  let docRef;
+  if (invoice.id) {
+    docRef = doc(docCollection, invoice.id).withConverter(
+      receivedInvoiceConverter
+    );
+  } else {
+    docRef = doc(docCollection).withConverter(receivedInvoiceConverter);
+    invoice.id = docRef.id;
+  }
+
   await setDoc(docRef, invoice);
   return docRef.id;
 };

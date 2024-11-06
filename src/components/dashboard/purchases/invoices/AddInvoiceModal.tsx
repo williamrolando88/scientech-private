@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
-import { useAddExpenseByType } from '@src/hooks/cache/expenses';
-import { EXTENDED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/expenses';
-import { ExtendedInvoice } from '@src/types/expenses';
+import { RECEIVED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/purchases';
+import { FirestoreReceivedInvoice } from '@src/services/firebase/purchases/invoice';
+import { ReceivedInvoice } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -14,13 +14,12 @@ interface Props {
 
 const AddInvoice: FC<Props> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addInvoice } = useAddExpenseByType('invoice');
 
-  const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = (
+  const handleSubmit: FormikConfig<ReceivedInvoice>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    addInvoice(values)
+    FirestoreReceivedInvoice.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura guardada exitosamente');
@@ -28,7 +27,9 @@ const AddInvoice: FC<Props> = ({ onClose }) => {
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al guardar la factura', { variant: 'error' });
+        enqueueSnackbar(`No se pudo guardar la factura. ${error}`, {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setSubmitting(false);
@@ -42,7 +43,7 @@ const AddInvoice: FC<Props> = ({ onClose }) => {
       <BaseInvoiceForm
         infoText="Ingrese los datos de la factura recibida. Los campos marcados con * son obligatorios. Si la factura tiene un proyecto asociado, selecciónelo en el campo correspondiente."
         onClose={onClose}
-        initialValues={EXTENDED_INVOICE_INITIAL_VALUE}
+        initialValues={RECEIVED_INVOICE_INITIAL_VALUE}
         onSubmit={handleSubmit}
       />
     </>

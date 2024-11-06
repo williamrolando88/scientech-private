@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
-import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { ExtendedInvoice, InvoiceOld } from '@src/types/expenses';
+import { FirestoreReceivedInvoice } from '@src/services/firebase/purchases/invoice';
+import { ReceivedInvoice } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +9,7 @@ import BaseInvoiceForm from './InvoiceForm/BaseInvoiceForm';
 interface UpdateInvoiceProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: InvoiceOld | null;
+  initialValues: ReceivedInvoice | null;
 }
 
 const UpdateInvoice: FC<UpdateInvoiceProps> = ({
@@ -18,15 +17,13 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
   onClose,
   initialValues,
 }) => {
-  const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateInvoice } = useUpdateExpenseByType('invoice');
 
-  const handleSubmit: FormikConfig<ExtendedInvoice>['onSubmit'] = (
+  const handleSubmit: FormikConfig<ReceivedInvoice>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    updateInvoice(values)
+    FirestoreReceivedInvoice.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura actualizada exitosamente');
@@ -41,25 +38,16 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
       });
   };
 
-  if (!initialValues || isLoading) return null;
-
-  const relatedTransaction = transactions?.find(
-    (transaction) => transaction.id === initialValues.day_book_transaction_id
-  );
-
-  const extendedInvoice: ExtendedInvoice = {
-    ...initialValues,
-    transaction_details: relatedTransaction?.transactions ?? [],
-  };
+  if (!initialValues) return null;
 
   return (
-    <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar factura</DialogTitle>
 
       <BaseInvoiceForm
         infoText="Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios."
         onClose={onClose}
-        initialValues={extendedInvoice}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
       />
     </Dialog>

@@ -1,3 +1,3 @@
 import { z } from 'zod';
 
-export const DocumentRefSchema = z.record(z.string(), z.string());
+export const DocumentRefSchema = z.object({ projectId: z.string() }).partial();

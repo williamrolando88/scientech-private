@@ -2,7 +2,6 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
-import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import {
@@ -12,15 +11,19 @@ import {
 import { ReceivedInvoice } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [invoiceToDelete, setInvoiceToDelete] =
     useState<ReceivedInvoice | null>(null);
+  const [invoiceToUpdate, setInvoiceToUpdate] =
+    useState<ReceivedInvoice | null>(null);
 
   const invoices = useCollectionSnapshot<ReceivedInvoice>({
     collectionName: COLLECTIONS.INVOICES,
     converter: receivedInvoiceConverter,
+    order: { field: 'issueDate', direction: 'desc' },
   });
 
   const columns: GridColDef<ReceivedInvoice>[] = [
@@ -72,12 +75,12 @@ const InvoiceList: FC = () => {
       type: 'actions',
       width: 50,
       getActions: (params) => [
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => setInvoiceToUpdate(params.row)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => setInvoiceToUpdate(params.row)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          showInMenu
+        />,
         <GridActionsCellItem
           label="Borrar"
           onClick={() => setInvoiceToDelete(params.row)}
@@ -110,6 +113,7 @@ const InvoiceList: FC = () => {
           autoHeight
           columns={columns}
           rows={invoices}
+          getRowId={(row) => row.id!}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
@@ -117,12 +121,12 @@ const InvoiceList: FC = () => {
         />
       </CardContent>
 
-      {/* <UpdateInvoice
+      <UpdateInvoice
         open={!!invoiceToUpdate}
         initialValues={invoiceToUpdate}
         onClose={() => setInvoiceToUpdate(null)}
         key={invoiceToUpdate?.id}
-      /> */}
+      />
 
       <ConfirmDialog
         onClose={() => setInvoiceToDelete(null)}

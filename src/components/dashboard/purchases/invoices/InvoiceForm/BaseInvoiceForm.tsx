@@ -14,27 +14,21 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { UploadBox } from '@src/components/shared/upload';
-import {
-  ALLOWED_ACCOUNTS,
-  DEFAULT_ACCOUNT,
-  TAX_PERCENTAGE_CODES,
-} from '@src/lib/constants/settings';
+import { TAX_PERCENTAGE_CODES } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { extendedInvoiceBuilder } from '@src/lib/modules/expenses';
-import { InvoiceSchema } from '@src/lib/schemas/expenses';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/expenses/invoice';
 import { ParsedInvoice } from '@src/types/documentParsers';
-import { ExtendedInvoice } from '@src/types/expenses';
+import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { AccountCategorySelector } from './AccountCategorySelector';
 import { VoucherIVAField } from './VoucherIVAField';
 import { VoucherProjectSelector } from './VoucherProjectSelector';
 import { VoucherTotalField } from './VoucherTotalField';
 
 type FormikProps = Pick<
-  FormikConfig<ExtendedInvoice>,
+  FormikConfig<ReceivedInvoice>,
   'initialValues' | 'onSubmit'
 >;
 
@@ -51,14 +45,8 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 }) => {
   const isUpdating = Boolean(initialValues.id);
 
-  const preSubmit: InvoiceFormProps['onSubmit'] = (formData, formActions) => {
-    const processedInvoice = extendedInvoiceBuilder(formData);
-
-    onSubmit(processedInvoice, formActions);
-  };
-
   const handleOnDropAccepted =
-    (setValues: FormikHelpers<ExtendedInvoice>['setValues']) =>
+    (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
       const documentParsedData = await xmlFileReader<ParsedInvoice>(
         files,
@@ -82,33 +70,33 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
       const { totalImpuesto } = invoice.infoFactura.totalConImpuestos;
 
-      let taxed_subtotal = 0;
+      let taxedSubtotal = 0;
       if (Array.isArray(totalImpuesto)) {
-        taxed_subtotal =
+        taxedSubtotal =
           totalImpuesto.find((impuesto) =>
             TAX_PERCENTAGE_CODES.includes(impuesto.codigoPorcentaje)
           )?.baseImponible || 0;
       } else {
-        taxed_subtotal = TAX_PERCENTAGE_CODES.includes(
+        taxedSubtotal = TAX_PERCENTAGE_CODES.includes(
           totalImpuesto.codigoPorcentaje
         )
           ? totalImpuesto.baseImponible
           : 0;
       }
 
-      let tax_exempted_subtotal = 0;
+      let noTaxSubtotal = 0;
       if (Array.isArray(totalImpuesto)) {
-        tax_exempted_subtotal =
+        noTaxSubtotal =
           totalImpuesto.find((impuesto) => impuesto.codigoPorcentaje === 0)
             ?.baseImponible || 0;
       } else {
-        tax_exempted_subtotal =
+        noTaxSubtotal =
           totalImpuesto.codigoPorcentaje === 0
             ? totalImpuesto.baseImponible
             : 0;
       }
 
-      const issue_date = new Date(
+      const issueDate = new Date(
         `${invoice.infoFactura.fechaEmision
           .split('/')
           .reverse()
@@ -118,22 +106,22 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
       setValues({
         ...initialValues,
         description,
-        issuer_id: invoice.infoTributaria.ruc,
-        issuer_name: invoice.infoTributaria.razonSocial,
+        issuerId: invoice.infoTributaria.ruc,
+        issuerName: invoice.infoTributaria.razonSocial,
         establishment: Number(invoice.infoTributaria.estab),
-        emission_point: Number(invoice.infoTributaria.ptoEmi),
-        sequential_number: Number(invoice.infoTributaria.secuencial),
-        issue_date,
-        taxed_subtotal,
-        tax_exempted_subtotal,
+        emissionPoint: Number(invoice.infoTributaria.ptoEmi),
+        sequentialNumber: Number(invoice.infoTributaria.secuencial),
+        issueDate,
+        taxedSubtotal,
+        noTaxSubtotal,
       });
     };
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={preSubmit}
-      validationSchema={toFormikValidationSchema(InvoiceSchema)}
+      onSubmit={onSubmit}
+      validationSchema={toFormikValidationSchema(ReceivedInvoiceSchema)}
     >
       {({ isSubmitting, setValues }) => (
         <Form>
@@ -147,6 +135,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="establishment"
                   label="Suc."
+                  type="number"
                   required
                 />
               </Grid>
@@ -155,8 +144,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="emission_point"
+                  name="emissionPoint"
                   label="Pto."
+                  type="number"
                   required
                 />
               </Grid>
@@ -165,8 +155,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="sequential_number"
+                  name="sequentialNumber"
                   label="Nro."
+                  type="number"
                   required
                 />
               </Grid>
@@ -177,7 +168,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikDatePicker
                   size="small"
                   fullWidth
-                  name="issue_date"
+                  name="issueDate"
                   label="Fecha de Emisión"
                   required
                 />
@@ -187,7 +178,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="issuer_id"
+                  name="issuerId"
                   label="RUC Emisor"
                   required
                 />
@@ -197,7 +188,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="issuer_name"
+                  name="issuerName"
                   label="Razón Social Emisor"
                   required
                 />
@@ -214,46 +205,24 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={7}>
-                <AccountCategorySelector
-                  size="small"
-                  name="transaction_details[0].account_id"
-                  label="Forma de pago"
-                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
-                  initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={2} />
+              <Grid item xs={9} />
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
                   size="small"
                   fullWidth
-                  name="taxed_subtotal"
+                  name="taxedSubtotal"
                   label="Base imponible"
                 />
               </Grid>
 
-              <Grid item xs={7}>
-                <AccountCategorySelector
-                  size="small"
-                  name="transaction_details[1].account_id"
-                  label="Tipo de egreso"
-                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
-                  initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={2} />
+              <Grid item xs={9} />
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
                   size="small"
                   fullWidth
-                  name="tax_exempted_subtotal"
+                  name="noTaxSubtotal"
                   label="Subtotal 0%"
                 />
               </Grid>

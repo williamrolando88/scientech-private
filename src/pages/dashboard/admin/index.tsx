@@ -88,7 +88,7 @@ const ExportInvoicesNewFormat: FC = () => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
-      ref.project_id = data.project_id;
+      ref.projectId = data.project_id;
     }
 
     return {

@@ -15,7 +15,7 @@ export const VoucherProjectSelector: FC = () => {
       select
       fullWidth
       size="small"
-      name="project_id"
+      name="ref.projectId"
       label="Proyecto asociado"
     >
       <MenuItem sx={{ fontStyle: 'italic' }} key="void" value="">
