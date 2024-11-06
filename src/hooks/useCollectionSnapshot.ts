@@ -5,7 +5,7 @@ import {
   FirestoreDataConverter,
   onSnapshot,
 } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface useCollectionSnapshotParams {
   collectionName: COLLECTIONS;
@@ -18,7 +18,7 @@ export const useCollectionSnapshot = <T>({
 }: useCollectionSnapshotParams) => {
   const [data, setData] = useState<T[]>([]);
 
-  const queryCollection = () => {
+  const queryCollection = useCallback(() => {
     let collectionRef = collection(DB, collectionName);
     if (converter) collectionRef = collectionRef.withConverter(converter);
 
@@ -27,12 +27,12 @@ export const useCollectionSnapshot = <T>({
 
       setData(snapshotData);
     });
-  };
+  }, [collectionName, converter]);
 
   useEffect(() => {
     const unsubscribe = queryCollection();
     return () => unsubscribe();
-  });
+  }, [queryCollection]);
 
   return data;
 };
