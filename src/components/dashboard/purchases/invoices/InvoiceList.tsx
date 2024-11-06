@@ -56,13 +56,15 @@ const InvoiceList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       getActions: (params) => [
-        <Label
-          variant="soft"
-          color={params.row.paid ? 'success' : 'error'}
-          sx={{ p: 0 }}
-        >
-          {params.row.paid ? 'Pagado' : 'Pendiente'}
-        </Label>,
+        // params.row.paid ? (
+        //   <Label variant="soft" color="success">
+        //     Pagado
+        //   </Label>
+        // ) : (
+        //   <Button variant="soft" color="warning">
+        //     Pagar
+        //   </Button>
+        // ),
       ],
     },
     {
