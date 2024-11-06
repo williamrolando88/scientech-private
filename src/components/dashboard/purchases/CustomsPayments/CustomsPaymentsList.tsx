@@ -1,38 +1,36 @@
-import { LoadingButton } from '@mui/lab';
 import { CardContent } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
-import Iconify from '@src/components/shared/iconify';
-import {
-  useDeleteExpenseByType,
-  useListExpensesByType,
-} from '@src/hooks/cache/expenses';
-import { CustomsPaymentOld } from '@src/types/expenses';
-import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
-import UpdateCustomsPayment from './UpdateCustomsPayment';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS } from '@src/lib/enums/collections';
+import { customsPaymentsConverter } from '@src/services/firebase/purchases/customsPayments';
+import { CustomsPayment } from '@src/types/purchases';
+import { FC } from 'react';
 
 const CustomsPaymentsList: FC = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [expenseToDelete, setExpenseToDelete] =
-    useState<CustomsPaymentOld | null>(null);
-  const [expenseToUpdate, setExpenseToUpdate] =
-    useState<CustomsPaymentOld | null>(null);
-  const { mutateAsync: deleteCustomsPayment, isPending } =
-    useDeleteExpenseByType('customs_payment');
-  const { data: customsPayments, isLoading } =
-    useListExpensesByType<CustomsPaymentOld>('customs_payment');
+  // const { enqueueSnackbar } = useSnackbar();
+  // const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
+  //   null
+  // );
+  // const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
+  //   null
+  // );
 
-  const columns: GridColDef<CustomsPaymentOld>[] = [
+  const customsPayments = useCollectionSnapshot<CustomsPayment>({
+    collectionName: COLLECTIONS.CUSTOMS_PAYMENTS,
+    converter: customsPaymentsConverter,
+    order: { field: 'issueDate', direction: 'desc' },
+  });
+
+  const columns: GridColDef<CustomsPayment>[] = [
     {
-      field: 'issue_date',
+      field: 'issueDate',
       headerName: 'Fecha de Emisión',
       type: 'date',
       flex: 1,
       sortable: false,
     },
     {
-      field: 'customs_payment_number',
+      field: 'customsPaymentNumber',
       headerName: 'Nro. Liquidación',
       type: 'number',
       flex: 1,
@@ -63,40 +61,57 @@ const CustomsPaymentsList: FC = () => {
         value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
-      field: 'actions',
+      field: 'paid',
+      headerName: 'Pagar',
       type: 'actions',
-      width: 50,
       getActions: (params) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setExpenseToUpdate(params.row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setExpenseToDelete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
+        // TODO: Add pay action button
+        // params.row.paid ? (
+        //   <Label variant="soft" color="success">
+        //     Pagado
+        //   </Label>
+        // ) : (
+        //   <Button variant="soft" color="warning">
+        //     Pagar
+        //   </Button>
+        // ),
       ],
     },
+    // {
+    //   field: 'actions',
+    //   type: 'actions',
+    //   width: 50,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       label="Modificar"
+    //       onClick={() => setExpenseToUpdate(params.row)}
+    //       icon={<Iconify icon="pajamas:doc-changes" />}
+    //       showInMenu
+    //     />,
+    //     <GridActionsCellItem
+    //       label="Borrar"
+    //       onClick={() => setExpenseToDelete(params.row)}
+    //       icon={<Iconify icon="pajamas:remove" />}
+    //       showInMenu
+    //     />,
+    //   ],
+    // },
   ];
 
-  const handleDeleteExpense = async () => {
-    if (!expenseToDelete) return;
+  // const handleDeleteExpense = async () => {
+  //   if (!expenseToDelete) return;
 
-    deleteCustomsPayment(expenseToDelete)
-      .then(() => {
-        enqueueSnackbar('Factura eliminada exitosamente');
-      })
-      .catch(() => {
-        enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
-      })
-      .finally(() => {
-        setExpenseToDelete(null);
-      });
-  };
+  //   deleteCustomsPayment(expenseToDelete)
+  //     .then(() => {
+  //       enqueueSnackbar('Factura eliminada exitosamente');
+  //     })
+  //     .catch(() => {
+  //       enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
+  //     })
+  //     .finally(() => {
+  //       setExpenseToDelete(null);
+  //     });
+  // };
 
   return (
     <>
@@ -108,22 +123,20 @@ const CustomsPaymentsList: FC = () => {
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{
-            sorting: {
-              sortModel: [{ field: 'issue_date', sort: 'desc' }],
-            },
+            pagination: { paginationModel: { pageSize: 20 } },
           }}
-          loading={isLoading}
+          pageSizeOptions={[20, 50, 100]}
         />
       </CardContent>
 
-      <UpdateCustomsPayment
+      {/* <UpdateCustomsPayment
         open={!!expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
         initialValues={expenseToUpdate}
         key={expenseToUpdate?.id}
-      />
+      /> */}
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
         title="Borrar factura"
@@ -136,7 +149,7 @@ const CustomsPaymentsList: FC = () => {
             Borrar
           </LoadingButton>
         }
-      />
+      /> */}
     </>
   );
 };

@@ -52,10 +52,10 @@ const AddCustomsPayment: FC<Props> = ({ onClose }) => {
   );
 };
 
-const AddInvoiceModal = () => (
+const AddCustomsPaymentModal = () => (
   <AddPurchaseDocumentModal>
     <AddCustomsPayment />
   </AddPurchaseDocumentModal>
 );
 
-export default AddInvoiceModal;
+export default AddCustomsPaymentModal;
