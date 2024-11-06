@@ -23,9 +23,9 @@ import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { IVAField } from '../../IVAField';
+import { IVAField } from './IVAField';
 import { ProjectSelector } from '../../ProjectSelector';
-import { TotalField } from '../../TotalField';
+import { TotalField } from './TotalField';
 
 type FormikProps = Pick<
   FormikConfig<ReceivedInvoice>,
