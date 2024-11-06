@@ -21,7 +21,6 @@ import { Project } from '@src/types/projects';
 import {
   collection,
   getDocs,
-  orderBy,
   query,
   runTransaction,
   where,

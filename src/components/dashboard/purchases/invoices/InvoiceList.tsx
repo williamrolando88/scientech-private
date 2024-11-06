@@ -1,13 +1,23 @@
-import { CardContent } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Button, CardContent } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import ConfirmDialog from '@src/components/shared/confirm-dialog';
+import Iconify from '@src/components/shared/iconify';
 import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
-import { receivedInvoiceConverter } from '@src/services/firebase/purchases/invoice';
+import {
+  FirestoreReceivedInvoice,
+  receivedInvoiceConverter,
+} from '@src/services/firebase/purchases/invoice';
 import { ReceivedInvoice } from '@src/types/purchases';
-import { FC } from 'react';
+import { useSnackbar } from 'notistack';
+import { FC, useState } from 'react';
 
 const InvoiceList: FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [invoiceToDelete, setInvoiceToDelete] =
+    useState<ReceivedInvoice | null>(null);
+
   const invoices = useCollectionSnapshot<ReceivedInvoice>({
     collectionName: COLLECTIONS.INVOICES,
     converter: receivedInvoiceConverter,
@@ -55,41 +65,41 @@ const InvoiceList: FC = () => {
         </Label>,
       ],
     },
-    // {
-    //   field: 'actions',
-    //   type: 'actions',
-    //   width: 50,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       label="Modificar"
-    //       onClick={() => setInvoiceToUpdate(params.row)}
-    //       icon={<Iconify icon="pajamas:doc-changes" />}
-    //       showInMenu
-    //     />,
-    //     <GridActionsCellItem
-    //       label="Borrar"
-    //       onClick={() => setInvoiceToDelete(params.row)}
-    //       icon={<Iconify icon="pajamas:remove" />}
-    //       showInMenu
-    //     />,
-    //   ],
-    // },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 50,
+      getActions: (params) => [
+        // <GridActionsCellItem
+        //   label="Modificar"
+        //   onClick={() => setInvoiceToUpdate(params.row)}
+        //   icon={<Iconify icon="pajamas:doc-changes" />}
+        //   showInMenu
+        // />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => setInvoiceToDelete(params.row)}
+          icon={<Iconify icon="pajamas:remove" />}
+          showInMenu
+        />,
+      ],
+    },
   ];
 
-  // const handleDeleteExpense = async () => {
-  //   if (!invoiceToDelete) return;
+  const handleDeleteExpense = () => {
+    if (!invoiceToDelete?.id) return;
 
-  //   deleteInvoice(invoiceToDelete)
-  //     .then(() => {
-  //       enqueueSnackbar('Factura eliminada exitosamente');
-  //     })
-  //     .catch(() => {
-  //       enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
-  //     })
-  //     .finally(() => {
-  //       setInvoiceToDelete(null);
-  //     });
-  // };
+    FirestoreReceivedInvoice.remove(invoiceToDelete.id)
+      .then(() => {
+        enqueueSnackbar('Factura eliminada exitosamente');
+      })
+      .catch(() => {
+        enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
+      })
+      .finally(() => {
+        setInvoiceToDelete(null);
+      });
+  };
 
   return (
     <>
@@ -110,22 +120,18 @@ const InvoiceList: FC = () => {
         initialValues={invoiceToUpdate}
         onClose={() => setInvoiceToUpdate(null)}
         key={invoiceToUpdate?.id}
-      />
+      /> */}
 
       <ConfirmDialog
         onClose={() => setInvoiceToDelete(null)}
         open={!!invoiceToDelete}
         title="Borrar factura"
         action={
-          <LoadingButton
-            onClick={handleDeleteExpense}
-            loading={isPending}
-            variant="contained"
-          >
+          <Button onClick={handleDeleteExpense} variant="contained">
             Borrar
-          </LoadingButton>
+          </Button>
         }
-      /> */}
+      />
     </>
   );
 };
