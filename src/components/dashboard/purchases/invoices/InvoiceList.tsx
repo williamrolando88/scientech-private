@@ -3,13 +3,18 @@ import { CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
 import Iconify from '@src/components/shared/iconify';
+import Label from '@src/components/shared/label';
 import {
   useDeleteExpenseByType,
   useListExpensesByType,
 } from '@src/hooks/cache/expenses';
+import { COLLECTIONS } from '@src/lib/enums/collections';
+import { DB } from '@src/settings/firebase';
 import { InvoiceOld } from '@src/types/expenses';
+import { collection, limit, onSnapshot, query } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import { useEffectOnce } from 'usehooks-ts';
 import UpdateInvoice from '../../vouchers/ReceivedInvoices/Invoices/UpdateInvoice';
 
 const InvoiceList: FC = () => {
@@ -25,33 +30,25 @@ const InvoiceList: FC = () => {
   const { data: invoices, isLoading } =
     useListExpensesByType<InvoiceOld>('invoice');
 
+  useEffectOnce(() => {
+    const invoicesCollection = collection(DB, COLLECTIONS.INVOICES);
+    const q = query(invoicesCollection, limit(20));
+    const unsub = onSnapshot(q, (snapshot) => {
+      // do something
+      const data = snapshot.docs.map((doc) => doc.data());
+
+      console.log(data);
+    });
+
+    return unsub;
+  });
+
   const columns: GridColDef<InvoiceOld>[] = [
     {
       field: 'issue_date',
       headerName: 'Fecha de Emisión',
       type: 'date',
       width: 130,
-      sortable: false,
-    },
-    {
-      field: 'establishment',
-      headerName: 'Suc.',
-      type: 'number',
-      width: 50,
-      sortable: false,
-    },
-    {
-      field: 'emission_point',
-      headerName: 'Pto.',
-      type: 'number',
-      width: 50,
-      sortable: false,
-    },
-    {
-      field: 'sequential_number',
-      headerName: 'Nro.',
-      type: 'number',
-      width: 100,
       sortable: false,
     },
     {
@@ -67,36 +64,26 @@ const InvoiceList: FC = () => {
       sortable: false,
     },
     {
-      field: 'tax_exempted_subtotal',
-      headerName: 'Base 0%',
-      type: 'number',
-      sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
-    },
-    {
-      field: 'taxed_subtotal',
-      headerName: 'Base imp.',
-      type: 'number',
-      sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
-    },
-    {
-      field: 'IVA',
-      headerName: 'IVA',
-      type: 'number',
-      sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
-    },
-    {
       field: 'total',
       headerName: 'Total',
       type: 'number',
       sortable: false,
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
+    },
+    {
+      field: 'paid',
+      headerName: 'Pagar',
+      type: 'actions',
+      getActions: (params) => [
+        <Label
+          variant="soft"
+          color={params.row.paid ? 'success' : 'error'}
+          sx={{ p: 0 }}
+        >
+          {params.row.paid ? 'Pagado' : 'Pendiente'}
+        </Label>,
+      ],
     },
     {
       field: 'actions',
@@ -143,7 +130,9 @@ const InvoiceList: FC = () => {
           rows={invoices}
           disableColumnFilter
           disableRowSelectionOnClick
+          pageSizeOptions={[20, 50, 100]}
           initialState={{
+            pagination: { paginationModel: { pageSize: 20 } },
             sorting: {
               sortModel: [{ field: 'issue_date', sort: 'desc' }],
             },
