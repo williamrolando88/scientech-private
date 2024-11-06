@@ -99,8 +99,10 @@ const InvoiceList: FC = () => {
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })
-      .catch(() => {
-        enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
+      .catch((error) => {
+        enqueueSnackbar(`No se pudo eliminar el documento: ${error}`, {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setInvoiceToDelete(null);

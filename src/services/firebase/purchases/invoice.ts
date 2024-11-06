@@ -60,8 +60,6 @@ const upsert = async (invoice: ReceivedInvoice): Promise<string> => {
 const remove = async (id: string) => {
   const docRef = doc(DB, COLLECTIONS.INVOICES, id);
   await deleteDoc(docRef);
-
-  return id;
 };
 
 export const FirestoreReceivedInvoice = {

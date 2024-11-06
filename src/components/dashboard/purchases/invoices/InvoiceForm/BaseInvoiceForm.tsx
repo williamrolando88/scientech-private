@@ -17,14 +17,14 @@ import { UploadBox } from '@src/components/shared/upload';
 import { TAX_PERCENTAGE_CODES } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { ReceivedInvoiceSchema } from '@src/lib/schemas/expenses/invoice';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/invoice';
 import { ParsedInvoice } from '@src/types/documentParsers';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { IVAField } from './IVAField';
 import { ProjectSelector } from '../../ProjectSelector';
+import { IVAField } from './IVAField';
 import { TotalField } from './TotalField';
 
 type FormikProps = Pick<

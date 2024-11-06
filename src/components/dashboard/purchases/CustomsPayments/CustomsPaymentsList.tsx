@@ -1,16 +1,22 @@
-import { CardContent } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Button, CardContent } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import ConfirmDialog from '@src/components/shared/confirm-dialog';
+import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
-import { customsPaymentsConverter } from '@src/services/firebase/purchases/customsPayments';
+import {
+  customsPaymentsConverter,
+  FirestoreCustomsPayment,
+} from '@src/services/firebase/purchases/customsPayments';
 import { CustomsPayment } from '@src/types/purchases';
-import { FC } from 'react';
+import { useSnackbar } from 'notistack';
+import { FC, useState } from 'react';
 
 const CustomsPaymentsList: FC = () => {
-  // const { enqueueSnackbar } = useSnackbar();
-  // const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
-  //   null
-  // );
+  const { enqueueSnackbar } = useSnackbar();
+  const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
+    null
+  );
   // const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
   //   null
   // );
@@ -77,41 +83,43 @@ const CustomsPaymentsList: FC = () => {
         // ),
       ],
     },
-    // {
-    //   field: 'actions',
-    //   type: 'actions',
-    //   width: 50,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       label="Modificar"
-    //       onClick={() => setExpenseToUpdate(params.row)}
-    //       icon={<Iconify icon="pajamas:doc-changes" />}
-    //       showInMenu
-    //     />,
-    //     <GridActionsCellItem
-    //       label="Borrar"
-    //       onClick={() => setExpenseToDelete(params.row)}
-    //       icon={<Iconify icon="pajamas:remove" />}
-    //       showInMenu
-    //     />,
-    //   ],
-    // },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 50,
+      getActions: (params) => [
+        // <GridActionsCellItem
+        //   label="Modificar"
+        //   onClick={() => setExpenseToUpdate(params.row)}
+        //   icon={<Iconify icon="pajamas:doc-changes" />}
+        //   showInMenu
+        // />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => setExpenseToDelete(params.row)}
+          icon={<Iconify icon="pajamas:remove" />}
+          showInMenu
+        />,
+      ],
+    },
   ];
 
-  // const handleDeleteExpense = async () => {
-  //   if (!expenseToDelete) return;
+  const handleDeleteExpense = async () => {
+    if (!expenseToDelete?.id) return;
 
-  //   deleteCustomsPayment(expenseToDelete)
-  //     .then(() => {
-  //       enqueueSnackbar('Factura eliminada exitosamente');
-  //     })
-  //     .catch(() => {
-  //       enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
-  //     })
-  //     .finally(() => {
-  //       setExpenseToDelete(null);
-  //     });
-  // };
+    FirestoreCustomsPayment.remove(expenseToDelete.id)
+      .then(() => {
+        enqueueSnackbar('Liquidación aduanera eliminada exitosamente');
+      })
+      .catch((error) => {
+        enqueueSnackbar(`No se pudo eliminar el documento: ${error}`, {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setExpenseToDelete(null);
+      });
+  };
 
   return (
     <>
@@ -136,20 +144,16 @@ const CustomsPaymentsList: FC = () => {
         key={expenseToUpdate?.id}
       /> */}
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
-        title="Borrar factura"
+        title="Borrar liquidación aduanera"
         action={
-          <LoadingButton
-            onClick={handleDeleteExpense}
-            loading={isPending}
-            variant="contained"
-          >
+          <Button onClick={handleDeleteExpense} variant="contained">
             Borrar
-          </LoadingButton>
+          </Button>
         }
-      /> */}
+      />
     </>
   );
 };

@@ -27,7 +27,7 @@ const AddInvoice: FC<Props> = ({ onClose }) => {
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar(`No se pudo guardar la factura. ${error}`, {
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
           variant: 'error',
         });
       })

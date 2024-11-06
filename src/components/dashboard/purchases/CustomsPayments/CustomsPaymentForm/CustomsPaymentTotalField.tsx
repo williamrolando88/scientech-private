@@ -1,16 +1,16 @@
 import { FormikTextField } from '@src/components/shared/formik-components';
-import { ExtendedCustomsPayment } from '@src/types/expenses';
+import { CustomsPayment } from '@src/types/purchases';
 import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { FC, useEffect } from 'react';
 
 export const CustomsPaymentTotalField: FC = () => {
-  const { values, setFieldValue } = useFormikContext<ExtendedCustomsPayment>();
+  const { values, setFieldValue } = useFormikContext<CustomsPayment>();
 
   useEffect(() => {
     const fodinfa = values.FODINFA || 0;
-    const adValoremTariff = values.ad_valorem_tariff || 0;
-    const specificTariff = values.specific_tariff || 0;
+    const adValoremTariff = values.adValoremTariff || 0;
+    const specificTariff = values.specificTariff || 0;
     const iva = values.IVA || 0;
 
     const total = round(fodinfa + adValoremTariff + specificTariff + iva, 2);
@@ -20,8 +20,8 @@ export const CustomsPaymentTotalField: FC = () => {
     setFieldValue,
     values.FODINFA,
     values.IVA,
-    values.ad_valorem_tariff,
-    values.specific_tariff,
+    values.adValoremTariff,
+    values.specificTariff,
   ]);
 
   return (

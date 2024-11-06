@@ -1,7 +1,7 @@
-import { CustomsPaymentSchema } from '@src/lib/schemas/expenses/customsPayment';
-import { ReceivedInvoiceSchema } from '@src/lib/schemas/expenses/invoice';
-import { NonDeductibleSchema } from '@src/lib/schemas/expenses/nonDeductible';
-import { SaleNoteSchema } from '@src/lib/schemas/expenses/saleNote';
+import { CustomsPaymentSchema } from '@src/lib/schemas/purchases/customsPayment';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/invoice';
+import { NonDeductibleSchema } from '@src/lib/schemas/purchases/nonDeductible';
+import { SaleNoteSchema } from '@src/lib/schemas/purchases/saleNote';
 import { z } from 'zod';
 
 export type ReceivedInvoice = z.infer<typeof ReceivedInvoiceSchema>;

@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
-import { useAddExpenseByType } from '@src/hooks/cache/expenses';
-import { CUSTOMS_PAYMENT_INITIAL_VALUE } from '@src/lib/constants/expenses';
-import { ExtendedCustomsPayment } from '@src/types/expenses';
+import { CUSTOMS_PAYMENT_INITIAL_VALUE } from '@src/lib/constants/purchases';
+import { FirestoreCustomsPayment } from '@src/services/firebase/purchases/customsPayments';
+import { CustomsPayment } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -14,14 +14,12 @@ interface Props {
 
 const AddCustomsPayment: FC<Props> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addCustomsPayment } =
-    useAddExpenseByType('customs_payment');
 
-  const handleSubmit: FormikConfig<ExtendedCustomsPayment>['onSubmit'] = (
+  const handleSubmit: FormikConfig<CustomsPayment>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    addCustomsPayment(values)
+    FirestoreCustomsPayment.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Liquidación aduanera guardada exitosamente');
@@ -29,7 +27,7 @@ const AddCustomsPayment: FC<Props> = ({ onClose }) => {
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al guardar la liquidación aduanera', {
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
           variant: 'error',
         });
       })
