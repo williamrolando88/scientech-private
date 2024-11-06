@@ -59,6 +59,7 @@ const InvoiceList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       getActions: (params) => [
+        // TODO: Add pay action button
         // params.row.paid ? (
         //   <Label variant="soft" color="success">
         //     Pagado
