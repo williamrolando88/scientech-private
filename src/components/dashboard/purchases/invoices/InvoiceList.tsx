@@ -1,64 +1,34 @@
-import { LoadingButton } from '@mui/lab';
 import { CardContent } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
-import Iconify from '@src/components/shared/iconify';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Label from '@src/components/shared/label';
-import {
-  useDeleteExpenseByType,
-  useListExpensesByType,
-} from '@src/hooks/cache/expenses';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
-import { DB } from '@src/settings/firebase';
-import { InvoiceOld } from '@src/types/expenses';
-import { collection, limit, onSnapshot, query } from 'firebase/firestore';
-import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
-import { useEffectOnce } from 'usehooks-ts';
-import UpdateInvoice from '../../vouchers/ReceivedInvoices/Invoices/UpdateInvoice';
+import { receivedInvoiceConverter } from '@src/services/firebase/purchases/invoice';
+import { ReceivedInvoice } from '@src/types/purchases';
+import { FC } from 'react';
 
 const InvoiceList: FC = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [invoiceToDelete, setInvoiceToDelete] = useState<InvoiceOld | null>(
-    null
-  );
-  const [invoiceToUpdate, setInvoiceToUpdate] = useState<InvoiceOld | null>(
-    null
-  );
-  const { mutateAsync: deleteInvoice, isPending } =
-    useDeleteExpenseByType('invoice');
-  const { data: invoices, isLoading } =
-    useListExpensesByType<InvoiceOld>('invoice');
-
-  useEffectOnce(() => {
-    const invoicesCollection = collection(DB, COLLECTIONS.INVOICES);
-    const q = query(invoicesCollection, limit(20));
-    const unsub = onSnapshot(q, (snapshot) => {
-      // do something
-      const data = snapshot.docs.map((doc) => doc.data());
-
-      console.log(data);
-    });
-
-    return unsub;
+  const invoices = useCollectionSnapshot<ReceivedInvoice>({
+    collectionName: COLLECTIONS.INVOICES,
+    converter: receivedInvoiceConverter,
   });
 
-  const columns: GridColDef<InvoiceOld>[] = [
+  const columns: GridColDef<ReceivedInvoice>[] = [
     {
-      field: 'issue_date',
+      field: 'issueDate',
       headerName: 'Fecha de Emisión',
       type: 'date',
       width: 130,
       sortable: false,
     },
     {
-      field: 'issuer_id',
+      field: 'issuerId',
       headerName: 'RUC',
       width: 180,
       sortable: false,
     },
     {
-      field: 'issuer_name',
+      field: 'issuerName',
       flex: 1,
       headerName: 'Razón Social',
       sortable: false,
@@ -85,41 +55,41 @@ const InvoiceList: FC = () => {
         </Label>,
       ],
     },
-    {
-      field: 'actions',
-      type: 'actions',
-      width: 50,
-      getActions: (params) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setInvoiceToUpdate(params.row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setInvoiceToDelete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
-    },
+    // {
+    //   field: 'actions',
+    //   type: 'actions',
+    //   width: 50,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       label="Modificar"
+    //       onClick={() => setInvoiceToUpdate(params.row)}
+    //       icon={<Iconify icon="pajamas:doc-changes" />}
+    //       showInMenu
+    //     />,
+    //     <GridActionsCellItem
+    //       label="Borrar"
+    //       onClick={() => setInvoiceToDelete(params.row)}
+    //       icon={<Iconify icon="pajamas:remove" />}
+    //       showInMenu
+    //     />,
+    //   ],
+    // },
   ];
 
-  const handleDeleteExpense = async () => {
-    if (!invoiceToDelete) return;
+  // const handleDeleteExpense = async () => {
+  //   if (!invoiceToDelete) return;
 
-    deleteInvoice(invoiceToDelete)
-      .then(() => {
-        enqueueSnackbar('Factura eliminada exitosamente');
-      })
-      .catch(() => {
-        enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
-      })
-      .finally(() => {
-        setInvoiceToDelete(null);
-      });
-  };
+  //   deleteInvoice(invoiceToDelete)
+  //     .then(() => {
+  //       enqueueSnackbar('Factura eliminada exitosamente');
+  //     })
+  //     .catch(() => {
+  //       enqueueSnackbar('Error al eliminar la factura', { variant: 'error' });
+  //     })
+  //     .finally(() => {
+  //       setInvoiceToDelete(null);
+  //     });
+  // };
 
   return (
     <>
@@ -130,18 +100,12 @@ const InvoiceList: FC = () => {
           rows={invoices}
           disableColumnFilter
           disableRowSelectionOnClick
+          initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
           pageSizeOptions={[20, 50, 100]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 20 } },
-            sorting: {
-              sortModel: [{ field: 'issue_date', sort: 'desc' }],
-            },
-          }}
-          loading={isLoading}
         />
       </CardContent>
 
-      <UpdateInvoice
+      {/* <UpdateInvoice
         open={!!invoiceToUpdate}
         initialValues={invoiceToUpdate}
         onClose={() => setInvoiceToUpdate(null)}
@@ -161,7 +125,7 @@ const InvoiceList: FC = () => {
             Borrar
           </LoadingButton>
         }
-      />
+      /> */}
     </>
   );
 };

@@ -9,8 +9,8 @@ import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { CustomsPaymentOld, ExpenseOld, InvoiceOld } from '@src/types/expenses';
 import {
   CustomsPayment,
-  Invoice,
   NonDeductible,
+  ReceivedInvoice,
   SaleNote,
 } from '@src/types/purchases';
 import { doc, getDoc, writeBatch } from 'firebase/firestore';
@@ -84,7 +84,7 @@ const ExportInvoicesNewFormat: FC = () => {
   const { data: oldData, isLoading } =
     useListExpensesByType<InvoiceOld>('invoice');
 
-  const converter = (data: InvoiceOld): Invoice => {
+  const converter = (data: InvoiceOld): ReceivedInvoice => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
