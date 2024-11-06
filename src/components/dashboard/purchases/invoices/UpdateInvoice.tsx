@@ -31,7 +31,9 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al actualizar la factura', { variant: 'error' });
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setSubmitting(false);

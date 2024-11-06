@@ -11,15 +11,16 @@ import {
 import { CustomsPayment } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import UpdateCustomsPayment from './UpdateCustomsPayment';
 
 const CustomsPaymentsList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
     null
   );
-  // const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
-  //   null
-  // );
+  const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
+    null
+  );
 
   const customsPayments = useCollectionSnapshot<CustomsPayment>({
     collectionName: COLLECTIONS.CUSTOMS_PAYMENTS,
@@ -88,12 +89,12 @@ const CustomsPaymentsList: FC = () => {
       type: 'actions',
       width: 50,
       getActions: (params) => [
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => setExpenseToUpdate(params.row)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => setExpenseToUpdate(params.row)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          showInMenu
+        />,
         <GridActionsCellItem
           label="Borrar"
           onClick={() => setExpenseToDelete(params.row)}
@@ -137,12 +138,12 @@ const CustomsPaymentsList: FC = () => {
         />
       </CardContent>
 
-      {/* <UpdateCustomsPayment
+      <UpdateCustomsPayment
         open={!!expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
         initialValues={expenseToUpdate}
         key={expenseToUpdate?.id}
-      /> */}
+      />
 
       <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}

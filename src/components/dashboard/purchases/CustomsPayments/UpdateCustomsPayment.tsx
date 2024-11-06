@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
-import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { CustomsPaymentOld, ExtendedCustomsPayment } from '@src/types/expenses';
+import { FirestoreCustomsPayment } from '@src/services/firebase/purchases/customsPayments';
+import { CustomsPayment } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +9,7 @@ import BaseCustomsPaymentForm from './CustomsPaymentForm/BaseCustomsPaymentForm'
 interface UpdateCustomsPaymentProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: CustomsPaymentOld | null;
+  initialValues: CustomsPayment | null;
 }
 
 const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
@@ -18,16 +17,13 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
   onClose,
   initialValues,
 }) => {
-  const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateCustomsPayment } =
-    useUpdateExpenseByType('customs_payment');
 
-  const handleSubmit: FormikConfig<ExtendedCustomsPayment>['onSubmit'] = (
+  const handleSubmit: FormikConfig<CustomsPayment>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    updateCustomsPayment(values)
+    FirestoreCustomsPayment.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Liquidación aduanera actualizada exitosamente');
@@ -35,7 +31,7 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al actualizar la liquidación aduanera', {
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
           variant: 'error',
         });
       })
@@ -44,25 +40,16 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
       });
   };
 
-  if (!initialValues || isLoading) return null;
-
-  const relatedTransaction = transactions?.find(
-    (transaction) => transaction.id === initialValues.day_book_transaction_id
-  );
-
-  const extendedCustomsPayment: ExtendedCustomsPayment = {
-    ...initialValues,
-    transaction_details: relatedTransaction?.transactions ?? [],
-  };
+  if (!initialValues) return null;
 
   return (
-    <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar liquidación aduanera</DialogTitle>
 
       <BaseCustomsPaymentForm
         infoText="Actualiza los datos de la liquidación aduanera recibida. Los campos marcados con * son obligatorios."
         onClose={onClose}
-        initialValues={extendedCustomsPayment}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
       />
     </Dialog>
