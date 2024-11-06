@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { FC, useEffect } from 'react';
 
-export const VoucherTotalField: FC = () => {
+export const TotalField: FC = () => {
   const { values, setFieldValue } = useFormikContext<ReceivedInvoice>();
 
   useEffect(() => {

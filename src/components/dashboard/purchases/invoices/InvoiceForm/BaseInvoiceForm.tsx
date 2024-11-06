@@ -23,9 +23,9 @@ import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { VoucherIVAField } from './VoucherIVAField';
-import { VoucherProjectSelector } from './VoucherProjectSelector';
-import { VoucherTotalField } from './VoucherTotalField';
+import { IVAField } from '../../IVAField';
+import { ProjectSelector } from '../../ProjectSelector';
+import { TotalField } from '../../TotalField';
 
 type FormikProps = Pick<
   FormikConfig<ReceivedInvoice>,
@@ -230,17 +230,17 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={9} />
 
               <Grid item xs={3}>
-                <VoucherIVAField />
+                <IVAField />
               </Grid>
 
               <Grid item xs={7}>
-                <VoucherProjectSelector />
+                <ProjectSelector />
               </Grid>
 
               <Grid item xs={2} />
 
               <Grid item xs={3}>
-                <VoucherTotalField />
+                <TotalField />
               </Grid>
             </Grid>
           </Stack>

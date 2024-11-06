@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
 import { useEffect, useMemo } from 'react';
 
-export const VoucherIVAField = () => {
+export const IVAField = () => {
   const { values, setFieldValue } = useFormikContext<ReceivedInvoice>();
 
   const IVA_RATE = useMemo(

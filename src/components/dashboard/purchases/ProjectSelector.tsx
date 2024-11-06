@@ -3,7 +3,7 @@ import { FormikTextField } from '@src/components/shared/formik-components';
 import { useListProjects } from '@src/hooks/cache/projects';
 import { FC } from 'react';
 
-export const VoucherProjectSelector: FC = () => {
+export const ProjectSelector: FC = () => {
   const { data: projects, isLoading } = useListProjects();
 
   const filteredProjects = projects.filter(
