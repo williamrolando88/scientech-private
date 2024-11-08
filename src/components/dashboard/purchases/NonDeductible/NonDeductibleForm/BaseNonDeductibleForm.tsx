@@ -12,7 +12,7 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { ExpensesCommonSchema } from '@src/lib/schemas/expenses';
+import { NonDeductibleSchema } from '@src/lib/schemas/purchases/nonDeductible';
 import { NonDeductible } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
@@ -41,7 +41,7 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(ExpensesCommonSchema)}
+      validationSchema={toFormikValidationSchema(NonDeductibleSchema)}
     >
       {({ isSubmitting }) => (
         <Form>
@@ -94,6 +94,7 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
                   fullWidth
                   name="total"
                   label="Total"
+                  required
                 />
               </Grid>
             </Grid>
