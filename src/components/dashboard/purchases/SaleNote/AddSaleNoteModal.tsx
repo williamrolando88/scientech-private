@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
-import { useAddExpenseByType } from '@src/hooks/cache/expenses';
-import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/expenses';
-import { ExtendedExpense } from '@src/types/expenses';
+import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/purchases';
+import { FirestoreSaleNote } from '@src/services/firebase/purchases/saleNote';
+import { SaleNote } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -14,13 +14,12 @@ interface Props {
 
 const AddSaleNote: FC<Props> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addExpense } = useAddExpenseByType('sale_note');
 
-  const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
+  const handleSubmit: FormikConfig<SaleNote>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    addExpense(values)
+    FirestoreSaleNote.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Nota de venta guardada exitosamente');

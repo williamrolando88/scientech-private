@@ -12,19 +12,14 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { extendedSaleNoteBuilder } from '@src/lib/modules/expenses';
-import { ExpensesCommonSchema } from '@src/lib/schemas/expenses';
-import { ExtendedExpense } from '@src/types/expenses';
+import { SaleNoteSchema } from '@src/lib/schemas/purchases/saleNote';
+import { SaleNote } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { ProjectSelector } from '../../ProjectSelector';
-import { TotalField } from '../../TotalField';
 
-type FormikProps = Pick<
-  FormikConfig<ExtendedExpense>,
-  'initialValues' | 'onSubmit'
->;
+type FormikProps = Pick<FormikConfig<SaleNote>, 'initialValues' | 'onSubmit'>;
 
 export interface BaseSaleNoteFormProps extends FormikProps {
   onClose?: VoidFunction;
@@ -39,45 +34,76 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
 }) => {
   const isUpdating = Boolean(initialValues.id);
 
-  const preSubmit: BaseSaleNoteFormProps['onSubmit'] = (
-    formData,
-    formActions
-  ) => {
-    const processedData = extendedSaleNoteBuilder(formData);
-
-    onSubmit(processedData, formActions);
-  };
-
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={preSubmit}
-      validationSchema={toFormikValidationSchema(ExpensesCommonSchema)}
+      onSubmit={onSubmit}
+      validationSchema={toFormikValidationSchema(SaleNoteSchema)}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
             <Alert severity="info">{infoText}</Alert>
 
             <Grid container columns={12} spacing={2}>
-              <Grid item xs={9} />
+              <Grid item xs={1}>
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="establishment"
+                  label="Suc."
+                  type="number"
+                />
+              </Grid>
+
+              <Grid item xs={1}>
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="emissionPoint"
+                  label="Pto."
+                  type="number"
+                />
+              </Grid>
+
+              <Grid item xs={2}>
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="sequentialNumber"
+                  label="Nro."
+                  type="number"
+                />
+              </Grid>
+
+              <Grid item xs={5} />
 
               <Grid item xs={3}>
                 <FormikDatePicker
                   size="small"
                   fullWidth
-                  name="issue_date"
+                  name="issueDate"
                   label="Fecha de Emisión"
                   required
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={3}>
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="issuer_name"
-                  label="Emisor y/o motivo"
+                  name="issuerId"
+                  label="CI/RUC Emisor"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={9}>
+                <FormikTextField
+                  size="small"
+                  fullWidth
+                  name="issuerName"
+                  label="Razón Social Emisor"
                   required
                 />
               </Grid>
@@ -90,31 +116,24 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
+                  required
                 />
-              </Grid>
-
-              <Grid item xs={9} />
-
-              <Grid item xs={3}>
-                <FormikAutoCalculateField
-                  size="small"
-                  fullWidth
-                  name="tax_exempted_subtotal"
-                  label="Subtotal"
-                />
-              </Grid>
-
-              <Grid item xs={9} />
-
-              <Grid item xs={3}>
-                <TotalField />
               </Grid>
 
               <Grid item xs={7}>
                 <ProjectSelector />
               </Grid>
 
-              <Grid item xs={5} />
+              <Grid item xs={2} />
+
+              <Grid item xs={3}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="total"
+                  label="Total"
+                />
+              </Grid>
             </Grid>
           </Stack>
 

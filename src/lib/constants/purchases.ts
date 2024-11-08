@@ -1,5 +1,9 @@
 import { ExtendedExpense } from '@src/types/expenses';
-import { CustomsPayment, ReceivedInvoice } from '@src/types/purchases';
+import {
+  CustomsPayment,
+  ReceivedInvoice,
+  SaleNote,
+} from '@src/types/purchases';
 import { DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE } from './dayBook';
 
 export const RECEIVED_INVOICE_INITIAL_VALUE: ReceivedInvoice = {
@@ -59,24 +63,18 @@ export const NON_DEDUCTIBLE_INITIAL_VALUE: ExtendedExpense = {
   ),
 };
 
-export const SALE_NOTE_INITIAL_VALUE: ExtendedExpense = {
+export const SALE_NOTE_INITIAL_VALUE: SaleNote = {
   id: '',
-  issue_date: new Date(),
-  type: 'sale_note',
-  issuer_name: '',
-  day_book_transaction_id: '',
-  tax_exempted_subtotal: 0,
+  issueDate: new Date(),
+  issuerName: '',
   description: '',
-  project_id: '',
   total: 0,
-  /**
-   * This is an array of DayBookTransactionDetail objects.
-   * It is used to store the transactions related to the invoice.
-   *
-   * First element will always be the payment method.
-   * Second element will always be the sum of the subtotals.
-   */
-  transaction_details: new Array(2).fill(
-    DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE
-  ),
+  issuerId: '',
+  establishment: 1,
+  emissionPoint: 1,
+  sequentialNumber: 1,
+  paid: false,
+  ref: {
+    projectId: '',
+  },
 };
