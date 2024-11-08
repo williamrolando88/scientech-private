@@ -33,8 +33,14 @@ const SaleNoteList: FC = () => {
       sortable: false,
     },
     {
+      field: 'sequentialNumber',
+      headerName: 'Nro.',
+      width: 80,
+      sortable: false,
+    },
+    {
       field: 'issuerName',
-      flex: 1,
+      flex: 2,
       headerName: 'Emisor y/o motivo',
       sortable: false,
     },
