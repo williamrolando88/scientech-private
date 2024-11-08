@@ -7,5 +7,4 @@ const firebaseApp = initializeApp(FIREBASE_API);
 export const DB = initializeFirestore(firebaseApp, {
   localCache: persistentLocalCache(),
 });
-// export const DB = getFirestore(firebaseApp);
 export const AUTH = getAuth(firebaseApp);

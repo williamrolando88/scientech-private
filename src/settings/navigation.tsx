@@ -57,21 +57,6 @@ const navConfig = [
     subheader: 'Contabilidad',
     items: [
       {
-        title: 'Comprobantes',
-        path: PATH_DASHBOARD.vouchers.root,
-        icon: ICONS.invoice,
-        children: [
-          {
-            title: 'Facturas Recibidas',
-            path: PATH_DASHBOARD.vouchers.received.root,
-          },
-          {
-            title: 'Facturas Emitidas',
-            path: PATH_DASHBOARD.vouchers.issued.root,
-          },
-        ],
-      },
-      {
         title: 'Compras',
         path: PATH_DASHBOARD.purchases.root,
         icon: ICONS.cart,
