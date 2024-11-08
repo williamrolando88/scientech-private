@@ -1,32 +1,34 @@
 import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import ConfirmDialog from '@src/components/shared/confirm-dialog';
+import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import {
-  FirestoreReceivedInvoice,
-  receivedInvoiceConverter,
-} from '@src/services/firebase/purchases/invoice';
-import { ReceivedInvoice } from '@src/types/purchases';
+  FirestoreNonDeductible,
+  nonDeductibleConverter,
+} from '@src/services/firebase/purchases/nonDeductible';
+import { NonDeductible } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
-import UpdateInvoice from './UpdateInvoice';
+import UpdateNonDeductible from './UpdateNonDeductible';
 
-const InvoiceList: FC = () => {
+const NonDeductibleList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [invoiceToDelete, setInvoiceToDelete] =
-    useState<ReceivedInvoice | null>(null);
-  const [invoiceToUpdate, setInvoiceToUpdate] =
-    useState<ReceivedInvoice | null>(null);
+  const [expenseToDelete, setExpenseToDelete] = useState<NonDeductible | null>(
+    null
+  );
+  const [expenseToUpdate, setExpenseToUpdate] = useState<NonDeductible | null>(
+    null
+  );
 
-  const invoices = useCollectionSnapshot<ReceivedInvoice>({
-    collectionName: COLLECTIONS.INVOICES,
-    converter: receivedInvoiceConverter,
+  const nonDeductibles = useCollectionSnapshot<NonDeductible>({
+    collectionName: COLLECTIONS.NON_DEDUCTIBLEs,
+    converter: nonDeductibleConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 
-  const columns: GridColDef<ReceivedInvoice>[] = [
+  const columns: GridColDef<NonDeductible>[] = [
     {
       field: 'issueDate',
       headerName: 'Fecha de Emisión',
@@ -35,21 +37,15 @@ const InvoiceList: FC = () => {
       sortable: false,
     },
     {
-      field: 'issuerId',
-      headerName: 'RUC',
-      width: 180,
-      sortable: false,
-    },
-    {
-      field: 'sequentialNumber',
-      headerName: 'Nro.',
-      width: 80,
-      sortable: false,
-    },
-    {
       field: 'issuerName',
       flex: 1,
-      headerName: 'Razón Social',
+      headerName: 'Emisor y/o motivo',
+      sortable: false,
+    },
+    {
+      field: 'description',
+      flex: 3,
+      headerName: 'Descripción',
       sortable: false,
     },
     {
@@ -84,13 +80,13 @@ const InvoiceList: FC = () => {
       getActions: (params) => [
         <GridActionsCellItem
           label="Modificar"
-          onClick={() => setInvoiceToUpdate(params.row)}
+          onClick={() => setExpenseToUpdate(params.row)}
           icon={<Iconify icon="pajamas:doc-changes" />}
           showInMenu
         />,
         <GridActionsCellItem
           label="Borrar"
-          onClick={() => setInvoiceToDelete(params.row)}
+          onClick={() => setExpenseToDelete(params.row)}
           icon={<Iconify icon="pajamas:remove" />}
           showInMenu
         />,
@@ -98,20 +94,18 @@ const InvoiceList: FC = () => {
     },
   ];
 
-  const handleDeleteExpense = () => {
-    if (!invoiceToDelete?.id) return;
+  const handleDeleteExpense = async () => {
+    if (!expenseToDelete?.id) return;
 
-    FirestoreReceivedInvoice.remove(invoiceToDelete.id)
+    FirestoreNonDeductible.remove(expenseToDelete.id)
       .then(() => {
-        enqueueSnackbar('Factura eliminada exitosamente');
+        enqueueSnackbar('Gasto eliminado exitosamente');
       })
-      .catch((error) => {
-        enqueueSnackbar(`No se pudo eliminar el documento: ${error}`, {
-          variant: 'error',
-        });
+      .catch(() => {
+        enqueueSnackbar('Error al eliminar el gasto', { variant: 'error' });
       })
       .finally(() => {
-        setInvoiceToDelete(null);
+        setExpenseToDelete(null);
       });
   };
 
@@ -121,7 +115,7 @@ const InvoiceList: FC = () => {
         <DataGrid
           autoHeight
           columns={columns}
-          rows={invoices}
+          rows={nonDeductibles}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
@@ -129,17 +123,17 @@ const InvoiceList: FC = () => {
         />
       </CardContent>
 
-      <UpdateInvoice
-        open={!!invoiceToUpdate}
-        initialValues={invoiceToUpdate}
-        onClose={() => setInvoiceToUpdate(null)}
-        key={invoiceToUpdate?.id}
+      <UpdateNonDeductible
+        open={!!expenseToUpdate}
+        initialValues={expenseToUpdate}
+        onClose={() => setExpenseToUpdate(null)}
+        key={expenseToUpdate?.id}
       />
 
       <ConfirmDialog
-        onClose={() => setInvoiceToDelete(null)}
-        open={!!invoiceToDelete}
-        title="Borrar factura"
+        onClose={() => setExpenseToDelete(null)}
+        open={!!expenseToDelete}
+        title="Borrar gasto"
         action={
           <Button onClick={handleDeleteExpense} variant="contained">
             Borrar
@@ -150,4 +144,4 @@ const InvoiceList: FC = () => {
   );
 };
 
-export default InvoiceList;
+export default NonDeductibleList;

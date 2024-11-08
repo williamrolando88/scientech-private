@@ -33,7 +33,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, 'purchases'),
     invoices: path(ROOTS_DASHBOARD, 'purchases', 'invoices'),
     customsPayments: path(ROOTS_DASHBOARD, 'purchases', 'customs-payments'),
-    sellNote: path(ROOTS_DASHBOARD, 'purchases', 'sale-note'),
+    sellNote: path(ROOTS_DASHBOARD, 'purchases', 'sale-notes'),
     nonDeductibles: path(ROOTS_DASHBOARD, 'purchases', 'non-deductibles'),
   },
   sells: {
