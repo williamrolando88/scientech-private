@@ -1,5 +1,5 @@
-import AddInvoiceModal from '@src/components/dashboard/purchases/ReceivedInvoices/AddInvoiceModal';
-import InvoiceList from '@src/components/dashboard/purchases/ReceivedInvoices/InvoiceList';
+import AddSaleNoteModal from '@src/components/dashboard/purchases/SaleNote/AddSaleNoteModal';
+import SaleNoteList from '@src/components/dashboard/purchases/SaleNote/SaleNoteList';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -10,11 +10,11 @@ Page.getLayout = (page: React.ReactElement) => (
 export default function Page() {
   return (
     <DashboardTemplate
-      documentTitle="Facturas Recibidas"
-      heading="Facturas Recibidas"
-      action={<AddInvoiceModal />}
+      documentTitle="Notas de Venta Recibidas"
+      heading="Notas de Venta Recibidas"
+      action={<AddSaleNoteModal />}
     >
-      <InvoiceList />
+      <SaleNoteList />
     </DashboardTemplate>
   );
 }

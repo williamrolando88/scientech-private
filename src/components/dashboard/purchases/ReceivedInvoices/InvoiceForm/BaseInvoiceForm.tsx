@@ -25,7 +25,7 @@ import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { ProjectSelector } from '../../ProjectSelector';
 import { IVAField } from './IVAField';
-import { TotalField } from './TotalField';
+import { TotalField } from '../../TotalField';
 
 type FormikProps = Pick<
   FormikConfig<ReceivedInvoice>,

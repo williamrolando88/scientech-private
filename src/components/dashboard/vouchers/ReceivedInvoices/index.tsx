@@ -4,7 +4,7 @@ import { TabInterface } from '@src/types/shared';
 import { useRouter } from 'next/router';
 import { FC, SyntheticEvent, useState } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
-import InvoiceList from '../../purchases/invoices/InvoiceList';
+import InvoiceList from '../../purchases/ReceivedInvoices/InvoiceList';
 import CustomsPaymentsList from './CustomsPayments/CustomsPaymentsList';
 import NonDeductibleList from './NonDeductible/NonDeductibleList';
 import SaleNoteList from './SaleNote/SaleNoteList';
