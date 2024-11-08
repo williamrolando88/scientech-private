@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
-import { useUpdateExpenseByType } from '@src/hooks/cache/expenses';
-import { ExpenseOld, ExtendedExpense } from '@src/types/expenses';
+import { FirestoreSaleNote } from '@src/services/firebase/purchases/saleNote';
+import { SaleNote } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -10,7 +9,7 @@ import BaseSaleNoteForm from './SaleNoteForm/BaseSaleNoteForm';
 interface UpdateSaleNoteProps {
   open: boolean;
   onClose: VoidFunction;
-  initialValues: ExpenseOld | null;
+  initialValues: SaleNote | null;
 }
 
 const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
@@ -18,15 +17,13 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
   onClose,
   initialValues,
 }) => {
-  const { data: transactions, isLoading } = useListDayBookTransactions();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateExpense } = useUpdateExpenseByType('sale_note');
 
-  const handleSubmit: FormikConfig<ExtendedExpense>['onSubmit'] = (
+  const handleSubmit: FormikConfig<SaleNote>['onSubmit'] = (
     values,
     { setSubmitting, resetForm }
   ) => {
-    updateExpense(values)
+    FirestoreSaleNote.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Nota de venta actualizada exitosamente');
@@ -34,7 +31,7 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
       })
       .catch((error) => {
         console.error(error);
-        enqueueSnackbar('Error al actualizar la nota de venta', {
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
           variant: 'error',
         });
       })
@@ -43,25 +40,16 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
       });
   };
 
-  if (!initialValues || isLoading) return null;
-
-  const relatedTransaction = transactions?.find(
-    (transaction) => transaction.id === initialValues.day_book_transaction_id
-  );
-
-  const extendedSaleNote: ExtendedExpense = {
-    ...initialValues,
-    transaction_details: relatedTransaction?.transactions ?? [],
-  };
+  if (!initialValues) return null;
 
   return (
-    <Dialog open={open && !isLoading} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar nota de venta</DialogTitle>
 
       <BaseSaleNoteForm
         infoText="Actualiza los datos de la nota de venta. Los campos marcados con * son obligatorios."
         onClose={onClose}
-        initialValues={extendedSaleNote}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
       />
     </Dialog>

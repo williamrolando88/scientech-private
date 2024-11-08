@@ -11,17 +11,12 @@ import {
 import { SaleNote } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import UpdateSaleNote from './UpdateSaleNote';
 
 const SaleNoteList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [expenseToDelete, setExpenseToDelete] = useState<SaleNote | null>(null);
-  // const [expenseToUpdate, setExpenseToUpdate] = useState<ExpenseOld | null>(
-  //   null
-  // );
-  // const { mutateAsync: deleteExpense, isPending } =
-  //   useDeleteExpenseByType('sale_note');
-  // const { data: saleNote, isLoading } =
-  //   useListExpensesByType<ExpenseOld>('sale_note');
+  const [expenseToUpdate, setExpenseToUpdate] = useState<SaleNote | null>(null);
 
   const saleNote = useCollectionSnapshot<SaleNote>({
     collectionName: COLLECTIONS.SALE_NOTES,
@@ -79,12 +74,12 @@ const SaleNoteList: FC = () => {
       type: 'actions',
       width: 50,
       getActions: (params) => [
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => setExpenseToUpdate(params.row)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => setExpenseToUpdate(params.row)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          showInMenu
+        />,
         <GridActionsCellItem
           label="Borrar"
           onClick={() => setExpenseToDelete(params.row)}
@@ -126,12 +121,12 @@ const SaleNoteList: FC = () => {
         />
       </CardContent>
 
-      {/* <UpdateSaleNote
+      <UpdateSaleNote
         open={!!expenseToUpdate}
         initialValues={expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
         key={expenseToUpdate?.id}
-      /> */}
+      />
 
       <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
