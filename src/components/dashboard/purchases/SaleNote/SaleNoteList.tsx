@@ -1,16 +1,20 @@
-import { CardContent } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Button, CardContent } from '@mui/material';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import ConfirmDialog from '@src/components/shared/confirm-dialog';
+import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
-import { saleNoteConverter } from '@src/services/firebase/purchases/saleNote';
+import {
+  FirestoreSaleNote,
+  saleNoteConverter,
+} from '@src/services/firebase/purchases/saleNote';
 import { SaleNote } from '@src/types/purchases';
-import { FC } from 'react';
+import { useSnackbar } from 'notistack';
+import { FC, useState } from 'react';
 
 const SaleNoteList: FC = () => {
-  // const { enqueueSnackbar } = useSnackbar();
-  // const [expenseToDelete, setExpenseToDelete] = useState<ExpenseOld | null>(
-  //   null
-  // );
+  const { enqueueSnackbar } = useSnackbar();
+  const [expenseToDelete, setExpenseToDelete] = useState<SaleNote | null>(null);
   // const [expenseToUpdate, setExpenseToUpdate] = useState<ExpenseOld | null>(
   //   null
   // );
@@ -70,43 +74,43 @@ const SaleNoteList: FC = () => {
         // ),
       ],
     },
-    // {
-    //   field: 'actions',
-    //   type: 'actions',
-    //   width: 50,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       label="Modificar"
-    //       onClick={() => setExpenseToUpdate(params.row)}
-    //       icon={<Iconify icon="pajamas:doc-changes" />}
-    //       showInMenu
-    //     />,
-    //     <GridActionsCellItem
-    //       label="Borrar"
-    //       onClick={() => setExpenseToDelete(params.row)}
-    //       icon={<Iconify icon="pajamas:remove" />}
-    //       showInMenu
-    //     />,
-    //   ],
-    // },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 50,
+      getActions: (params) => [
+        // <GridActionsCellItem
+        //   label="Modificar"
+        //   onClick={() => setExpenseToUpdate(params.row)}
+        //   icon={<Iconify icon="pajamas:doc-changes" />}
+        //   showInMenu
+        // />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => setExpenseToDelete(params.row)}
+          icon={<Iconify icon="pajamas:remove" />}
+          showInMenu
+        />,
+      ],
+    },
   ];
 
-  // const handleDeleteExpense = async () => {
-  //   if (!expenseToDelete) return;
+  const handleDeleteExpense = async () => {
+    if (!expenseToDelete?.id) return;
 
-  //   deleteExpense(expenseToDelete)
-  //     .then(() => {
-  //       enqueueSnackbar('Nota de venta eliminada exitosamente');
-  //     })
-  //     .catch(() => {
-  //       enqueueSnackbar('Error al eliminar la nota de venta', {
-  //         variant: 'error',
-  //       });
-  //     })
-  //     .finally(() => {
-  //       setExpenseToDelete(null);
-  //     });
-  // };
+    FirestoreSaleNote.remove(expenseToDelete.id)
+      .then(() => {
+        enqueueSnackbar('Nota de venta eliminada exitosamente');
+      })
+      .catch(() => {
+        enqueueSnackbar('Error al eliminar la nota de venta', {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setExpenseToDelete(null);
+      });
+  };
 
   return (
     <>
@@ -129,20 +133,16 @@ const SaleNoteList: FC = () => {
         key={expenseToUpdate?.id}
       /> */}
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         onClose={() => setExpenseToDelete(null)}
         open={!!expenseToDelete}
         title="Borrar nota de venta"
         action={
-          <LoadingButton
-            onClick={handleDeleteExpense}
-            loading={isPending}
-            variant="contained"
-          >
+          <Button onClick={handleDeleteExpense} variant="contained">
             Borrar
-          </LoadingButton>
+          </Button>
         }
-      /> */}
+      />
     </>
   );
 };

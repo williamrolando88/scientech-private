@@ -65,6 +65,7 @@ const remove = async (id: string) => {
   const docRef = doc(DB, COLLECTIONS.SALE_NOTES, id);
   await deleteDoc(docRef);
 };
+
 export const FirestoreSaleNote = {
   upsert,
   remove,
