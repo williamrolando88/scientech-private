@@ -1,14 +1,19 @@
 import { CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS } from '@src/lib/enums/collections';
+import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
+import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  ExpandedTransaction,
+} from '@src/types/doubleEntryAccounting';
 import { FC, useCallback, useMemo, useState } from 'react';
 import Iconify from 'src/components/shared/iconify';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
-import {
-  getDayBookTransactions,
-  getTransactionDataByDetailId,
-} from 'src/lib/modules/dayBook';
-import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
+import { getTransactionDataByDetailId } from 'src/lib/modules/dayBook';
+import { DayBookTransactionOld } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
@@ -22,6 +27,12 @@ const DayBookIndex: FC = () => {
     useState<DayBookTransactionOld | null>(null);
   const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
   const { data: accountCategories } = useListAccountCategories();
+
+  const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
+    collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+    converter: doubleEntryAccountingConverter,
+    order: { field: 'issueDate', direction: 'desc' },
+  });
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
@@ -56,25 +67,23 @@ const DayBookIndex: FC = () => {
     [dayBookTransactions]
   );
 
-  const columns: GridColDef<DayBookTableEntryOld>[] = useMemo(
+  const columns: GridColDef<ExpandedTransaction>[] = useMemo(
     () => [
       {
-        field: 'date',
+        field: 'issueDate',
         headerName: 'Fecha',
         flex: 1,
         type: 'date',
-        valueFormatter: ({ value }) =>
-          new Date(value as string).toLocaleDateString(),
       },
       {
-        field: 'account_id',
+        field: 'accountId',
         headerName: 'Cuenta contable',
         type: 'string',
         flex: 4,
         valueGetter: (params) =>
           `
-      ${params.row.account_id} -
-      ${accountCategories[params.row.account_id]?.name || ''}
+      ${params.row.accountId} -
+      ${accountCategories[params.row.accountId]?.name || ''}
       `,
       },
       {
@@ -139,9 +148,9 @@ const DayBookIndex: FC = () => {
     ]
   );
 
-  const rows: DayBookTableEntryOld[] = useMemo(
-    () => getDayBookTransactions(dayBookTransactions),
-    [dayBookTransactions]
+  const rows = useMemo(
+    () => expandDoubleEntryAccounting(doubleEntryAccounting),
+    [doubleEntryAccounting]
   );
 
   return (
@@ -155,10 +164,9 @@ const DayBookIndex: FC = () => {
           loading={isLoading}
           density="compact"
           initialState={{
-            sorting: {
-              sortModel: [{ field: 'date', sort: 'desc' }],
-            },
+            pagination: { paginationModel: { pageSize: 20 } },
           }}
+          pageSizeOptions={[20, 50, 100]}
           sx={{
             '& .MuiDataGrid-columnHeader': {
               bgcolor: (theme) => theme.palette.action.selected,
