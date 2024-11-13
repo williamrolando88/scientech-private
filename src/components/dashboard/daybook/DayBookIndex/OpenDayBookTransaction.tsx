@@ -8,18 +8,19 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
+  TextField,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DatePicker } from '@mui/x-date-pickers';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
-import { FC, useMemo } from 'react';
 import {
-  DayBookTableEntryOld,
-  DayBookTransactionDetailOld,
-  DayBookTransactionOld,
-} from 'src/types/dayBook';
+  DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
+} from '@src/types/doubleEntryAccounting';
+import { FC, useMemo } from 'react';
 
 interface OpenDayBookTransactionProps {
-  transaction: DayBookTransactionOld | null;
+  transaction: DoubleEntryAccounting | null;
   onClose: () => void;
   actions?: React.ReactNode;
   alertText?: string;
@@ -36,7 +37,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
 }) => {
   const { data: accountCategories } = useListAccountCategories();
 
-  const columns: GridColDef<DayBookTransactionDetailOld>[] = [
+  const columns: GridColDef<DoubleEntryAccountingTransaction>[] = [
     {
       field: 'account_id',
       headerName: 'Cuenta contable',
@@ -44,8 +45,8 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       flex: 5,
       valueGetter: (params) =>
         `
-      ${params.row.account_id} -
-      ${accountCategories[params.row.account_id]?.name || ''},
+      ${params.row.accountId} -
+      ${accountCategories[params.row.accountId]?.name || ''}
       `,
     },
     {
@@ -68,41 +69,16 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
     },
-    {
-      field: 'description',
-      headerName: 'Descripción',
-      type: 'string',
-      flex: 6,
-    },
-    {
-      field: 'quotation_id',
-      headerName: 'Cotización No.',
-      headerAlign: 'center',
-      type: 'number',
-      flex: 1,
-      align: 'center',
-      valueFormatter: ({ value }) => value || '-',
-    },
-    {
-      field: 'invoice_id',
-      headerName: 'Factura No.',
-      headerAlign: 'center',
-      type: 'number',
-      flex: 1,
-      align: 'center',
-      valueFormatter: ({ value }) => value || '-',
-    },
   ];
 
-  const rows: DayBookTableEntryOld[] = useMemo(
+  const rows: DoubleEntryAccountingTransaction[] = useMemo(
     () =>
       transaction?.transactions.map((t) => ({
         ...t,
-        id: t.account_id,
-        date: transaction.date,
+        id: t.accountId,
       })) || [],
 
-    [transaction?.date, transaction?.transactions]
+    [transaction?.transactions]
   );
 
   if (!transaction) return null;
@@ -118,6 +94,24 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
 
       <Stack component={DialogContent} gap={2}>
         {alertText && <Alert severity={alertSeverity}>{alertText}</Alert>}
+
+        <DatePicker
+          value={transaction.issueDate}
+          label="Fecha"
+          readOnly
+          sx={{ width: 200 }}
+        />
+
+        <TextField
+          size="small"
+          multiline
+          rows={3}
+          fullWidth
+          name="description"
+          label="Descripción"
+          value={transaction.description}
+          inputProps={{ readOnly: true }}
+        />
 
         <Card variant="outlined">
           <DataGrid
@@ -142,7 +136,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
       </Stack>
 
       <DialogActions>
-        {actions || <Button onClick={onClose}>Cancelar</Button>}
+        {actions || <Button onClick={onClose}>Cerrar</Button>}
       </DialogActions>
     </Dialog>
   );

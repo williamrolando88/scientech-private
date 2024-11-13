@@ -15,7 +15,7 @@ export const expandDoubleEntryAccounting = (
         return {
           ...formattedEntry,
           ...transaction,
-          id: `${entry.id}-${index}`,
+          id: `${entry.id}:${index}`,
         } satisfies ExpandedTransaction;
       })
     )

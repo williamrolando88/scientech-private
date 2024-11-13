@@ -45,8 +45,8 @@ export const dayBookTransactionsValidator = (
 
 export const getTransactionDataByDetailId = (
   detailId: string,
-  transactions: DayBookTransactionOld[]
-): DayBookTransactionOld | null => {
+  transactions: DoubleEntryAccounting[]
+): DoubleEntryAccounting | null => {
   const [transactionId] = detailId.split(':');
   const transaction = transactions?.find((entry) => entry.id === transactionId);
 

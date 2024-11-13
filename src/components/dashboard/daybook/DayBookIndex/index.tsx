@@ -1,24 +1,27 @@
 import { CardContent, CardHeader } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import Iconify from '@src/components/shared/iconify';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
+import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
 import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
 } from '@src/types/doubleEntryAccounting';
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
+import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 
 const DayBookIndex: FC = () => {
   // const [transactionToDelete, setTransactionToDelete] =
   //   useState<DayBookTransactionOld | null>(null);
   // const [transactionToUpdate, setTransactionToUpdate] =
   //   useState<DayBookTransactionOld | null>(null);
-  // const [transactionToOpen, setTransactionToOpen] =
-  //   useState<DayBookTransactionOld | null>(null);
   // const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
+  const [transactionToOpen, setTransactionToOpen] =
+    useState<DoubleEntryAccounting | null>(null);
   const { data: accountCategories } = useListAccountCategories();
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
@@ -49,16 +52,16 @@ const DayBookIndex: FC = () => {
   //   [dayBookTransactions]
   // );
 
-  // const getTransactionToOpen = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(
-  //       detailId,
-  //       dayBookTransactions
-  //     );
-  //     setTransactionToOpen(transaction);
-  //   },
-  //   [dayBookTransactions]
-  // );
+  const getTransactionToOpen = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToOpen(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
   const columns: GridColDef<ExpandedTransaction>[] = useMemo(
     () => [
@@ -110,12 +113,12 @@ const DayBookIndex: FC = () => {
         type: 'actions',
         width: 50,
         getActions: (params) => [
-          // <GridActionsCellItem
-          //   label="Abrir"
-          //   onClick={() => getTransactionToOpen(params.id as string)}
-          //   icon={<Iconify icon="pajamas:doc-text" />}
-          //   showInMenu
-          // />,
+          <GridActionsCellItem
+            label="Abrir"
+            onClick={() => getTransactionToOpen(params.id as string)}
+            icon={<Iconify icon="pajamas:doc-text" />}
+            showInMenu
+          />,
           // <GridActionsCellItem
           //   label="Modificar"
           //   onClick={() => getTransactionToUpdate(params.id as string)}
@@ -135,7 +138,7 @@ const DayBookIndex: FC = () => {
     ],
     [
       accountCategories,
-      // getTransactionToOpen,
+      getTransactionToOpen,
       // getTransactionToUpdate,
       // getTransactionToDelete,
     ]
@@ -169,10 +172,10 @@ const DayBookIndex: FC = () => {
         />
       </CardContent>
 
-      {/* <OpenDayBookTransaction
+      <OpenDayBookTransaction
         transaction={transactionToOpen}
         onClose={() => setTransactionToOpen(null)}
-      /> */}
+      />
 
       {/* <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
