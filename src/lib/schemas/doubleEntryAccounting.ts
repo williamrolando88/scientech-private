@@ -3,8 +3,8 @@ import { DocumentRefSchema } from './documentRef';
 
 export const TransactionSchema = z.object({
   accountId: z.string(),
-  credit: z.number(),
-  debit: z.number(),
+  credit: z.number().default(0),
+  debit: z.number().default(0),
 });
 
 export const DoubleEntryAccountingSchema = z.object({

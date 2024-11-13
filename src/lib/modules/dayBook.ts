@@ -1,9 +1,10 @@
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
 import { AccountCategoryDict, AccountTree } from 'src/types/accountCategories';
 import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
-  entry: DayBookTransactionOld
+  entry: DoubleEntryAccounting
 ): string | null => {
   if (entry.transactions.length < 2) {
     return 'La transacción debe tener al menos dos movimientos';
@@ -25,24 +26,13 @@ export const dayBookTransactionsValidator = (
     return 'Toda transacción solo puede tener un movimiento en "DEBE" o "HABER"';
   }
 
-  const hasEmptyDescriptions = entry.transactions.some(
-    (transaction) =>
-      !transaction.description &&
-      !transaction.invoice_id &&
-      !transaction.quotation_id
-  );
-
-  if (hasEmptyDescriptions) {
-    return 'Toda transacción debe tener al menos una descripción, factura o cotización';
-  }
-
   const totalDebit = entry.transactions.reduce(
-    (acc, curr) => acc + curr.debit! ?? 0,
+    (acc, curr) => acc + curr.debit,
     0
   );
 
   const totalCredit = entry.transactions.reduce(
-    (acc, curr) => acc + curr.credit! ?? 0,
+    (acc, curr) => acc + curr.credit,
     0
   );
 

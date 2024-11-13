@@ -6,34 +6,35 @@ import {
   DialogContent,
   Stack,
 } from '@mui/material';
+import { DoubleEntryAccountingSchema } from '@src/lib/schemas/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
-import { FormikDatePicker } from 'src/components/shared/formik-components';
+import {
+  FormikDatePicker,
+  FormikTextField,
+} from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
-import { DayBookTransactionOld } from 'src/types/dayBook';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
-type FormikProps = Pick<
-  FormikConfig<DayBookTransactionOld>,
-  'initialValues' | 'validationSchema'
->;
-
-interface DayBookTransactionFormProps extends FormikProps {
-  onSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'];
+interface DayBookTransactionFormProps {
+  onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'];
   onClose: VoidFunction;
   infoText?: string;
+  initialValues: DoubleEntryAccounting;
 }
 
 export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
   onSubmit,
   onClose,
   infoText,
-  ...formikProps
+  initialValues,
 }) => {
   const [formError, setFormError] = useState('');
 
-  const handleSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'] = (
+  const handleSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = (
     values,
     helpers
   ) => {
@@ -46,12 +47,15 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
     }
 
     setFormError('');
-
     onSubmit(values, helpers);
   };
 
   return (
-    <Formik {...formikProps} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={toFormikValidationSchema(DoubleEntryAccountingSchema)}
+      onSubmit={handleSubmit}
+    >
       {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
@@ -62,10 +66,19 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
               justifyContent="space-between"
               alignItems="center"
             >
-              <FormikDatePicker name="date" label="Fecha" />
+              <FormikDatePicker name="issueDate" label="Fecha" />
 
               <DayBookTransactionSummary />
             </Stack>
+
+            <FormikTextField
+              size="small"
+              multiline
+              rows={3}
+              fullWidth
+              name="description"
+              label="Descripción"
+            />
 
             <DayBookTransactionsTable />
 

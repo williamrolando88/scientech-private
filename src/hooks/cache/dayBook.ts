@@ -1,3 +1,4 @@
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { COLLECTIONS } from 'src/lib/enums/collections';
 import { DayBookTransactions } from 'src/services/firebase/dayBookTransactions';
@@ -25,7 +26,7 @@ export const useAddDayBookTransactions = () => {
     onSuccess: (id, inputs) => {
       queryClient.setQueryData(
         queryKey,
-        (prevData: DayBookTransactionOld[]) => [...prevData, { ...inputs, id }]
+        (prevData: DoubleEntryAccounting[]) => [...prevData, { ...inputs, id }]
       );
     },
   });

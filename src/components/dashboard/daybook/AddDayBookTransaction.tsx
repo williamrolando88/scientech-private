@@ -1,12 +1,10 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
-import { DayBookTransactionSchema } from '@src/lib/schemas/dayBook';
+import { FirestoreDoubleEntryAccounting } from '@src/services/firebase/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
-import { useAddDayBookTransactions } from 'src/hooks/cache/dayBook';
 import { DAYBOOK_TRANSACTION_INITIAL_VALUE } from 'src/lib/constants/dayBook';
-import { DayBookTransactionOld } from 'src/types/dayBook';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from './DayBookTransactionForm';
 
 const AddDayBookTransaction: FC = () => {
@@ -15,15 +13,14 @@ const AddDayBookTransaction: FC = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: addTransaction } = useAddDayBookTransactions();
 
-  const onSubmit: FormikConfig<DayBookTransactionOld>['onSubmit'] = async (
+  const onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = async (
     values,
     { setSubmitting, resetForm }
   ) => {
     setSubmitting(true);
 
-    addTransaction(values)
+    FirestoreDoubleEntryAccounting.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Transacción guardada exitosamente');
@@ -58,7 +55,6 @@ const AddDayBookTransaction: FC = () => {
           infoText="Aquí puedes agregar nuevas transacciones, en los campos de débito y crédito puedes usar operaciones matemáticas básicas (+, -, *, /) para calcular el valor de la transacción. El color de los campos indica incremento (verde) o decremento (rojo)."
           initialValues={DAYBOOK_TRANSACTION_INITIAL_VALUE}
           onSubmit={onSubmit}
-          validationSchema={toFormikValidationSchema(DayBookTransactionSchema)}
           onClose={handleCloseModal}
         />
       </Dialog>

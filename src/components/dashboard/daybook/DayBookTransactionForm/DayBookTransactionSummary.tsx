@@ -1,10 +1,10 @@
 import { Box, Stack } from '@mui/material';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { round } from 'mathjs';
-import { DayBookTransactionOld } from 'src/types/dayBook';
 
 export function DayBookTransactionSummary() {
-  const { values } = useFormikContext<DayBookTransactionOld>();
+  const { values } = useFormikContext<DoubleEntryAccounting>();
 
   const totalDebit = values.transactions.reduce(
     (acc, curr) => acc + curr.debit!,

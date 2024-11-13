@@ -28,9 +28,12 @@ const upsert = async (invoice: DoubleEntryAccounting): Promise<string> => {
     docRef = doc(docCollection, invoice.id).withConverter(
       doubleEntryAccountingConverter
     );
+    invoice.updatedAt = new Date();
   } else {
     docRef = doc(docCollection).withConverter(doubleEntryAccountingConverter);
     invoice.id = docRef.id;
+    invoice.createdAt = new Date();
+    invoice.updatedAt = new Date();
   }
 
   await setDoc(docRef, invoice);

@@ -1,11 +1,11 @@
 import { Button, Grid, MenuItem } from '@mui/material';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { FC, useMemo } from 'react';
 import { FormikTextField } from 'src/components/shared/formik-components';
 import Iconify from 'src/components/shared/iconify';
 import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
 import { DAYBOOK_FORM_GRID_LAYOUT } from 'src/lib/constants/dayBook';
-import { DayBookTransactionOld } from 'src/types/dayBook';
 import { ColoredAutoCalculateFields } from './ColoredAutoCalculateFields';
 
 interface DayBookTransactionsTableRowProps {
@@ -16,7 +16,7 @@ export const DayBookTransactionsTableRow: FC<
 > = ({ index }) => {
   const { data: categories } = useListAccountCategories();
 
-  const { values, setValues } = useFormikContext<DayBookTransactionOld>();
+  const { values, setValues } = useFormikContext<DoubleEntryAccounting>();
 
   const handleDeleteRow = (rowIndex: number) => {
     setValues({
@@ -34,7 +34,7 @@ export const DayBookTransactionsTableRow: FC<
       fullWidth
       size="small"
       select
-      name={`transactions[${index}].account_id`}
+      name={`transactions[${index}].accountId`}
     >
       {accountCategories.map((category) => (
         <MenuItem key={category.id} value={category.id}>
@@ -42,25 +42,11 @@ export const DayBookTransactionsTableRow: FC<
         </MenuItem>
       ))}
     </FormikTextField>,
+
     <ColoredAutoCalculateFields index={index} type="debit" />,
+
     <ColoredAutoCalculateFields index={index} type="credit" />,
-    <FormikTextField
-      fullWidth
-      size="small"
-      name={`transactions[${index}].description`}
-    />,
-    <FormikTextField
-      fullWidth
-      size="small"
-      name={`transactions[${index}].quotation_id`}
-      type="number"
-    />,
-    <FormikTextField
-      fullWidth
-      size="small"
-      name={`transactions[${index}].invoice_id`}
-      type="number"
-    />,
+
     <Button
       sx={{ height: '100%', width: '100%' }}
       variant="outlined"
