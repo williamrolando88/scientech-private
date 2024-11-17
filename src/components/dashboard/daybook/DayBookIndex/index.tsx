@@ -13,13 +13,14 @@ import {
 } from '@src/types/doubleEntryAccounting';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
+import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
+import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
 const DayBookIndex: FC = () => {
-  // const [transactionToDelete, setTransactionToDelete] =
-  //   useState<DayBookTransactionOld | null>(null);
-  // const [transactionToUpdate, setTransactionToUpdate] =
-  //   useState<DayBookTransactionOld | null>(null);
-  // const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
+  const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DoubleEntryAccounting | null>(null);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<DoubleEntryAccounting | null>(null);
   const [transactionToOpen, setTransactionToOpen] =
     useState<DoubleEntryAccounting | null>(null);
   const { data: accountCategories } = useListAccountCategories();
@@ -30,27 +31,27 @@ const DayBookIndex: FC = () => {
     order: { field: 'issueDate', direction: 'desc' },
   });
 
-  // const getTransactionToDelete = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(
-  //       detailId,
-  //       dayBookTransactions
-  //     );
-  //     setTransactionToDelete(transaction);
-  //   },
-  //   [dayBookTransactions]
-  // );
+  const getTransactionToDelete = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToDelete(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
-  // const getTransactionToUpdate = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(
-  //       detailId,
-  //       dayBookTransactions
-  //     );
-  //     setTransactionToUpdate(transaction);
-  //   },
-  //   [dayBookTransactions]
-  // );
+  const getTransactionToUpdate = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToUpdate(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
@@ -119,28 +120,28 @@ const DayBookIndex: FC = () => {
             icon={<Iconify icon="pajamas:doc-text" />}
             showInMenu
           />,
-          // <GridActionsCellItem
-          //   label="Modificar"
-          //   onClick={() => getTransactionToUpdate(params.id as string)}
-          //   icon={<Iconify icon="pajamas:doc-changes" />}
-          //   showInMenu
-          //   disabled={params.row.locked}
-          // />,
-          // <GridActionsCellItem
-          //   label="Borrar"
-          //   onClick={() => getTransactionToDelete(params.id as string)}
-          //   icon={<Iconify icon="pajamas:remove" />}
-          //   showInMenu
-          //   disabled={params.row.locked}
-          // />,
+          <GridActionsCellItem
+            label="Modificar"
+            onClick={() => getTransactionToUpdate(params.id as string)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+            disabled={params.row.locked}
+          />,
+          <GridActionsCellItem
+            label="Borrar"
+            onClick={() => getTransactionToDelete(params.id as string)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+            disabled={params.row.locked}
+          />,
         ],
       },
     ],
     [
       accountCategories,
       getTransactionToOpen,
-      // getTransactionToUpdate,
-      // getTransactionToDelete,
+      getTransactionToUpdate,
+      getTransactionToDelete,
     ]
   );
 
@@ -177,15 +178,15 @@ const DayBookIndex: FC = () => {
         onClose={() => setTransactionToOpen(null)}
       />
 
-      {/* <UpdateDayBookTransaction
+      <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
         transaction={transactionToUpdate}
-      /> */}
+      />
 
-      {/* <DeleteDayBookTransaction
+      <DeleteDayBookTransaction
         transaction={transactionToDelete}
         onClose={() => setTransactionToDelete(null)}
-      /> */}
+      />
     </>
   );
 };

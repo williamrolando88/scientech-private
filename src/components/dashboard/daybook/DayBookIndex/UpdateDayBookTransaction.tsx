@@ -4,12 +4,11 @@ import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import { DayBookTransactionOld } from 'src/types/dayBook';
 import { DayBookTransactionForm } from '../DayBookTransactionForm';
 
 interface UpdateDayBookTransactionProps {
-  transaction: DayBookTransactionOld | null;
-  setTransaction: (transaction: DayBookTransactionOld | null) => void;
+  transaction: DoubleEntryAccounting | null;
+  setTransaction: (transaction: DoubleEntryAccounting | null) => void;
 }
 export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
   setTransaction,
