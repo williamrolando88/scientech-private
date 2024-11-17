@@ -1,23 +1,15 @@
 import { LoadingButton } from '@mui/lab';
-import {
-  Alert,
-  Button,
-  DialogActions,
-  DialogContent,
-  Stack,
-} from '@mui/material';
-import { DoubleEntryAccountingSchema } from '@src/lib/schemas/doubleEntryAccounting';
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
-import { Form, Formik, FormikConfig } from 'formik';
+import { Alert, Button, DialogActions, DialogContent, Stack } from '@mui/material';
+import { DoubleEntryAccountingFormSchema } from '@src/lib/schemas/doubleEntryAccounting';
+import { DoubleEntryAccounting, DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
+import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC, useState } from 'react';
-import {
-  FormikDatePicker,
-  FormikTextField,
-} from 'src/components/shared/formik-components';
+import { FormikDatePicker, FormikTextField } from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
+import { convertFromForm, convertToForm } from '@src/lib/modules/doubleEntryAccounting';
 
 interface DayBookTransactionFormProps {
   onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'];
@@ -27,18 +19,19 @@ interface DayBookTransactionFormProps {
 }
 
 export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
-  onSubmit,
-  onClose,
-  infoText,
-  initialValues,
-}) => {
+                                                                          onSubmit,
+                                                                          onClose,
+                                                                          infoText,
+                                                                          initialValues,
+                                                                        }) => {
   const [formError, setFormError] = useState('');
 
-  const handleSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = (
+  const handleSubmit: FormikConfig<DoubleEntryAccountingForm>['onSubmit'] = (
     values,
-    helpers
+    helpers,
   ) => {
     const error = dayBookTransactionsValidator(values);
+    const convertedValues = convertFromForm(values);
 
     if (error) {
       setFormError(error);
@@ -47,13 +40,13 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
     }
 
     setFormError('');
-    onSubmit(values, helpers);
+    onSubmit(convertedValues, helpers as unknown as FormikHelpers<DoubleEntryAccounting>);
   };
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={toFormikValidationSchema(DoubleEntryAccountingSchema)}
+      initialValues={convertToForm(initialValues)}
+      validationSchema={toFormikValidationSchema(DoubleEntryAccountingFormSchema)}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (

@@ -10,16 +10,17 @@ interface UpdateDayBookTransactionProps {
   transaction: DoubleEntryAccounting | null;
   setTransaction: (transaction: DoubleEntryAccounting | null) => void;
 }
+
 export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
-  setTransaction,
-  transaction,
-}) => {
+                                                                              setTransaction,
+                                                                              transaction,
+                                                                            }) => {
   const handleCloseModal = () => setTransaction(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = async (
     values,
-    { setSubmitting, resetForm }
+    { setSubmitting, resetForm },
   ) => {
     setSubmitting(true);
 

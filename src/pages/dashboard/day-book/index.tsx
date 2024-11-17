@@ -2,12 +2,12 @@ import { Card, CardContent, Tab, Tabs } from '@mui/material';
 import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
-import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DayBookReportByAccount from 'src/components/dashboard/daybook/DayBookReportByAccount';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import { DayBookTabsOld } from 'src/types/dayBook';
 import { TabInterface } from 'src/types/shared';
+import DayBookIndex from '@src/components/dashboard/daybook/DayBookIndex';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>

@@ -1,17 +1,16 @@
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting, DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
-import { AccountCategoryDict, AccountTree } from 'src/types/accountCategories';
 import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
-  entry: DoubleEntryAccounting
+  entry: DoubleEntryAccountingForm,
 ): string | null => {
   if (entry.transactions.length < 2) {
     return 'La transacción debe tener al menos dos movimientos';
   }
 
   const hasEmptyentry = entry.transactions.some(
-    (transaction) => !transaction.debit && !transaction.credit
+    (transaction) => !transaction.debit && !transaction.credit,
   );
 
   if (hasEmptyentry) {
@@ -19,7 +18,7 @@ export const dayBookTransactionsValidator = (
   }
 
   const hasBothValues = entry.transactions.some(
-    (transaction) => transaction.debit && transaction.credit
+    (transaction) => transaction.debit && transaction.credit,
   );
 
   if (hasBothValues) {
@@ -28,12 +27,12 @@ export const dayBookTransactionsValidator = (
 
   const totalDebit = entry.transactions.reduce(
     (acc, curr) => acc + curr.debit,
-    0
+    0,
   );
 
   const totalCredit = entry.transactions.reduce(
     (acc, curr) => acc + curr.credit,
-    0
+    0,
   );
 
   if (round(totalDebit, 2) !== round(totalCredit, 2)) {
@@ -45,7 +44,7 @@ export const dayBookTransactionsValidator = (
 
 export const getTransactionDataByDetailId = (
   detailId: string,
-  transactions: DoubleEntryAccounting[]
+  transactions: DoubleEntryAccounting[],
 ): DoubleEntryAccounting | null => {
   const [transactionId] = detailId.split(':');
   const transaction = transactions?.find((entry) => entry.id === transactionId);
@@ -72,7 +71,7 @@ export const getInputColorById = (accountId: string) => {
 };
 
 export const getDayBookTransactions = (
-  transactions: DayBookTransactionOld[]
+  transactions: DayBookTransactionOld[],
 ): DayBookTableEntryOld[] => {
   if (!transactions) return [];
 
@@ -83,7 +82,7 @@ export const getDayBookTransactions = (
         id: `${entry.id}:${index}`,
         date: entry.date,
         locked: entry.locked,
-      }))
+      })),
     )
     .flat();
 };
@@ -107,33 +106,3 @@ export const getIncrementByAccount = (detail: DayBookTableEntryOld) =>
 export const getDecrementByAccount = (detail: DayBookTableEntryOld) =>
   (['1', '5'].includes(detail.account_id[0]) ? detail.credit : detail.debit) ||
   0;
-
-export const createAccountsTree = (
-  accounts: AccountCategoryDict
-): AccountTree[] => {
-  const tree: AccountTree[] = [];
-
-  Object.values(accounts).forEach((account) => {
-    const [root, ...rest] = account.id.split('.');
-
-    if (rest.length === 0) {
-      tree.push({
-        id: account.id,
-        name: account.name,
-        children: [],
-      });
-    } else {
-      const parent = tree.find((node) => node.id === root);
-
-      if (parent) {
-        parent.children.push({
-          id: account.id,
-          name: account.name,
-          children: [],
-        });
-      }
-    }
-  });
-
-  return tree;
-};

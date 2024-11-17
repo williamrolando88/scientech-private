@@ -17,3 +17,7 @@ export const DoubleEntryAccountingSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
+
+export const DoubleEntryAccountingFormSchema = DoubleEntryAccountingSchema.extend({
+  transactions: TransactionSchema.array(),
+});

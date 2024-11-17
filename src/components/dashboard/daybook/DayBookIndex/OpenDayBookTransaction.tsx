@@ -13,10 +13,7 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
-import {
-  DoubleEntryAccounting,
-  DoubleEntryAccountingTransaction,
-} from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting, DoubleEntryAccountingTransaction } from '@src/types/doubleEntryAccounting';
 import { FC, useMemo } from 'react';
 
 interface OpenDayBookTransactionProps {
@@ -27,14 +24,15 @@ interface OpenDayBookTransactionProps {
   alertSeverity?: AlertColor;
   title?: string;
 }
+
 export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
-  onClose,
-  transaction,
-  actions,
-  title = 'Detalles de transacción',
-  alertText = 'La transacción seleccionada contiene los siguientes detalles asociados.',
-  alertSeverity = 'info',
-}) => {
+                                                                          onClose,
+                                                                          transaction,
+                                                                          actions,
+                                                                          title = 'Detalles de transacción',
+                                                                          alertText = 'La transacción seleccionada contiene los siguientes detalles asociados.',
+                                                                          alertSeverity = 'info',
+                                                                        }) => {
   const { data: accountCategories } = useListAccountCategories();
 
   const columns: GridColDef<DoubleEntryAccountingTransaction>[] = [
@@ -72,13 +70,13 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
   ];
 
   const rows: DoubleEntryAccountingTransaction[] = useMemo(
-    () =>
-      transaction?.transactions.map((t) => ({
+    () => transaction ? (
+      Object.values(transaction.transactions).map((t) => ({
         ...t,
         id: t.accountId,
-      })) || [],
-
-    [transaction?.transactions]
+      }))) : []
+    ,
+    [transaction],
   );
 
   if (!transaction) return null;

@@ -1,16 +1,13 @@
 import { Button, Grid } from '@mui/material';
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { useMemo } from 'react';
 import Iconify from 'src/components/shared/iconify';
-import {
-  DAYBOOK_FORM_GRID_LAYOUT,
-  DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
-} from 'src/lib/constants/dayBook';
+import { DAYBOOK_FORM_GRID_LAYOUT, DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE } from 'src/lib/constants/dayBook';
 import { TableCell } from './TableCell';
 
 export function DayBookTransactionsTableHeader() {
-  const { values, setValues } = useFormikContext<DoubleEntryAccounting>();
+  const { values, setValues } = useFormikContext<DoubleEntryAccountingForm>();
 
   const handleAddRow = () => {
     setValues({
@@ -39,7 +36,7 @@ export function DayBookTransactionsTableHeader() {
 
   const totalColumns = useMemo(
     () => DAYBOOK_FORM_GRID_LAYOUT.reduce((acc, curr) => acc + curr.value, 0),
-    []
+    [],
   );
 
   return (

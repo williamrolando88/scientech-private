@@ -1,5 +1,5 @@
 import { Button, Grid, MenuItem } from '@mui/material';
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { FC, useMemo } from 'react';
 import { FormikTextField } from 'src/components/shared/formik-components';
@@ -11,12 +11,13 @@ import { ColoredAutoCalculateFields } from './ColoredAutoCalculateFields';
 interface DayBookTransactionsTableRowProps {
   index: number;
 }
+
 export const DayBookTransactionsTableRow: FC<
   DayBookTransactionsTableRowProps
 > = ({ index }) => {
   const { data: categories } = useListAccountCategories();
 
-  const { values, setValues } = useFormikContext<DoubleEntryAccounting>();
+  const { values, setValues } = useFormikContext<DoubleEntryAccountingForm>();
 
   const handleDeleteRow = (rowIndex: number) => {
     setValues({
@@ -26,7 +27,7 @@ export const DayBookTransactionsTableRow: FC<
   };
 
   const accountCategories = Object.values(categories).sort((a, b) =>
-    a.id.localeCompare(b.id)
+    a.id.localeCompare(b.id),
   );
 
   const InputFieldsArray = [
@@ -59,7 +60,7 @@ export const DayBookTransactionsTableRow: FC<
 
   const totalColumns = useMemo(
     () => DAYBOOK_FORM_GRID_LAYOUT.reduce((acc, curr) => acc + curr.value, 0),
-    []
+    [],
   );
 
   return (
