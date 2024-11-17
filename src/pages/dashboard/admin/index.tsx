@@ -5,14 +5,9 @@ import { COLLECTIONS } from '@src/lib/enums/collections';
 import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting, DoubleEntryAccountingTransaction } from '@src/types/doubleEntryAccounting';
 import { CustomsPaymentOld, ExpenseOld, InvoiceOld } from '@src/types/expenses';
-import {
-  CustomsPayment,
-  NonDeductible,
-  ReceivedInvoice,
-  SaleNote,
-} from '@src/types/purchases';
+import { CustomsPayment, NonDeductible, ReceivedInvoice, SaleNote } from '@src/types/purchases';
 import { doc, getDoc, writeBatch } from 'firebase/firestore';
 import { camelCase } from 'lodash';
 import { FC, useEffect, useState } from 'react';
@@ -277,7 +272,7 @@ const ExportDayBookNewFormat: FC = () => {
 
   const getExpenseKeyType = async (id: string) => {
     const docRef = doc(DB, COLLECTIONS.EXPENSES, id).withConverter(
-      GeneralExpenseConverter
+      GeneralExpenseConverter,
     );
 
     const docData = (await getDoc(docRef)).data();
@@ -305,7 +300,7 @@ const ExportDayBookNewFormat: FC = () => {
 
                 if (details.expense_id) {
                   const expenseKey = await getExpenseKeyType(
-                    details.expense_id
+                    details.expense_id,
                   );
 
                   setLinkedTransactions((prev) => ({
@@ -332,29 +327,38 @@ const ExportDayBookNewFormat: FC = () => {
                   }));
                 }
               }
-            })
+            }),
           );
-        })
+        }),
       );
     }
   }, [data]);
 
   const converter = (
-    oldData: DayBookTransactionOld
-  ): DoubleEntryAccounting => ({
-    id: oldData.id || '',
-    issueDate: oldData.createdAt || new Date(),
-    description: oldData.transactions[0].description || '',
-    ref: linkedTransactions[oldData.id!] || {},
-    transactions: oldData.transactions.map((transaction) => ({
-      accountId: transaction.account_id,
-      credit: transaction.credit || 0,
-      debit: transaction.debit || 0,
-    })),
-    locked: oldData.locked || false,
-    createdAt: oldData.createdAt || new Date(),
-    updatedAt: oldData.updatedAt || new Date(),
-  });
+    oldData: DayBookTransactionOld,
+  ): DoubleEntryAccounting => {
+
+    const transactions: Record<string, DoubleEntryAccountingTransaction> = {};
+
+    oldData.transactions.forEach((transaction) => {
+      transactions[transaction.account_id] = {
+        accountId: transaction.account_id,
+        credit: transaction.credit || 0,
+        debit: transaction.debit || 0,
+      };
+    });
+
+    return ({
+      id: oldData.id || '',
+      issueDate: oldData.createdAt || new Date(),
+      description: oldData.transactions[0].description || '',
+      ref: linkedTransactions[oldData.id!] || {},
+      transactions,
+      locked: oldData.locked || false,
+      createdAt: oldData.createdAt || new Date(),
+      updatedAt: oldData.updatedAt || new Date(),
+    });
+  };
 
   const execute = async () => {
     if (Object.keys(linkedTransactions).length === 0) {
@@ -369,8 +373,17 @@ const ExportDayBookNewFormat: FC = () => {
       const docRef = doc(
         DB,
         COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
-        document.id ?? ''
+        document.id ?? '',
       );
+
+
+      const isValid = document.transactions.every((transaction) => transaction.account_id);
+
+      if (!isValid) {
+        console.error('Invalid transaction data', document);
+
+        return;
+      }
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
