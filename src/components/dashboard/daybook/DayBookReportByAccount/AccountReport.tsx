@@ -1,60 +1,69 @@
 import { Card, Stack, Typography } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS } from '@src/lib/enums/collections';
+import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { where } from 'firebase/firestore';
 import { round } from 'mathjs';
-import { FC, useCallback, useMemo, useState } from 'react';
-import Iconify from 'src/components/shared/iconify';
+import { FC, useMemo } from 'react';
 import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
 import {
   getDayBookTransactions,
   getDecrementByAccount,
   getIncrementByAccount,
   getPositiveValueByAccount,
-  getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
-import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
-import { DeleteDayBookTransaction } from '../DayBookIndex/DeleteDayBookTransaction';
-import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
-import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
+import { DayBookTableEntryOld } from 'src/types/dayBook';
 
 interface AccountReportProps {
   account: string;
 }
 export const AccountReport: FC<AccountReportProps> = ({ account }) => {
+  const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
+    collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+    converter: doubleEntryAccountingConverter,
+    additionalQueries: account
+      ? [where(`transactions.${account}`, '!=', {})]
+      : [],
+    order: { field: 'issueDate', direction: 'desc' },
+  });
+
   const { data: transactions } = useListDayBookTransactions();
-  const [transactionToOpen, setTransactionToOpen] =
-    useState<DayBookTransactionOld | null>(null);
-  const [transactionToUpdate, setTransactionToUpdate] =
-    useState<DayBookTransactionOld | null>(null);
-  const [transactionToDelete, setTransactionToDelete] =
-    useState<DayBookTransactionOld | null>(null);
+  // const [transactionToOpen, setTransactionToOpen] =
+  //   useState<DayBookTransactionOld | null>(null);
+  // const [transactionToUpdate, setTransactionToUpdate] =
+  //   useState<DayBookTransactionOld | null>(null);
+  // const [transactionToDelete, setTransactionToDelete] =
+  //   useState<DayBookTransactionOld | null>(null);
 
-  const getTransactionToOpen = useCallback(
-    (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
-      setTransactionToOpen(transaction);
-    },
-    [transactions]
-  );
+  // const getTransactionToOpen = useCallback(
+  //   (detailId: string) => {
+  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
+  //     setTransactionToOpen(transaction);
+  //   },
+  //   [transactions]
+  // );
 
-  const getTransactionToUpdate = useCallback(
-    (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
-      setTransactionToUpdate(transaction);
-    },
-    [transactions]
-  );
+  // const getTransactionToUpdate = useCallback(
+  //   (detailId: string) => {
+  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
+  //     setTransactionToUpdate(transaction);
+  //   },
+  //   [transactions]
+  // );
 
-  const getTransactionToDelete = useCallback(
-    (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
-      setTransactionToDelete(transaction);
-    },
-    [transactions]
-  );
+  // const getTransactionToDelete = useCallback(
+  //   (detailId: string) => {
+  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
+  //     setTransactionToDelete(transaction);
+  //   },
+  //   [transactions]
+  // );
 
   const columns: GridColDef<DayBookTableEntryOld>[] = [
     {
-      field: 'date',
+      field: 'issueDate',
       headerName: 'Fecha',
       flex: 1,
       type: 'date',
@@ -78,45 +87,29 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
       headerAlign: 'left',
     },
     {
-      field: 'quotation_id',
-      headerName: 'Cotización',
-      flex: 1,
-      type: 'number',
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
-      field: 'invoice_id',
-      headerName: 'Factura',
-      flex: 1,
-      type: 'number',
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
       field: 'actions',
       type: 'actions',
       width: 50,
       getActions: (params) => [
-        <GridActionsCellItem
-          label="Abrir"
-          onClick={() => getTransactionToOpen(params.id as string)}
-          icon={<Iconify icon="pajamas:doc-text" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => getTransactionToUpdate(params.id as string)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => getTransactionToDelete(params.id as string)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-          disabled={params.row.locked}
-        />,
+        // <GridActionsCellItem
+        //   label="Abrir"
+        //   onClick={() => getTransactionToOpen(params.id as string)}
+        //   icon={<Iconify icon="pajamas:doc-text" />}
+        //   showInMenu
+        // />,
+        // <GridActionsCellItem
+        //   label="Modificar"
+        //   onClick={() => getTransactionToUpdate(params.id as string)}
+        //   icon={<Iconify icon="pajamas:doc-changes" />}
+        //   showInMenu
+        // />,
+        // <GridActionsCellItem
+        //   label="Borrar"
+        //   onClick={() => getTransactionToDelete(params.id as string)}
+        //   icon={<Iconify icon="pajamas:remove" />}
+        //   showInMenu
+        //   disabled={params.row.locked}
+        // />,
       ],
     },
   ];
@@ -192,20 +185,20 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
         />
       </Card>
 
-      <OpenDayBookTransaction
+      {/* <OpenDayBookTransaction
         transaction={transactionToOpen}
         onClose={() => setTransactionToOpen(null)}
-      />
+      /> */}
 
-      <UpdateDayBookTransaction
+      {/* <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
         transaction={transactionToUpdate}
-      />
+      /> */}
 
-      <DeleteDayBookTransaction
+      {/* <DeleteDayBookTransaction
         transaction={transactionToDelete}
         onClose={() => setTransactionToDelete(null)}
-      />
+      /> */}
     </>
   );
 };

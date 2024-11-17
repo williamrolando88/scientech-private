@@ -8,18 +8,21 @@ import {
   orderBy,
   OrderByDirection,
   query,
+  QueryConstraint,
 } from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 
 interface useCollectionSnapshotParams<T> {
   collectionName: COLLECTIONS;
   converter?: FirestoreDataConverter<any>;
+  additionalQueries?: QueryConstraint[];
   order?: { field: keyof T; direction?: OrderByDirection };
 }
 
 export const useCollectionSnapshot = <T>({
   collectionName,
   converter,
+  additionalQueries,
   order,
 }: useCollectionSnapshotParams<T>) => {
   const [data, setData] = useState<T[]>([]);
@@ -29,6 +32,7 @@ export const useCollectionSnapshot = <T>({
     if (converter) collectionRef = collectionRef.withConverter(converter);
 
     const queries = [];
+    if (additionalQueries) queries.push(...additionalQueries);
     if (order) queries.push(orderBy(order.field as string, order.direction));
 
     // TODO: Used for debugging purposes, remove in production
@@ -37,7 +41,7 @@ export const useCollectionSnapshot = <T>({
     }
 
     return query(collectionRef, ...queries);
-  }, [collectionName, converter, order]);
+  }, [additionalQueries, collectionName, converter, order]);
 
   const queryCollection = useCallback(
     () =>

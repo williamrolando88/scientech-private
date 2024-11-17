@@ -12,7 +12,7 @@ export const DoubleEntryAccountingSchema = z.object({
   issueDate: z.coerce.date(),
   description: z.string(),
   ref: DocumentRefSchema,
-  transactions: TransactionSchema.array(),
+  transactions: z.record(z.string(), TransactionSchema),
   locked: z.boolean().default(false),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

@@ -27,5 +27,4 @@ export interface DayBookTransactionFirestoreOld
 export type DayBookTableEntryOld = DayBookTransactionDetailOld &
   Pick<DayBookTransactionOld, 'id' | 'date' | 'locked'>;
 
-/** @deprecated */
-export type DayBookTabsOld = 'listado' | 'reporte-por-cuenta' | 'balance';
+export type DayBookTabsOld = 'listado' | 'reporte-por-cuenta';
