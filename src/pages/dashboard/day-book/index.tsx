@@ -2,7 +2,6 @@ import { Card, CardContent, Tab, Tabs } from '@mui/material';
 import { startCase } from 'lodash';
 import React, { useState } from 'react';
 import AddDayBookTransaction from 'src/components/dashboard/daybook/AddDayBookTransaction';
-import DayBookBalance from 'src/components/dashboard/daybook/DayBookBalance';
 import DayBookIndex from 'src/components/dashboard/daybook/DayBookIndex';
 import DayBookReportByAccount from 'src/components/dashboard/daybook/DayBookReportByAccount';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
@@ -22,10 +21,6 @@ const TABS: TabInterface<DayBookTabsOld>[] = [
   {
     value: 'reporte-por-cuenta',
     component: <DayBookReportByAccount key="reporte-por-cuenta" />,
-  },
-  {
-    value: 'balance',
-    component: <DayBookBalance key="balance" />,
   },
 ];
 
