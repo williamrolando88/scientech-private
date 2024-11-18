@@ -1,76 +1,82 @@
 import { Card, Stack, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
+import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
 import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  ExpandedTransaction,
+} from '@src/types/doubleEntryAccounting';
 import { where } from 'firebase/firestore';
 import { round } from 'mathjs';
-import { FC, useMemo } from 'react';
-import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
+import { FC, useCallback, useMemo, useState } from 'react';
 import {
-  getDayBookTransactions,
   getDecrementByAccount,
   getIncrementByAccount,
   getPositiveValueByAccount,
+  getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
-import { DayBookTableEntryOld } from 'src/types/dayBook';
+import { DeleteDayBookTransaction } from '../DayBookIndex/DeleteDayBookTransaction';
+import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
+import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
 
 interface AccountReportProps {
   account: string;
 }
 
 export const AccountReport: FC<AccountReportProps> = ({ account }) => {
-
-  const location = `transactions.\`${account}\`.accountId`;
+  const [transactionToOpen, setTransactionToOpen] =
+    useState<DoubleEntryAccounting | null>(null);
+  const [transactionToUpdate, setTransactionToUpdate] =
+    useState<DoubleEntryAccounting | null>(null);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<DoubleEntryAccounting | null>(null);
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
     collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
-    additionalQueries: account
-      ? [where(location, '==', account)]
-      : [],
     order: { field: 'issueDate', direction: 'desc' },
+    additionalQueries: [where('accounts', 'array-contains', account)],
   });
 
-  console.log(doubleEntryAccounting);
-  console.log(location);
+  const getTransactionToOpen = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToOpen(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
-  const { data: transactions } = useListDayBookTransactions();
-  // const [transactionToOpen, setTransactionToOpen] =
-  //   useState<DayBookTransactionOld | null>(null);
-  // const [transactionToUpdate, setTransactionToUpdate] =
-  //   useState<DayBookTransactionOld | null>(null);
-  // const [transactionToDelete, setTransactionToDelete] =
-  //   useState<DayBookTransactionOld | null>(null);
+  const getTransactionToUpdate = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToUpdate(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
-  // const getTransactionToOpen = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
-  //     setTransactionToOpen(transaction);
-  //   },
-  //   [transactions]
-  // );
+  const getTransactionToDelete = useCallback(
+    (detailId: string) => {
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
+      setTransactionToDelete(transaction);
+    },
+    [doubleEntryAccounting]
+  );
 
-  // const getTransactionToUpdate = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
-  //     setTransactionToUpdate(transaction);
-  //   },
-  //   [transactions]
-  // );
-
-  // const getTransactionToDelete = useCallback(
-  //   (detailId: string) => {
-  //     const transaction = getTransactionDataByDetailId(detailId, transactions);
-  //     setTransactionToDelete(transaction);
-  //   },
-  //   [transactions]
-  // );
-
-  const columns: GridColDef<DayBookTableEntryOld>[] = [
+  const columns: GridColDef<ExpandedTransaction>[] = [
     {
-      field: 'date',
+      field: 'issueDate',
       headerName: 'Fecha',
       flex: 1,
       type: 'date',
@@ -98,62 +104,57 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
       type: 'actions',
       width: 50,
       getActions: (params) => [
-        // <GridActionsCellItem
-        //   label="Abrir"
-        //   onClick={() => getTransactionToOpen(params.id as string)}
-        //   icon={<Iconify icon="pajamas:doc-text" />}
-        //   showInMenu
-        // />,
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => getTransactionToUpdate(params.id as string)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
-        // <GridActionsCellItem
-        //   label="Borrar"
-        //   onClick={() => getTransactionToDelete(params.id as string)}
-        //   icon={<Iconify icon="pajamas:remove" />}
-        //   showInMenu
-        //   disabled={params.row.locked}
-        // />,
+        <GridActionsCellItem
+          label="Abrir"
+          onClick={() => getTransactionToOpen(params.id as string)}
+          icon={<Iconify icon="pajamas:doc-text" />}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          label="Modificar"
+          onClick={() => getTransactionToUpdate(params.id as string)}
+          icon={<Iconify icon="pajamas:doc-changes" />}
+          disabled={params.row.locked}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => getTransactionToDelete(params.id as string)}
+          icon={<Iconify icon="pajamas:remove" />}
+          disabled={params.row.locked}
+          showInMenu
+        />,
       ],
     },
   ];
 
-  const dayBookTableEntries = useMemo(
+  const rows = useMemo(
     () =>
-      getDayBookTransactions(transactions).filter(
-        (t) => t.account_id === account,
+      expandDoubleEntryAccounting(doubleEntryAccounting).filter(
+        (r) => r.accountId === account
       ),
-    [transactions, account],
+    [doubleEntryAccounting, account]
   );
 
   const balanceReport = useMemo(
     () =>
-      dayBookTableEntries.reduce(
+      rows.reduce(
         (acc, current) => acc + getPositiveValueByAccount(current),
-        0,
+        0
       ),
-    [dayBookTableEntries],
+    [rows]
   );
 
   const totalIncrement = useMemo(
     () =>
-      dayBookTableEntries.reduce(
-        (acc, current) => acc + getIncrementByAccount(current),
-        0,
-      ),
-    [dayBookTableEntries],
+      rows.reduce((acc, current) => acc + getIncrementByAccount(current), 0),
+    [rows]
   );
 
   const totalDecrement = useMemo(
     () =>
-      dayBookTableEntries.reduce(
-        (acc, current) => acc + getDecrementByAccount(current),
-        0,
-      ),
-    [dayBookTableEntries],
+      rows.reduce((acc, current) => acc + getDecrementByAccount(current), 0),
+    [rows]
   );
 
   return (
@@ -174,7 +175,7 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
 
       <Card variant="outlined">
         <DataGrid
-          rows={dayBookTableEntries}
+          rows={rows}
           columns={columns}
           autoHeight
           density="compact"
@@ -192,20 +193,20 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
         />
       </Card>
 
-      {/* <OpenDayBookTransaction
+      <OpenDayBookTransaction
         transaction={transactionToOpen}
         onClose={() => setTransactionToOpen(null)}
-      /> */}
+      />
 
-      {/* <UpdateDayBookTransaction
+      <UpdateDayBookTransaction
         setTransaction={setTransactionToUpdate}
         transaction={transactionToUpdate}
-      /> */}
+      />
 
-      {/* <DeleteDayBookTransaction
+      <DeleteDayBookTransaction
         transaction={transactionToDelete}
         onClose={() => setTransactionToDelete(null)}
-      /> */}
+      />
     </>
   );
 };

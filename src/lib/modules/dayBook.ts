@@ -1,16 +1,19 @@
-import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  ExpandedTransaction,
+} from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
 import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
-  entry: DoubleEntryAccounting,
+  entry: DoubleEntryAccounting
 ): string | null => {
   if (entry.transactions.length < 2) {
     return 'La transacción debe tener al menos dos movimientos';
   }
 
   const hasEmptyentry = entry.transactions.some(
-    (transaction) => !transaction.debit && !transaction.credit,
+    (transaction) => !transaction.debit && !transaction.credit
   );
 
   if (hasEmptyentry) {
@@ -18,7 +21,7 @@ export const dayBookTransactionsValidator = (
   }
 
   const hasBothValues = entry.transactions.some(
-    (transaction) => transaction.debit && transaction.credit,
+    (transaction) => transaction.debit && transaction.credit
   );
 
   if (hasBothValues) {
@@ -27,12 +30,12 @@ export const dayBookTransactionsValidator = (
 
   const totalDebit = entry.transactions.reduce(
     (acc, curr) => acc + curr.debit,
-    0,
+    0
   );
 
   const totalCredit = entry.transactions.reduce(
     (acc, curr) => acc + curr.credit,
-    0,
+    0
   );
 
   if (round(totalDebit, 2) !== round(totalCredit, 2)) {
@@ -44,7 +47,7 @@ export const dayBookTransactionsValidator = (
 
 export const getTransactionDataByDetailId = (
   detailId: string,
-  transactions: DoubleEntryAccounting[],
+  transactions: DoubleEntryAccounting[]
 ): DoubleEntryAccounting | null => {
   const [transactionId] = detailId.split(':');
   const transaction = transactions?.find((entry) => entry.id === transactionId);
@@ -70,8 +73,8 @@ export const getInputColorById = (accountId: string) => {
   return 'text-gray-500';
 };
 
-export const getDayBookTransactions = (
-  transactions: DayBookTransactionOld[],
+export const expandDoubleEntryAccountTransaction = (
+  transactions: DayBookTransactionOld[]
 ): DayBookTableEntryOld[] => {
   if (!transactions) return [];
 
@@ -82,27 +85,42 @@ export const getDayBookTransactions = (
         id: `${entry.id}:${index}`,
         date: entry.date,
         locked: entry.locked,
-      })),
+      }))
     )
     .flat();
 };
 
-export const getPositiveValueByAccount = (detail: DayBookTableEntryOld) => {
-  const { account_id, credit, debit } = detail;
+export const getDayBookTransactions = (
+  transactions: DayBookTransactionOld[]
+): DayBookTableEntryOld[] => {
+  if (!transactions) return [];
+
+  return transactions
+    .map((entry) =>
+      (entry.transactions || []).map((detail, index) => ({
+        ...detail,
+        id: `${entry.id}:${index}`,
+        date: entry.date,
+        locked: entry.locked,
+      }))
+    )
+    .flat();
+};
+
+export const getPositiveValueByAccount = (detail: ExpandedTransaction) => {
+  const { accountId, credit, debit } = detail;
 
   const roundedCredit = round(credit || 0, 2);
   const roundedDebit = round(debit || 0, 2);
 
-  if (['1', '5'].includes(account_id[0])) {
+  if (['1', '5'].includes(accountId)) {
     return roundedDebit - roundedCredit;
   }
   return roundedCredit - roundedDebit;
 };
 
-export const getIncrementByAccount = (detail: DayBookTableEntryOld) =>
-  (['1', '5'].includes(detail.account_id[0]) ? detail.debit : detail.credit) ||
-  0;
+export const getIncrementByAccount = (detail: ExpandedTransaction) =>
+  (['1', '5'].includes(detail.accountId) ? detail.debit : detail.credit) || 0;
 
-export const getDecrementByAccount = (detail: DayBookTableEntryOld) =>
-  (['1', '5'].includes(detail.account_id[0]) ? detail.credit : detail.debit) ||
-  0;
+export const getDecrementByAccount = (detail: ExpandedTransaction) =>
+  (['1', '5'].includes(detail.accountId) ? detail.credit : detail.debit) || 0;
