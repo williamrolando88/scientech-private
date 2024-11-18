@@ -1,9 +1,9 @@
-import { DoubleEntryAccounting, DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
 import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
-  entry: DoubleEntryAccountingForm,
+  entry: DoubleEntryAccounting,
 ): string | null => {
   if (entry.transactions.length < 2) {
     return 'La transacción debe tener al menos dos movimientos';

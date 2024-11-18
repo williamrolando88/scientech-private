@@ -1,16 +1,11 @@
-import {
-  DoubleEntryAccounting,
-  DoubleEntryAccountingForm,
-  DoubleEntryAccountingTransaction,
-  ExpandedTransaction,
-} from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting, ExpandedTransaction } from '@src/types/doubleEntryAccounting';
 
 export const expandDoubleEntryAccounting = (
   entries: DoubleEntryAccounting[],
 ): ExpandedTransaction[] =>
   entries
     .map((entry) =>
-      Object.values(entry.transactions).map((transaction, index) => {
+      entry.transactions.map((transaction, index) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { transactions, ...formattedEntry } = entry;
 
@@ -22,21 +17,3 @@ export const expandDoubleEntryAccounting = (
       }),
     )
     .flat();
-
-export const convertToForm = (data: DoubleEntryAccounting): DoubleEntryAccountingForm =>
-  ({
-    ...data,
-    transactions: Object.values(data.transactions),
-  });
-
-export const convertFromForm = (data: DoubleEntryAccountingForm): DoubleEntryAccounting => {
-  const transactions: Record<string, DoubleEntryAccountingTransaction> = {};
-
-  data.transactions.forEach((transaction, index) => {
-    const { accountId } = transaction;
-    transactions[accountId] = transaction;
-  });
-
-  return { ...data, transactions };
-};
-

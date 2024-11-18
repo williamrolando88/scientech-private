@@ -19,15 +19,22 @@ import { DayBookTableEntryOld } from 'src/types/dayBook';
 interface AccountReportProps {
   account: string;
 }
+
 export const AccountReport: FC<AccountReportProps> = ({ account }) => {
+
+  const location = `transactions.\`${account}\`.accountId`;
+
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
     collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     additionalQueries: account
-      ? [where(`transactions.${account}`, '!=', {})]
+      ? [where(location, '==', account)]
       : [],
     order: { field: 'issueDate', direction: 'desc' },
   });
+
+  console.log(doubleEntryAccounting);
+  console.log(location);
 
   const { data: transactions } = useListDayBookTransactions();
   // const [transactionToOpen, setTransactionToOpen] =
@@ -63,7 +70,7 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
 
   const columns: GridColDef<DayBookTableEntryOld>[] = [
     {
-      field: 'issueDate',
+      field: 'date',
       headerName: 'Fecha',
       flex: 1,
       type: 'date',
@@ -117,36 +124,36 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const dayBookTableEntries = useMemo(
     () =>
       getDayBookTransactions(transactions).filter(
-        (t) => t.account_id === account
+        (t) => t.account_id === account,
       ),
-    [transactions, account]
+    [transactions, account],
   );
 
   const balanceReport = useMemo(
     () =>
       dayBookTableEntries.reduce(
         (acc, current) => acc + getPositiveValueByAccount(current),
-        0
+        0,
       ),
-    [dayBookTableEntries]
+    [dayBookTableEntries],
   );
 
   const totalIncrement = useMemo(
     () =>
       dayBookTableEntries.reduce(
         (acc, current) => acc + getIncrementByAccount(current),
-        0
+        0,
       ),
-    [dayBookTableEntries]
+    [dayBookTableEntries],
   );
 
   const totalDecrement = useMemo(
     () =>
       dayBookTableEntries.reduce(
         (acc, current) => acc + getDecrementByAccount(current),
-        0
+        0,
       ),
-    [dayBookTableEntries]
+    [dayBookTableEntries],
   );
 
   return (

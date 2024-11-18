@@ -15,10 +15,8 @@ export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DoubleEntryAccounting = {
   description: '',
   ref: {},
   id: '',
-  transactions: {
-    '1': DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
-    '2': DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE,
-  },
+  transactions: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
+  accounts: [],
 };
 
 export const DAYBOOK_FORM_GRID_LAYOUT = [

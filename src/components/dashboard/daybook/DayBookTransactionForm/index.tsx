@@ -1,15 +1,14 @@
 import { LoadingButton } from '@mui/lab';
 import { Alert, Button, DialogActions, DialogContent, Stack } from '@mui/material';
-import { DoubleEntryAccountingFormSchema } from '@src/lib/schemas/doubleEntryAccounting';
-import { DoubleEntryAccounting, DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
-import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
+import { DoubleEntryAccountingSchema } from '@src/lib/schemas/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
 import { FormikDatePicker, FormikTextField } from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
-import { convertFromForm, convertToForm } from '@src/lib/modules/doubleEntryAccounting';
 
 interface DayBookTransactionFormProps {
   onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'];
@@ -26,12 +25,12 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
                                                                         }) => {
   const [formError, setFormError] = useState('');
 
-  const handleSubmit: FormikConfig<DoubleEntryAccountingForm>['onSubmit'] = (
+  const handleSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = (
     values,
     helpers,
   ) => {
     const error = dayBookTransactionsValidator(values);
-    const convertedValues = convertFromForm(values);
+    values.accounts = values.transactions.map(t => t.accountId);
 
     if (error) {
       setFormError(error);
@@ -40,13 +39,13 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
     }
 
     setFormError('');
-    onSubmit(convertedValues, helpers as unknown as FormikHelpers<DoubleEntryAccounting>);
+    onSubmit(values, helpers);
   };
 
   return (
     <Formik
-      initialValues={convertToForm(initialValues)}
-      validationSchema={toFormikValidationSchema(DoubleEntryAccountingFormSchema)}
+      initialValues={initialValues}
+      validationSchema={toFormikValidationSchema(DoubleEntryAccountingSchema)}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (

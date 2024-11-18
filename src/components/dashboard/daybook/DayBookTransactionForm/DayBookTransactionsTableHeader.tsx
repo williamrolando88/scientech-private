@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { useMemo } from 'react';
 import Iconify from 'src/components/shared/iconify';
@@ -7,7 +7,7 @@ import { DAYBOOK_FORM_GRID_LAYOUT, DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE } fr
 import { TableCell } from './TableCell';
 
 export function DayBookTransactionsTableHeader() {
-  const { values, setValues } = useFormikContext<DoubleEntryAccountingForm>();
+  const { values, setValues } = useFormikContext<DoubleEntryAccounting>();
 
   const handleAddRow = () => {
     setValues({

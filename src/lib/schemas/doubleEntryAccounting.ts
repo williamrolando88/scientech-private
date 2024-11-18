@@ -12,12 +12,9 @@ export const DoubleEntryAccountingSchema = z.object({
   issueDate: z.coerce.date(),
   description: z.string(),
   ref: DocumentRefSchema,
-  transactions: z.record(z.string(), TransactionSchema),
+  transactions: TransactionSchema.array(),
+  accounts: z.string().array(),
   locked: z.boolean().default(false),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-});
-
-export const DoubleEntryAccountingFormSchema = DoubleEntryAccountingSchema.extend({
-  transactions: TransactionSchema.array(),
 });

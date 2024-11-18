@@ -1,5 +1,5 @@
 import { Button, Grid, MenuItem } from '@mui/material';
-import { DoubleEntryAccountingForm } from '@src/types/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useFormikContext } from 'formik';
 import { FC, useMemo } from 'react';
 import { FormikTextField } from 'src/components/shared/formik-components';
@@ -16,8 +16,7 @@ export const DayBookTransactionsTableRow: FC<
   DayBookTransactionsTableRowProps
 > = ({ index }) => {
   const { data: categories } = useListAccountCategories();
-
-  const { values, setValues } = useFormikContext<DoubleEntryAccountingForm>();
+  const { values, setValues } = useFormikContext<DoubleEntryAccounting>();
 
   const handleDeleteRow = (rowIndex: number) => {
     setValues({

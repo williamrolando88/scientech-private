@@ -337,16 +337,12 @@ const ExportDayBookNewFormat: FC = () => {
   const converter = (
     oldData: DayBookTransactionOld,
   ): DoubleEntryAccounting => {
-
-    const transactions: Record<string, DoubleEntryAccountingTransaction> = {};
-
-    oldData.transactions.forEach((transaction) => {
-      transactions[transaction.account_id] = {
+    const transactions: DoubleEntryAccountingTransaction[] = oldData.transactions.map((transaction) => ({
         accountId: transaction.account_id,
         credit: transaction.credit || 0,
         debit: transaction.debit || 0,
-      };
-    });
+      }),
+    );
 
     return ({
       id: oldData.id || '',
@@ -354,6 +350,7 @@ const ExportDayBookNewFormat: FC = () => {
       description: oldData.transactions[0].description || '',
       ref: linkedTransactions[oldData.id!] || {},
       transactions,
+      accounts: oldData.transactions.map((t) => t.account_id),
       locked: oldData.locked || false,
       createdAt: oldData.createdAt || new Date(),
       updatedAt: oldData.updatedAt || new Date(),
