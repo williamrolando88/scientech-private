@@ -14,7 +14,6 @@ const AddProject: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const { user } = useAuthContext();
   const { mutateAsync: addProject } = useAddProject();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -22,10 +21,6 @@ const AddProject: FC = () => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    values.events = [
-      { date: new Date(), action: 'created', user_id: user?.uid },
-    ];
-
     addProject(values)
       .then(() => {
         resetForm();
@@ -33,7 +28,6 @@ const AddProject: FC = () => {
         handleCloseModal();
       })
       .catch((error) => {
-        values.events = [];
         console.error(error);
         enqueueSnackbar('Error al guardar el proyecto', {
           variant: 'error',
