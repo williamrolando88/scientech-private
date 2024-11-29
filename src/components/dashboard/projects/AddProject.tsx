@@ -2,7 +2,6 @@ import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddProject } from '@src/hooks/cache/projects';
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
 import { ProjectSchema } from '@src/lib/schemas/projects';
-import { useAuthContext } from '@src/services/auth/useAuthContext';
 import { Project } from '@src/types/projects';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

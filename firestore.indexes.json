@@ -1,4 +1,19 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "doubleEntryAccounting",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "accounts",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "issueDate",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

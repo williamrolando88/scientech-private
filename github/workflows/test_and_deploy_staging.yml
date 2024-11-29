@@ -1,0 +1,53 @@
+name: Test and Deploy Firebase Firestore Rules
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
+
+  firebase-rules-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    concurrency:
+      group: 'firebase-rules-deploy'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Deploy Firestore Rules
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          echo $FIREBASE_TOKEN > credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+          firebase use ${{ vars.FIREBASE_PROJECT_ID }}
+          firebase deploy
