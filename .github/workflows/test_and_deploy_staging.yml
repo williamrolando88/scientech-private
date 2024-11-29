@@ -24,37 +24,58 @@ jobs:
       - name: Run Tests
         run: yarn test
 
-  firebase-rules-deploy:
+  # firebase-rules-deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   if: success()
+  #   environment: Preview
+  #   concurrency:
+  #     group: 'firebase-rules-deploy'
+
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: 'yarn'
+
+  #     - uses: 'google-github-actions/auth@v2'
+  #       with:
+  #         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}' # Replace with the name of your GitHub Actions secret
+
+  #     - name: Create credentials.json
+  #       id: create-json
+  #       uses: jsdaniell/create-json@1.1.2
+  #       with:
+  #         name: 'credentials.json'
+  #         json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+  #     - name: Set environment variable with path to credentials.json
+  #       run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f credentials.json)" >> $GITHUB_ENV
+
+  #     - name: Install Firebase CLI
+  #       run: npm install -g firebase-tools
+
+  #     - name: Deploy Firestore
+  #       run: |
+  #         firebase use ${{ vars.FIREBASE_PROJECT_ID }}
+  #         firebase deploy
+
+  build_and_deploy:
     runs-on: ubuntu-latest
-    needs: test
-    if: success()
     environment: Preview
-    concurrency:
-      group: 'firebase-rules-deploy'
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Create credentials.json
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
+          node-version: 20
+          cache: 'npm'
+      - run: npm install -g firebase-tools
+      - uses: 'google-github-actions/auth@v2'
         with:
-          name: 'credentials.json'
-          json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-
-      - name: Set environment variable with path to credentials.json
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f credentials.json)" >> $GITHUB_ENV
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Deploy Firestore
-        run: |
-          firebase use ${{ vars.FIREBASE_PROJECT_ID }}
-          firebase deploy
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+      - run: firebase use ${{ vars.FIREBASE_PROJECT_ID }}
+      - run: firebase deploy
