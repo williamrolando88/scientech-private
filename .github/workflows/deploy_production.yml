@@ -8,7 +8,7 @@ on:
 jobs:
   deploy_rules_and_indexes:
     runs-on: ubuntu-latest
-    environment: Preview
+    environment: Production
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
