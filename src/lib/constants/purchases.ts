@@ -22,6 +22,7 @@ export const RECEIVED_INVOICE_INITIAL_VALUE: ReceivedInvoice = {
   ref: {
     projectId: '',
   },
+  expenseAccount: '5.01.01.02',
 };
 
 export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
@@ -50,6 +51,7 @@ export const NON_DEDUCTIBLE_INITIAL_VALUE: NonDeductible = {
   ref: {
     projectId: '',
   },
+  expenseAccount: '5.01.01.02',
 };
 
 export const SALE_NOTE_INITIAL_VALUE: SaleNote = {
@@ -66,4 +68,5 @@ export const SALE_NOTE_INITIAL_VALUE: SaleNote = {
   ref: {
     projectId: '',
   },
+  expenseAccount: '5.01.01.02',
 };

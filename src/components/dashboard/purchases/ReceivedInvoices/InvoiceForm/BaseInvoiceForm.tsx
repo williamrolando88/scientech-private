@@ -14,15 +14,20 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { UploadBox } from '@src/components/shared/upload';
-import { TAX_PERCENTAGE_CODES } from '@src/lib/constants/settings';
+import {
+  ALLOWED_ACCOUNTS,
+  DEFAULT_ACCOUNT,
+  TAX_PERCENTAGE_CODES,
+} from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/invoice';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/receivedInvoice';
 import { ParsedInvoice } from '@src/types/documentParsers';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { AccountCategorySelector } from '../../AccountCategorySelector';
 import { ProjectSelector } from '../../ProjectSelector';
 import { IVAField } from './IVAField';
 import { TotalField } from './TotalField';
@@ -202,6 +207,18 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
+                />
+              </Grid>
+
+              {/* TODO: Run script to add new account category field */}
+              <Grid item xs={12}>
+                <AccountCategorySelector
+                  size="small"
+                  label="Cuenta de gasto"
+                  name="expenseAccount"
+                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
+                  initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
+                  required
                 />
               </Grid>
 

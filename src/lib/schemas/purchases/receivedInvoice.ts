@@ -18,4 +18,5 @@ export const ReceivedInvoiceSchema = z.object({
   taxedSubtotal: z.number(),
   total: z.number().positive(),
   ref: DocumentRefSchema.optional(),
+  expenseAccount: z.string(),
 });

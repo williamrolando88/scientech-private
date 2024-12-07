@@ -15,4 +15,5 @@ export const SaleNoteSchema = z.object({
   description: z.string(),
   total: z.number().positive(),
   ref: DocumentRefSchema,
+  expenseAccount: z.string(),
 });

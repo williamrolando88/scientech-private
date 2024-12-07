@@ -13,6 +13,7 @@ interface AccountCategorySelectorProps {
   size?: 'small' | 'medium';
   required?: boolean;
 }
+
 export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   name,
   initialValue,

@@ -9,4 +9,5 @@ export const NonDeductibleSchema = z.object({
   description: z.string(),
   total: z.number().positive(),
   ref: DocumentRefSchema,
+  expenseAccount: z.string(),
 });

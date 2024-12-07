@@ -1,6 +1,6 @@
 import { CustomsPaymentSchema } from '@src/lib/schemas/purchases/customsPayment';
-import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/invoice';
 import { NonDeductibleSchema } from '@src/lib/schemas/purchases/nonDeductible';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/receivedInvoice';
 import { SaleNoteSchema } from '@src/lib/schemas/purchases/saleNote';
 import { z } from 'zod';
 
