@@ -24,7 +24,7 @@ export const receivedInvoiceConverter: FirestoreDataConverter<ReceivedInvoice> =
 const checkDuplicated = async (invoice: ReceivedInvoice) => {
   if (invoice.id) return;
 
-  const docCollection = collection(DB, COLLECTIONS.INVOICES);
+  const docCollection = collection(DB, COLLECTIONS.RECEIVED_INVOICES);
   const querySnapshot = query(
     docCollection,
     where('issuerId', '==', invoice.issuerId),
@@ -41,7 +41,7 @@ const checkDuplicated = async (invoice: ReceivedInvoice) => {
 const upsert = async (invoice: ReceivedInvoice): Promise<string> => {
   await checkDuplicated(invoice);
 
-  const docCollection = collection(DB, COLLECTIONS.INVOICES);
+  const docCollection = collection(DB, COLLECTIONS.RECEIVED_INVOICES);
 
   let docRef;
   if (invoice.id) {
@@ -58,7 +58,7 @@ const upsert = async (invoice: ReceivedInvoice): Promise<string> => {
 };
 
 const remove = async (id: string) => {
-  const docRef = doc(DB, COLLECTIONS.INVOICES, id);
+  const docRef = doc(DB, COLLECTIONS.RECEIVED_INVOICES, id);
   await deleteDoc(docRef);
 };
 

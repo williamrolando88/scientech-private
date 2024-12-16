@@ -5,9 +5,17 @@ import { COLLECTIONS } from '@src/lib/enums/collections';
 import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
-import { DoubleEntryAccounting, DoubleEntryAccountingTransaction } from '@src/types/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
+} from '@src/types/doubleEntryAccounting';
 import { CustomsPaymentOld, ExpenseOld, InvoiceOld } from '@src/types/expenses';
-import { CustomsPayment, NonDeductible, ReceivedInvoice, SaleNote } from '@src/types/purchases';
+import {
+  CustomsPayment,
+  NonDeductible,
+  ReceivedInvoice,
+  SaleNote,
+} from '@src/types/purchases';
 import { doc, getDoc, writeBatch } from 'firebase/firestore';
 import { camelCase } from 'lodash';
 import { FC, useEffect, useState } from 'react';
@@ -101,6 +109,7 @@ const ExportInvoicesNewFormat: FC = () => {
       IVA: data.IVA,
       total: data.total,
       ref,
+      expenseAccount: '2.1.3.01.001',
     };
   };
 
@@ -114,7 +123,7 @@ const ExportInvoicesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS.INVOICES, document.id ?? '');
+      const docRef = doc(DB, COLLECTIONS.RECEIVED_INVOICES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -160,6 +169,7 @@ const ExportSaleNotesNewFormat: FC = () => {
       issuerId: '9999999999',
       issuerName: data.issuer_name || '',
       ref,
+      expenseAccount: '2.1.3.01.001',
     };
   };
 
@@ -217,6 +227,7 @@ const ExportNonDeductiblesNewFormat: FC = () => {
       issuerName: data.issuer_name || '',
       total: data.total,
       ref,
+      expenseAccount: '2.1.3.01.001',
     };
   };
 
@@ -272,7 +283,7 @@ const ExportDayBookNewFormat: FC = () => {
 
   const getExpenseKeyType = async (id: string) => {
     const docRef = doc(DB, COLLECTIONS.EXPENSES, id).withConverter(
-      GeneralExpenseConverter,
+      GeneralExpenseConverter
     );
 
     const docData = (await getDoc(docRef)).data();
@@ -300,7 +311,7 @@ const ExportDayBookNewFormat: FC = () => {
 
                 if (details.expense_id) {
                   const expenseKey = await getExpenseKeyType(
-                    details.expense_id,
+                    details.expense_id
                   );
 
                   setLinkedTransactions((prev) => ({
@@ -327,25 +338,41 @@ const ExportDayBookNewFormat: FC = () => {
                   }));
                 }
               }
-            }),
+            })
           );
-        }),
+        })
       );
     }
   }, [data]);
 
-  const converter = (
-    oldData: DayBookTransactionOld,
-  ): DoubleEntryAccounting => {
-    const transactions: DoubleEntryAccountingTransaction[] = oldData.transactions.map((transaction) => ({
+  const converter = (oldData: DayBookTransactionOld): DoubleEntryAccounting => {
+    const transactions: DoubleEntryAccountingTransaction[] =
+      oldData.transactions.map((transaction) => ({
         accountId: transaction.account_id,
         credit: transaction.credit || 0,
         debit: transaction.debit || 0,
-      }),
-    );
+      }));
 
-    return ({
-      id: oldData.id || '',
+    const getDocId = (oldId: string): string => {
+      const refObject = linkedTransactions[oldId];
+
+      if (!refObject) {
+        return oldId;
+      }
+
+      const hasNonProjectId = Object.keys(refObject).filter(
+        (k) => k !== 'projectId'
+      );
+
+      if (hasNonProjectId.length) {
+        return linkedTransactions[oldId][hasNonProjectId[0]];
+      }
+
+      return oldId;
+    };
+
+    return {
+      id: getDocId(oldData.id!),
       issueDate: oldData.createdAt || new Date(),
       description: oldData.transactions[0].description || '',
       ref: linkedTransactions[oldData.id!] || {},
@@ -354,7 +381,7 @@ const ExportDayBookNewFormat: FC = () => {
       locked: oldData.locked || false,
       createdAt: oldData.createdAt || new Date(),
       updatedAt: oldData.updatedAt || new Date(),
-    });
+    };
   };
 
   const execute = async () => {
@@ -370,11 +397,12 @@ const ExportDayBookNewFormat: FC = () => {
       const docRef = doc(
         DB,
         COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
-        document.id ?? '',
+        document.id ?? ''
       );
 
-
-      const isValid = document.transactions.every((transaction) => transaction.account_id);
+      const isValid = document.transactions.every(
+        (transaction) => transaction.account_id
+      );
 
       if (!isValid) {
         console.error('Invalid transaction data', document);

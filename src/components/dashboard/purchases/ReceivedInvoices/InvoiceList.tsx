@@ -21,7 +21,7 @@ const InvoiceList: FC = () => {
     useState<ReceivedInvoice | null>(null);
 
   const invoices = useCollectionSnapshot<ReceivedInvoice>({
-    collectionName: COLLECTIONS.INVOICES,
+    collectionName: COLLECTIONS.RECEIVED_INVOICES,
     converter: receivedInvoiceConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
