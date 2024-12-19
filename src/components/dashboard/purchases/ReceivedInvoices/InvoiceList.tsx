@@ -2,6 +2,7 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
+import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS } from '@src/lib/enums/collections';
 import {
@@ -11,6 +12,7 @@ import {
 import { ReceivedInvoice } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import PaymentButton from '../Payments/PaymentButton';
 import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
@@ -66,15 +68,17 @@ const InvoiceList: FC = () => {
       type: 'actions',
       getActions: (params) => [
         // TODO: Add pay action button
-        // params.row.paid ? (
-        //   <Label variant="soft" color="success">
-        //     Pagado
-        //   </Label>
-        // ) : (
-        //   <Button variant="soft" color="warning">
-        //     Pagar
-        //   </Button>
-        // ),
+        params.row.paid ? (
+          <Label variant="soft" color="success">
+            Pagado
+          </Label>
+        ) : (
+          <PaymentButton
+            amount={params.row.total}
+            id={params.row.id}
+            ref={params.row.ref ?? {}}
+          />
+        ),
       ],
     },
     {
