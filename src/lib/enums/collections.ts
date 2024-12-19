@@ -11,6 +11,7 @@ export enum COLLECTIONS {
   NON_DEDUCTIBLEs = 'nonDeductibles',
   SALE_NOTES = 'saleNotes',
   DOUBLE_ENTRY_ACCOUNTING = 'doubleEntryAccounting',
+  PAYMENTS = 'payments',
 }
 
 export enum APPLICATION_SETTINGS {

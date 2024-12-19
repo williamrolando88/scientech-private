@@ -11,7 +11,6 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { PAYMENT_INITIAL_VALUE } from '@src/lib/constants/payment';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { PaymentSchema } from '@src/lib/schemas/payment';
 import { Payment } from '@src/types/payment';
@@ -24,17 +23,17 @@ interface Props {
   open: boolean;
   onClose: VoidFunction;
   onSubmit: FormikConfig<Payment>['onSubmit'];
-  amount: number;
+  initialValue: Payment;
 }
 
-const PaymentModal: FC<Props> = ({ onClose, open, amount, onSubmit }) => {
+const PaymentModal: FC<Props> = ({ onClose, open, initialValue, onSubmit }) => {
   console.log('mounting');
 
   return (
     <Dialog open={open} fullWidth onClose={onClose}>
       <DialogTitle>This is a payment modal</DialogTitle>
       <Formik
-        initialValues={{ ...PAYMENT_INITIAL_VALUE, amount }}
+        initialValues={initialValue}
         onSubmit={onSubmit}
         validationSchema={toFormikValidationSchema(PaymentSchema)}
       >

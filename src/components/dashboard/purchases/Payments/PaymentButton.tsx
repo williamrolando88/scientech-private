@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { PAYMENT_INITIAL_VALUE } from '@src/lib/constants/payment';
 import { DocumentRef } from '@src/types/documentReference';
 import { Payment } from '@src/types/payment';
 import { FormikConfig } from 'formik';
@@ -7,16 +8,16 @@ import PaymentModal from './PaymentModal';
 
 interface Props {
   amount: number;
-  id?: string;
+  purchaseDocumentId?: string;
   ref: DocumentRef;
 }
 
-const PaymentButton: FC<Props> = ({ amount, id, ref }) => {
+const PaymentButton: FC<Props> = ({ amount, purchaseDocumentId, ref }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
-  console.log(`This is purchase ${id}`);
+  console.log(`This is purchase ${purchaseDocumentId}`);
 
   /**
    * TODO: Add submit handler method
@@ -41,8 +42,8 @@ const PaymentButton: FC<Props> = ({ amount, id, ref }) => {
       <PaymentModal
         open={modalOpen}
         onClose={closeModal}
-        amount={amount}
         onSubmit={handleSubmit}
+        initialValue={{ ...PAYMENT_INITIAL_VALUE, amount }}
       />
     </>
   );
