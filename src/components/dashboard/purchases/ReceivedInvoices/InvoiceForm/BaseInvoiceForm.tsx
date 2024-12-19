@@ -136,7 +136,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
             <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
                 <FormikTextField
-                  size="small"
                   fullWidth
                   name="establishment"
                   label="Suc."
@@ -147,7 +146,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={1}>
                 <FormikTextField
-                  size="small"
                   fullWidth
                   name="emissionPoint"
                   label="Pto."
@@ -158,7 +156,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={2}>
                 <FormikTextField
-                  size="small"
                   fullWidth
                   name="sequentialNumber"
                   label="Nro."
@@ -171,7 +168,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={3}>
                 <FormikDatePicker
-                  size="small"
                   fullWidth
                   name="issueDate"
                   label="Fecha de Emisión"
@@ -181,7 +177,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={3}>
                 <FormikTextField
-                  size="small"
                   fullWidth
                   name="issuerId"
                   label="RUC Emisor"
@@ -191,7 +186,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={9}>
                 <FormikTextField
-                  size="small"
                   fullWidth
                   name="issuerName"
                   label="Razón Social Emisor"
@@ -201,7 +195,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={12}>
                 <FormikTextField
-                  size="small"
                   multiline
                   rows={3}
                   fullWidth
@@ -213,7 +206,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               {/* TODO: Run script to add new account category field */}
               <Grid item xs={12}>
                 <AccountCategorySelector
-                  size="small"
                   label="Cuenta de gasto"
                   name="expenseAccount"
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
@@ -226,7 +218,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
-                  size="small"
                   fullWidth
                   name="taxedSubtotal"
                   label="Base imponible"
@@ -237,7 +228,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={3}>
                 <FormikAutoCalculateField
-                  size="small"
                   fullWidth
                   name="noTaxSubtotal"
                   label="Subtotal 0%"

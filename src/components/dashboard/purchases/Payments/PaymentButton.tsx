@@ -1,5 +1,7 @@
 import { Button } from '@mui/material';
 import { DocumentRef } from '@src/types/documentReference';
+import { Payment } from '@src/types/payment';
+import { FormikConfig } from 'formik';
 import { FC, useState } from 'react';
 import PaymentModal from './PaymentModal';
 
@@ -28,10 +30,20 @@ const PaymentButton: FC<Props> = ({ amount, id, ref }) => {
    *
    */
 
+  const handleSubmit: FormikConfig<Payment>['onSubmit'] = (values, actions) => {
+    console.log(values);
+    actions.setSubmitting(false);
+  };
+
   return (
     <>
       <Button onClick={openModal}>Pagar</Button>
-      <PaymentModal open={modalOpen} onClose={closeModal} amount={amount} />
+      <PaymentModal
+        open={modalOpen}
+        onClose={closeModal}
+        amount={amount}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };
