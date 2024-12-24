@@ -5,6 +5,6 @@ export const PaymentSchema = z.object({
   id: z.string().optional(),
   paymentAccount: z.string(),
   amount: z.number(),
-  createdAt: z.coerce.date(),
+  paymentDate: z.coerce.date(),
   ref: DocumentRefSchema,
 });

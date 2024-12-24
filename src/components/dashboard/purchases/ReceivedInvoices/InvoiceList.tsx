@@ -6,9 +6,9 @@ import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
-  FirestoreReceivedInvoice,
-  receivedInvoiceConverter,
-} from '@src/services/firestore/purchases/invoice';
+  purchaseConverter,
+  PurchasesFirestore,
+} from '@src/services/firestore/purchases';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -24,7 +24,7 @@ const InvoiceList: FC = () => {
 
   const invoices = useCollectionSnapshot<ReceivedInvoice>({
     collectionName: COLLECTIONS_ENUM.RECEIVED_INVOICES,
-    converter: receivedInvoiceConverter,
+    converter: purchaseConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 
@@ -105,7 +105,7 @@ const InvoiceList: FC = () => {
   const handleDeleteExpense = () => {
     if (!invoiceToDelete?.id) return;
 
-    FirestoreReceivedInvoice.remove(invoiceToDelete.id)
+    PurchasesFirestore.remove({ id: invoiceToDelete.id })
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })

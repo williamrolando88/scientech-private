@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { NON_DEDUCTIBLE_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreNonDeductible } from '@src/services/firestore/purchases/nonDeductible';
-import { NonDeductible } from '@src/types/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
+import { NonDeductible, Purchase } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -19,7 +19,12 @@ const AddNonDeductible: FC<Props> = ({ onClose }) => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreNonDeductible.upsert(values)
+    const purchase: Purchase = {
+      purchaseData: values,
+      type: 'nonDeductible',
+    };
+
+    PurchasesFirestore.create(purchase)
       .then(() => {
         resetForm();
         enqueueSnackbar('Gasto guardado exitosamente');

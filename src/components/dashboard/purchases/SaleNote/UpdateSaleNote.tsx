@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreSaleNote } from '@src/services/firestore/purchases/saleNote';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { SaleNote } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -23,7 +23,7 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreSaleNote.upsert(values)
+    PurchasesFirestore.update({ purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Nota de venta actualizada exitosamente');

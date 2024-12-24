@@ -5,9 +5,9 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
-  FirestoreNonDeductible,
-  nonDeductibleConverter,
-} from '@src/services/firestore/purchases/nonDeductible';
+  purchaseConverter,
+  PurchasesFirestore,
+} from '@src/services/firestore/purchases';
 import { NonDeductible } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -24,7 +24,7 @@ const NonDeductibleList: FC = () => {
 
   const nonDeductibles = useCollectionSnapshot<NonDeductible>({
     collectionName: COLLECTIONS_ENUM.NON_DEDUCTIBLES,
-    converter: nonDeductibleConverter,
+    converter: purchaseConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 
@@ -97,7 +97,7 @@ const NonDeductibleList: FC = () => {
   const handleDeleteExpense = async () => {
     if (!expenseToDelete?.id) return;
 
-    FirestoreNonDeductible.remove(expenseToDelete.id)
+    PurchasesFirestore.remove({ id: expenseToDelete.id })
       .then(() => {
         enqueueSnackbar('Gasto eliminado exitosamente');
       })

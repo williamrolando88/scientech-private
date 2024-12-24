@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { CUSTOMS_PAYMENT_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreCustomsPayment } from '@src/services/firestore/purchases/customsPayments';
-import { CustomsPayment } from '@src/types/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
+import { CustomsPayment, Purchase } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -19,7 +19,12 @@ const AddCustomsPayment: FC<Props> = ({ onClose }) => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreCustomsPayment.upsert(values)
+    const purchase: Purchase = {
+      purchaseData: values,
+      type: 'customsPayment',
+    };
+
+    PurchasesFirestore.create(purchase)
       .then(() => {
         resetForm();
         enqueueSnackbar('Liquidación aduanera guardada exitosamente');

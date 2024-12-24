@@ -5,9 +5,9 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
-  customsPaymentsConverter,
-  FirestoreCustomsPayment,
-} from '@src/services/firestore/purchases/customsPayments';
+  purchaseConverter,
+  PurchasesFirestore,
+} from '@src/services/firestore/purchases';
 import { CustomsPayment } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -24,7 +24,7 @@ const CustomsPaymentsList: FC = () => {
 
   const customsPayments = useCollectionSnapshot<CustomsPayment>({
     collectionName: COLLECTIONS_ENUM.CUSTOMS_PAYMENTS,
-    converter: customsPaymentsConverter,
+    converter: purchaseConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 
@@ -108,7 +108,7 @@ const CustomsPaymentsList: FC = () => {
   const handleDeleteExpense = async () => {
     if (!expenseToDelete?.id) return;
 
-    FirestoreCustomsPayment.remove(expenseToDelete.id)
+    PurchasesFirestore.remove({ id: expenseToDelete.id })
       .then(() => {
         enqueueSnackbar('Liquidación aduanera eliminada exitosamente');
       })

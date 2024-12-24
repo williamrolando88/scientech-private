@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { RECEIVED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreReceivedInvoice } from '@src/services/firestore/purchases/invoice';
-import { ReceivedInvoice } from '@src/types/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
+import { Purchase, ReceivedInvoice } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -19,7 +19,12 @@ const AddInvoice: FC<Props> = ({ onClose }) => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreReceivedInvoice.upsert(values)
+    const purchase: Purchase = {
+      purchaseData: values,
+      type: 'receivedInvoice',
+    };
+
+    PurchasesFirestore.create(purchase)
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura guardada exitosamente');

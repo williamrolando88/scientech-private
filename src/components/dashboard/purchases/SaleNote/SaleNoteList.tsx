@@ -5,9 +5,9 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
-  FirestoreSaleNote,
-  saleNoteConverter,
-} from '@src/services/firestore/purchases/saleNote';
+  purchaseConverter,
+  PurchasesFirestore,
+} from '@src/services/firestore/purchases';
 import { SaleNote } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -20,7 +20,7 @@ const SaleNoteList: FC = () => {
 
   const saleNote = useCollectionSnapshot<SaleNote>({
     collectionName: COLLECTIONS_ENUM.SALE_NOTES,
-    converter: saleNoteConverter,
+    converter: purchaseConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 
@@ -99,7 +99,7 @@ const SaleNoteList: FC = () => {
   const handleDeleteExpense = async () => {
     if (!expenseToDelete?.id) return;
 
-    FirestoreSaleNote.remove(expenseToDelete.id)
+    PurchasesFirestore.remove({ id: expenseToDelete.id })
       .then(() => {
         enqueueSnackbar('Nota de venta eliminada exitosamente');
       })

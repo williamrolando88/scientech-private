@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { COLLECTIONS_ENUM, SETTING_ENUM } from 'src/lib/enums/collections';
+import { COLLECTIONS_ENUM, SETTINGS_ENUM } from 'src/lib/enums/collections';
 import { AccountCategories } from 'src/services/firestore/applicationSettings';
 import { AccountCategoryDict } from 'src/types/accountCategories';
 
 const queryKey = [
   COLLECTIONS_ENUM.APPLICATION_SETTINGS,
-  SETTING_ENUM.ACCOUNT_CATEGORIES,
+  SETTINGS_ENUM.ACCOUNT_CATEGORIES,
 ];
 
 export const useListAccountCategories = () => {

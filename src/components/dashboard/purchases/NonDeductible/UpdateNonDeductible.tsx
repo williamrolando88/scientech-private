@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreNonDeductible } from '@src/services/firestore/purchases/nonDeductible';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { NonDeductible } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -23,7 +23,7 @@ const UpdateNonDeductible: FC<UpdateNonDeductibleProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreNonDeductible.upsert(values)
+    PurchasesFirestore.update({ purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Gasto actualizado exitosamente');

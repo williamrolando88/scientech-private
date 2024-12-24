@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreCustomsPayment } from '@src/services/firestore/purchases/customsPayments';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { CustomsPayment } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -23,7 +23,7 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreCustomsPayment.upsert(values)
+    PurchasesFirestore.update({ purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Liquidación aduanera actualizada exitosamente');

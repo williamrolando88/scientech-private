@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreReceivedInvoice } from '@src/services/firestore/purchases/invoice';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -23,7 +23,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreReceivedInvoice.upsert(values)
+    PurchasesFirestore.update({ purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura actualizada exitosamente');

@@ -1,8 +1,8 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreSaleNote } from '@src/services/firestore/purchases/saleNote';
-import { SaleNote } from '@src/types/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
+import { Purchase, SaleNote } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
@@ -19,7 +19,12 @@ const AddSaleNote: FC<Props> = ({ onClose }) => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    FirestoreSaleNote.upsert(values)
+    const purchase: Purchase = {
+      purchaseData: values,
+      type: 'saleNote',
+    };
+
+    PurchasesFirestore.create(purchase)
       .then(() => {
         resetForm();
         enqueueSnackbar('Nota de venta guardada exitosamente');
