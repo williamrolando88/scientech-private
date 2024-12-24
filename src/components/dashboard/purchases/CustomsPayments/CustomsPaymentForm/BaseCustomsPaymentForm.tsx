@@ -12,7 +12,7 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { CustomsPaymentSchema } from '@src/lib/schemas/purchases/customsPayment';
+import { CustomsPaymentSchema } from '@src/lib/schemas/purchases';
 import { CustomsPayment } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';

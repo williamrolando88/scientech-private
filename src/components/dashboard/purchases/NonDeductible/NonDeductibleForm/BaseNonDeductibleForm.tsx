@@ -12,7 +12,7 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { NonDeductibleSchema } from '@src/lib/schemas/purchases/nonDeductible';
+import { NonDeductibleSchema } from '@src/lib/schemas/purchases';
 import { NonDeductible } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';

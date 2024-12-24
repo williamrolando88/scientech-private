@@ -75,7 +75,7 @@ const InvoiceList: FC = () => {
         ) : (
           <PaymentButton
             amount={params.row.total}
-            id={params.row.id}
+            purchaseDocumentId={params.row.id}
             ref={params.row.ref ?? {}}
           />
         ),

@@ -12,7 +12,7 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { SaleNoteSchema } from '@src/lib/schemas/purchases/saleNote';
+import { SaleNoteSchema } from '@src/lib/schemas/purchases';
 import { SaleNote } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';

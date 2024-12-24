@@ -21,7 +21,7 @@ import {
 } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases/receivedInvoice';
+import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases';
 import { ParsedInvoice } from '@src/types/documentParsers';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
