@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { FirestoreDoubleEntryAccounting } from '@src/services/firebase/doubleEntryAccounting';
+import { FirestoreDoubleEntryAccounting } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';

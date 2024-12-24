@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreCustomsPayment } from '@src/services/firebase/purchases/customsPayments';
+import { FirestoreCustomsPayment } from '@src/services/firestore/purchases/customsPayments';
 import { CustomsPayment } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

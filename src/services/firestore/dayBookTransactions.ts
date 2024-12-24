@@ -9,7 +9,7 @@ import {
   query,
   setDoc,
 } from 'firebase/firestore';
-import { COLLECTIONS } from 'src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import {
   DayBookTransactionFirestoreOld,
@@ -36,7 +36,7 @@ const upsert = async (transaction: DayBookTransactionOld): Promise<string> => {
   const date = new Date();
   const { id } = transaction;
   let docRef;
-  const docCollection = collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS);
+  const docCollection = collection(DB, COLLECTIONS_ENUM.DAY_BOOK_TRANSACTIONS);
 
   if (id) {
     docRef = doc(docCollection, id).withConverter(DayBookTransactionConverter);
@@ -55,7 +55,7 @@ const upsert = async (transaction: DayBookTransactionOld): Promise<string> => {
 
 const list = async (): Promise<DayBookTransactionOld[]> => {
   const q = query(
-    collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS).withConverter(
+    collection(DB, COLLECTIONS_ENUM.DAY_BOOK_TRANSACTIONS).withConverter(
       DayBookTransactionConverter
     ),
     orderBy('date', 'desc')
@@ -72,7 +72,7 @@ const list = async (): Promise<DayBookTransactionOld[]> => {
 
 const remove = async (id: string) => {
   const docRef = doc(
-    collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS),
+    collection(DB, COLLECTIONS_ENUM.DAY_BOOK_TRANSACTIONS),
     id
   ).withConverter(DayBookTransactionConverter);
 

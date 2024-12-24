@@ -1,7 +1,7 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { RECEIVED_INVOICE_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreReceivedInvoice } from '@src/services/firebase/purchases/invoice';
+import { FirestoreReceivedInvoice } from '@src/services/firestore/purchases/invoice';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

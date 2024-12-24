@@ -1,4 +1,4 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import { Project } from '@src/types/projects';
 import {
@@ -25,7 +25,7 @@ export const ProjectConverter: FirestoreDataConverter<Project> = {
 
 const list = async (): Promise<Project[]> => {
   const q = query(
-    collection(DB, COLLECTIONS.PROJECTS).withConverter(ProjectConverter),
+    collection(DB, COLLECTIONS_ENUM.PROJECTS).withConverter(ProjectConverter),
     orderBy('id', 'desc')
   );
   const querySnapshot = await getDocs(q);
@@ -39,7 +39,7 @@ const list = async (): Promise<Project[]> => {
 };
 
 const upsert = async (project: Project): Promise<string> => {
-  const docCollection = collection(DB, COLLECTIONS.PROJECTS);
+  const docCollection = collection(DB, COLLECTIONS_ENUM.PROJECTS);
   let docRef;
 
   if (project.id) {
@@ -53,7 +53,7 @@ const upsert = async (project: Project): Promise<string> => {
 };
 
 const remove = async (id: string) => {
-  const docRef = doc(DB, COLLECTIONS.PROJECTS, id);
+  const docRef = doc(DB, COLLECTIONS_ENUM.PROJECTS, id);
   await deleteDoc(docRef);
 
   return id;

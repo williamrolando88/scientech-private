@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreNonDeductible } from '@src/services/firebase/purchases/nonDeductible';
+import { FirestoreNonDeductible } from '@src/services/firestore/purchases/nonDeductible';
 import { NonDeductible } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

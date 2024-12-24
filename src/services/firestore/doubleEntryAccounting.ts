@@ -1,4 +1,4 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import {
@@ -21,7 +21,10 @@ export const doubleEntryAccountingConverter: FirestoreDataConverter<DoubleEntryA
   };
 
 const upsert = async (invoice: DoubleEntryAccounting): Promise<string> => {
-  const docCollection = collection(DB, COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING);
+  const docCollection = collection(
+    DB,
+    COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING
+  );
 
   let docRef;
   if (invoice.id) {
@@ -41,7 +44,7 @@ const upsert = async (invoice: DoubleEntryAccounting): Promise<string> => {
 };
 
 const remove = async (id: string) => {
-  const docRef = doc(DB, COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING, id);
+  const docRef = doc(DB, COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING, id);
   await deleteDoc(docRef);
 };
 

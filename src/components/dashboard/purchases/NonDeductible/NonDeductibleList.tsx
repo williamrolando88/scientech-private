@@ -3,11 +3,11 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
   FirestoreNonDeductible,
   nonDeductibleConverter,
-} from '@src/services/firebase/purchases/nonDeductible';
+} from '@src/services/firestore/purchases/nonDeductible';
 import { NonDeductible } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -23,7 +23,7 @@ const NonDeductibleList: FC = () => {
   );
 
   const nonDeductibles = useCollectionSnapshot<NonDeductible>({
-    collectionName: COLLECTIONS.NON_DEDUCTIBLEs,
+    collectionName: COLLECTIONS_ENUM.NON_DEDUCTIBLES,
     converter: nonDeductibleConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });

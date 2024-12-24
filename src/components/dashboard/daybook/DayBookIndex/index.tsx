@@ -3,18 +3,18 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import Iconify from '@src/components/shared/iconify';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
-import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
+import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
 } from '@src/types/doubleEntryAccounting';
 import { FC, useCallback, useMemo, useState } from 'react';
+import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
-import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 
 const DayBookIndex: FC = () => {
   const [transactionToUpdate, setTransactionToUpdate] =
@@ -26,7 +26,7 @@ const DayBookIndex: FC = () => {
   const { data: accountCategories } = useListAccountCategories();
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
-    collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });

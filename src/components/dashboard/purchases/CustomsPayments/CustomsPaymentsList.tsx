@@ -3,11 +3,11 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
   customsPaymentsConverter,
   FirestoreCustomsPayment,
-} from '@src/services/firebase/purchases/customsPayments';
+} from '@src/services/firestore/purchases/customsPayments';
 import { CustomsPayment } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -23,7 +23,7 @@ const CustomsPaymentsList: FC = () => {
   );
 
   const customsPayments = useCollectionSnapshot<CustomsPayment>({
-    collectionName: COLLECTIONS.CUSTOMS_PAYMENTS,
+    collectionName: COLLECTIONS_ENUM.CUSTOMS_PAYMENTS,
     converter: customsPaymentsConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });

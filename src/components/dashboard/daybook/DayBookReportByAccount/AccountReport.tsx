@@ -2,9 +2,9 @@ import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
-import { doubleEntryAccountingConverter } from '@src/services/firebase/doubleEntryAccounting';
+import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
@@ -35,7 +35,7 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
     useState<DoubleEntryAccounting | null>(null);
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
-    collectionName: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     order: { field: 'issueDate', direction: 'desc' },
     additionalQueries: [where('accounts', 'array-contains', account)],

@@ -1,10 +1,10 @@
+import { DayBookTransactions } from '@src/services/firestore/dayBookTransactions';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { COLLECTIONS } from 'src/lib/enums/collections';
-import { DayBookTransactions } from 'src/services/firebase/dayBookTransactions';
+import { COLLECTIONS_ENUM } from 'src/lib/enums/collections';
 import { DayBookTransactionOld } from 'src/types/dayBook';
 
-const queryKey = [COLLECTIONS.DAY_BOOK_TRANSACTIONS];
+const queryKey = [COLLECTIONS_ENUM.DAY_BOOK_TRANSACTIONS];
 
 export const useListDayBookTransactions = () => {
   const query = useQuery<DayBookTransactionOld[]>({

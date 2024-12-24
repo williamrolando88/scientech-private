@@ -1,4 +1,4 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import {
   collection,
@@ -13,7 +13,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 
 interface useCollectionSnapshotParams<T> {
-  collectionName: COLLECTIONS;
+  collectionName: COLLECTIONS_ENUM;
   converter?: FirestoreDataConverter<any>;
   additionalQueries?: QueryConstraint[];
   order?: { field: keyof T; direction?: OrderByDirection };

@@ -1,7 +1,7 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { CUSTOMS_PAYMENT_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreCustomsPayment } from '@src/services/firebase/purchases/customsPayments';
+import { FirestoreCustomsPayment } from '@src/services/firestore/purchases/customsPayments';
 import { CustomsPayment } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

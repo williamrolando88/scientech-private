@@ -1,7 +1,7 @@
 import { DialogTitle } from '@mui/material';
 import AddPurchaseDocumentModal from '@src/components/shared/AddPurchaseDocumentModal';
 import { SALE_NOTE_INITIAL_VALUE } from '@src/lib/constants/purchases';
-import { FirestoreSaleNote } from '@src/services/firebase/purchases/saleNote';
+import { FirestoreSaleNote } from '@src/services/firestore/purchases/saleNote';
 import { SaleNote } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';

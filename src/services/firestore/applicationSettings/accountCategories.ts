@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { APPLICATION_SETTINGS, COLLECTIONS } from 'src/lib/enums/collections';
+import { COLLECTIONS_ENUM, SETTING_ENUM } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import {
   AccountCategoryDict,
@@ -9,8 +9,8 @@ import {
 const upsert = async (accounts: AccountCategoryDict) => {
   const docRef = doc(
     DB,
-    COLLECTIONS.APPLICATION_SETTINGS,
-    APPLICATION_SETTINGS.ACCOUNT_CATEGORIES
+    COLLECTIONS_ENUM.APPLICATION_SETTINGS,
+    SETTING_ENUM.ACCOUNT_CATEGORIES
   );
 
   const docBody: AccountCategoryDoc = {
@@ -25,8 +25,8 @@ const upsert = async (accounts: AccountCategoryDict) => {
 const list = async (): Promise<AccountCategoryDict> => {
   const docRef = doc(
     DB,
-    COLLECTIONS.APPLICATION_SETTINGS,
-    APPLICATION_SETTINGS.ACCOUNT_CATEGORIES
+    COLLECTIONS_ENUM.APPLICATION_SETTINGS,
+    SETTING_ENUM.ACCOUNT_CATEGORIES
   );
 
   const docSnap = await getDoc(docRef);

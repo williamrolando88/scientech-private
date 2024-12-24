@@ -1,18 +1,29 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
-import { DayBookTransactionConverter } from '@src/services/firebase/dayBookTransactions';
-import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
-import { ProjectConverter } from '@src/services/firebase/projects';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { DayBookTransactionConverter } from '@src/services/firestore/dayBookTransactions';
+import { GeneralExpenseConverter } from '@src/services/firestore/expenses/converters';
+import { ProjectConverter } from '@src/services/firestore/projects';
 import { DB } from '@src/settings/firebase';
-import { ExtendedGeneralExpenseOld, GeneralExpenseOld } from '@src/types/expenses';
+import {
+  ExtendedGeneralExpenseOld,
+  GeneralExpenseOld,
+} from '@src/types/expenses';
 import { Project } from '@src/types/projects';
-import { collection, doc, DocumentReference, Transaction } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  DocumentReference,
+  Transaction,
+} from 'firebase/firestore';
 
 export const docReferencer = (
-  expense: ExtendedGeneralExpenseOld | GeneralExpenseOld,
+  expense: ExtendedGeneralExpenseOld | GeneralExpenseOld
 ) => {
-  const expensesCollection = collection(DB, COLLECTIONS.EXPENSES);
-  const projectsCollection = collection(DB, COLLECTIONS.PROJECTS);
-  const dayBookCollection = collection(DB, COLLECTIONS.DAY_BOOK_TRANSACTIONS);
+  const expensesCollection = collection(DB, COLLECTIONS_ENUM.EXPENSES);
+  const projectsCollection = collection(DB, COLLECTIONS_ENUM.PROJECTS);
+  const dayBookCollection = collection(
+    DB,
+    COLLECTIONS_ENUM.DAY_BOOK_TRANSACTIONS
+  );
 
   let expenseDocRef: DocumentReference;
   let dayBookDocRef: DocumentReference;
@@ -32,7 +43,7 @@ export const docReferencer = (
 
   if (expense.project_id) {
     projectDocRef = doc(projectsCollection, expense.project_id).withConverter(
-      ProjectConverter,
+      ProjectConverter
     );
   } else {
     projectDocRef = null;
@@ -47,7 +58,7 @@ export const docReferencer = (
 
 export const previousProjectReferencer = async (
   transaction: Transaction,
-  expenseDocRef: DocumentReference<GeneralExpenseOld>,
+  expenseDocRef: DocumentReference<GeneralExpenseOld>
 ) => {
   // Check for previous linked projects
   const storedExpenseDoc = await transaction.get(expenseDocRef);
@@ -64,8 +75,8 @@ export const previousProjectReferencer = async (
 
   const previousProjectRef = doc(
     DB,
-    COLLECTIONS.PROJECTS,
-    previousProjectId,
+    COLLECTIONS_ENUM.PROJECTS,
+    previousProjectId
   ).withConverter(ProjectConverter);
   const previousProjectDoc = await transaction.get(previousProjectRef);
 

@@ -3,11 +3,11 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
   FirestoreSaleNote,
   saleNoteConverter,
-} from '@src/services/firebase/purchases/saleNote';
+} from '@src/services/firestore/purchases/saleNote';
 import { SaleNote } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -19,7 +19,7 @@ const SaleNoteList: FC = () => {
   const [expenseToUpdate, setExpenseToUpdate] = useState<SaleNote | null>(null);
 
   const saleNote = useCollectionSnapshot<SaleNote>({
-    collectionName: COLLECTIONS.SALE_NOTES,
+    collectionName: COLLECTIONS_ENUM.SALE_NOTES,
     converter: saleNoteConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });

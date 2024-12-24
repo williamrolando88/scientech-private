@@ -4,11 +4,11 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
   FirestoreReceivedInvoice,
   receivedInvoiceConverter,
-} from '@src/services/firebase/purchases/invoice';
+} from '@src/services/firestore/purchases/invoice';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -23,7 +23,7 @@ const InvoiceList: FC = () => {
     useState<ReceivedInvoice | null>(null);
 
   const invoices = useCollectionSnapshot<ReceivedInvoice>({
-    collectionName: COLLECTIONS.RECEIVED_INVOICES,
+    collectionName: COLLECTIONS_ENUM.RECEIVED_INVOICES,
     converter: receivedInvoiceConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });

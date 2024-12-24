@@ -1,8 +1,8 @@
 import { Button, Stack } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
-import { COLLECTIONS } from '@src/lib/enums/collections';
-import { GeneralExpenseConverter } from '@src/services/firebase/expenses/converters';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { GeneralExpenseConverter } from '@src/services/firestore/expenses/converters';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
 import {
@@ -58,7 +58,11 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS.CUSTOMS_PAYMENTS, document.id ?? '');
+      const docRef = doc(
+        DB,
+        COLLECTIONS_ENUM.CUSTOMS_PAYMENTS,
+        document.id ?? ''
+      );
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -123,7 +127,11 @@ const ExportInvoicesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS.RECEIVED_INVOICES, document.id ?? '');
+      const docRef = doc(
+        DB,
+        COLLECTIONS_ENUM.RECEIVED_INVOICES,
+        document.id ?? ''
+      );
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -183,7 +191,7 @@ const ExportSaleNotesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS.SALE_NOTES, document.id ?? '');
+      const docRef = doc(DB, COLLECTIONS_ENUM.SALE_NOTES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -241,7 +249,11 @@ const ExportNonDeductiblesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS.NON_DEDUCTIBLEs, document.id ?? '');
+      const docRef = doc(
+        DB,
+        COLLECTIONS_ENUM.NON_DEDUCTIBLES,
+        document.id ?? ''
+      );
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -282,7 +294,7 @@ const ExportDayBookNewFormat: FC = () => {
   >({});
 
   const getExpenseKeyType = async (id: string) => {
-    const docRef = doc(DB, COLLECTIONS.EXPENSES, id).withConverter(
+    const docRef = doc(DB, COLLECTIONS_ENUM.EXPENSES, id).withConverter(
       GeneralExpenseConverter
     );
 
@@ -396,7 +408,7 @@ const ExportDayBookNewFormat: FC = () => {
     data.forEach((document) => {
       const docRef = doc(
         DB,
-        COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
+        COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
         document.id ?? ''
       );
 

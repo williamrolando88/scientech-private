@@ -7,13 +7,13 @@ import {
   query,
   setDoc,
 } from 'firebase/firestore';
-import { COLLECTIONS } from 'src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from 'src/lib/enums/collections';
 import { DB } from 'src/settings/firebase';
 import { ImportCalculator } from 'src/types/importCalculator';
 
 const list = async (): Promise<ImportCalculator[]> => {
   const q = query(
-    collection(DB, COLLECTIONS.IMPORT_CALCULATIONS),
+    collection(DB, COLLECTIONS_ENUM.IMPORT_CALCULATIONS),
     orderBy('metadata.updatedAt', 'desc')
   );
   const querySnapshot = await getDocs(q);
@@ -26,7 +26,7 @@ const list = async (): Promise<ImportCalculator[]> => {
 };
 
 const open = async (id: string): Promise<ImportCalculator> => {
-  const docRef = doc(DB, COLLECTIONS.IMPORT_CALCULATIONS, id);
+  const docRef = doc(DB, COLLECTIONS_ENUM.IMPORT_CALCULATIONS, id);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -41,10 +41,10 @@ const upsert = async (calculation: ImportCalculator): Promise<string> => {
   let docRef;
 
   if (id) {
-    docRef = doc(DB, COLLECTIONS.IMPORT_CALCULATIONS, id);
+    docRef = doc(DB, COLLECTIONS_ENUM.IMPORT_CALCULATIONS, id);
     calculation.metadata.updatedAt = date;
   } else {
-    docRef = doc(collection(DB, COLLECTIONS.IMPORT_CALCULATIONS));
+    docRef = doc(collection(DB, COLLECTIONS_ENUM.IMPORT_CALCULATIONS));
     calculation.metadata.createdAt = date;
     calculation.metadata.updatedAt = date;
     calculation.id = docRef.id;

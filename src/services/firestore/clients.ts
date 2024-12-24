@@ -1,4 +1,4 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import { Client } from '@src/types/clients';
 import {
@@ -19,7 +19,7 @@ const ClientConverter: FirestoreDataConverter<Client> = {
 
 const list = async (): Promise<Client[]> => {
   const q = query(
-    collection(DB, COLLECTIONS.CLIENTS).withConverter(ClientConverter),
+    collection(DB, COLLECTIONS_ENUM.CLIENTS).withConverter(ClientConverter),
     orderBy('name', 'desc')
   );
   const querySnapshot = await getDocs(q);
@@ -33,14 +33,14 @@ const list = async (): Promise<Client[]> => {
 };
 
 const upsert = async (client: Client): Promise<string> => {
-  const docCollection = collection(DB, COLLECTIONS.CLIENTS);
+  const docCollection = collection(DB, COLLECTIONS_ENUM.CLIENTS);
   const docRef = doc(docCollection, client.id).withConverter(ClientConverter);
   await setDoc(docRef, client);
   return docRef.id;
 };
 
 const remove = async (id: string) => {
-  const docRef = doc(DB, COLLECTIONS.CLIENTS, id);
+  const docRef = doc(DB, COLLECTIONS_ENUM.CLIENTS, id);
   await deleteDoc(docRef);
 
   return id;

@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { FirestoreDoubleEntryAccounting } from '@src/services/firebase/doubleEntryAccounting';
+import { FirestoreDoubleEntryAccounting } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -12,15 +12,15 @@ interface UpdateDayBookTransactionProps {
 }
 
 export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
-                                                                              setTransaction,
-                                                                              transaction,
-                                                                            }) => {
+  setTransaction,
+  transaction,
+}) => {
   const handleCloseModal = () => setTransaction(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = async (
     values,
-    { setSubmitting, resetForm },
+    { setSubmitting, resetForm }
   ) => {
     setSubmitting(true);
 
