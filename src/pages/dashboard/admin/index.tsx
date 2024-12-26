@@ -2,7 +2,6 @@ import { Button, Stack } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
 import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
-import { GeneralExpenseConverter } from '@src/services/firestore/expenses/converters';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
 import {
@@ -13,11 +12,11 @@ import { CustomsPaymentOld, ExpenseOld, InvoiceOld } from '@src/types/expenses';
 import {
   CustomsPayment,
   NonDeductible,
+  Purchase,
   ReceivedInvoice,
   SaleNote,
 } from '@src/types/purchases';
-import { doc, getDoc, writeBatch } from 'firebase/firestore';
-import { camelCase } from 'lodash';
+import { doc, writeBatch } from 'firebase/firestore';
 import { FC, useEffect, useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
@@ -26,14 +25,14 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
   const { data: oldData, isLoading } =
     useListExpensesByType<CustomsPaymentOld>('customs_payment');
 
-  const converter = (data: CustomsPaymentOld): CustomsPayment => {
+  const converter = (data: CustomsPaymentOld): Purchase => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
       ref.project_id = data.project_id;
     }
 
-    return {
+    const purchaseData: CustomsPayment = {
       id: data.id || '',
       paid: true,
       description: data.description || '',
@@ -45,6 +44,12 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
       customsPaymentNumber: data.customs_payment_number,
       total: data.total,
       ref,
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'customsPayment',
     };
   };
 
@@ -58,11 +63,7 @@ const ExportCustomsPaymentsNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(
-        DB,
-        COLLECTIONS_ENUM.CUSTOMS_PAYMENTS,
-        document.id ?? ''
-      );
+      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -91,14 +92,14 @@ const ExportInvoicesNewFormat: FC = () => {
   const { data: oldData, isLoading } =
     useListExpensesByType<InvoiceOld>('invoice');
 
-  const converter = (data: InvoiceOld): ReceivedInvoice => {
+  const converter = (data: InvoiceOld): Purchase => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
       ref.projectId = data.project_id;
     }
 
-    return {
+    const purchaseData: ReceivedInvoice = {
       id: data.id || '',
       paid: true,
       issueDate: data.issue_date,
@@ -115,6 +116,12 @@ const ExportInvoicesNewFormat: FC = () => {
       ref,
       expenseAccount: '2.1.3.01.001',
     };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'receivedInvoice',
+    };
   };
 
   const execute = async () => {
@@ -127,11 +134,7 @@ const ExportInvoicesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(
-        DB,
-        COLLECTIONS_ENUM.RECEIVED_INVOICES,
-        document.id ?? ''
-      );
+      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -158,14 +161,14 @@ const ExportSaleNotesNewFormat: FC = () => {
   const { data: oldData, isLoading } =
     useListExpensesByType<ExpenseOld>('sale_note');
 
-  const converter = (data: ExpenseOld): SaleNote => {
+  const converter = (data: ExpenseOld): Purchase => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
       ref.project_id = data.project_id;
     }
 
-    return {
+    const purchaseData: SaleNote = {
       id: data.id || '',
       paid: true,
       description: data.description || '',
@@ -179,6 +182,12 @@ const ExportSaleNotesNewFormat: FC = () => {
       ref,
       expenseAccount: '2.1.3.01.001',
     };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'saleNote',
+    };
   };
 
   const execute = async () => {
@@ -191,7 +200,7 @@ const ExportSaleNotesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS_ENUM.SALE_NOTES, document.id ?? '');
+      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -220,14 +229,14 @@ const ExportNonDeductiblesNewFormat: FC = () => {
   const { data: oldData, isLoading } =
     useListExpensesByType<ExpenseOld>('non_deductible');
 
-  const converter = (data: ExpenseOld): NonDeductible => {
+  const converter = (data: ExpenseOld): Purchase => {
     const ref: Record<string, string> = {};
 
     if (data.project_id) {
       ref.project_id = data.project_id;
     }
 
-    return {
+    const purchaseData: NonDeductible = {
       id: data.id || '',
       paid: true,
       description: data.description || '',
@@ -236,6 +245,12 @@ const ExportNonDeductiblesNewFormat: FC = () => {
       total: data.total,
       ref,
       expenseAccount: '2.1.3.01.001',
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'nonDeductible',
     };
   };
 
@@ -249,11 +264,7 @@ const ExportNonDeductiblesNewFormat: FC = () => {
     const batch = writeBatch(DB);
 
     oldData.forEach((document) => {
-      const docRef = doc(
-        DB,
-        COLLECTIONS_ENUM.NON_DEDUCTIBLES,
-        document.id ?? ''
-      );
+      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
 
       const convertedData = converter(document);
       batch.set(docRef, convertedData);
@@ -293,17 +304,6 @@ const ExportDayBookNewFormat: FC = () => {
     Record<string, Record<string, string>>
   >({});
 
-  const getExpenseKeyType = async (id: string) => {
-    const docRef = doc(DB, COLLECTIONS_ENUM.EXPENSES, id).withConverter(
-      GeneralExpenseConverter
-    );
-
-    const docData = (await getDoc(docRef)).data();
-
-    const type = docData?.type;
-    return `${camelCase(type)}Id`;
-  };
-
   useEffect(() => {
     if (data.length) {
       Promise.all(
@@ -322,15 +322,11 @@ const ExportDayBookNewFormat: FC = () => {
                 }
 
                 if (details.expense_id) {
-                  const expenseKey = await getExpenseKeyType(
-                    details.expense_id
-                  );
-
                   setLinkedTransactions((prev) => ({
                     ...prev,
                     [String(transaction.id)]: {
                       ...(prev[String(transaction.id)] ?? {}),
-                      [expenseKey]: details.expense_id!,
+                      purchaseId: details.expense_id!,
                     },
                   }));
                 }
