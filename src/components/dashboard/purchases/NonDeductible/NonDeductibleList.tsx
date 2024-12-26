@@ -62,6 +62,7 @@ const NonDeductibleList: FC = () => {
       field: 'paid',
       headerName: 'Pagar',
       type: 'actions',
+      width: 100,
       getActions: (params) => [
         <PaymentButton
           purchase={purchases.find((p) => p.id === params.row.id)}

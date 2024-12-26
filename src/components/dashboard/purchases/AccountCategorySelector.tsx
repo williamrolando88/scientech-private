@@ -12,6 +12,7 @@ interface AccountCategorySelectorProps {
   label?: string;
   size?: 'small' | 'medium';
   required?: boolean;
+  disabled?: boolean;
 }
 
 export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
@@ -21,6 +22,7 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   label = '',
   size = 'medium',
   required = false,
+  disabled = false,
 }) => {
   const { data: accountCategories } = useListAccountCategories();
   const [{ value }, , { setValue }] = useField(name);
@@ -48,6 +50,7 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
       name={name}
       label={label}
       required={required}
+      disabled={disabled}
     >
       {filteredAccountCategories.map((category) => (
         <MenuItem key={category.id} value={category.id}>

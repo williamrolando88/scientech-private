@@ -11,23 +11,37 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
+import Iconify from '@src/components/shared/iconify';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { PaymentSchema } from '@src/lib/schemas/payment';
 import { Payment } from '@src/types/payment';
 import { Form, Formik, FormikConfig } from 'formik';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../AccountCategorySelector';
 
 interface Props {
   open: boolean;
+  initialValue: Payment;
+  paid: boolean;
   onClose: VoidFunction;
   onSubmit: FormikConfig<Payment>['onSubmit'];
-  initialValue: Payment;
+  onDelete: VoidFunction;
 }
 
-const PaymentModal: FC<Props> = ({ onClose, open, initialValue, onSubmit }) => {
-  console.log('mounting');
+const PaymentModal: FC<Props> = ({
+  open,
+  initialValue,
+  paid,
+  onClose,
+  onSubmit,
+  onDelete,
+}) => {
+  const [lockEdit, setLockEdit] = useState(paid);
+
+  useEffect(() => {
+    setLockEdit(paid);
+  }, [open, paid]);
 
   return (
     <Dialog open={open} fullWidth onClose={onClose}>
@@ -45,8 +59,9 @@ const PaymentModal: FC<Props> = ({ onClose, open, initialValue, onSubmit }) => {
               </Alert>
 
               <FormikDatePicker
-                name="createdAt"
+                name="paymentDate"
                 label="Fecha de pago"
+                disabled={lockEdit}
                 required
               />
 
@@ -55,6 +70,7 @@ const PaymentModal: FC<Props> = ({ onClose, open, initialValue, onSubmit }) => {
                 name="paymentAccount"
                 selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
                 initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
+                disabled={lockEdit}
                 required
               />
 
@@ -66,8 +82,43 @@ const PaymentModal: FC<Props> = ({ onClose, open, initialValue, onSubmit }) => {
                 disabled
               />
             </Stack>
+
             <DialogActions>
-              <Button onClick={onClose}>Cancelar</Button>
+              {paid && lockEdit ? (
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Button
+                    type="button"
+                    color="error"
+                    variant="outlined"
+                    onClick={onDelete}
+                  >
+                    <Iconify icon="pajamas:remove" />
+                  </Button>
+
+                  <Stack direction="row" gap={2}>
+                    <Button type="button" onClick={() => setLockEdit(false)}>
+                      Editar
+                    </Button>
+
+                    <Button type="button" variant="contained" onClick={onClose}>
+                      Cerrar
+                    </Button>
+                  </Stack>
+                </Stack>
+              ) : (
+                <>
+                  <Button type="button" onClick={onClose}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" variant="contained">
+                    Guardar
+                  </Button>
+                </>
+              )}
             </DialogActions>
           </Form>
         )}

@@ -42,6 +42,7 @@ const create = async (purchase: Partial<Purchase>) => {
 };
 
 const update = async (purchase: Partial<Purchase>) => {
+  // TODO: Update to receive the id from the param
   if (purchase.purchaseData?.paid) {
     throw new Error('El documento ya fue pagado, no se puede modificar');
   }
