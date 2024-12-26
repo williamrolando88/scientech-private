@@ -9,7 +9,7 @@ import {
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
 import { Purchase, SaleNote } from '@src/types/purchases';
-import { where } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
@@ -22,7 +22,10 @@ const SaleNoteList: FC = () => {
 
   const purchases = useCollectionSnapshot<Purchase>({
     collectionName: COLLECTIONS_ENUM.PURCHASES,
-    additionalQueries: [where('type', '==', 'saleNote')],
+    additionalQueries: [
+      where('type', '==', 'saleNote'),
+      orderBy('purchaseData.issueDate', 'desc'),
+    ],
     converter: purchaseConverter,
   });
 

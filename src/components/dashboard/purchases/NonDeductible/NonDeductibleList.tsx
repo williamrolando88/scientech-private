@@ -9,11 +9,11 @@ import {
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
 import { NonDeductible, Purchase } from '@src/types/purchases';
-import { where } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
-import UpdateNonDeductible from './UpdateNonDeductible';
 import PaymentButton from '../Payments/PaymentButton';
+import UpdateNonDeductible from './UpdateNonDeductible';
 
 const NonDeductibleList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -27,7 +27,10 @@ const NonDeductibleList: FC = () => {
   const purchases = useCollectionSnapshot<Purchase>({
     collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    additionalQueries: [where('type', '==', 'nonDeductible')],
+    additionalQueries: [
+      where('type', '==', 'nonDeductible'),
+      orderBy('purchaseData.issueDate', 'desc'),
+    ],
   });
 
   const columns: GridColDef<NonDeductible>[] = [

@@ -9,7 +9,7 @@ import {
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
 import { CustomsPayment, Purchase } from '@src/types/purchases';
-import { where } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
@@ -27,7 +27,10 @@ const CustomsPaymentsList: FC = () => {
   const purchases = useCollectionSnapshot<Purchase>({
     collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    additionalQueries: [where('type', '==', 'customsPayment')],
+    additionalQueries: [
+      where('type', '==', 'customsPayment'),
+      orderBy('purchaseData.issueDate', 'desc'),
+    ],
   });
 
   const columns: GridColDef<CustomsPayment>[] = [

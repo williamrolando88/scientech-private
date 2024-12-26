@@ -9,7 +9,7 @@ import {
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
 import { Purchase, ReceivedInvoice } from '@src/types/purchases';
-import { where } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
@@ -25,7 +25,10 @@ const InvoiceList: FC = () => {
   const purchases = useCollectionSnapshot<Purchase>({
     collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    additionalQueries: [where('type', '==', 'receivedInvoice')],
+    additionalQueries: [
+      where('type', '==', 'receivedInvoice'),
+      orderBy('purchaseData.issueDate', 'desc'),
+    ],
   });
 
   const columns: GridColDef<ReceivedInvoice>[] = [
