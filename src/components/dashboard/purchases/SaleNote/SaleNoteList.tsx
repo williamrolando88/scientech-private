@@ -12,6 +12,7 @@ import { Purchase, SaleNote } from '@src/types/purchases';
 import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
+import PaymentButton from '../Payments/PaymentButton';
 import UpdateSaleNote from './UpdateSaleNote';
 
 const SaleNoteList: FC = () => {
@@ -64,16 +65,9 @@ const SaleNoteList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       getActions: (params) => [
-        // TODO: Add pay action button
-        // params.row.paid ? (
-        //   <Label variant="soft" color="success">
-        //     Pagado
-        //   </Label>
-        // ) : (
-        //   <Button variant="soft" color="warning">
-        //     Pagar
-        //   </Button>
-        // ),
+        <PaymentButton
+          purchase={purchases.find((p) => p.id === params.row.id)}
+        />,
       ],
     },
     {

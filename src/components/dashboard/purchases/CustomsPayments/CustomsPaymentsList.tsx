@@ -13,6 +13,7 @@ import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import UpdateCustomsPayment from './UpdateCustomsPayment';
+import PaymentButton from '../Payments/PaymentButton';
 
 const CustomsPaymentsList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -73,16 +74,9 @@ const CustomsPaymentsList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       getActions: (params) => [
-        // TODO: Add pay action button
-        // params.row.paid ? (
-        //   <Label variant="soft" color="success">
-        //     Pagado
-        //   </Label>
-        // ) : (
-        //   <Button variant="soft" color="warning">
-        //     Pagar
-        //   </Button>
-        // ),
+        <PaymentButton
+          purchase={purchases.find((p) => p.id === params.row.id)}
+        />,
       ],
     },
     {

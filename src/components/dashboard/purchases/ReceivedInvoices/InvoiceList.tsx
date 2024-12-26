@@ -2,7 +2,6 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
-import Label from '@src/components/shared/label';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import {
@@ -68,16 +67,9 @@ const InvoiceList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       getActions: (params) => [
-        // TODO: Add pay action button
-        params.row.paid ? (
-          <Label variant="soft" color="success">
-            Pagado
-          </Label>
-        ) : (
-          <PaymentButton
-            purchase={purchases.find((p) => p.id === params.row.id)}
-          />
-        ),
+        <PaymentButton
+          purchase={purchases.find((p) => p.id === params.row.id)}
+        />,
       ],
     },
     {
