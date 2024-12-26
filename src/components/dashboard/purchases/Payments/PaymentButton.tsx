@@ -83,6 +83,7 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
           amount: purchase.purchaseData.total,
           ...purchase.payment,
         }}
+        isLegacy={paid && !purchase.payment}
         onClose={closeModal}
         onSubmit={handleSubmit}
         onDelete={handleDelete}

@@ -24,6 +24,7 @@ interface Props {
   open: boolean;
   initialValue: Payment;
   paid: boolean;
+  isLegacy: boolean;
   onClose: VoidFunction;
   onSubmit: FormikConfig<Payment>['onSubmit'];
   onDelete: VoidFunction;
@@ -33,6 +34,7 @@ const PaymentModal: FC<Props> = ({
   open,
   initialValue,
   paid,
+  isLegacy,
   onClose,
   onSubmit,
   onDelete,
@@ -45,84 +47,98 @@ const PaymentModal: FC<Props> = ({
 
   return (
     <Dialog open={open} fullWidth onClose={onClose}>
-      <DialogTitle>This is a payment modal</DialogTitle>
-      <Formik
-        initialValues={initialValue}
-        onSubmit={onSubmit}
-        validationSchema={toFormikValidationSchema(PaymentSchema)}
-      >
-        {() => (
-          <Form>
-            <Stack component={DialogContent} gap={2}>
-              <Alert severity="info">
-                Indique la fecha y la cuenta contable para registrar el pago
-              </Alert>
+      <DialogTitle>Registrar pago</DialogTitle>
 
-              <FormikDatePicker
-                name="paymentDate"
-                label="Fecha de pago"
-                disabled={lockEdit}
-                required
-              />
+      {isLegacy ? (
+        <DialogContent sx={{ pb: 3 }}>
+          <Alert severity="error">
+            Este documento de compra fue migrado de una version anterior, por lo
+            que no cuenta con un documento de pago vinculado
+          </Alert>
+        </DialogContent>
+      ) : (
+        <Formik
+          initialValues={initialValue}
+          onSubmit={onSubmit}
+          validationSchema={toFormikValidationSchema(PaymentSchema)}
+        >
+          {() => (
+            <Form>
+              <Stack component={DialogContent} gap={2}>
+                <Alert severity="info">
+                  Indique la fecha y la cuenta contable para registrar el pago
+                </Alert>
 
-              <AccountCategorySelector
-                label="Cuenta de pago"
-                name="paymentAccount"
-                selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
-                initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
-                disabled={lockEdit}
-                required
-              />
+                <FormikDatePicker
+                  name="paymentDate"
+                  label="Fecha de pago"
+                  disabled={lockEdit}
+                  required
+                />
 
-              <FormikTextField
-                name="amount"
-                type="number"
-                label="Monto"
-                required
-                disabled
-              />
-            </Stack>
+                <AccountCategorySelector
+                  label="Cuenta de pago"
+                  name="paymentAccount"
+                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
+                  initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
+                  disabled={lockEdit}
+                  required
+                />
 
-            <DialogActions>
-              {paid && lockEdit ? (
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  width="100%"
-                >
-                  <Button
-                    type="button"
-                    color="error"
-                    variant="outlined"
-                    onClick={onDelete}
+                <FormikTextField
+                  name="amount"
+                  type="number"
+                  label="Monto"
+                  required
+                  disabled
+                />
+              </Stack>
+
+              <DialogActions>
+                {paid && lockEdit ? (
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    width="100%"
                   >
-                    <Iconify icon="pajamas:remove" />
-                  </Button>
-
-                  <Stack direction="row" gap={2}>
-                    <Button type="button" onClick={() => setLockEdit(false)}>
-                      Editar
+                    <Button
+                      type="button"
+                      color="error"
+                      variant="outlined"
+                      onClick={onDelete}
+                    >
+                      <Iconify icon="pajamas:remove" />
                     </Button>
 
-                    <Button type="button" variant="contained" onClick={onClose}>
-                      Cerrar
-                    </Button>
+                    <Stack direction="row" gap={2}>
+                      <Button type="button" onClick={() => setLockEdit(false)}>
+                        Editar
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="contained"
+                        onClick={onClose}
+                      >
+                        Cerrar
+                      </Button>
+                    </Stack>
                   </Stack>
-                </Stack>
-              ) : (
-                <>
-                  <Button type="button" onClick={onClose}>
-                    Cancelar
-                  </Button>
-                  <Button type="submit" variant="contained">
-                    Guardar
-                  </Button>
-                </>
-              )}
-            </DialogActions>
-          </Form>
-        )}
-      </Formik>
+                ) : (
+                  <>
+                    <Button type="button" onClick={onClose}>
+                      Cancelar
+                    </Button>
+                    <Button type="submit" variant="contained">
+                      Guardar
+                    </Button>
+                  </>
+                )}
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Dialog>
   );
 };
