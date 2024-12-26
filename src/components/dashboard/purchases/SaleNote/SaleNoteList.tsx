@@ -8,9 +8,10 @@ import {
   purchaseConverter,
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
-import { SaleNote } from '@src/types/purchases';
+import { Purchase, SaleNote } from '@src/types/purchases';
+import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import UpdateSaleNote from './UpdateSaleNote';
 
 const SaleNoteList: FC = () => {
@@ -18,10 +19,10 @@ const SaleNoteList: FC = () => {
   const [expenseToDelete, setExpenseToDelete] = useState<SaleNote | null>(null);
   const [expenseToUpdate, setExpenseToUpdate] = useState<SaleNote | null>(null);
 
-  const saleNote = useCollectionSnapshot<SaleNote>({
-    collectionName: COLLECTIONS_ENUM.SALE_NOTES,
+  const purchases = useCollectionSnapshot<Purchase>({
+    collectionName: COLLECTIONS_ENUM.PURCHASES,
+    additionalQueries: [where('type', '==', 'saleNote')],
     converter: purchaseConverter,
-    order: { field: 'issueDate', direction: 'desc' },
   });
 
   const columns: GridColDef<SaleNote>[] = [
@@ -113,13 +114,18 @@ const SaleNoteList: FC = () => {
       });
   };
 
+  const rows = useMemo(
+    () => purchases.map((d) => d.purchaseData) as SaleNote[],
+    [purchases]
+  );
+
   return (
     <>
       <CardContent>
         <DataGrid
           autoHeight
           columns={columns}
-          rows={saleNote}
+          rows={rows}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}

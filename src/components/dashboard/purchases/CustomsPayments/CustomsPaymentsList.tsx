@@ -8,9 +8,10 @@ import {
   purchaseConverter,
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
-import { CustomsPayment } from '@src/types/purchases';
+import { CustomsPayment, Purchase } from '@src/types/purchases';
+import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import UpdateCustomsPayment from './UpdateCustomsPayment';
 
 const CustomsPaymentsList: FC = () => {
@@ -22,10 +23,10 @@ const CustomsPaymentsList: FC = () => {
     null
   );
 
-  const customsPayments = useCollectionSnapshot<CustomsPayment>({
-    collectionName: COLLECTIONS_ENUM.CUSTOMS_PAYMENTS,
+  const purchases = useCollectionSnapshot<Purchase>({
+    collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    order: { field: 'issueDate', direction: 'desc' },
+    additionalQueries: [where('type', '==', 'customsPayment')],
   });
 
   const columns: GridColDef<CustomsPayment>[] = [
@@ -122,13 +123,18 @@ const CustomsPaymentsList: FC = () => {
       });
   };
 
+  const rows = useMemo(
+    () => purchases.map((d) => d.purchaseData) as CustomsPayment[],
+    [purchases]
+  );
+
   return (
     <>
       <CardContent>
         <DataGrid
           autoHeight
           columns={columns}
-          rows={customsPayments}
+          rows={rows}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{

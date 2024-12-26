@@ -9,9 +9,10 @@ import {
   purchaseConverter,
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
-import { ReceivedInvoice } from '@src/types/purchases';
+import { Purchase, ReceivedInvoice } from '@src/types/purchases';
+import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
 import UpdateInvoice from './UpdateInvoice';
 
@@ -22,10 +23,10 @@ const InvoiceList: FC = () => {
   const [invoiceToUpdate, setInvoiceToUpdate] =
     useState<ReceivedInvoice | null>(null);
 
-  const invoices = useCollectionSnapshot<ReceivedInvoice>({
-    collectionName: COLLECTIONS_ENUM.RECEIVED_INVOICES,
+  const purchases = useCollectionSnapshot<Purchase>({
+    collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    order: { field: 'issueDate', direction: 'desc' },
+    additionalQueries: [where('type', '==', 'receivedInvoice')],
   });
 
   const columns: GridColDef<ReceivedInvoice>[] = [
@@ -74,9 +75,7 @@ const InvoiceList: FC = () => {
           </Label>
         ) : (
           <PaymentButton
-            amount={params.row.total}
-            purchaseDocumentId={params.row.id}
-            ref={params.row.ref ?? {}}
+            purchase={purchases.find((p) => p.id === params.row.id)}
           />
         ),
       ],
@@ -119,13 +118,18 @@ const InvoiceList: FC = () => {
       });
   };
 
+  const rows = useMemo(
+    () => purchases.map((d) => d.purchaseData) as ReceivedInvoice[],
+    [purchases]
+  );
+
   return (
     <>
       <CardContent>
         <DataGrid
           autoHeight
           columns={columns}
-          rows={invoices}
+          rows={rows}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}

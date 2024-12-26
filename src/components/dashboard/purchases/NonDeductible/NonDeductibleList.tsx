@@ -8,9 +8,10 @@ import {
   purchaseConverter,
   PurchasesFirestore,
 } from '@src/services/firestore/purchases';
-import { NonDeductible } from '@src/types/purchases';
+import { NonDeductible, Purchase } from '@src/types/purchases';
+import { where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import UpdateNonDeductible from './UpdateNonDeductible';
 
 const NonDeductibleList: FC = () => {
@@ -22,10 +23,10 @@ const NonDeductibleList: FC = () => {
     null
   );
 
-  const nonDeductibles = useCollectionSnapshot<NonDeductible>({
-    collectionName: COLLECTIONS_ENUM.NON_DEDUCTIBLES,
+  const purchases = useCollectionSnapshot<Purchase>({
+    collectionName: COLLECTIONS_ENUM.PURCHASES,
     converter: purchaseConverter,
-    order: { field: 'issueDate', direction: 'desc' },
+    additionalQueries: [where('type', '==', 'nonDeductible')],
   });
 
   const columns: GridColDef<NonDeductible>[] = [
@@ -109,13 +110,18 @@ const NonDeductibleList: FC = () => {
       });
   };
 
+  const rows = useMemo(
+    () => purchases.map((d) => d.purchaseData) as NonDeductible[],
+    [purchases]
+  );
+
   return (
     <>
       <CardContent>
         <DataGrid
           autoHeight
           columns={columns}
-          rows={nonDeductibles}
+          rows={rows}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
