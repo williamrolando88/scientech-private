@@ -64,7 +64,7 @@ export const CustomsPaymentSchema = z.object({
 
 const BaseSchema = z.object({
   id: z.string().optional(),
-  payment: PaymentSchema.optional(),
+  payment: PaymentSchema.nullish(),
 });
 
 export const PurchaseSchema = z.discriminatedUnion('type', [

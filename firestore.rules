@@ -23,22 +23,10 @@ service cloud.firestore {
     match /expenses/{doc} {
       allow read, write: if request.auth != null;
     }
-    match /receivedInvoices/{doc} {
-      allow read, write: if request.auth != null;
-    }
-    match /customsPayments/{doc} {
-      allow read, write: if request.auth != null;
-    }
-    match /nonDeductibles/{doc} {
-      allow read, write: if request.auth != null;
-    }
-    match /saleNotes/{doc} {
-      allow read, write: if request.auth != null;
-    }
     match /doubleEntryAccounting/{doc} {
       allow read, write: if request.auth != null;
     }
-    match /payments/{doc} {
+    match /purchases/{doc} {
       allow read, write: if request.auth != null;
     }
   }
