@@ -23,7 +23,7 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    PurchasesFirestore.update({ purchaseData: values })
+    PurchasesFirestore.update({ id: values.id, purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Liquidación aduanera actualizada exitosamente');

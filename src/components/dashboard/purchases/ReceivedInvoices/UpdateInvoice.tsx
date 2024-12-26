@@ -23,7 +23,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    PurchasesFirestore.update({ purchaseData: values })
+    PurchasesFirestore.update({ id: values.id, purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Factura actualizada exitosamente');

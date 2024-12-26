@@ -203,7 +203,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 />
               </Grid>
 
-              {/* TODO: Run script to add new account category field */}
               <Grid item xs={12}>
                 <AccountCategorySelector
                   label="Cuenta de gasto"

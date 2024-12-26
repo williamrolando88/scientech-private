@@ -23,7 +23,7 @@ const UpdateNonDeductible: FC<UpdateNonDeductibleProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    PurchasesFirestore.update({ purchaseData: values })
+    PurchasesFirestore.update({ id: values.id, purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Gasto actualizado exitosamente');

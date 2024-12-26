@@ -23,7 +23,7 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
     values,
     { setSubmitting, resetForm }
   ) => {
-    PurchasesFirestore.update({ purchaseData: values })
+    PurchasesFirestore.update({ id: values.id, purchaseData: values })
       .then(() => {
         resetForm();
         enqueueSnackbar('Nota de venta actualizada exitosamente');
