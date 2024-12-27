@@ -1,10 +1,19 @@
 import { LoadingButton } from '@mui/lab';
-import { Alert, Button, DialogActions, DialogContent, Stack } from '@mui/material';
+import {
+  Alert,
+  Button,
+  DialogActions,
+  DialogContent,
+  Stack,
+} from '@mui/material';
 import { DoubleEntryAccountingSchema } from '@src/lib/schemas/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useState } from 'react';
-import { FormikDatePicker, FormikTextField } from 'src/components/shared/formik-components';
+import {
+  FormikDatePicker,
+  FormikTextField,
+} from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
@@ -18,19 +27,19 @@ interface DayBookTransactionFormProps {
 }
 
 export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
-                                                                          onSubmit,
-                                                                          onClose,
-                                                                          infoText,
-                                                                          initialValues,
-                                                                        }) => {
+  onSubmit,
+  onClose,
+  infoText,
+  initialValues,
+}) => {
   const [formError, setFormError] = useState('');
 
   const handleSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = (
     values,
-    helpers,
+    helpers
   ) => {
     const error = dayBookTransactionsValidator(values);
-    values.accounts = values.transactions.map(t => t.accountId);
+    values.accounts = values.transactions.map((t) => t.accountId);
 
     if (error) {
       setFormError(error);

@@ -1,4 +1,7 @@
-import { DoubleEntryAccounting, DoubleEntryAccountingTransaction } from '@src/types/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
+} from '@src/types/doubleEntryAccounting';
 
 export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DoubleEntryAccountingTransaction =
   {
@@ -20,7 +23,7 @@ export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DoubleEntryAccounting = {
 };
 
 export const DAYBOOK_FORM_GRID_LAYOUT = [
-  { name: 'accountId', value: 6 },
+  { name: 'accountId', value: 10 },
   { name: 'debit', value: 2 },
   { name: 'credit', value: 2 },
   { name: 'action', value: 1 },
