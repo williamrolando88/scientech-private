@@ -23,7 +23,7 @@ export const DEFAULT_ACCOUNT = {
     PAYMENT: '2.01.04.01.01',
     EXPENSE: '5.02.02.20',
   },
-  IVA: '1.01.05.01',
+  IVA_TAX_CREDIT: '1.01.05.01',
 };
 
 export const ALLOWED_ACCOUNTS = {

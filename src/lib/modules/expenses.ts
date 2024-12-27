@@ -36,7 +36,7 @@ export const extendedCustomPaymentBuilder = (
   };
 
   const tax: DayBookTransactionDetailOld = {
-    account_id: DEFAULT_ACCOUNT.IVA,
+    account_id: DEFAULT_ACCOUNT.IVA_TAX_CREDIT,
     debit: formData.IVA,
     credit: 0,
     description: transactionDescription,
@@ -75,7 +75,7 @@ export const extendedInvoiceBuilder = (
   };
 
   const tax: DayBookTransactionDetailOld = {
-    account_id: DEFAULT_ACCOUNT.IVA,
+    account_id: DEFAULT_ACCOUNT.IVA_TAX_CREDIT,
     debit: formData.IVA,
     credit: 0,
     description: transactionDescription,

@@ -60,7 +60,7 @@ export const previousProjectReferencer = async (
   transaction: Transaction,
   expenseDocRef: DocumentReference<GeneralExpenseOld>
 ) => {
-  // Check for previous linked projects
+  // TODO: Check for previous linked projects
   const storedExpenseDoc = await transaction.get(expenseDocRef);
 
   if (!storedExpenseDoc.exists()) {
