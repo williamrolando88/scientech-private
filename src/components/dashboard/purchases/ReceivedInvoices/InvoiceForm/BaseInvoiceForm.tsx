@@ -220,6 +220,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="taxedSubtotal"
                   label="Base imponible"
+                  size="small"
                 />
               </Grid>
 
@@ -230,6 +231,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="noTaxSubtotal"
                   label="Subtotal 0%"
+                  size="small"
                 />
               </Grid>
 
