@@ -12,11 +12,13 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
+import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { SaleNoteSchema } from '@src/lib/schemas/purchases';
 import { SaleNote } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { AccountCategorySelector } from '../../AccountCategorySelector';
 import { ProjectSelector } from '../../ProjectSelector';
 
 type FormikProps = Pick<FormikConfig<SaleNote>, 'initialValues' | 'onSubmit'>;
@@ -116,6 +118,16 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <AccountCategorySelector
+                  label="Cuenta de gasto"
+                  name="expenseAccount"
+                  selectableCategories={ALLOWED_ACCOUNTS.SALE_NOTE.EXPENSE}
+                  initialValue={DEFAULT_ACCOUNT.SALE_NOTE.EXPENSE}
                   required
                 />
               </Grid>

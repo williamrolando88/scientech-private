@@ -12,11 +12,13 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
+import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { NonDeductibleSchema } from '@src/lib/schemas/purchases';
 import { NonDeductible } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { AccountCategorySelector } from '../../AccountCategorySelector';
 import { ProjectSelector } from '../../ProjectSelector';
 
 type FormikProps = Pick<
@@ -79,6 +81,16 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <AccountCategorySelector
+                  label="Cuenta de gasto"
+                  name="expenseAccount"
+                  selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.EXPENSE}
+                  initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.EXPENSE}
+                  required
                 />
               </Grid>
 
