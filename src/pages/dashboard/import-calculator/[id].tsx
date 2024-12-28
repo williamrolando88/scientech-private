@@ -1,3 +1,4 @@
+import ImportCalculationsFirebase from '@src/services/firestore/importCalculations';
 import { useRouter } from 'next/router';
 import ImportCalculatorComponent from 'src/components/dashboard/importCalculator/ImportCalculator';
 import CalculatorControllers from 'src/components/dashboard/importCalculator/ImportCalculator/CalculatorControllers';
@@ -6,7 +7,6 @@ import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLa
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 import useQueryOnMount from 'src/hooks/useQueryOnMount';
 import { IMPORT_CALCULATOR_LINKS } from 'src/lib/constants/importCalculator';
-import ImportCalculationsFirebase from 'src/services/firebase/importCalculations';
 import { ImportCalculator } from 'src/types/importCalculator';
 
 Page.getLayout = (page: React.ReactElement) => (

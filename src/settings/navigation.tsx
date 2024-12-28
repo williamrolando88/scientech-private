@@ -57,39 +57,43 @@ const navConfig = [
     subheader: 'Contabilidad',
     items: [
       {
-        title: 'Comprobantes',
-        path: PATH_DASHBOARD.vouchers.root,
-        icon: ICONS.invoice,
+        title: 'Compras',
+        path: PATH_DASHBOARD.purchases.root,
+        icon: ICONS.cart,
         children: [
           {
-            title: 'Facturas Recibidas',
-            path: PATH_DASHBOARD.vouchers.received.root,
+            title: 'Facturas',
+            path: PATH_DASHBOARD.purchases.invoices,
           },
           {
-            title: 'Facturas Emitidas',
-            path: PATH_DASHBOARD.vouchers.issued.root,
+            title: 'Declaraciones de Aduana',
+            path: PATH_DASHBOARD.purchases.customsPayments,
+          },
+          {
+            title: 'Notas de Venta',
+            path: PATH_DASHBOARD.purchases.sellNote,
+          },
+          {
+            title: 'Gastos no Deducibles',
+            path: PATH_DASHBOARD.purchases.nonDeductibles,
+          },
+        ],
+      },
+      {
+        title: 'Ventas',
+        path: PATH_DASHBOARD.sells.root,
+        icon: ICONS.analytics,
+        children: [
+          {
+            title: 'Facturas',
+            path: PATH_DASHBOARD.sells.invoices,
           },
         ],
       },
       {
         title: 'Libro Diario',
         path: PATH_DASHBOARD.dayBook.root,
-        icon: ICONS.analytics,
-      },
-      {
-        title: 'Banca',
-        path: PATH_DASHBOARD.banking.root,
-        icon: ICONS.banking,
-        children: [
-          {
-            title: 'Tarjetas de crédito',
-            path: PATH_DASHBOARD.banking.creditCards.root,
-          },
-          {
-            title: 'Cuentas bancarias',
-            path: PATH_DASHBOARD.banking.accounts.root,
-          },
-        ],
+        icon: ICONS.lock,
       },
     ],
   },

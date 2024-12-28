@@ -29,20 +29,16 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, 'projects', 'new'),
     open: (id: string) => path(ROOTS_DASHBOARD, 'projects', id),
   },
-  vouchers: {
-    root: path(ROOTS_DASHBOARD, 'vouchers'),
-    received: {
-      root: path(ROOTS_DASHBOARD, 'vouchers', 'received'),
-      list: path(ROOTS_DASHBOARD, 'vouchers', 'received', 'list'),
-      new: path(ROOTS_DASHBOARD, 'vouchers', 'received', 'new'),
-      open: (id: string) => path(ROOTS_DASHBOARD, 'vouchers', 'received', id),
-    },
-    issued: {
-      root: path(ROOTS_DASHBOARD, 'vouchers', 'issued'),
-      list: path(ROOTS_DASHBOARD, 'vouchers', 'issued', 'list'),
-      new: path(ROOTS_DASHBOARD, 'vouchers', 'issued', 'new'),
-      open: (id: string) => path(ROOTS_DASHBOARD, 'vouchers', 'issued', id),
-    },
+  purchases: {
+    root: path(ROOTS_DASHBOARD, 'purchases'),
+    invoices: path(ROOTS_DASHBOARD, 'purchases', 'invoices'),
+    customsPayments: path(ROOTS_DASHBOARD, 'purchases', 'customs-payments'),
+    sellNote: path(ROOTS_DASHBOARD, 'purchases', 'sale-notes'),
+    nonDeductibles: path(ROOTS_DASHBOARD, 'purchases', 'non-deductibles'),
+  },
+  sells: {
+    root: path(ROOTS_DASHBOARD, 'sells'),
+    invoices: path(ROOTS_DASHBOARD, 'sells', 'invoices'),
   },
   dayBook: {
     root: path(ROOTS_DASHBOARD, 'day-book'),
@@ -53,7 +49,6 @@ export const PATH_DASHBOARD = {
       root: path(ROOTS_DASHBOARD, 'banking', 'accounts'),
       open: (id: string) => path(ROOTS_DASHBOARD, 'banking', 'accounts', id),
     },
-
     creditCards: {
       root: path(ROOTS_DASHBOARD, 'banking', 'credit-cards'),
       open: (id: string) =>

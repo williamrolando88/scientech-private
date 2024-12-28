@@ -1,10 +1,10 @@
-import { COLLECTIONS } from '@src/lib/enums/collections';
-import { Projects } from '@src/services/firebase/projects';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { Projects } from '@src/services/firestore/projects';
 import { Client } from '@src/types/clients';
 import { Project } from '@src/types/projects';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const queryKey = [COLLECTIONS.PROJECTS];
+const queryKey = [COLLECTIONS_ENUM.PROJECTS];
 
 export const useListProjects = () => {
   const query = useQuery<Project[]>({

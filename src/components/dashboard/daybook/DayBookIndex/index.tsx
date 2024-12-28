@@ -1,80 +1,86 @@
 import { CardContent, CardHeader } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import Iconify from '@src/components/shared/iconify';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
-import { FC, useCallback, useMemo, useState } from 'react';
-import Iconify from 'src/components/shared/iconify';
-import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
+import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
+import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
-  getDayBookTransactions,
-  getTransactionDataByDetailId,
-} from 'src/lib/modules/dayBook';
-import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
+  DoubleEntryAccounting,
+  ExpandedTransaction,
+} from '@src/types/doubleEntryAccounting';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { DeleteDayBookTransaction } from './DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from './UpdateDayBookTransaction';
 
 const DayBookIndex: FC = () => {
-  const [transactionToDelete, setTransactionToDelete] =
-    useState<DayBookTransaction | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
-    useState<DayBookTransaction | null>(null);
+    useState<DoubleEntryAccounting | null>(null);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<DoubleEntryAccounting | null>(null);
   const [transactionToOpen, setTransactionToOpen] =
-    useState<DayBookTransaction | null>(null);
-  const { data: dayBookTransactions, isLoading } = useListDayBookTransactions();
+    useState<DoubleEntryAccounting | null>(null);
   const { data: accountCategories } = useListAccountCategories();
+
+  const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
+    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
+    converter: doubleEntryAccountingConverter,
+    order: { field: 'issueDate', direction: 'desc' },
+  });
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        dayBookTransactions
+        doubleEntryAccounting
       );
       setTransactionToDelete(transaction);
     },
-    [dayBookTransactions]
+    [doubleEntryAccounting]
   );
 
   const getTransactionToUpdate = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        dayBookTransactions
+        doubleEntryAccounting
       );
       setTransactionToUpdate(transaction);
     },
-    [dayBookTransactions]
+    [doubleEntryAccounting]
   );
 
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        dayBookTransactions
+        doubleEntryAccounting
       );
       setTransactionToOpen(transaction);
     },
-    [dayBookTransactions]
+    [doubleEntryAccounting]
   );
 
-  const columns: GridColDef<DayBookTableEntry>[] = useMemo(
+  const columns: GridColDef<ExpandedTransaction>[] = useMemo(
     () => [
       {
-        field: 'date',
+        field: 'issueDate',
         headerName: 'Fecha',
         flex: 1,
         type: 'date',
-        valueFormatter: ({ value }) =>
-          new Date(value as string).toLocaleDateString(),
       },
       {
-        field: 'account_id',
+        field: 'accountId',
         headerName: 'Cuenta contable',
         type: 'string',
         flex: 4,
         valueGetter: (params) =>
           `
-      ${params.row.account_id} -
-      ${accountCategories[params.row.account_id]?.name || ''}
+      ${params.row.accountId} -
+      ${accountCategories[params.row.accountId]?.name || ''}
       `,
       },
       {
@@ -139,9 +145,9 @@ const DayBookIndex: FC = () => {
     ]
   );
 
-  const rows: DayBookTableEntry[] = useMemo(
-    () => getDayBookTransactions(dayBookTransactions),
-    [dayBookTransactions]
+  const rows = useMemo(
+    () => expandDoubleEntryAccounting(doubleEntryAccounting),
+    [doubleEntryAccounting]
   );
 
   return (
@@ -152,13 +158,11 @@ const DayBookIndex: FC = () => {
         <DataGrid
           columns={columns}
           rows={rows}
-          loading={isLoading}
           density="compact"
           initialState={{
-            sorting: {
-              sortModel: [{ field: 'date', sort: 'desc' }],
-            },
+            pagination: { paginationModel: { pageSize: 20 } },
           }}
+          pageSizeOptions={[20, 50, 100]}
           sx={{
             '& .MuiDataGrid-columnHeader': {
               bgcolor: (theme) => theme.palette.action.selected,

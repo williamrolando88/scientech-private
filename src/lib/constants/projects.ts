@@ -8,9 +8,4 @@ export const PROJECTS_INITIAL_VALUE: Project = {
   start_date: new Date(),
   end_date: new Date(),
   status: 'active',
-  custom_payments_id: [],
-  events: [],
-  issued_invoices_id: [],
-  issued_quotations_id: [],
-  received_vouchers: [],
 };

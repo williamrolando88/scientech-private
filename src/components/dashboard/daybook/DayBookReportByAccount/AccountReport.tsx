@@ -1,17 +1,23 @@
 import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import Iconify from '@src/components/shared/iconify';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
+import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
+import {
+  DoubleEntryAccounting,
+  ExpandedTransaction,
+} from '@src/types/doubleEntryAccounting';
+import { where } from 'firebase/firestore';
 import { round } from 'mathjs';
 import { FC, useCallback, useMemo, useState } from 'react';
-import Iconify from 'src/components/shared/iconify';
-import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
 import {
-  getDayBookTransactions,
   getDecrementByAccount,
   getIncrementByAccount,
   getPositiveValueByAccount,
   getTransactionDataByDetailId,
 } from 'src/lib/modules/dayBook';
-import { DayBookTableEntry, DayBookTransaction } from 'src/types/dayBook';
 import { DeleteDayBookTransaction } from '../DayBookIndex/DeleteDayBookTransaction';
 import { OpenDayBookTransaction } from '../DayBookIndex/OpenDayBookTransaction';
 import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransaction';
@@ -19,42 +25,58 @@ import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransacti
 interface AccountReportProps {
   account: string;
 }
+
 export const AccountReport: FC<AccountReportProps> = ({ account }) => {
-  const { data: transactions } = useListDayBookTransactions();
   const [transactionToOpen, setTransactionToOpen] =
-    useState<DayBookTransaction | null>(null);
+    useState<DoubleEntryAccounting | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
-    useState<DayBookTransaction | null>(null);
+    useState<DoubleEntryAccounting | null>(null);
   const [transactionToDelete, setTransactionToDelete] =
-    useState<DayBookTransaction | null>(null);
+    useState<DoubleEntryAccounting | null>(null);
+
+  const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
+    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
+    converter: doubleEntryAccountingConverter,
+    order: { field: 'issueDate', direction: 'desc' },
+    additionalQueries: [where('accounts', 'array-contains', account)],
+  });
 
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
       setTransactionToOpen(transaction);
     },
-    [transactions]
+    [doubleEntryAccounting]
   );
 
   const getTransactionToUpdate = useCallback(
     (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
       setTransactionToUpdate(transaction);
     },
-    [transactions]
+    [doubleEntryAccounting]
   );
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
-      const transaction = getTransactionDataByDetailId(detailId, transactions);
+      const transaction = getTransactionDataByDetailId(
+        detailId,
+        doubleEntryAccounting
+      );
       setTransactionToDelete(transaction);
     },
-    [transactions]
+    [doubleEntryAccounting]
   );
 
-  const columns: GridColDef<DayBookTableEntry>[] = [
+  const columns: GridColDef<ExpandedTransaction>[] = [
     {
-      field: 'date',
+      field: 'issueDate',
       headerName: 'Fecha',
       flex: 1,
       type: 'date',
@@ -78,22 +100,6 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
       headerAlign: 'left',
     },
     {
-      field: 'quotation_id',
-      headerName: 'Cotización',
-      flex: 1,
-      type: 'number',
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
-      field: 'invoice_id',
-      headerName: 'Factura',
-      flex: 1,
-      type: 'number',
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
       field: 'actions',
       type: 'actions',
       width: 50,
@@ -108,52 +114,47 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
           label="Modificar"
           onClick={() => getTransactionToUpdate(params.id as string)}
           icon={<Iconify icon="pajamas:doc-changes" />}
+          disabled={params.row.locked}
           showInMenu
         />,
         <GridActionsCellItem
           label="Borrar"
           onClick={() => getTransactionToDelete(params.id as string)}
           icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
           disabled={params.row.locked}
+          showInMenu
         />,
       ],
     },
   ];
 
-  const dayBookTableEntries = useMemo(
+  const rows = useMemo(
     () =>
-      getDayBookTransactions(transactions).filter(
-        (t) => t.account_id === account
+      expandDoubleEntryAccounting(doubleEntryAccounting).filter(
+        (r) => r.accountId === account
       ),
-    [transactions, account]
+    [doubleEntryAccounting, account]
   );
 
   const balanceReport = useMemo(
     () =>
-      dayBookTableEntries.reduce(
+      rows.reduce(
         (acc, current) => acc + getPositiveValueByAccount(current),
         0
       ),
-    [dayBookTableEntries]
+    [rows]
   );
 
   const totalIncrement = useMemo(
     () =>
-      dayBookTableEntries.reduce(
-        (acc, current) => acc + getIncrementByAccount(current),
-        0
-      ),
-    [dayBookTableEntries]
+      rows.reduce((acc, current) => acc + getIncrementByAccount(current), 0),
+    [rows]
   );
 
   const totalDecrement = useMemo(
     () =>
-      dayBookTableEntries.reduce(
-        (acc, current) => acc + getDecrementByAccount(current),
-        0
-      ),
-    [dayBookTableEntries]
+      rows.reduce((acc, current) => acc + getDecrementByAccount(current), 0),
+    [rows]
   );
 
   return (
@@ -174,7 +175,7 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
 
       <Card variant="outlined">
         <DataGrid
-          rows={dayBookTableEntries}
+          rows={rows}
           columns={columns}
           autoHeight
           density="compact"

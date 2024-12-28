@@ -19,8 +19,11 @@ const DayBookReportByAccount: FC = () => {
           selectedAccount={selectedAccount}
           setSelectedAccount={setSelectedAccount}
         />
-
-        <AccountReport account={selectedAccount} />
+        {selectedAccount ? (
+          <AccountReport account={selectedAccount} />
+        ) : (
+          'Selecciona una cuenta contable para ver el reporte'
+        )}
       </Stack>
     </>
   );

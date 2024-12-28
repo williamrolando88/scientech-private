@@ -1,32 +1,30 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { DayBookTransactionSchema } from '@src/lib/schemas/dayBook';
+import { FirestoreDoubleEntryAccounting } from '@src/services/firestore/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import { useUpdateDayBookTransaction } from 'src/hooks/cache/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { DayBookTransactionForm } from '../DayBookTransactionForm';
 
 interface UpdateDayBookTransactionProps {
-  transaction: DayBookTransaction | null;
-  setTransaction: (transaction: DayBookTransaction | null) => void;
+  transaction: DoubleEntryAccounting | null;
+  setTransaction: (transaction: DoubleEntryAccounting | null) => void;
 }
+
 export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
   setTransaction,
   transaction,
 }) => {
   const handleCloseModal = () => setTransaction(null);
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: updateTransaction } = useUpdateDayBookTransaction();
 
-  const onSubmit: FormikConfig<DayBookTransaction>['onSubmit'] = async (
+  const onSubmit: FormikConfig<DoubleEntryAccounting>['onSubmit'] = async (
     values,
     { setSubmitting, resetForm }
   ) => {
     setSubmitting(true);
 
-    updateTransaction(values)
+    FirestoreDoubleEntryAccounting.upsert(values)
       .then(() => {
         resetForm();
         enqueueSnackbar('Transacción actualizada exitosamente');
@@ -59,7 +57,6 @@ export const UpdateDayBookTransaction: FC<UpdateDayBookTransactionProps> = ({
         initialValues={transaction}
         onSubmit={onSubmit}
         onClose={handleCloseModal}
-        validationSchema={toFormikValidationSchema(DayBookTransactionSchema)}
       />
     </Dialog>
   );

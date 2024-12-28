@@ -1,7 +1,7 @@
 import { Button, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Head from 'next/head';
-import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { MotionContainer, varBounce } from 'src/components/shared/animate';
 import CompactLayout from 'src/components/shared/layouts/compact/CompactLayout';
 import { PageNotFoundIllustration } from '../assets/illustrations';
@@ -11,6 +11,7 @@ Page404.getLayout = (page: React.ReactElement) => (
 );
 
 export default function Page404() {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -40,8 +41,8 @@ export default function Page404() {
           />
         </m.div>
 
-        <Button component={NextLink} href="/" size="large" variant="contained">
-          Go to Home
+        <Button onClick={router.back} size="large" variant="contained">
+          Go Back
         </Button>
       </MotionContainer>
     </>

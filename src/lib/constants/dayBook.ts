@@ -1,31 +1,30 @@
 import {
-  DayBookTransaction,
-  DayBookTransactionDetail,
-} from 'src/types/dayBook';
+  DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
+} from '@src/types/doubleEntryAccounting';
 
-export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DayBookTransactionDetail =
+export const DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE: DoubleEntryAccountingTransaction =
   {
-    account_id: '',
+    accountId: '',
     debit: 0,
     credit: 0,
-    description: '',
-    invoice_id: '' as unknown as number,
-    quotation_id: '' as unknown as number,
-    expense_id: '',
-    project_id: '',
   };
 
-export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DayBookTransaction = {
-  date: new Date(),
+export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DoubleEntryAccounting = {
+  issueDate: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  locked: false,
+  description: '',
+  ref: {},
+  id: '',
   transactions: new Array(2).fill(DAYBOOK_TRANSACTION_DETAIL_INITIAL_VALUE),
+  accounts: [],
 };
 
 export const DAYBOOK_FORM_GRID_LAYOUT = [
-  { name: 'account_id', value: 6 },
-  { name: 'debit', value: 3 },
-  { name: 'credit', value: 3 },
-  { name: 'description', value: 6 },
-  { name: 'invoice_id', value: 3 },
-  { name: 'quotation_id', value: 3 },
-  { name: 'action', value: 2 },
+  { name: 'accountId', value: 10 },
+  { name: 'debit', value: 2 },
+  { name: 'credit', value: 2 },
+  { name: 'action', value: 1 },
 ];

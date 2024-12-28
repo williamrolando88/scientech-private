@@ -5,10 +5,21 @@ import {
   signOut,
 } from 'firebase/auth';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
-import { COLLECTIONS } from 'src/lib/enums/collections';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+} from 'react';
+import { COLLECTIONS_ENUM } from 'src/lib/enums/collections';
 import { AUTH, DB } from 'src/settings/firebase';
-import { ActionMapType, AuthStateType, AuthUserType, FirebaseContextType } from './types';
+import {
+  ActionMapType,
+  AuthStateType,
+  AuthUserType,
+  FirebaseContextType,
+} from './types';
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -53,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       onAuthStateChanged(AUTH, async (user) => {
         if (user) {
-          const userRef = doc(DB, COLLECTIONS.USERS, user.uid);
+          const userRef = doc(DB, COLLECTIONS_ENUM.USERS, user.uid);
           const docSnap = await getDoc(userRef);
           const profile = docSnap.data();
 
@@ -92,17 +103,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string) => {
-      await createUserWithEmailAndPassword(AUTH, email, password).then(async (res) => {
-        const userRef = doc(collection(DB, 'users'), res.user?.uid);
+    async (
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string
+    ) => {
+      await createUserWithEmailAndPassword(AUTH, email, password).then(
+        async (res) => {
+          const userRef = doc(collection(DB, 'users'), res.user?.uid);
 
-        await setDoc(userRef, {
-          uid: res.user?.uid,
-          email,
-          displayName: `${firstName} ${lastName}`,
-          role: 'user',
-        });
-      });
+          await setDoc(userRef, {
+            uid: res.user?.uid,
+            email,
+            displayName: `${firstName} ${lastName}`,
+            role: 'user',
+          });
+        }
+      );
     },
     []
   );
@@ -121,8 +139,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       register,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, register, logout]
+    [
+      state.isAuthenticated,
+      state.isInitialized,
+      state.user,
+      login,
+      register,
+      logout,
+    ]
   );
 
-  return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={memoizedValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

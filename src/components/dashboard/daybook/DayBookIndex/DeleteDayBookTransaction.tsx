@@ -1,13 +1,12 @@
-import { LoadingButton } from '@mui/lab';
 import { Button } from '@mui/material';
+import { FirestoreDoubleEntryAccounting } from '@src/services/firestore/doubleEntryAccounting';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import { useDeleteDayBookTransaction } from 'src/hooks/cache/dayBook';
-import { DayBookTransaction } from 'src/types/dayBook';
 import { OpenDayBookTransaction } from './OpenDayBookTransaction';
 
 interface DeleteDayBookTransactionProps {
-  transaction: DayBookTransaction | null;
+  transaction: DoubleEntryAccounting | null;
   onClose: () => void;
 }
 
@@ -16,13 +15,11 @@ export const DeleteDayBookTransaction: FC<DeleteDayBookTransactionProps> = ({
   onClose,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: handleDeleteAccount, isPending } =
-    useDeleteDayBookTransaction();
 
   const transactionId = transaction?.id || '';
 
   const handleConfirm = () => {
-    handleDeleteAccount(transactionId)
+    FirestoreDoubleEntryAccounting.remove(transactionId)
       .then(() => {
         enqueueSnackbar('Transacción eliminada exitosamente');
         onClose();
@@ -44,18 +41,11 @@ export const DeleteDayBookTransaction: FC<DeleteDayBookTransactionProps> = ({
       title="Eliminar Transacción"
       actions={
         <>
-          <Button onClick={onClose} disabled={isPending}>
-            Cancelar
-          </Button>
+          <Button onClick={onClose}>Cancelar</Button>
 
-          <LoadingButton
-            variant="contained"
-            onClick={handleConfirm}
-            loading={isPending}
-            color="error"
-          >
+          <Button variant="contained" onClick={handleConfirm} color="error">
             Eliminar
-          </LoadingButton>
+          </Button>
         </>
       }
       alertText="La transacción que deseas eliminar contiene los siguientes detalles. ¿Está seguro que desea eliminar esta transacción?"

@@ -5,16 +5,6 @@ export const ISD_TAX_RATE = 5;
 export const FODINFA_TAX_RATE = 0.5;
 export const INSURANCE_RATE = 1;
 export const TAX_PERCENTAGE_CODES = [2, 4];
-export const DEFAULT_INVOICE_PAYMENT_ACCOUNT = '1.01.01.03.01';
-export const DEFAULT_INVOICE_EXPENSE_ACCOUNT = '5.01.01.02';
-export const PAYMENT_INVOICE_ALLOWED_ACCOUNTS = [
-  '1.01.01.03.01',
-  '1.01.02.05.02.01',
-  '1.01.02.05.02.02',
-  '2.01.04.01.01',
-  '2.01.04.01.02',
-];
-export const INVOICE_EXPENSE_ALLOWED_ACCOUNTS = ['5.02.01', '5.02.02'];
 
 export const DEFAULT_ACCOUNT = {
   INVOICE: {
@@ -33,7 +23,7 @@ export const DEFAULT_ACCOUNT = {
     PAYMENT: '2.01.04.01.01',
     EXPENSE: '5.02.02.20',
   },
-  IVA: '1.01.05.01',
+  IVA_TAX_CREDIT: '1.01.05.01',
 };
 
 export const ALLOWED_ACCOUNTS = {

@@ -2,7 +2,6 @@ import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddProject } from '@src/hooks/cache/projects';
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
 import { ProjectSchema } from '@src/lib/schemas/projects';
-import { useAuthContext } from '@src/services/auth/useAuthContext';
 import { Project } from '@src/types/projects';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -14,7 +13,6 @@ const AddProject: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const { user } = useAuthContext();
   const { mutateAsync: addProject } = useAddProject();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -22,10 +20,6 @@ const AddProject: FC = () => {
     values,
     { setSubmitting, resetForm }
   ) => {
-    values.events = [
-      { date: new Date(), action: 'created', user_id: user?.uid },
-    ];
-
     addProject(values)
       .then(() => {
         resetForm();
@@ -33,7 +27,6 @@ const AddProject: FC = () => {
         handleCloseModal();
       })
       .catch((error) => {
-        values.events = [];
         console.error(error);
         enqueueSnackbar('Error al guardar el proyecto', {
           variant: 'error',
