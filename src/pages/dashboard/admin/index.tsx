@@ -1,6 +1,6 @@
+import { LoadingButton } from '@mui/lab';
 import { Button, Stack } from '@mui/material';
 import { useListDayBookTransactions } from '@src/hooks/cache/dayBook';
-import { useListExpensesByType } from '@src/hooks/cache/expenses';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
@@ -16,276 +16,236 @@ import {
   ReceivedInvoice,
   SaleNote,
 } from '@src/types/purchases';
-import { doc, writeBatch } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  writeBatch,
+} from 'firebase/firestore';
+import { useSnackbar } from 'notistack';
 import { FC, useEffect, useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
-const ExportCustomsPaymentsNewFormat: FC = () => {
-  const { data: oldData, isLoading } =
-    useListExpensesByType<CustomsPaymentOld>('customs_payment');
+const customPayment2Purchase = (data: CustomsPaymentOld): Purchase => {
+  const ref: Record<string, string> = {};
 
-  const converter = (data: CustomsPaymentOld): Purchase => {
-    const ref: Record<string, string> = {};
-
-    if (data.project_id) {
-      ref.project_id = data.project_id;
-    }
-
-    const purchaseData: CustomsPayment = {
-      id: data.id || '',
-      paid: true,
-      description: data.description || '',
-      issueDate: data.issue_date,
-      IVA: data.IVA,
-      FODINFA: data.FODINFA,
-      adValoremTariff: data.ad_valorem_tariff,
-      specificTariff: data.specific_tariff,
-      customsPaymentNumber: data.customs_payment_number,
-      total: data.total,
-      ref,
-    };
-
-    return {
-      id: data.id,
-      purchaseData,
-      type: 'customsPayment',
-    };
-  };
-
-  const execute = async () => {
-    if (oldData.length === 0) {
-      alert('Cargando datos...');
-      return;
-    }
-
-    console.log('Started batch creation');
-    const batch = writeBatch(DB);
-
-    oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
-
-      const convertedData = converter(document);
-      batch.set(docRef, convertedData);
-      console.log('Added document with ID: ', docRef.id, ' to batch');
-    });
-
-    console.log('Committing batch');
-    await batch.commit();
-    console.log('Batch committed');
-  };
-
-  if (isLoading) {
-    return <p>Cargando liquidaciones...</p>;
+  if (data.project_id) {
+    ref.project_id = data.project_id;
   }
 
-  return (
-    <Button onClick={execute} disabled={isLoading || !oldData.length}>
-      {!oldData.length
-        ? 'No hay datos'
-        : 'Exportar Liquidaciones en Nuevo Formato'}
-    </Button>
-  );
+  const purchaseData: CustomsPayment = {
+    id: data.id || '',
+    paid: true,
+    description: data.description || '',
+    issueDate: data.issue_date,
+    IVA: data.IVA,
+    FODINFA: data.FODINFA,
+    adValoremTariff: data.ad_valorem_tariff,
+    specificTariff: data.specific_tariff,
+    customsPaymentNumber: data.customs_payment_number,
+    total: data.total,
+    ref,
+  };
+
+  return {
+    id: data.id,
+    purchaseData,
+    type: 'customsPayment',
+  };
 };
 
-const ExportInvoicesNewFormat: FC = () => {
-  const { data: oldData, isLoading } =
-    useListExpensesByType<InvoiceOld>('invoice');
+const invoice2Purchase = (data: InvoiceOld): Purchase => {
+  const ref: Record<string, string> = {};
 
-  const converter = (data: InvoiceOld): Purchase => {
-    const ref: Record<string, string> = {};
-
-    if (data.project_id) {
-      ref.projectId = data.project_id;
-    }
-
-    const purchaseData: ReceivedInvoice = {
-      id: data.id || '',
-      paid: true,
-      issueDate: data.issue_date,
-      description: data.description || '',
-      emissionPoint: data.emission_point,
-      establishment: data.establishment,
-      sequentialNumber: data.sequential_number,
-      issuerId: data.issuer_id,
-      issuerName: data.issuer_name || '',
-      noTaxSubtotal: data.tax_exempted_subtotal || 0,
-      taxedSubtotal: data.taxed_subtotal || 0,
-      IVA: data.IVA,
-      total: data.total,
-      ref,
-      expenseAccount: '2.1.3.01.001',
-    };
-
-    return {
-      id: data.id,
-      purchaseData,
-      type: 'receivedInvoice',
-    };
-  };
-
-  const execute = async () => {
-    if (oldData.length === 0) {
-      alert('Cargando datos...');
-      return;
-    }
-
-    console.log('Started batch creation');
-    const batch = writeBatch(DB);
-
-    oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
-
-      const convertedData = converter(document);
-      batch.set(docRef, convertedData);
-      console.log('Added document with ID: ', docRef.id, ' to batch');
-    });
-
-    console.log('Committing batch');
-    await batch.commit();
-    console.log('Batch committed');
-  };
-
-  if (isLoading) {
-    return <p>Cargando facturas...</p>;
+  if (data.project_id) {
+    ref.projectId = data.project_id;
   }
 
-  return (
-    <Button onClick={execute} disabled={isLoading || !oldData.length}>
-      {!oldData.length ? 'No hay datos' : 'Exportar facturas en Nuevo Formato'}
-    </Button>
-  );
+  const purchaseData: ReceivedInvoice = {
+    id: data.id || '',
+    paid: true,
+    issueDate: data.issue_date,
+    description: data.description || '',
+    emissionPoint: data.emission_point,
+    establishment: data.establishment,
+    sequentialNumber: data.sequential_number,
+    issuerId: data.issuer_id,
+    issuerName: data.issuer_name || '',
+    noTaxSubtotal: data.tax_exempted_subtotal || 0,
+    taxedSubtotal: data.taxed_subtotal || 0,
+    IVA: data.IVA,
+    total: data.total,
+    ref,
+    expenseAccount: '2.1.3.01.001',
+  };
+
+  return {
+    id: data.id,
+    purchaseData,
+    type: 'receivedInvoice',
+  };
 };
 
-const ExportSaleNotesNewFormat: FC = () => {
-  const { data: oldData, isLoading } =
-    useListExpensesByType<ExpenseOld>('sale_note');
+const saleNote2Purchase = (data: ExpenseOld): Purchase => {
+  const ref: Record<string, string> = {};
 
-  const converter = (data: ExpenseOld): Purchase => {
-    const ref: Record<string, string> = {};
-
-    if (data.project_id) {
-      ref.project_id = data.project_id;
-    }
-
-    const purchaseData: SaleNote = {
-      id: data.id || '',
-      paid: true,
-      description: data.description || '',
-      issueDate: data.issue_date,
-      total: data.total,
-      emissionPoint: 1,
-      establishment: 1,
-      sequentialNumber: 1,
-      issuerId: '9999999999',
-      issuerName: data.issuer_name || '',
-      ref,
-      expenseAccount: '2.1.3.01.001',
-    };
-
-    return {
-      id: data.id,
-      purchaseData,
-      type: 'saleNote',
-    };
-  };
-
-  const execute = async () => {
-    if (oldData.length === 0) {
-      alert('Cargando datos...');
-      return;
-    }
-
-    console.log('Started batch creation');
-    const batch = writeBatch(DB);
-
-    oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
-
-      const convertedData = converter(document);
-      batch.set(docRef, convertedData);
-      console.log('Added document with ID: ', docRef.id, ' to batch');
-    });
-
-    console.log('Committing batch');
-    await batch.commit();
-    console.log('Batch committed');
-  };
-
-  if (isLoading) {
-    return <p>Cargando notas de venta...</p>;
+  if (data.project_id) {
+    ref.project_id = data.project_id;
   }
 
-  return (
-    <Button onClick={execute} disabled={isLoading || !oldData.length}>
-      {!oldData.length
-        ? 'No hay datos'
-        : 'Exportar notas de venta en Nuevo Formato'}
-    </Button>
-  );
+  const purchaseData: SaleNote = {
+    id: data.id || '',
+    paid: true,
+    description: data.description || '',
+    issueDate: data.issue_date,
+    total: data.total,
+    emissionPoint: 1,
+    establishment: 1,
+    sequentialNumber: 1,
+    issuerId: '9999999999',
+    issuerName: data.issuer_name || '',
+    ref,
+    expenseAccount: '2.1.3.01.001',
+  };
+
+  return {
+    id: data.id,
+    purchaseData,
+    type: 'saleNote',
+  };
 };
 
-const ExportNonDeductiblesNewFormat: FC = () => {
-  const { data: oldData, isLoading } =
-    useListExpensesByType<ExpenseOld>('non_deductible');
+const nonDeductible2Purchase = (data: ExpenseOld): Purchase => {
+  const ref: Record<string, string> = {};
 
-  const converter = (data: ExpenseOld): Purchase => {
-    const ref: Record<string, string> = {};
-
-    if (data.project_id) {
-      ref.project_id = data.project_id;
-    }
-
-    const purchaseData: NonDeductible = {
-      id: data.id || '',
-      paid: true,
-      description: data.description || '',
-      issueDate: data.issue_date,
-      issuerName: data.issuer_name || '',
-      total: data.total,
-      ref,
-      expenseAccount: '2.1.3.01.001',
-    };
-
-    return {
-      id: data.id,
-      purchaseData,
-      type: 'nonDeductible',
-    };
-  };
-
-  const execute = async () => {
-    if (oldData.length === 0) {
-      alert('Cargando datos...');
-      return;
-    }
-
-    console.log('Started batch creation');
-    const batch = writeBatch(DB);
-
-    oldData.forEach((document) => {
-      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
-
-      const convertedData = converter(document);
-      batch.set(docRef, convertedData);
-      console.log('Added document with ID: ', docRef.id, ' to batch');
-    });
-
-    console.log('Committing batch');
-    await batch.commit();
-    console.log('Batch committed');
-  };
-
-  if (isLoading) {
-    return <p>Cargando no deducibles...</p>;
+  if (data.project_id) {
+    ref.project_id = data.project_id;
   }
 
+  const purchaseData: NonDeductible = {
+    id: data.id || '',
+    paid: true,
+    description: data.description || '',
+    issueDate: data.issue_date,
+    issuerName: data.issuer_name || '',
+    total: data.total,
+    ref,
+    expenseAccount: '2.1.3.01.001',
+  };
+
+  return {
+    id: data.id,
+    purchaseData,
+    type: 'nonDeductible',
+  };
+};
+
+const ExportExpenses: FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [expenses, setExpenses] = useState<any[]>([]);
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [loadingExpenses, setLoadingExpenses] = useState(false);
+  const [converting, setConverting] = useState(false);
+  const [uploadingExpenses, setUploadingExpenses] = useState(false);
+
+  const loadExpenses = async () => {
+    setLoadingExpenses(true);
+    const q = query(collection(DB, COLLECTIONS_ENUM.EXPENSES));
+    const querySnapshot = await getDocs(q);
+
+    const expensesArray = querySnapshot.docs.map((document) => document.data());
+    setExpenses(expensesArray);
+    setLoadingExpenses(false);
+    enqueueSnackbar(`${expensesArray.length} were loaded into memory`);
+  };
+
+  const convertExpense2Purchase = () => {
+    enqueueSnackbar('Starting converting expenses to purchases');
+    setConverting(true);
+
+    const purchasesArray = new Array(expenses.length);
+
+    expenses.forEach((expense, index) => {
+      if (expense.type === 'non_deductible') {
+        purchasesArray[index] = nonDeductible2Purchase(expense);
+        return;
+      }
+
+      if (expense.type === 'sale_note') {
+        purchasesArray[index] = saleNote2Purchase(expense);
+        return;
+      }
+
+      if (expense.type === 'customs_payment') {
+        purchasesArray[index] = customPayment2Purchase(expense);
+        return;
+      }
+
+      if (expense.type === 'invoice') {
+        purchasesArray[index] = invoice2Purchase(expense);
+        return;
+      }
+
+      console.error('No category match for: ', expense);
+      purchasesArray[index] = null;
+    });
+
+    const errorsArray = purchasesArray.filter((p) => !p);
+
+    if (errorsArray) {
+      enqueueSnackbar(`Finished with errors ${errorsArray.length}`);
+    } else {
+      enqueueSnackbar('Finished with no errors');
+    }
+
+    setPurchases(purchasesArray);
+    setConverting(false);
+  };
+
+  const storePurchases = async () => {
+    setUploadingExpenses(true);
+    enqueueSnackbar('Documents upload started');
+    const batch = writeBatch(DB);
+
+    purchases.forEach((document) => {
+      const docRef = doc(DB, COLLECTIONS_ENUM.PURCHASES, document.id ?? '');
+
+      batch.set(docRef, document);
+      console.info('Added document with ID: ', docRef.id, ' to batch');
+    });
+
+    console.info('Committing batch');
+    await batch.commit();
+    console.info('Batch committed');
+
+    enqueueSnackbar('Documents upload finished');
+    setUploadingExpenses(false);
+  };
+
   return (
-    <Button onClick={execute} disabled={isLoading || !oldData.length}>
-      {!oldData.length
-        ? 'No hay datos'
-        : 'Exportar no deducibles en Nuevo Formato'}
-    </Button>
+    <Stack direction="row" gap={2}>
+      <LoadingButton onClick={loadExpenses} loading={loadingExpenses}>
+        Load Expenses into memory
+      </LoadingButton>
+
+      <LoadingButton
+        onClick={convertExpense2Purchase}
+        disabled={expenses.length === 0}
+        loading={converting}
+      >
+        Convert Expenses into Purchases
+      </LoadingButton>
+
+      <LoadingButton
+        onClick={storePurchases}
+        disabled={purchases.length === 0}
+        loading={uploadingExpenses}
+      >
+        Store Purchases
+      </LoadingButton>
+    </Stack>
   );
 };
 
@@ -452,10 +412,7 @@ export default function Page() {
   return (
     <DashboardTemplate documentTitle="Admin" heading="Admin Tools">
       <Stack>
-        <ExportCustomsPaymentsNewFormat />
-        <ExportNonDeductiblesNewFormat />
-        <ExportSaleNotesNewFormat />
-        <ExportInvoicesNewFormat />
+        <ExportExpenses />
         <ExportDayBookNewFormat />
       </Stack>
     </DashboardTemplate>
