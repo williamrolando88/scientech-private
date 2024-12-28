@@ -1,5 +1,6 @@
 import { LoadingButton } from '@mui/lab';
 import { Stack, Typography } from '@mui/material';
+import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { DB } from '@src/settings/firebase';
 import { DayBookTransactionOld } from '@src/types/dayBook';
@@ -30,120 +31,6 @@ import DashboardTemplate from 'src/components/shared/layouts/dashboard/Dashboard
 
 const BATCH_LIMIT = 500; // Firestore batch write limit
 
-const customPayment2Purchase = (data: CustomsPaymentOld): Purchase => {
-  const ref: Record<string, string> = {};
-
-  if (data.project_id) {
-    ref.project_id = data.project_id;
-  }
-
-  const purchaseData: CustomsPayment = {
-    id: data.id || '',
-    paid: true,
-    description: data.description || '',
-    issueDate: data.issue_date,
-    IVA: data.IVA,
-    FODINFA: data.FODINFA,
-    adValoremTariff: data.ad_valorem_tariff,
-    specificTariff: data.specific_tariff,
-    customsPaymentNumber: data.customs_payment_number,
-    total: data.total,
-    ref,
-  };
-
-  return {
-    id: data.id,
-    purchaseData,
-    type: 'customsPayment',
-  };
-};
-
-const invoice2Purchase = (data: InvoiceOld): Purchase => {
-  const ref: Record<string, string> = {};
-
-  if (data.project_id) {
-    ref.projectId = data.project_id;
-  }
-
-  const purchaseData: ReceivedInvoice = {
-    id: data.id || '',
-    paid: true,
-    issueDate: data.issue_date,
-    description: data.description || '',
-    emissionPoint: data.emission_point,
-    establishment: data.establishment,
-    sequentialNumber: data.sequential_number,
-    issuerId: data.issuer_id,
-    issuerName: data.issuer_name || '',
-    noTaxSubtotal: data.tax_exempted_subtotal || 0,
-    taxedSubtotal: data.taxed_subtotal || 0,
-    IVA: data.IVA,
-    total: data.total,
-    ref,
-    expenseAccount: '2.1.3.01.001',
-  };
-
-  return {
-    id: data.id,
-    purchaseData,
-    type: 'receivedInvoice',
-  };
-};
-
-const saleNote2Purchase = (data: ExpenseOld): Purchase => {
-  const ref: Record<string, string> = {};
-
-  if (data.project_id) {
-    ref.project_id = data.project_id;
-  }
-
-  const purchaseData: SaleNote = {
-    id: data.id || '',
-    paid: true,
-    description: data.description || '',
-    issueDate: data.issue_date,
-    total: data.total,
-    emissionPoint: 1,
-    establishment: 1,
-    sequentialNumber: 1,
-    issuerId: '9999999999',
-    issuerName: data.issuer_name || '',
-    ref,
-    expenseAccount: '2.1.3.01.001',
-  };
-
-  return {
-    id: data.id,
-    purchaseData,
-    type: 'saleNote',
-  };
-};
-
-const nonDeductible2Purchase = (data: ExpenseOld): Purchase => {
-  const ref: Record<string, string> = {};
-
-  if (data.project_id) {
-    ref.project_id = data.project_id;
-  }
-
-  const purchaseData: NonDeductible = {
-    id: data.id || '',
-    paid: true,
-    description: data.description || '',
-    issueDate: data.issue_date,
-    issuerName: data.issuer_name || '',
-    total: data.total,
-    ref,
-    expenseAccount: '2.1.3.01.001',
-  };
-
-  return {
-    id: data.id,
-    purchaseData,
-    type: 'nonDeductible',
-  };
-};
-
 const ExportExpenses: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [expenses, setExpenses] = useState<any[]>([]);
@@ -151,16 +38,171 @@ const ExportExpenses: FC = () => {
   const [loadingExpenses, setLoadingExpenses] = useState(false);
   const [converting, setConverting] = useState(false);
   const [uploadingExpenses, setUploadingExpenses] = useState(false);
+  const [accountingData, setAccountingData] = useState<DoubleEntryAccounting[]>(
+    []
+  );
+
+  const getExpenseAccount = (id: string) => {
+    const docData = accountingData.find((d) => d.id === id);
+
+    if (!docData) {
+      return DEFAULT_ACCOUNT.INVOICE.EXPENSE;
+    }
+
+    const expenseAccounts = docData.accounts.filter((account) =>
+      account.startsWith('5.')
+    );
+
+    if (expenseAccounts.length) {
+      return expenseAccounts[0];
+    }
+
+    return DEFAULT_ACCOUNT.INVOICE.EXPENSE;
+  };
+
+  const customPayment2Purchase = (data: CustomsPaymentOld): Purchase => {
+    const ref: Record<string, string> = {};
+
+    if (data.project_id) {
+      ref.project_id = data.project_id;
+    }
+
+    const purchaseData: CustomsPayment = {
+      id: data.id || '',
+      paid: true,
+      description: data.description || '',
+      issueDate: data.issue_date,
+      IVA: data.IVA,
+      FODINFA: data.FODINFA,
+      adValoremTariff: data.ad_valorem_tariff,
+      specificTariff: data.specific_tariff,
+      customsPaymentNumber: data.customs_payment_number,
+      total: data.total,
+      ref,
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'customsPayment',
+    };
+  };
+
+  const invoice2Purchase = (data: InvoiceOld): Purchase => {
+    const ref: Record<string, string> = {};
+
+    if (data.project_id) {
+      ref.projectId = data.project_id;
+    }
+
+    const purchaseData: ReceivedInvoice = {
+      id: data.id || '',
+      paid: true,
+      issueDate: data.issue_date,
+      description: data.description || '',
+      emissionPoint: data.emission_point,
+      establishment: data.establishment,
+      sequentialNumber: data.sequential_number,
+      issuerId: data.issuer_id,
+      issuerName: data.issuer_name || '',
+      noTaxSubtotal: data.tax_exempted_subtotal || 0,
+      taxedSubtotal: data.taxed_subtotal || 0,
+      IVA: data.IVA,
+      total: data.total,
+      ref,
+      expenseAccount: getExpenseAccount(data.id ?? ''),
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'receivedInvoice',
+    };
+  };
+
+  const saleNote2Purchase = (data: ExpenseOld): Purchase => {
+    const ref: Record<string, string> = {};
+
+    if (data.project_id) {
+      ref.project_id = data.project_id;
+    }
+
+    const purchaseData: SaleNote = {
+      id: data.id || '',
+      paid: true,
+      description: data.description || '',
+      issueDate: data.issue_date,
+      total: data.total,
+      emissionPoint: 1,
+      establishment: 1,
+      sequentialNumber: 1,
+      issuerId: '9999999999',
+      issuerName: data.issuer_name || '',
+      ref,
+      expenseAccount: getExpenseAccount(data.id ?? ''),
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'saleNote',
+    };
+  };
+
+  const nonDeductible2Purchase = (data: ExpenseOld): Purchase => {
+    const ref: Record<string, string> = {};
+
+    if (data.project_id) {
+      ref.project_id = data.project_id;
+    }
+
+    const purchaseData: NonDeductible = {
+      id: data.id || '',
+      paid: true,
+      description: data.description || '',
+      issueDate: data.issue_date,
+      issuerName: data.issuer_name || '',
+      total: data.total,
+      ref,
+      expenseAccount: 'null',
+    };
+
+    return {
+      id: data.id,
+      purchaseData,
+      type: 'nonDeductible',
+    };
+  };
 
   const loadExpenses = async () => {
-    setLoadingExpenses(true);
     const q = query(collection(DB, COLLECTIONS_ENUM.EXPENSES));
     const querySnapshot = await getDocs(q);
 
     const expensesArray = querySnapshot.docs.map((document) => document.data());
     setExpenses(expensesArray);
     setLoadingExpenses(false);
-    enqueueSnackbar(`${expensesArray.length} were loaded into memory`);
+    enqueueSnackbar(`${expensesArray.length} expenses were loaded into memory`);
+  };
+
+  const loadAccountingData = async () => {
+    setLoadingExpenses(true);
+    const q = query(collection(DB, COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING));
+    const querySnapshot = await getDocs(q);
+
+    const fetchedData = querySnapshot.docs.map(
+      (document) => document.data() as DoubleEntryAccounting
+    );
+    setAccountingData(fetchedData);
+    enqueueSnackbar(
+      `${fetchedData.length} accounting entries were loaded into memory`
+    );
+  };
+
+  const loadFirestoreData = async () => {
+    setLoadingExpenses(true);
+    await loadExpenses();
+    await loadAccountingData();
+    setLoadingExpenses(false);
   };
 
   const convertExpense2Purchase = () => {
@@ -248,7 +290,7 @@ const ExportExpenses: FC = () => {
     <Stack>
       <Typography variant="h4">Convert Expenses to Purchases</Typography>
       <Stack direction="row" gap={2}>
-        <LoadingButton onClick={loadExpenses} loading={loadingExpenses}>
+        <LoadingButton onClick={loadFirestoreData} loading={loadingExpenses}>
           Load Expenses into memory
         </LoadingButton>
         <LoadingButton
