@@ -1,4 +1,4 @@
-name: Test and Deploy Firebase Firestore Rules
+name: Preview check
 
 on:
   pull_request:
