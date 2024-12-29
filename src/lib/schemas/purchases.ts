@@ -2,7 +2,6 @@ import { ZOD_ERROR } from '@src/lib/constants/errors';
 import { CI_RUC_REGEX } from '@src/lib/constants/regex';
 import { z } from 'zod';
 import { DocumentRefSchema } from './documentRef';
-import { PaymentSchema } from './payment';
 
 export const ReceivedInvoiceSchema = z.object({
   id: z.string().optional(),
@@ -59,6 +58,14 @@ export const CustomsPaymentSchema = z.object({
   adValoremTariff: z.number().nonnegative(),
   specificTariff: z.number().nonnegative(),
   total: z.number().positive(),
+  ref: DocumentRefSchema,
+});
+
+export const PaymentSchema = z.object({
+  id: z.string(),
+  paymentAccount: z.string(),
+  amount: z.number(),
+  paymentDate: z.coerce.date(),
   ref: DocumentRefSchema,
 });
 

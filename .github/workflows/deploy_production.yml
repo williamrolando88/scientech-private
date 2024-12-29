@@ -1,4 +1,4 @@
-name: Deploy Firebase Firestore Rules
+name: Production Deploy
 
 on:
   push:

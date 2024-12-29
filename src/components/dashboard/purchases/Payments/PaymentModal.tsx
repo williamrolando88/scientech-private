@@ -13,8 +13,8 @@ import {
 } from '@src/components/shared/formik-components';
 import Iconify from '@src/components/shared/iconify';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
-import { PaymentSchema } from '@src/lib/schemas/payment';
-import { Payment } from '@src/types/payment';
+import { PaymentSchema } from '@src/lib/schemas/purchases';
+import { Payment } from '@src/types/purchases';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC, useEffect, useState } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';

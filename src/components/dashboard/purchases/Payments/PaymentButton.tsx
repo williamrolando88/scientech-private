@@ -1,8 +1,7 @@
 import { Button } from '@mui/material';
 import { PAYMENT_INITIAL_VALUE } from '@src/lib/constants/payment';
 import { PurchasesFirestore } from '@src/services/firestore/purchases';
-import { Payment } from '@src/types/payment';
-import { Purchase } from '@src/types/purchases';
+import { Payment, Purchase } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -27,6 +26,7 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
     const payment: Payment = {
       ...values,
       ref: { ...purchase.purchaseData.ref, purchaseId: purchase.id },
+      id: `${purchase.id}-p`,
     };
 
     PurchasesFirestore.pay({ id: purchase.id, payment })
