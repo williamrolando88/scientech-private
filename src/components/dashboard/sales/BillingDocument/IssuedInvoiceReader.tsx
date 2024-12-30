@@ -25,7 +25,7 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
     setParsedData(documentParsedData);
     setBusy(false);
 
-    console.log(documentParsedData);
+    console.log(documentParsedData[0]);
   };
 
   const handleClose = () => {

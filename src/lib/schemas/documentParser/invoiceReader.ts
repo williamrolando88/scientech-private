@@ -10,6 +10,8 @@ const ImpuestoSchema = z.object({
 export const TotalTaxSchema = z.union([ImpuestoSchema, ImpuestoSchema.array()]);
 
 const InfoFacturaSchema = z.object({
+  identificacionComprador: z.string(),
+  razonSocialComprador: z.string(),
   fechaEmision: z.string(),
   importeTotal: z.coerce.number(),
   totalConImpuestos: z.object({
