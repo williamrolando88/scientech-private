@@ -1,6 +1,7 @@
-import { DropzoneOptions } from 'react-dropzone';
 import { SxProps } from '@mui/material';
 import { Theme } from '@mui/material/styles';
+import { CSSProperties } from 'react';
+import { DropzoneOptions } from 'react-dropzone';
 
 export interface CustomFile extends File {
   path?: string;
@@ -22,4 +23,6 @@ export interface UploadProps extends DropzoneOptions {
   onRemove?: (file: CustomFile | string) => void;
   onRemoveAll?: VoidFunction;
   uploadButtonText?: string;
+  scrollable?: boolean;
+  scrollBoxHeight?: CSSProperties['height'];
 }
