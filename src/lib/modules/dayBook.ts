@@ -55,22 +55,10 @@ export const getTransactionDataByDetailId = (
   return transaction || null;
 };
 
-export const getInputColorById = (accountId: string) => {
+const checkDebitIncrement = (accountId: string) => {
   const [root] = accountId.split('.');
 
-  if (['1', '5'].includes(root)) {
-    return 'text-green-500';
-  }
-
-  if (root === '2') {
-    return 'text-red-500';
-  }
-
-  if (root === '3') {
-    return 'text-blue-500';
-  }
-
-  return 'text-gray-500';
+  return ['1', '5'].includes(root);
 };
 
 export const expandDoubleEntryAccountTransaction = (
@@ -113,14 +101,14 @@ export const getPositiveValueByAccount = (detail: ExpandedTransaction) => {
   const roundedCredit = round(credit || 0, 2);
   const roundedDebit = round(debit || 0, 2);
 
-  if (['1', '5'].includes(accountId)) {
+  if (checkDebitIncrement(accountId)) {
     return roundedDebit - roundedCredit;
   }
   return roundedCredit - roundedDebit;
 };
 
 export const getIncrementByAccount = (detail: ExpandedTransaction) =>
-  (['1', '5'].includes(detail.accountId) ? detail.debit : detail.credit) || 0;
+  checkDebitIncrement(detail.accountId) ? detail.debit : detail.credit;
 
 export const getDecrementByAccount = (detail: ExpandedTransaction) =>
-  (['1', '5'].includes(detail.accountId) ? detail.credit : detail.debit) || 0;
+  checkDebitIncrement(detail.accountId) ? detail.credit : detail.debit;

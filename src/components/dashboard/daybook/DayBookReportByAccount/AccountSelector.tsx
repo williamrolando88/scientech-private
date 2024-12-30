@@ -1,22 +1,21 @@
 import { Alert, MenuItem, Stack, TextField } from '@mui/material';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FC } from 'react';
 import { useListAccountCategories } from 'src/hooks/cache/accountCategories';
-import { useListDayBookTransactions } from 'src/hooks/cache/dayBook';
 
 interface AccountSelectorProps {
+  accountingData: DoubleEntryAccounting[];
   selectedAccount: string;
   setSelectedAccount: (value: string) => void;
 }
 export const AccountSelector: FC<AccountSelectorProps> = ({
+  accountingData,
   selectedAccount,
   setSelectedAccount,
 }) => {
   const { data: accounts } = useListAccountCategories();
-  const { data: transactions } = useListDayBookTransactions();
 
-  const usedAccounts = transactions
-    ?.map((entry) => entry.transactions.map((detail) => detail.account_id))
-    .flat();
+  const usedAccounts = accountingData?.map((entry) => entry.accounts).flat();
 
   const uniqueAccounts = Array.from(new Set(usedAccounts)).sort((a, b) =>
     a.localeCompare(b)
