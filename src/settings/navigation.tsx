@@ -81,12 +81,12 @@ const navConfig = [
       },
       {
         title: 'Ventas',
-        path: PATH_DASHBOARD.sells.root,
+        path: PATH_DASHBOARD.sales.root,
         icon: ICONS.analytics,
         children: [
           {
             title: 'Facturas',
-            path: PATH_DASHBOARD.sells.invoices,
+            path: PATH_DASHBOARD.sales.invoices,
           },
         ],
       },
