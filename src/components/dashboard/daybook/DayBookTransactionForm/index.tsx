@@ -16,6 +16,7 @@ import {
 } from 'src/components/shared/formik-components';
 import { dayBookTransactionsValidator } from 'src/lib/modules/dayBook';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { ProjectSelector } from '../../purchases/ProjectSelector';
 import { DayBookTransactionSummary } from './DayBookTransactionSummary';
 import { DayBookTransactionsTable } from './DayBookTransactionsTable';
 
@@ -80,6 +81,8 @@ export const DayBookTransactionForm: FC<DayBookTransactionFormProps> = ({
               name="description"
               label="Descripción"
             />
+
+            <ProjectSelector />
 
             <DayBookTransactionsTable />
 

@@ -1,15 +1,11 @@
 import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import Iconify from '@src/components/shared/iconify';
-import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
-import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
 } from '@src/types/doubleEntryAccounting';
-import { where } from 'firebase/firestore';
 import { round } from 'mathjs';
 import { FC, useCallback, useMemo, useState } from 'react';
 import {
@@ -24,9 +20,13 @@ import { UpdateDayBookTransaction } from '../DayBookIndex/UpdateDayBookTransacti
 
 interface AccountReportProps {
   account: string;
+  accountingData: DoubleEntryAccounting[];
 }
 
-export const AccountReport: FC<AccountReportProps> = ({ account }) => {
+export const AccountReport: FC<AccountReportProps> = ({
+  account,
+  accountingData,
+}) => {
   const [transactionToOpen, setTransactionToOpen] =
     useState<DoubleEntryAccounting | null>(null);
   const [transactionToUpdate, setTransactionToUpdate] =
@@ -34,44 +34,37 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const [transactionToDelete, setTransactionToDelete] =
     useState<DoubleEntryAccounting | null>(null);
 
-  const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
-    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
-    converter: doubleEntryAccountingConverter,
-    order: { field: 'issueDate', direction: 'desc' },
-    additionalQueries: [where('accounts', 'array-contains', account)],
-  });
-
   const getTransactionToOpen = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        doubleEntryAccounting
+        accountingData
       );
       setTransactionToOpen(transaction);
     },
-    [doubleEntryAccounting]
+    [accountingData]
   );
 
   const getTransactionToUpdate = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        doubleEntryAccounting
+        accountingData
       );
       setTransactionToUpdate(transaction);
     },
-    [doubleEntryAccounting]
+    [accountingData]
   );
 
   const getTransactionToDelete = useCallback(
     (detailId: string) => {
       const transaction = getTransactionDataByDetailId(
         detailId,
-        doubleEntryAccounting
+        accountingData
       );
       setTransactionToDelete(transaction);
     },
-    [doubleEntryAccounting]
+    [accountingData]
   );
 
   const columns: GridColDef<ExpandedTransaction>[] = [
@@ -130,19 +123,10 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
 
   const rows = useMemo(
     () =>
-      expandDoubleEntryAccounting(doubleEntryAccounting).filter(
+      expandDoubleEntryAccounting(accountingData).filter(
         (r) => r.accountId === account
       ),
-    [doubleEntryAccounting, account]
-  );
-
-  const balanceReport = useMemo(
-    () =>
-      rows.reduce(
-        (acc, current) => acc + getPositiveValueByAccount(current),
-        0
-      ),
-    [rows]
+    [accountingData, account]
   );
 
   const totalIncrement = useMemo(
@@ -154,6 +138,15 @@ export const AccountReport: FC<AccountReportProps> = ({ account }) => {
   const totalDecrement = useMemo(
     () =>
       rows.reduce((acc, current) => acc + getDecrementByAccount(current), 0),
+    [rows]
+  );
+
+  const balanceReport = useMemo(
+    () =>
+      rows.reduce(
+        (acc, current) => acc + getPositiveValueByAccount(current),
+        0
+      ),
     [rows]
   );
 
