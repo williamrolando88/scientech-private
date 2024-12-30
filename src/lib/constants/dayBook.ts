@@ -23,8 +23,8 @@ export const DAYBOOK_TRANSACTION_INITIAL_VALUE: DoubleEntryAccounting = {
 };
 
 export const DAYBOOK_FORM_GRID_LAYOUT = [
-  { name: 'accountId', value: 10 },
-  { name: 'debit', value: 2 },
-  { name: 'credit', value: 2 },
+  { name: 'accountId', value: 7 },
+  { name: 'debit', value: 1 },
+  { name: 'credit', value: 1 },
   { name: 'action', value: 1 },
 ];
