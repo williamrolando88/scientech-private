@@ -26,7 +26,6 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
     const payment: Payment = {
       ...values,
       ref: { ...purchase.purchaseData.ref, purchaseId: purchase.id },
-      id: `${purchase.id}-p`,
     };
 
     PurchasesFirestore.pay({ id: purchase.id, payment })
@@ -64,6 +63,12 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
 
   const { paid } = purchase.purchaseData;
 
+  const initialValue: Payment = {
+    ...PAYMENT_INITIAL_VALUE,
+    id: `${purchase.id}-p`,
+    amount: purchase.purchaseData.total,
+  };
+
   return (
     <>
       <Button
@@ -78,11 +83,7 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
       <PaymentModal
         open={modalOpen}
         paid={paid}
-        initialValue={{
-          ...PAYMENT_INITIAL_VALUE,
-          amount: purchase.purchaseData.total,
-          ...purchase.payment,
-        }}
+        initialValue={purchase.payment ? purchase.payment : initialValue}
         isLegacy={paid && !purchase.payment}
         onClose={closeModal}
         onSubmit={handleSubmit}
