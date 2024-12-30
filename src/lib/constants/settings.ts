@@ -24,6 +24,11 @@ export const DEFAULT_ACCOUNT = {
     EXPENSE: '5.02.02.20',
   },
   IVA_TAX_CREDIT: '1.01.05.01',
+  INCOME_TAX_CREDIT: '1.01.05.02',
+  ACCOUNTS_RECEIVABLE: '1.01.02.05.02.01',
+  BILLS_TO_PAY: '2.01.03',
+  TAXES_PAYABLE: '2.01.07.01',
+  CUSTOMER_ADVANCE: '2.02.06',
 };
 
 export const ALLOWED_ACCOUNTS = {
@@ -35,7 +40,7 @@ export const ALLOWED_ACCOUNTS = {
       '2.01.04.01.01',
       '2.01.04.01.02',
     ],
-    EXPENSE: ['1.01.03.06', '5.01.01', '5.02.01', '5.02.02'],
+    EXPENSE: ['5.01.01', '5.02.01', '5.02.02'],
   },
   NON_DEDUCTIBLE: {
     PAYMENT: [
@@ -44,7 +49,7 @@ export const ALLOWED_ACCOUNTS = {
       '2.01.04.01.01',
       '2.01.04.01.02',
     ],
-    EXPENSE: ['1.01.03.06', '5.01.01', '5.02.01', '5.02.02', '5.02.03'],
+    EXPENSE: ['5.01.01', '5.02.01', '5.02.02', '5.02.03'],
   },
   SALE_NOTE: {
     PAYMENT: [
@@ -53,9 +58,9 @@ export const ALLOWED_ACCOUNTS = {
       '2.01.04.01.01',
       '2.01.04.01.02',
     ],
-    EXPENSE: ['1.01.03.06', '5.01.01', '5.02.01', '5.02.02', '5.02.03'],
+    EXPENSE: ['5.01.01', '5.02.01', '5.02.02', '5.02.03'],
   },
   CUSTOMS_PAYMENT: {
-    PAYMENT: ['1.01.03.06', '1.01.01.03.01', '2.01.04.01.01', '2.01.04.01.02'],
+    PAYMENT: ['1.01.01.03.01', '2.01.04.01.01', '2.01.04.01.02'],
   },
 };
