@@ -56,7 +56,7 @@ export default function Upload({
   sx,
   uploadButtonText,
   scrollable,
-  scrollBoxHeight = '300px',
+  scrollBoxHeight = '250px',
   ...other
 }: UploadProps) {
   const {

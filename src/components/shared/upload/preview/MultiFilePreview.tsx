@@ -24,7 +24,7 @@ export default function MultiFilePreview({
   return (
     <AnimatePresence initial={false}>
       {files.map((file) => (
-        <ElementRenderer file={file} {...props} />
+        <ElementRenderer key={fileData(file).key} file={file} {...props} />
       ))}
     </AnimatePresence>
   );
@@ -40,12 +40,10 @@ const ElementRenderer: FC<ElementRendererProps> = ({
   sx,
   thumbnail,
 }) => {
-  const { key, name = '', size = 0 } = fileData(file);
+  const { name = '', size = 0 } = fileData(file);
 
   if (thumbnail) {
-    return (
-      <ThumbnailElement key={key} file={file} sx={sx} onRemove={onRemove} />
-    );
+    return <ThumbnailElement file={file} sx={sx} onRemove={onRemove} />;
   }
 
   return (
@@ -53,7 +51,6 @@ const ElementRenderer: FC<ElementRendererProps> = ({
       file={file}
       name={name}
       size={size}
-      key={key}
       onRemove={onRemove}
       sx={sx}
     />
