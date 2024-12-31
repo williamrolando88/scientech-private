@@ -29,6 +29,7 @@ export const DEFAULT_ACCOUNT = {
   BILLS_TO_PAY: '2.01.03',
   TAXES_PAYABLE: '2.01.07.01',
   CUSTOMER_ADVANCE: '2.02.06',
+  INCOME_ROOT: '4',
 };
 
 export const ALLOWED_ACCOUNTS = {

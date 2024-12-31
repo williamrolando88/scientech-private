@@ -1,7 +1,13 @@
-import { TAX_PERCENTAGE_CODES } from '@src/lib/constants/settings';
+import {
+  IVA_RATE_12,
+  IVA_RATE_15,
+  TAX_PERCENTAGE_CODES,
+} from '@src/lib/constants/settings';
 import { DOCUMENT_TYPE } from '@src/lib/enums/documentParser';
 import { documentParser } from '@src/lib/modules/documentParser/xmlParser';
 import { NormalizedInvoice, ParsedInvoice } from '@src/types/documentParsers';
+import { BillingDocument } from '@src/types/sale';
+import { round } from 'mathjs';
 import { InvoiceReaderSchema } from '../../schemas/documentParser/invoiceReader';
 
 export const parseFactura = (xmlText: string): ParsedInvoice | null => {
@@ -75,5 +81,32 @@ export const normalizeInvoice = (invoice: ParsedInvoice): NormalizedInvoice => {
       noTaxSubtotal,
       taxedSubtotal,
     },
+  };
+};
+
+export const normalizedInvoice2BillingDocument = (
+  invoice: NormalizedInvoice
+): BillingDocument => {
+  const IVA_RATE =
+    invoice.normalizedData.issueDate < new Date('2024-04-01')
+      ? IVA_RATE_12
+      : IVA_RATE_15;
+
+  const IVA = round((invoice.normalizedData.taxedSubtotal * IVA_RATE) / 100, 2);
+
+  return {
+    issueDate: invoice.normalizedData.issueDate,
+    recipientName: invoice.infoFactura.razonSocialComprador,
+    recipientId: invoice.infoFactura.identificacionComprador,
+    establishment: Number(invoice.infoTributaria.estab),
+    emissionPoint: Number(invoice.infoTributaria.ptoEmi),
+    sequentialNumber: Number(invoice.infoTributaria.secuencial),
+    description: invoice.normalizedData.description,
+    IVA,
+    taxedSubtotal: invoice.normalizedData.taxedSubtotal,
+    total: invoice.infoFactura.importeTotal,
+    ref: {},
+    paid: false,
+    saleAccount: '',
   };
 };

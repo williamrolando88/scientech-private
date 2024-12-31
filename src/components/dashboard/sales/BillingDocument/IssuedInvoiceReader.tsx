@@ -1,7 +1,13 @@
 import { Dialog, DialogTitle } from '@mui/material';
+import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
+import {
+  normalizedInvoice2BillingDocument,
+  normalizeInvoice,
+  parseFactura,
+} from '@src/lib/modules/documentParser/invoiceParser';
 import { ParsedInvoice } from '@src/types/documentParsers';
+import { BillingDocument } from '@src/types/sale';
 import { FC, useState } from 'react';
 import { DropdownSection } from '../../documentParser/DropdownSection';
 
@@ -13,19 +19,25 @@ interface Props {
 export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
   const [busy, setBusy] = useState(false);
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
 
-  const handleConfirmation = async () => {
+  const handleUpload = async () => {
     setBusy(true);
     const documentParsedData = await xmlFileReader<ParsedInvoice>(
       files,
       parseFactura
     );
 
-    setParsedData(documentParsedData);
-    setBusy(false);
+    const billingDocuments = documentParsedData.map((d) => {
+      const normalData = normalizeInvoice(d);
 
-    console.log(documentParsedData[0]);
+      return {
+        ...normalizedInvoice2BillingDocument(normalData),
+        saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
+      } satisfies BillingDocument;
+    });
+
+    setBusy(false);
+    console.log(billingDocuments);
   };
 
   const handleClose = () => {
@@ -44,7 +56,7 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
       <DropdownSection
         files={files}
         setFiles={setFiles}
-        onUpload={handleConfirmation}
+        onUpload={handleUpload}
         uploadButtonText="Cargar facturas"
         accept={{ 'text/xml': [] }}
         multiple
