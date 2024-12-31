@@ -24,9 +24,7 @@ export default function ConfirmDialog({
       )}
 
       <DialogActions>
-        <Button color="error" onClick={onClose}>
-          Cancel
-        </Button>
+        <Button onClick={onClose}>Cancelar</Button>
 
         {action}
       </DialogActions>

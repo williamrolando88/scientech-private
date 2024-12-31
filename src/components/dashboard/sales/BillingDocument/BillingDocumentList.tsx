@@ -1,17 +1,26 @@
-import { CardContent } from '@mui/material';
-import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { Button, CardContent } from '@mui/material';
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridEventListener,
+} from '@mui/x-data-grid';
+import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
-import { saleConverter } from '@src/services/firestore/sales';
+import { saleConverter, SalesFirestore } from '@src/services/firestore/sales';
 import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
+import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
 const BillingDocumentList: FC = () => {
-  const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const [sale2Update, setSale2Update] = useState<Sale | null>(null);
+  const [sale2Delete, setSale2Delete] = useState<Sale | null>(null);
 
   const sales = useCollectionSnapshot<Sale>({
     collectionName: COLLECTIONS_ENUM.SALES,
@@ -103,18 +112,35 @@ const BillingDocumentList: FC = () => {
         //   icon={<Iconify icon="pajamas:doc-changes" />}
         //   showInMenu
         // />,
-        // <GridActionsCellItem
-        //   label="Borrar"
-        //   onClick={() => setInvoiceToDelete(params.row)}
-        //   icon={<Iconify icon="pajamas:remove" />}
-        //   showInMenu
-        // />,
+        <GridActionsCellItem
+          label="Borrar"
+          onClick={() => setSale2Delete(params.row)}
+          icon={<Iconify icon="pajamas:remove" />}
+          showInMenu
+        />,
       ],
     },
   ];
 
   const onRowClick: GridEventListener<'rowClick'> = ({ row }) => {
-    setSelectedSale(row);
+    setSale2Update(row);
+  };
+
+  const handleDeleteInvoice = async () => {
+    if (!sale2Delete) return;
+    SalesFirestore.remove(sale2Delete)
+      .then(() => {
+        enqueueSnackbar('Factura eliminada exitosamente');
+      })
+      .catch((error) => {
+        enqueueSnackbar(`No se pudo eliminar el documento`, {
+          variant: 'error',
+        });
+        console.error(error);
+      })
+      .finally(() => {
+        setSale2Delete(null);
+      });
   };
 
   return (
@@ -133,9 +159,20 @@ const BillingDocumentList: FC = () => {
       </CardContent>
 
       <UpdateBillingDocument
-        open={Boolean(selectedSale)}
-        sale={selectedSale}
-        onClose={() => setSelectedSale(null)}
+        open={Boolean(sale2Update)}
+        sale={sale2Update}
+        onClose={() => setSale2Update(null)}
+      />
+
+      <ConfirmDialog
+        onClose={() => setSale2Delete(null)}
+        open={!!sale2Delete}
+        title="Borrar factura"
+        action={
+          <Button onClick={handleDeleteInvoice} variant="contained">
+            Borrar
+          </Button>
+        }
       />
     </>
   );

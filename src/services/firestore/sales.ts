@@ -1,6 +1,7 @@
 import { DB } from '@src/settings/firebase';
 import { BillingDocument, Sale } from '@src/types/sale';
 import {
+  deleteDoc,
   doc,
   DocumentData,
   FirestoreDataConverter,
@@ -99,7 +100,14 @@ const update = async (sale: Sale) => {
   await updateDoc(docRef, sale);
 };
 
+const remove = async (sale: Sale) => {
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+
+  await deleteDoc(docRef);
+};
+
 export const SalesFirestore = {
   bulkCreate,
   update,
+  remove,
 };
