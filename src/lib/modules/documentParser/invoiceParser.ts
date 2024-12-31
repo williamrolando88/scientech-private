@@ -10,7 +10,7 @@ import { BillingDocument } from '@src/types/sale';
 import { round } from 'mathjs';
 import { InvoiceReaderSchema } from '../../schemas/documentParser/invoiceReader';
 
-export const parseFactura = (xmlText: string): ParsedInvoice | null => {
+export const parseInvoiceXML = (xmlText: string): ParsedInvoice | null => {
   const documentData = documentParser(xmlText, DOCUMENT_TYPE.INVOICE);
 
   if (!documentData) {

@@ -2,7 +2,7 @@ import { Button, Stack } from '@mui/material';
 import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import { InvoiceDetailsViewer } from '@src/components/dashboard/documentParser/InvoiceDetailsViewer';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
+import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
 import { ParsedInvoice } from '@src/types/documentParsers';
 import { useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
@@ -20,7 +20,7 @@ function Page() {
   const handleUpload = async () => {
     const documentParsedData = await xmlFileReader<ParsedInvoice>(
       files,
-      parseFactura
+      parseInvoiceXML
     );
 
     setParsedData(documentParsedData);

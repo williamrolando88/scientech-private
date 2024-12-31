@@ -2,8 +2,8 @@ import { Button, Stack } from '@mui/material';
 import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import { HoldingDetailsViewer } from '@src/components/dashboard/documentParser/HoldingDetailsViewer';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseRetencion } from '@src/lib/modules/documentParser/holdingParser';
-import { ParsedHolding } from '@src/types/documentParsers';
+import { parseWithholdingXML } from '@src/lib/modules/documentParser/holdingParser';
+import { ParsedWithholding } from '@src/types/documentParsers';
 import { useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
@@ -14,12 +14,12 @@ Page.getLayout = (page: React.ReactElement) => (
 
 function Page() {
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [parsedData, setParsedData] = useState<ParsedHolding[]>([]);
+  const [parsedData, setParsedData] = useState<ParsedWithholding[]>([]);
 
   const handleUpload = async () => {
-    const documentParsedData = await xmlFileReader<ParsedHolding>(
+    const documentParsedData = await xmlFileReader<ParsedWithholding>(
       files,
-      parseRetencion
+      parseWithholdingXML
     );
 
     setParsedData(documentParsedData);

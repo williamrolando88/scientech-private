@@ -1,7 +1,7 @@
 import { InvoiceInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
 import { z } from 'zod';
 
-const HoldingSchema = z.object({
+const WithholdingSchema = z.object({
   baseImponible: z.coerce.number(),
   valorRetenido: z.coerce.number(),
   porcentajeRetener: z.coerce.number(),
@@ -16,17 +16,17 @@ const SustainDocumentsSchema = z.object({
       }),
     }),
     retenciones: z.object({
-      retencion: HoldingSchema.array(),
+      retencion: WithholdingSchema.array(),
     }),
   }),
 });
 
-const HoldingDocumentData = z.object({
+const WithholdingDocumentData = z.object({
   fechaEmision: z.string(),
 });
 
-export const HoldingReaderSchema = z.object({
+export const WithholdingReaderSchema = z.object({
   docsSustento: SustainDocumentsSchema,
-  infoCompRetencion: HoldingDocumentData,
+  infoCompRetencion: WithholdingDocumentData,
   infoTributaria: InvoiceInfoSchema,
 });

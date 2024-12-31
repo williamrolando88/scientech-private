@@ -18,7 +18,7 @@ import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import {
   normalizeInvoice,
-  parseFactura,
+  parseInvoiceXML,
 } from '@src/lib/modules/documentParser/invoiceParser';
 import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases';
 import { ParsedInvoice } from '@src/types/documentParsers';
@@ -54,7 +54,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
     async (files: File[]) => {
       const documentParsedData = await xmlFileReader<ParsedInvoice>(
         files,
-        parseFactura
+        parseInvoiceXML
       );
 
       if (!documentParsedData || !documentParsedData.length) {

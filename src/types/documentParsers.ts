@@ -1,4 +1,4 @@
-import { HoldingReaderSchema } from '@src/lib/schemas/documentParser/holdingReader';
+import { WithholdingReaderSchema } from '@src/lib/schemas/documentParser/holdingReader';
 import {
   InvoiceReaderSchema,
   TotalTaxSchema,
@@ -6,7 +6,7 @@ import {
 import { z } from 'zod';
 
 export type ParsedInvoice = z.infer<typeof InvoiceReaderSchema>;
-export type ParsedHolding = z.infer<typeof HoldingReaderSchema>;
+export type ParsedWithholding = z.infer<typeof WithholdingReaderSchema>;
 
 export type TotalTax = z.infer<typeof TotalTaxSchema>;
 

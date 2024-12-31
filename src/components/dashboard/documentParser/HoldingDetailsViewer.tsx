@@ -1,14 +1,14 @@
 import { Card, CardContent } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ParsedWithholding } from '@src/types/documentParsers';
+import { get } from 'lodash';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { ParsedHolding } from '@src/types/documentParsers';
-import { get } from 'lodash';
 import { DocumentViewerCustomToolbar } from './DocumentViewerCustomToolbar';
 
 const holdingValueGetter = (
-  docData: ParsedHolding,
+  docData: ParsedWithholding,
   requestedValue: 'valorImpuesto' | 'baseImponible'
 ) => {
   const taxValue =
@@ -27,7 +27,7 @@ const holdingValueGetter = (
 };
 
 const holdingPercentageValueGetter = (
-  docData: ParsedHolding,
+  docData: ParsedWithholding,
   requestedValue: 'valorImpuesto' | 'baseImponible'
 ) => {
   const taxValue =
@@ -45,7 +45,7 @@ const holdingPercentageValueGetter = (
   return holding ? round(holding.porcentajeRetener, 2) : 0;
 };
 
-const columns: GridColDef<ParsedHolding>[] = [
+const columns: GridColDef<ParsedWithholding>[] = [
   {
     field: 'issueDate',
     headerName: 'Fecha de Emisión',
@@ -111,10 +111,10 @@ const columns: GridColDef<ParsedHolding>[] = [
 ];
 
 interface InvoiceDetailsViewerProps {
-  data: ParsedHolding[];
+  data: ParsedWithholding[];
 }
 
-const getUniqueInvoice = (invoices: ParsedHolding[]) => {
+const getUniqueInvoice = (invoices: ParsedWithholding[]) => {
   const uniqueAccessKey = new Set();
   return invoices.filter((invoice) => {
     if (!uniqueAccessKey.has(invoice.infoTributaria.claveAcceso)) {

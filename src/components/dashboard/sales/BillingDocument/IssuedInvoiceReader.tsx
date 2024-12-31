@@ -4,7 +4,7 @@ import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import {
   normalizedInvoice2BillingDocument,
   normalizeInvoice,
-  parseFactura,
+  parseInvoiceXML,
 } from '@src/lib/modules/documentParser/invoiceParser';
 import { SalesFirestore } from '@src/services/firestore/sales';
 import { ParsedInvoice } from '@src/types/documentParsers';
@@ -18,7 +18,7 @@ interface Props {
   onClose: VoidFunction;
 }
 
-export const AddBillingDocument: FC<Props> = ({ onClose, open }) => {
+export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [busy, setBusy] = useState(false);
   const [files, setFiles] = useState<(File | string)[]>([]);
@@ -27,7 +27,7 @@ export const AddBillingDocument: FC<Props> = ({ onClose, open }) => {
     setBusy(true);
     const documentParsedData = await xmlFileReader<ParsedInvoice>(
       files,
-      parseFactura
+      parseInvoiceXML
     );
 
     const billingDocuments = documentParsedData.map((d) => {
