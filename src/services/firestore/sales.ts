@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   QueryDocumentSnapshot,
+  updateDoc,
   where,
   writeBatch,
 } from 'firebase/firestore';
@@ -84,6 +85,21 @@ const bulkCreate = async (invoices: BillingDocument[]) => {
   };
 };
 
+const update = async (sale: Sale) => {
+  if (sale.withholding) {
+    throw new Error(
+      'El documento tiene una retención vinculada, no se puede modificar'
+    );
+  }
+  if (sale.paymentCollection) {
+    throw new Error('El documento ya fue cobrado, no se puede modificar');
+  }
+
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+  await updateDoc(docRef, sale);
+};
+
 export const SalesFirestore = {
   bulkCreate,
+  update,
 };

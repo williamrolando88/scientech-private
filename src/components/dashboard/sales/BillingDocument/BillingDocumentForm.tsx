@@ -25,7 +25,7 @@ import { ProjectSelector } from '../../purchases/ProjectSelector';
 const MISSING_SALE_ACCOUNT =
   'Es necesario actualizar la informacion de Proyecto relacionado y Cuenta contable';
 const DEFAULT_MESSAGE =
-  'Los datos presentados no estan disponibles para edicion, fueron extraidos directamente del XML generado';
+  'Los datos presentados fueron extraidos directamente del XML generado, no estan disponibles para edicion';
 
 type FormikProps = Pick<
   FormikConfig<BillingDocument>,
