@@ -13,7 +13,10 @@ const BillingDocumentList: FC = () => {
   const sales = useCollectionSnapshot<Sale>({
     collectionName: COLLECTIONS_ENUM.SALES,
     converter: saleConverter,
-    additionalQueries: [orderBy('billingDocument.issueDate', 'desc')],
+    additionalQueries: [
+      orderBy('billingDocument.issueDate', 'desc'),
+      orderBy('billingDocument.sequentialNumber', 'desc'),
+    ],
   });
 
   const columns: GridColDef<Sale>[] = [
