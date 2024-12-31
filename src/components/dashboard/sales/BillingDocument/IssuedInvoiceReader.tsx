@@ -18,7 +18,7 @@ interface Props {
   onClose: VoidFunction;
 }
 
-export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
+export const AddBillingDocument: FC<Props> = ({ onClose, open }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [busy, setBusy] = useState(false);
   const [files, setFiles] = useState<(File | string)[]>([]);

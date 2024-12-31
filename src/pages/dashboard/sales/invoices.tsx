@@ -1,4 +1,5 @@
-import AddSalesDocument from '@src/components/dashboard/sales/BillingDocument/AddSalesDocument';
+import AddSalesDocument from '@src/components/dashboard/sales/AddSalesDocument';
+import BillingDocumentList from '@src/components/dashboard/sales/BillingDocument/BillingDocumentList';
 import DashboardLayout from '@src/components/shared/layouts/dashboard';
 import DashboardTemplate from '@src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -13,7 +14,7 @@ export default function Page() {
       heading="Facturas Recibidas"
       action={<AddSalesDocument />}
     >
-      Here comes the issued invoices
+      <BillingDocumentList />
     </DashboardTemplate>
   );
 }

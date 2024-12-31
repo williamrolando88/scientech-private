@@ -63,6 +63,7 @@ function Page() {
           onUpload={handleUpload}
           uploadButtonText={buttonText}
           accept={{ 'text/xml': [] }}
+          multiple
         />
       )}
     </DashboardTemplate>

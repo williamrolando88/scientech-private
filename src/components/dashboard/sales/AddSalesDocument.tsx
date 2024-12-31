@@ -1,6 +1,6 @@
 import SplitButton from '@src/components/shared/SplitButton';
 import { useState } from 'react';
-import { IssuedInvoiceReader } from './IssuedInvoiceReader';
+import { AddBillingDocument } from './BillingDocument/IssuedInvoiceReader';
 
 const AddSalesDocument = () => {
   const [issuedInvoiceOpen, setIssuedInvoiceOpen] = useState(false);
@@ -21,7 +21,7 @@ const AddSalesDocument = () => {
         ]}
       />
 
-      <IssuedInvoiceReader
+      <AddBillingDocument
         open={issuedInvoiceOpen}
         onClose={() => setIssuedInvoiceOpen(false)}
       />

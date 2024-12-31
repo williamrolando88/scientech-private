@@ -1,7 +1,40 @@
 import { DB } from '@src/settings/firebase';
 import { BillingDocument, Sale } from '@src/types/sale';
-import { doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
+import {
+  doc,
+  DocumentData,
+  FirestoreDataConverter,
+  getDocs,
+  query,
+  QueryDocumentSnapshot,
+  where,
+  writeBatch,
+} from 'firebase/firestore';
 import { COLLECTIONS } from './collections';
+
+export const saleConverter: FirestoreDataConverter<Sale> = {
+  toFirestore: (sale: Sale) => sale,
+  fromFirestore: (snapshot: QueryDocumentSnapshot<Sale, DocumentData>) =>
+    ({
+      ...snapshot.data(),
+      billingDocument: {
+        ...snapshot.data().billingDocument,
+        issueDate: snapshot.get('billingDocument.issueDate').toDate(),
+      },
+      withholding: snapshot.data().withholding
+        ? {
+            ...snapshot.data().withholding,
+            issueDate: snapshot.get('withholding.issueDate').toDate(),
+          }
+        : null,
+      paymentCollection: snapshot.data().paymentCollection
+        ? {
+            ...snapshot.data().paymentCollection,
+            paymentDate: snapshot.get('paymentCollection.paymentDate').toDate(),
+          }
+        : null,
+    }) as Sale,
+};
 
 const bulkCreate = async (invoices: BillingDocument[]) => {
   const storedDocuments = await Promise.all(
