@@ -77,6 +77,7 @@ const PaymentModal: FC<Props> = ({
                 />
 
                 <AccountCategorySelector
+                  size="small"
                   label="Cuenta de pago"
                   name="paymentAccount"
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}

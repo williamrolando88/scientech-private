@@ -67,6 +67,8 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
       const invoice = normalizedInvoices[0];
 
+      // TODO: Add locking parameter for XML extracted documents
+
       setValues({
         ...initialValues,
         description: invoice.normalizedData.description,
@@ -164,6 +166,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={12}>
                 <AccountCategorySelector
+                  size="small"
                   label="Cuenta de gasto"
                   name="expenseAccount"
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}

@@ -30,6 +30,7 @@ export const DEFAULT_ACCOUNT = {
   TAXES_PAYABLE: '2.01.07.01',
   CUSTOMER_ADVANCE: '2.02.06',
   INCOME_ROOT: '4',
+  ISSUED_INVOICE: '4.01.01',
 };
 
 export const ALLOWED_ACCOUNTS = {
@@ -64,4 +65,5 @@ export const ALLOWED_ACCOUNTS = {
   CUSTOMS_PAYMENT: {
     PAYMENT: ['1.01.01.03.01', '2.01.04.01.01', '2.01.04.01.02'],
   },
+  ISSUED_INVOICES: ['4.01.01', '4.01.02'],
 };

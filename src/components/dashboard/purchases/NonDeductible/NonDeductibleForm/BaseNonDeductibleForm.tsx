@@ -86,6 +86,7 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
 
               <Grid item xs={12}>
                 <AccountCategorySelector
+                  size="small"
                   label="Cuenta de gasto"
                   name="expenseAccount"
                   selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.EXPENSE}
