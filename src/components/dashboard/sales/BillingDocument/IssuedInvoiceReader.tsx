@@ -6,8 +6,10 @@ import {
   normalizeInvoice,
   parseFactura,
 } from '@src/lib/modules/documentParser/invoiceParser';
+import { SalesFirestore } from '@src/services/firestore/sales';
 import { ParsedInvoice } from '@src/types/documentParsers';
 import { BillingDocument } from '@src/types/sale';
+import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { DropdownSection } from '../../documentParser/DropdownSection';
 
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [busy, setBusy] = useState(false);
   const [files, setFiles] = useState<(File | string)[]>([]);
 
@@ -36,12 +39,33 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
       } satisfies BillingDocument;
     });
 
-    setBusy(false);
-    console.log(billingDocuments);
+    SalesFirestore.bulkCreate(billingDocuments)
+      .then(({ created, existing }) => {
+        if (created) {
+          enqueueSnackbar(`Se crearon ${created} facturas`);
+        }
+
+        if (existing) {
+          enqueueSnackbar(`No se crearon ${existing} facturas existentes`, {
+            variant: 'info',
+          });
+        }
+
+        handleClose({ force: true });
+      })
+      .catch((e) => {
+        enqueueSnackbar(`Algo salió mal, vuelva a intentarlo nuevamente`, {
+          variant: 'error',
+        });
+        console.error(e);
+      })
+      .finally(() => {
+        setBusy(false);
+      });
   };
 
-  const handleClose = () => {
-    if (busy) return;
+  const handleClose = ({ force = false } = {}) => {
+    if (busy && !force) return;
     onClose();
 
     setTimeout(() => {

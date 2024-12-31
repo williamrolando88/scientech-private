@@ -13,6 +13,7 @@ export const COLLECTIONS = {
     DB,
     COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING
   ),
+  SALES: collection(DB, COLLECTIONS_ENUM.SALES),
 };
 
 export const APPLICATION_SETTINGS = {
