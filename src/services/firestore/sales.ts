@@ -176,9 +176,28 @@ const bulkWithhold = async (
   };
 };
 
+const deleteWithhold = async (sale: Sale) => {
+  if (!sale.withholding) {
+    throw new Error('El documento no tiene una retención vinculada');
+  }
+  if (sale.paymentCollection) {
+    throw new Error('El documento ya fue cobrado, no se puede modificar');
+  }
+
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+
+  const newSale: Partial<Sale> = {
+    withholding: null,
+    paymentDue: sale.billingDocument.total,
+  };
+
+  await updateDoc(docRef, newSale);
+};
+
 export const SalesFirestore = {
   bulkCreate,
   update,
   remove,
   bulkWithhold,
+  deleteWithhold,
 };

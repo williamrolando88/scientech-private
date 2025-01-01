@@ -21,6 +21,9 @@ const BillingDocumentList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [sale2Update, setSale2Update] = useState<Sale | null>(null);
   const [sale2Delete, setSale2Delete] = useState<Sale | null>(null);
+  const [withholding2Delete, setWithholding2Delete] = useState<Sale | null>(
+    null
+  );
 
   const sales = useCollectionSnapshot<Sale>({
     collectionName: COLLECTIONS_ENUM.SALES,
@@ -126,20 +129,40 @@ const BillingDocumentList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: (params) => [
-        // <GridActionsCellItem
-        //   label="Modificar"
-        //   onClick={() => setInvoiceToUpdate(params.row)}
-        //   icon={<Iconify icon="pajamas:doc-changes" />}
-        //   showInMenu
-        // />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setSale2Delete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
+      getActions: ({ row }) => {
+        const defaultOptions = [
+          <GridActionsCellItem
+            label="Modificar factura"
+            onClick={() => setSale2Update(row)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+          />,
+          <GridActionsCellItem
+            label="Borrar factura"
+            onClick={() => setSale2Delete(row)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+          />,
+        ];
+
+        if (row.withholding) {
+          const withholdingOptions = [
+            <GridActionsCellItem
+              label="Borrar retención"
+              onClick={() => setWithholding2Delete(row)}
+              icon={<Iconify icon="pajamas:remove" />}
+              sx={{
+                borderTop: '1px solid #ddd',
+              }}
+              showInMenu
+            />,
+          ];
+
+          defaultOptions.push(...withholdingOptions);
+        }
+
+        return defaultOptions;
+      },
     },
   ];
 
@@ -149,6 +172,7 @@ const BillingDocumentList: FC = () => {
 
   const handleDeleteInvoice = async () => {
     if (!sale2Delete) return;
+
     SalesFirestore.remove(sale2Delete)
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
@@ -161,6 +185,24 @@ const BillingDocumentList: FC = () => {
       })
       .finally(() => {
         setSale2Delete(null);
+      });
+  };
+
+  const handleDeleteWithholding = async () => {
+    if (!withholding2Delete) return;
+
+    SalesFirestore.deleteWithhold(withholding2Delete)
+      .then(() => {
+        enqueueSnackbar('Retencion eliminada exitosamente');
+      })
+      .catch((error) => {
+        enqueueSnackbar(`No se pudo eliminar el documento`, {
+          variant: 'error',
+        });
+        console.error(error);
+      })
+      .finally(() => {
+        setWithholding2Delete(null);
       });
   };
 
@@ -189,8 +231,21 @@ const BillingDocumentList: FC = () => {
         onClose={() => setSale2Delete(null)}
         open={!!sale2Delete}
         title="Borrar factura"
+        content="Esta operacion borrará la factura seleccionada y todos los documentos dependientes existentes (retenciones, cobros), así como sus asientos contables. Deseas continuar?"
+        maxWidth="md"
         action={
           <Button onClick={handleDeleteInvoice} variant="contained">
+            Borrar
+          </Button>
+        }
+      />
+
+      <ConfirmDialog
+        onClose={() => setWithholding2Delete(null)}
+        open={!!withholding2Delete}
+        title="Borrar retencion"
+        action={
+          <Button onClick={handleDeleteWithholding} variant="contained">
             Borrar
           </Button>
         }

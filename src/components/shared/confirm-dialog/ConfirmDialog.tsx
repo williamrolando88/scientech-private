@@ -9,7 +9,7 @@ import { ConfirmDialogProps } from './types';
 
 export default function ConfirmDialog({
   title,
-  content,
+  content = 'Estas seguro que deseas continuar?',
   action,
   open,
   onClose,
