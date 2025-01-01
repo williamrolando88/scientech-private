@@ -27,7 +27,7 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
 
     const billingDocuments = documentParsedData
       .filter((d) => !!d)
-      .filter((d) => d.infoTributaria.ruc === USER_RUC)
+      .filter((d) => d?.infoTributaria.ruc === USER_RUC)
       .map((d) =>
         normalizedInvoice2BillingDocument(d as NormalizedParsedInvoice)
       );
