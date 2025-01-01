@@ -16,12 +16,9 @@ import {
 import { UploadBox } from '@src/components/shared/upload';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import {
-  normalizeInvoice,
-  parseInvoiceXML,
-} from '@src/lib/modules/documentParser/invoiceParser';
+import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
 import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases';
-import { ParsedInvoice } from '@src/types/documentParsers';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
@@ -52,20 +49,13 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   const handleOnDropAccepted =
     (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
-      const documentParsedData = await xmlFileReader<ParsedInvoice>(
-        files,
-        parseInvoiceXML
-      );
+      const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
 
       if (!documentParsedData || !documentParsedData.length) {
         return;
       }
 
-      const normalizedInvoices = documentParsedData.map((d) =>
-        normalizeInvoice(d)
-      );
-
-      const invoice = normalizedInvoices[0];
+      const invoice = documentParsedData[0] as NormalizedParsedInvoice;
 
       // TODO: Add locking parameter for XML extracted documents
 

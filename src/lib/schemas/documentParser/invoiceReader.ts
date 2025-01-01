@@ -1,5 +1,5 @@
+import { TaxableInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
 import { z } from 'zod';
-import { InvoiceInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
 
 const ImpuestoSchema = z.object({
   codigoPorcentaje: z.coerce.number(),
@@ -26,7 +26,7 @@ const DetalleSchema = z.object({
 });
 
 export const InvoiceReaderSchema = z.object({
-  infoTributaria: InvoiceInfoSchema,
+  infoTributaria: TaxableInfoSchema,
   infoFactura: InfoFacturaSchema,
   detalles: z.object({
     detalle: DetalleSchema.array().or(DetalleSchema),

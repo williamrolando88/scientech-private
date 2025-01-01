@@ -1,4 +1,4 @@
-import { InvoiceInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
+import { TaxableInfoSchema } from '@src/lib/schemas/documentParser/commonReader';
 import { z } from 'zod';
 
 const WithholdingSchema = z.object({
@@ -18,6 +18,7 @@ const SustainDocumentsSchema = z.object({
     retenciones: z.object({
       retencion: WithholdingSchema.array(),
     }),
+    numAutDocSustento: z.string(),
   }),
 });
 
@@ -28,5 +29,5 @@ const WithholdingDocumentData = z.object({
 export const WithholdingReaderSchema = z.object({
   docsSustento: SustainDocumentsSchema,
   infoCompRetencion: WithholdingDocumentData,
-  infoTributaria: InvoiceInfoSchema,
+  infoTributaria: TaxableInfoSchema,
 });

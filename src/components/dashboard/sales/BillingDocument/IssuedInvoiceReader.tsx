@@ -3,11 +3,9 @@ import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import {
   normalizedInvoice2BillingDocument,
-  normalizeInvoice,
   parseInvoiceXML,
 } from '@src/lib/modules/documentParser/invoiceParser';
 import { SalesFirestore } from '@src/services/firestore/sales';
-import { ParsedInvoice } from '@src/types/documentParsers';
 import { BillingDocument } from '@src/types/sale';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
@@ -25,19 +23,17 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
 
   const handleUpload = async () => {
     setBusy(true);
-    const documentParsedData = await xmlFileReader<ParsedInvoice>(
-      files,
-      parseInvoiceXML
-    );
+    const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
 
-    const billingDocuments = documentParsedData.map((d) => {
-      const normalData = normalizeInvoice(d);
-
-      return {
-        ...normalizedInvoice2BillingDocument(normalData),
-        saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
-      } satisfies BillingDocument;
-    });
+    const billingDocuments = documentParsedData
+      .filter((d) => !!d)
+      .map(
+        (d) =>
+          ({
+            ...normalizedInvoice2BillingDocument(d),
+            saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
+          }) as BillingDocument
+      );
 
     SalesFirestore.bulkCreate(billingDocuments)
       .then(({ created, existing }) => {

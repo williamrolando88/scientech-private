@@ -1,12 +1,15 @@
 import { Card, CardContent } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
 import { round } from 'mathjs';
 import { useSnackbar } from 'notistack';
 import { FC, useEffect } from 'react';
-import { ParsedInvoice } from '@src/types/documentParsers';
 import { DocumentViewerCustomToolbar } from './DocumentViewerCustomToolbar';
 
-const baseTaxValueGetter = (docData: ParsedInvoice, code: number): number => {
+const baseTaxValueGetter = (
+  docData: NormalizedParsedInvoice,
+  code: number
+): number => {
   const value = docData.infoFactura.totalConImpuestos.totalImpuesto;
   let result: number;
 
@@ -20,7 +23,7 @@ const baseTaxValueGetter = (docData: ParsedInvoice, code: number): number => {
   return result ? round(result, 2) : 0;
 };
 
-const columns: GridColDef<ParsedInvoice>[] = [
+const columns: GridColDef<NormalizedParsedInvoice>[] = [
   {
     field: 'issueDate',
     headerName: 'Fecha de Emisión',
@@ -101,27 +104,25 @@ const columns: GridColDef<ParsedInvoice>[] = [
   },
 ];
 
-interface InvoiceDetailsViewerProps {
-  data: ParsedInvoice[];
+interface Props {
+  data: (NormalizedParsedInvoice | null)[];
 }
 
-const getUniqueInvoice = (invoices: ParsedInvoice[]) => {
+const getUnique = (docs: (NormalizedParsedInvoice | null)[]) => {
   const uniqueAccessKey = new Set();
-  return invoices.filter((invoice) => {
-    if (!uniqueAccessKey.has(invoice.infoTributaria.claveAcceso)) {
-      uniqueAccessKey.add(invoice.infoTributaria.claveAcceso);
+  return docs.filter((doc) => {
+    if (doc && !uniqueAccessKey.has(doc.infoTributaria.claveAcceso)) {
+      uniqueAccessKey.add(doc.infoTributaria.claveAcceso);
       return true;
     }
     return false;
-  });
+  }) as NormalizedParsedInvoice[];
 };
 
-export const InvoiceDetailsViewer: FC<InvoiceDetailsViewerProps> = ({
-  data,
-}) => {
+export const InvoiceDetailsViewer: FC<Props> = ({ data }) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const filteredData = getUniqueInvoice(data);
+  const filteredData = getUnique(data);
 
   useEffect(() => {
     const discardedInvoices = data.length - filteredData.length;

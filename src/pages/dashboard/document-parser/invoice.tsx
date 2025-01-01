@@ -3,7 +3,7 @@ import { DropdownSection } from '@src/components/dashboard/documentParser/Dropdo
 import { InvoiceDetailsViewer } from '@src/components/dashboard/documentParser/InvoiceDetailsViewer';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
-import { ParsedInvoice } from '@src/types/documentParsers';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
 import { useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
@@ -15,13 +15,12 @@ Page.getLayout = (page: React.ReactElement) => (
 function Page() {
   const buttonText = 'Leer Facturas';
   const [files, setFiles] = useState<(string | File)[]>([]);
-  const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
+  const [parsedData, setParsedData] = useState<
+    (NormalizedParsedInvoice | null)[]
+  >([]);
 
   const handleUpload = async () => {
-    const documentParsedData = await xmlFileReader<ParsedInvoice>(
-      files,
-      parseInvoiceXML
-    );
+    const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
 
     setParsedData(documentParsedData);
   };
