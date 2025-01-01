@@ -30,7 +30,7 @@ const UpdateBillingDocument: FC<Props> = ({ sale, open, onClose }) => {
         onClose();
       })
       .catch((e) => {
-        enqueueSnackbar('Factura actualizada exitosamente', {
+        enqueueSnackbar(`No se pudo actualizar la factura. ${e}`, {
           variant: 'error',
         });
         console.error(e);
