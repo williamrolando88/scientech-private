@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
-  TextField,
 } from '@mui/material';
 import {
   FormikAutoCalculateField,
@@ -17,10 +16,10 @@ import { ALLOWED_ACCOUNTS } from '@src/lib/constants/settings';
 import { PaymentCollectionSchema } from '@src/lib/schemas/sale';
 import { PaymentCollection } from '@src/types/sale';
 import { Form, Formik, FormikConfig } from 'formik';
-import { round } from 'mathjs';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { AccountCategorySelector } from '../../purchases/AccountCategorySelector';
+import { PaymentCollectionAmountField } from './PaymentCollectionAmountField';
 
 interface Props
   extends Pick<FormikConfig<PaymentCollection>, 'initialValues' | 'onSubmit'> {
@@ -35,74 +34,63 @@ const PaymentCollectionModal: FC<Props> = ({
   initialValues,
   onClose,
   onSubmit,
-}) => {
-  console.log('placeholder');
+}) => (
+  <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <DialogTitle>Registrar cobro</DialogTitle>
 
-  return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Registrar cobro</DialogTitle>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={toFormikValidationSchema(PaymentCollectionSchema)}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <Stack component={DialogContent} gap={2}>
+            <Alert severity="info">
+              Indique la fecha de cobro y el monto de los anticipos recibidos
+            </Alert>
 
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        validationSchema={toFormikValidationSchema(PaymentCollectionSchema)}
-      >
-        {({ values, isSubmitting, errors }) => (
-          <Form>
-            <Stack component={DialogContent} gap={2}>
-              <Alert severity="info">
-                Indique la fecha de cobro y el monto de los anticipos recibidos
-              </Alert>
+            <FormikDatePicker
+              name="paymentDate"
+              label="Fecha de pago"
+              required
+            />
 
-              <FormikDatePicker
-                name="paymentDate"
-                label="Fecha de pago"
-                required
-              />
+            <AccountCategorySelector
+              size="small"
+              label="Cuenta destino"
+              name="paymentAccount"
+              selectableCategories={ALLOWED_ACCOUNTS.PAYMENT_COLLECTION}
+              required
+            />
 
-              <AccountCategorySelector
-                size="small"
-                label="Cuenta destino"
-                name="paymentAccount"
-                selectableCategories={ALLOWED_ACCOUNTS.PAYMENT_COLLECTION}
-                required
-              />
+            <FormikAutoCalculateField
+              size="small"
+              name="advancePaymentAmount"
+              label="Anticipos recibidos"
+              required
+            />
 
-              <FormikAutoCalculateField
-                size="small"
-                name="advancePaymentAmount"
-                label="Anticipos recibidos"
-                required
-              />
+            <PaymentCollectionAmountField initialAmount={initialAmount} />
+          </Stack>
 
-              <TextField
-                size="small"
-                name="amount"
-                value={round(initialAmount - values.advancePaymentAmount, 2)}
-                label="Monto a cobrar"
-                required
-                disabled
-              />
-            </Stack>
+          <DialogActions>
+            <Button type="button" onClick={onClose}>
+              Cancelar
+            </Button>
 
-            <DialogActions>
-              <Button type="button" onClick={onClose}>
-                Cancelar
-              </Button>
-
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Guardar
-              </LoadingButton>
-            </DialogActions>
-          </Form>
-        )}
-      </Formik>
-    </Dialog>
-  );
-};
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
+          </DialogActions>
+        </Form>
+      )}
+    </Formik>
+  </Dialog>
+);
 
 export default PaymentCollectionModal;

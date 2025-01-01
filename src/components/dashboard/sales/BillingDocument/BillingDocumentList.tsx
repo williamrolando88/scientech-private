@@ -239,6 +239,7 @@ const BillingDocumentList: FC = () => {
           pageSizeOptions={[20, 50, 100]}
         />
       </CardContent>
+
       <UpdateBillingDocument
         open={Boolean(sale2Update)}
         sale={sale2Update}
