@@ -84,7 +84,7 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
       <PaymentModal
         open={modalOpen}
         paid={paid}
-        initialValue={purchase.payment ? purchase.payment : initialValue}
+        initialValue={purchase.payment ?? initialValue}
         isLegacy={paid && !purchase.payment}
         onClose={closeModal}
         onSubmit={handleSubmit}

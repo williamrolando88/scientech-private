@@ -195,10 +195,13 @@ const deleteWithhold = async (sale: Sale) => {
   await updateDoc(docRef, newSale);
 };
 
+const collectPayment = async (value: Sale) => {};
+
 export const SalesFirestore = {
   bulkCreate,
   update,
   remove,
   bulkWithhold,
   deleteWithhold,
+  collectPayment,
 };

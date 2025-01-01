@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import {
   Alert,
   Button,
@@ -62,7 +63,7 @@ const PaymentModal: FC<Props> = ({
           onSubmit={onSubmit}
           validationSchema={toFormikValidationSchema(PaymentSchema)}
         >
-          {() => (
+          {({ isSubmitting }) => (
             <Form>
               <Stack component={DialogContent} gap={2}>
                 <Alert severity="info">
@@ -130,9 +131,14 @@ const PaymentModal: FC<Props> = ({
                     <Button type="button" onClick={onClose}>
                       Cancelar
                     </Button>
-                    <Button type="submit" variant="contained">
+
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isSubmitting}
+                    >
                       Guardar
-                    </Button>
+                    </LoadingButton>
                   </>
                 )}
               </DialogActions>

@@ -15,6 +15,7 @@ import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
 import ShowWithholding from '../Withholding/ShowWithholding';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
@@ -79,11 +80,7 @@ const BillingDocumentList: FC = () => {
       headerName: 'Pagar',
       type: 'actions',
       width: 100,
-      getActions: (params) => [
-        // <PaymentButton
-        //   purchase={purchases.find((p) => p.id === params.row.id)}
-        // />,
-      ],
+      getActions: ({ row }) => [<PaymentCollectionButton sale={row} />],
     },
     {
       field: 'withholding',
