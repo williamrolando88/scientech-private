@@ -1,11 +1,11 @@
 import { CardContent, CardHeader, Stack } from '@mui/material';
-import { COLLECTIONS } from '@src/services/firestore/collections';
+import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
+import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
-import { getDocs, orderBy, query } from 'firebase/firestore';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { LOCAL_STORAGE } from 'src/lib/enums/localStorage';
-import { useEffectOnce, useLocalStorage } from 'usehooks-ts';
+import { useLocalStorage } from 'usehooks-ts';
 import { AccountReport } from './AccountReport';
 import { AccountSelector } from './AccountSelector';
 
@@ -14,26 +14,11 @@ const DayBookReportByAccount: FC = () => {
     LOCAL_STORAGE.ACCOUNT_TO_REPORT,
     ''
   );
-  const [accountingData, setAccountingData] = useState<DoubleEntryAccounting[]>(
-    []
-  );
 
-  const getAccountingEntries = async () => {
-    const querySnapshot = await getDocs(
-      query(
-        COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING.withConverter(
-          doubleEntryAccountingConverter
-        ),
-        orderBy('issueDate', 'desc')
-      )
-    );
-
-    const accountingDocuments = querySnapshot.docs.map((d) => d.data());
-    setAccountingData(accountingDocuments);
-  };
-
-  useEffectOnce(() => {
-    getAccountingEntries();
+  const accountingData = useCollectionSnapshot<DoubleEntryAccounting>({
+    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
+    converter: doubleEntryAccountingConverter,
+    order: { field: 'issueDate', direction: 'desc' },
   });
 
   return (

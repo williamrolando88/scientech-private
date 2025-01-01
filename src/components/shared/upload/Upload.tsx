@@ -14,6 +14,7 @@ import { UploadIllustration } from '../../../assets/illustrations';
 //
 import Iconify from '../iconify';
 //
+import Scrollbar from '../scrollbar';
 import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
@@ -54,6 +55,8 @@ export default function Upload({
   onRemoveAll,
   sx,
   uploadButtonText,
+  scrollable,
+  scrollBoxHeight = '250px',
   ...other
 }: UploadProps) {
   const {
@@ -135,12 +138,22 @@ export default function Upload({
 
       {hasFiles && (
         <>
-          <Box sx={{ my: 3 }}>
-            <MultiFilePreview
-              files={files}
-              thumbnail={thumbnail}
-              onRemove={onRemove}
-            />
+          <Box sx={{ my: 3, height: scrollable ? scrollBoxHeight : 'auto' }}>
+            {scrollable ? (
+              <Scrollbar>
+                <MultiFilePreview
+                  files={files}
+                  thumbnail={thumbnail}
+                  onRemove={onRemove}
+                />
+              </Scrollbar>
+            ) : (
+              <MultiFilePreview
+                files={files}
+                thumbnail={thumbnail}
+                onRemove={onRemove}
+              />
+            )}
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>

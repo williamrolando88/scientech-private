@@ -1,19 +1,18 @@
 import { Card, CardContent } from '@mui/material';
+import { Upload, UploadProps } from '@src/components/shared/upload';
 import { FC, useCallback } from 'react';
-import { Upload } from '@src/components/shared/upload';
 
-interface DropdownSectionProps {
+interface DropdownSectionProps
+  extends Omit<UploadProps, 'onDrop' | 'onRemove' | 'onRemoveAll'> {
   files: (File | string)[];
   setFiles: (files: (File | string)[]) => void;
-  handleUpload: VoidFunction;
-  uploadButtonText?: string;
 }
 
 export const DropdownSection: FC<DropdownSectionProps> = ({
   files,
   setFiles,
-  handleUpload,
   uploadButtonText,
+  ...props
 }) => {
   const handleRemoveFile = (inputFile: File | string) => {
     const filtered = files.filter((file) => file !== inputFile);
@@ -42,14 +41,11 @@ export const DropdownSection: FC<DropdownSectionProps> = ({
     <Card>
       <CardContent>
         <Upload
-          multiple
+          {...props}
           files={files}
-          accept={{ 'text/xml': [] }}
           onDrop={handleDropMultiFile}
           onRemove={handleRemoveFile}
           onRemoveAll={handleRemoveAllFiles}
-          onUpload={handleUpload}
-          uploadButtonText={uploadButtonText}
         />
       </CardContent>
     </Card>

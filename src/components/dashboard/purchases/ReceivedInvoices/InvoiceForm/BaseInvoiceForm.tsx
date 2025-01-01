@@ -17,12 +17,12 @@ import { UploadBox } from '@src/components/shared/upload';
 import {
   ALLOWED_ACCOUNTS,
   DEFAULT_ACCOUNT,
-  TAX_PERCENTAGE_CODES,
+  USER_RUC,
 } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
+import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
 import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases';
-import { ParsedInvoice } from '@src/types/documentParsers';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
 import { ReceivedInvoice } from '@src/types/purchases';
 import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import { FC } from 'react';
@@ -53,72 +53,29 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   const handleOnDropAccepted =
     (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
-      const documentParsedData = await xmlFileReader<ParsedInvoice>(
-        files,
-        parseFactura
-      );
+      const documentParsedData = (
+        await xmlFileReader(files, parseInvoiceXML)
+      ).filter((d) => d?.infoTributaria.ruc !== USER_RUC);
 
       if (!documentParsedData || !documentParsedData.length) {
         return;
       }
 
-      const invoice = documentParsedData[0];
+      const invoice = documentParsedData[0] as NormalizedParsedInvoice;
 
-      let description = '';
-      if (Array.isArray(invoice.detalles.detalle)) {
-        description = invoice.detalles.detalle
-          .map((detalle) => `${detalle.cantidad} - ${detalle.descripcion}`)
-          .join('\n');
-      } else {
-        description = `${invoice.detalles.detalle.cantidad} - ${invoice.detalles.detalle.descripcion}`;
-      }
-
-      const { totalImpuesto } = invoice.infoFactura.totalConImpuestos;
-
-      let taxedSubtotal = 0;
-      if (Array.isArray(totalImpuesto)) {
-        taxedSubtotal =
-          totalImpuesto.find((impuesto) =>
-            TAX_PERCENTAGE_CODES.includes(impuesto.codigoPorcentaje)
-          )?.baseImponible || 0;
-      } else {
-        taxedSubtotal = TAX_PERCENTAGE_CODES.includes(
-          totalImpuesto.codigoPorcentaje
-        )
-          ? totalImpuesto.baseImponible
-          : 0;
-      }
-
-      let noTaxSubtotal = 0;
-      if (Array.isArray(totalImpuesto)) {
-        noTaxSubtotal =
-          totalImpuesto.find((impuesto) => impuesto.codigoPorcentaje === 0)
-            ?.baseImponible || 0;
-      } else {
-        noTaxSubtotal =
-          totalImpuesto.codigoPorcentaje === 0
-            ? totalImpuesto.baseImponible
-            : 0;
-      }
-
-      const issueDate = new Date(
-        `${invoice.infoFactura.fechaEmision
-          .split('/')
-          .reverse()
-          .join('-')}T12:00:00-05:00`
-      );
+      // TODO: Add locking parameter for XML extracted documents
 
       setValues({
         ...initialValues,
-        description,
+        description: invoice.normalizedData.description,
         issuerId: invoice.infoTributaria.ruc,
         issuerName: invoice.infoTributaria.razonSocial,
         establishment: Number(invoice.infoTributaria.estab),
         emissionPoint: Number(invoice.infoTributaria.ptoEmi),
         sequentialNumber: Number(invoice.infoTributaria.secuencial),
-        issueDate,
-        taxedSubtotal,
-        noTaxSubtotal,
+        issueDate: invoice.normalizedData.issueDate,
+        taxedSubtotal: invoice.normalizedData.taxedSubtotal,
+        noTaxSubtotal: invoice.normalizedData.noTaxSubtotal,
       });
     };
 
@@ -205,6 +162,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
               <Grid item xs={12}>
                 <AccountCategorySelector
+                  size="small"
                   label="Cuenta de gasto"
                   name="expenseAccount"
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}

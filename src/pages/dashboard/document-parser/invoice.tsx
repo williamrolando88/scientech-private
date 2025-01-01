@@ -1,12 +1,13 @@
 import { Button, Stack } from '@mui/material';
-import { useState } from 'react';
 import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import { InvoiceDetailsViewer } from '@src/components/dashboard/documentParser/InvoiceDetailsViewer';
+import { USER_RUC } from '@src/lib/constants/settings';
+import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
+import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
+import { useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
-import { ParsedInvoice } from '@src/types/documentParsers';
-import { parseFactura } from '@src/lib/modules/documentParser/invoiceParser';
-import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 
 Page.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
@@ -15,15 +16,18 @@ Page.getLayout = (page: React.ReactElement) => (
 function Page() {
   const buttonText = 'Leer Facturas';
   const [files, setFiles] = useState<(string | File)[]>([]);
-  const [parsedData, setParsedData] = useState<ParsedInvoice[]>([]);
+  const [parsedData, setParsedData] = useState<
+    (NormalizedParsedInvoice | null)[]
+  >([]);
 
   const handleUpload = async () => {
-    const documentParsedData = await xmlFileReader<ParsedInvoice>(
-      files,
-      parseFactura
+    const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
+
+    const filteredDocuments = documentParsedData.filter(
+      (d) => d?.infoTributaria.ruc !== USER_RUC
     );
 
-    setParsedData(documentParsedData);
+    setParsedData(filteredDocuments);
   };
 
   const handleReset = () => {
@@ -60,8 +64,10 @@ function Page() {
         <DropdownSection
           files={files}
           setFiles={setFiles}
-          handleUpload={handleUpload}
+          onUpload={handleUpload}
           uploadButtonText={buttonText}
+          accept={{ 'text/xml': [] }}
+          multiple
         />
       )}
     </DashboardTemplate>

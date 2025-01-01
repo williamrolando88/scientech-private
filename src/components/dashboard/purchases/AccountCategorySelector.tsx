@@ -8,7 +8,7 @@ import { useEffectOnce } from 'usehooks-ts';
 interface AccountCategorySelectorProps {
   name: string;
   selectableCategories: string[];
-  initialValue: string;
+  initialValue?: string;
   label?: string;
   size?: 'small' | 'medium';
   required?: boolean;

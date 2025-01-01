@@ -13,7 +13,7 @@ export const singleFileReader = async (file: string | File): Promise<string> =>
 
 export async function xmlFileReader<T>(
   files: (string | File)[],
-  parser: Function
+  parser: (data: string) => T
 ): Promise<Array<T>> {
   const documentParsedData: T[] = [];
 

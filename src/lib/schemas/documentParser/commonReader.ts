@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const InvoiceInfoSchema = z.object({
+export const TaxableInfoSchema = z.object({
   razonSocial: z.string(),
   ruc: z.string(),
   claveAcceso: z.string(),

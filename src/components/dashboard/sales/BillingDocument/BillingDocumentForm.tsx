@@ -1,6 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import {
   Alert,
+  AlertColor,
   Button,
   DialogActions,
   DialogContent,
@@ -13,39 +14,48 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
-import { SaleNoteSchema } from '@src/lib/schemas/purchases';
-import { SaleNote } from '@src/types/purchases';
+import { BillingDocumentSchema } from '@src/lib/schemas/sale';
+import { BillingDocument } from '@src/types/sale';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { AccountCategorySelector } from '../../AccountCategorySelector';
-import { ProjectSelector } from '../../ProjectSelector';
+import { AccountCategorySelector } from '../../purchases/AccountCategorySelector';
+import { ProjectSelector } from '../../purchases/ProjectSelector';
 
-type FormikProps = Pick<FormikConfig<SaleNote>, 'initialValues' | 'onSubmit'>;
+const MISSING_SALE_ACCOUNT =
+  'Es necesario actualizar la informacion de Proyecto relacionado y Cuenta contable';
+const DEFAULT_MESSAGE =
+  'Los datos presentados fueron extraidos directamente del XML generado, no estan disponibles para edicion';
 
-export interface BaseSaleNoteFormProps extends FormikProps {
-  onClose?: VoidFunction;
-  infoText?: string;
+type FormikProps = Pick<
+  FormikConfig<BillingDocument>,
+  'initialValues' | 'onSubmit'
+>;
+
+interface Props extends FormikProps {
+  onClose: VoidFunction;
 }
 
-const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
-  onClose,
-  infoText,
+const BillingDocumentForm: FC<Props> = ({
   initialValues,
   onSubmit,
+  onClose,
 }) => {
-  const isUpdating = Boolean(initialValues.id);
+  const alertParams: { text: string; severity: AlertColor } =
+    initialValues.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT
+      ? { text: MISSING_SALE_ACCOUNT, severity: 'warning' }
+      : { text: DEFAULT_MESSAGE, severity: 'info' };
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(SaleNoteSchema)}
+      validationSchema={toFormikValidationSchema(BillingDocumentSchema)}
     >
       {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">{infoText}</Alert>
+            <Alert severity={alertParams.severity}>{alertParams.text}</Alert>
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
@@ -55,6 +65,8 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   name="establishment"
                   label="Suc."
                   type="number"
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -65,6 +77,8 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   name="emissionPoint"
                   label="Pto."
                   type="number"
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -75,6 +89,8 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   name="sequentialNumber"
                   label="Nro."
                   type="number"
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -87,6 +103,7 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   name="issueDate"
                   label="Fecha de Emisión"
                   required
+                  disabled
                 />
               </Grid>
 
@@ -94,9 +111,10 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="issuerId"
+                  name="recipientId"
                   label="CI/RUC Emisor"
                   required
+                  disabled
                 />
               </Grid>
 
@@ -104,9 +122,10 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 <FormikTextField
                   size="small"
                   fullWidth
-                  name="issuerName"
+                  name="recipientName"
                   label="Razón Social Emisor"
                   required
+                  disabled
                 />
               </Grid>
 
@@ -119,17 +138,44 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   name="description"
                   label="Descripción"
                   required
+                  disabled
                 />
               </Grid>
 
               <Grid item xs={12}>
                 <AccountCategorySelector
                   size="small"
-                  label="Cuenta de gasto"
-                  name="expenseAccount"
-                  selectableCategories={ALLOWED_ACCOUNTS.SALE_NOTE.EXPENSE}
-                  initialValue={DEFAULT_ACCOUNT.SALE_NOTE.EXPENSE}
+                  label="Cuenta de venta"
+                  name="saleAccount"
+                  selectableCategories={ALLOWED_ACCOUNTS.ISSUED_INVOICES}
+                  initialValue={DEFAULT_ACCOUNT.ISSUED_INVOICE}
                   required
+                />
+              </Grid>
+
+              <Grid item xs={9} />
+
+              <Grid item xs={3}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="taxedSubtotal"
+                  label="Base Imponible"
+                  required
+                  disabled
+                />
+              </Grid>
+
+              <Grid item xs={9} />
+
+              <Grid item xs={3}>
+                <FormikAutoCalculateField
+                  size="small"
+                  fullWidth
+                  name="IVA"
+                  label="IVA"
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -145,14 +191,16 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                   fullWidth
                   name="total"
                   label="Total"
+                  required
+                  disabled
                 />
               </Grid>
             </Grid>
           </Stack>
 
           <DialogActions>
-            <Button onClick={onClose} disabled={isSubmitting}>
-              Cancelar
+            <Button type="button" onClick={onClose}>
+              Cerrar
             </Button>
 
             <LoadingButton
@@ -160,7 +208,7 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
               type="submit"
               loading={isSubmitting}
             >
-              {isUpdating ? 'Actualizar' : 'Guardar'}
+              Guardar
             </LoadingButton>
           </DialogActions>
         </Form>
@@ -169,4 +217,4 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
   );
 };
 
-export default BaseSaleNoteForm;
+export default BillingDocumentForm;

@@ -9,7 +9,7 @@ import { ConfirmDialogProps } from './types';
 
 export default function ConfirmDialog({
   title,
-  content,
+  content = 'Estas seguro que deseas continuar?',
   action,
   open,
   onClose,
@@ -24,9 +24,7 @@ export default function ConfirmDialog({
       )}
 
       <DialogActions>
-        <Button color="error" onClick={onClose}>
-          Cancel
-        </Button>
+        <Button onClick={onClose}>Cancelar</Button>
 
         {action}
       </DialogActions>

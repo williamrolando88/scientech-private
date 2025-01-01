@@ -93,6 +93,7 @@ const NonDeductibleList: FC = () => {
     },
   ];
 
+  // TODO: Standardize error message
   const handleDeleteExpense = async () => {
     if (!expenseToDelete?.id) return;
 

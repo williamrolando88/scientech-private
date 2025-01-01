@@ -5,6 +5,7 @@ export const ISD_TAX_RATE = 5;
 export const FODINFA_TAX_RATE = 0.5;
 export const INSURANCE_RATE = 1;
 export const TAX_PERCENTAGE_CODES = [2, 4];
+export const USER_RUC = '1722528872001';
 
 export const DEFAULT_ACCOUNT = {
   INVOICE: {
@@ -29,6 +30,9 @@ export const DEFAULT_ACCOUNT = {
   BILLS_TO_PAY: '2.01.03',
   TAXES_PAYABLE: '2.01.07.01',
   CUSTOMER_ADVANCE: '2.02.06',
+  INCOME_ROOT: '4',
+  ISSUED_INVOICE: '4.01.01',
+  MAIN_BANK_ACCOUNT: '1.01.01.03.01',
 };
 
 export const ALLOWED_ACCOUNTS = {
@@ -63,4 +67,6 @@ export const ALLOWED_ACCOUNTS = {
   CUSTOMS_PAYMENT: {
     PAYMENT: ['1.01.01.03.01', '2.01.04.01.01', '2.01.04.01.02'],
   },
+  ISSUED_INVOICES: ['4.01.01', '4.01.02'],
+  PAYMENT_COLLECTION: ['1.01.01.03'],
 };
