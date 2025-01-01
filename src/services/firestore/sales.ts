@@ -1,6 +1,7 @@
 import { normalizeWithholding2Withholding } from '@src/lib/modules/documentParser/holdingParser';
 import { DB } from '@src/settings/firebase';
 import { NormalizedParsedWithholding } from '@src/types/documentParsers';
+import { DocumentRef } from '@src/types/documentReference';
 import { BillingDocument, Sale, Withholding } from '@src/types/sale';
 import {
   deleteDoc,
@@ -157,7 +158,7 @@ const bulkWithhold = async (
       const withholding: Withholding = {
         ...normalizeWithholding2Withholding(normalizedWithholdings[index]),
         id: subId(docRef.id, 'saleWithholding'),
-        ref: { ...saleDoc.billingDocument.ref, sellId: docRef.id },
+        ref: { ...saleDoc.billingDocument.ref, saleId: docRef.id },
       };
 
       const sale: Partial<Sale> = {
@@ -195,7 +196,26 @@ const deleteWithhold = async (sale: Sale) => {
   await updateDoc(docRef, newSale);
 };
 
-const collectPayment = async (value: Sale) => {};
+const collectPayment = async (sale: Sale) => {
+  const paymentCollectionRefs: DocumentRef = sale.billingDocument.ref ?? {};
+  paymentCollectionRefs.saleId = sale.id;
+
+  if (sale.withholding) {
+    paymentCollectionRefs.withholdingId = sale.withholding.id;
+  }
+
+  const newSale: Sale = {
+    ...sale,
+    paymentCollection: {
+      ...sale.paymentCollection!,
+      id: subId(sale.id ?? '', 'salePaymentCollection'),
+      ref: paymentCollectionRefs,
+    },
+  };
+
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+  await updateDoc(docRef, newSale);
+};
 
 export const SalesFirestore = {
   bulkCreate,

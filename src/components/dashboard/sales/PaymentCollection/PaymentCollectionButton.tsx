@@ -1,9 +1,11 @@
 import { Button } from '@mui/material';
 import { PAYMENT_COLLECTION_INITIAL_VALUE } from '@src/lib/constants/sale';
+import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { subId } from '@src/services/firestore/helpers/subIdGenerator';
 import { SalesFirestore } from '@src/services/firestore/sales';
 import { PaymentCollection, Sale } from '@src/types/sale';
 import { FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import PaymentCollectionModal from './PaymentCollectionModal';
 
@@ -12,23 +14,42 @@ interface Props {
 }
 
 const PaymentCollectionButton: FC<Props> = ({ sale }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const handleSubmit: FormikConfig<PaymentCollection>['onSubmit'] = (
-    values
+    values,
+    { resetForm, setSubmitting }
   ) => {
-    SalesFirestore.collectPayment({} as Sale);
+    SalesFirestore.collectPayment({ ...sale, paymentCollection: values })
+      .then(() => {
+        resetForm();
+        enqueueSnackbar('Cobro registrado exitosamente');
+        closeModal();
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   const collected = Boolean(sale.paymentCollection);
+  const isDisabled =
+    sale.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
 
   const initialValue: PaymentCollection = {
     ...PAYMENT_COLLECTION_INITIAL_VALUE,
     id: subId(sale.id ?? '', 'salePaymentCollection'),
     amount: sale.paymentDue,
   };
+
   return (
     <>
       <Button
@@ -36,6 +57,7 @@ const PaymentCollectionButton: FC<Props> = ({ sale }) => {
         variant="soft"
         onClick={openModal}
         sx={{ width: '80px' }}
+        disabled={isDisabled}
       >
         {collected ? 'Cobrado' : 'Pendiente'}
       </Button>

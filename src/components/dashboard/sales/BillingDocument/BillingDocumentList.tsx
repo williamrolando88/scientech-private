@@ -85,30 +85,37 @@ const BillingDocumentList: FC = () => {
     {
       field: 'withholding',
       headerName: 'Ret.',
-      type: 'boolean',
+      type: 'actions',
       width: 10,
       sortable: false,
-      valueGetter: ({ row }) =>
-        Boolean(row.withholding) || Boolean(row.paymentCollection),
-      renderCell: (params) =>
-        params.value ? (
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setWithholding2Open(params.row);
-            }}
-          >
+      getActions: ({ row }) => {
+        if (row.withholding) {
+          return [
+            <IconButton onClick={() => setWithholding2Open(row)}>
+              <Iconify
+                icon="pajamas:review-checkmark"
+                sx={{ color: (theme) => theme.palette.success.main }}
+              />
+            </IconButton>,
+          ];
+        }
+
+        if (row.paymentCollection && !row.withholding) {
+          return [
             <Iconify
-              icon="pajamas:review-checkmark"
-              sx={{ color: (theme) => theme.palette.success.main }}
-            />
-          </IconButton>
-        ) : (
+              icon="pajamas:review-list"
+              sx={{ color: (theme) => theme.palette.grey[400] }}
+            />,
+          ];
+        }
+
+        return [
           <Iconify
             icon="pajamas:review-warning"
             sx={{ color: (theme) => theme.palette.warning.main }}
-          />
-        ),
+          />,
+        ];
+      },
     },
     {
       field: 'salesAccount',
