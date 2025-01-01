@@ -1,4 +1,6 @@
+import { normalizeWithholding2Withholding } from '@src/lib/modules/documentParser/holdingParser';
 import { DB } from '@src/settings/firebase';
+import { NormalizedParsedWithholding } from '@src/types/documentParsers';
 import { BillingDocument, Sale, Withholding } from '@src/types/sale';
 import {
   deleteDoc,
@@ -13,6 +15,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { COLLECTIONS } from './collections';
+import { subId } from './helpers/subIdGenerator';
 
 export const saleConverter: FirestoreDataConverter<Sale> = {
   toFirestore: (sale: Sale) => sale,
@@ -106,12 +109,70 @@ const remove = async (sale: Sale) => {
   await deleteDoc(docRef);
 };
 
-const bulkWithhold = async (withholdings: Omit<Withholding, 'id'>[]) => {
-  console.log('first');
+const bulkWithhold = async (
+  normalizedWithholdings: NormalizedParsedWithholding[]
+) => {
+  const storedDocs = await Promise.all(
+    normalizedWithholdings.map(async (withholding) => {
+      const { linkedInvoice } = withholding.normalizedData;
+
+      const q = query(
+        COLLECTIONS.SALES.withConverter(saleConverter),
+        where(
+          'billingDocument.emissionPoint',
+          '==',
+          linkedInvoice.emissionPoint
+        ),
+        where(
+          'billingDocument.establishment',
+          '==',
+          linkedInvoice.establishment
+        ),
+        where(
+          'billingDocument.sequentialNumber',
+          '==',
+          linkedInvoice.sequentialNumber
+        )
+      );
+
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) return 'noStored';
+      return querySnapshot.docs[0].data();
+    })
+  );
+
+  const onlyStored = storedDocs
+    .filter((d) => d !== 'noStored')
+    .filter((d) => !!d);
+
+  if (onlyStored.length) {
+    const batch = writeBatch(DB);
+
+    storedDocs.forEach((saleDoc, index) => {
+      if (saleDoc === 'noStored' || !saleDoc) return;
+
+      const docRef = doc(COLLECTIONS.SALES, saleDoc.id);
+
+      const withholding: Withholding = {
+        ...normalizeWithholding2Withholding(normalizedWithholdings[index]),
+        id: subId(docRef.id, 'saleWithholding'),
+        ref: { ...saleDoc.billingDocument.ref, sellId: docRef.id },
+      };
+
+      const sale: Partial<Sale> = {
+        withholding,
+        paymentDue: saleDoc.billingDocument.total - withholding.total,
+      };
+
+      batch.update(docRef, sale);
+    });
+
+    await batch.commit();
+  }
 
   return {
-    created: 0,
-    existing: 0,
+    linked: onlyStored.length,
+    ignored: normalizedWithholdings.length - onlyStored.length,
   };
 };
 

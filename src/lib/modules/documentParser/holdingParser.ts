@@ -1,6 +1,7 @@
 import { DOCUMENT_TYPE } from '@src/lib/enums/documentParser';
 import { documentParser } from '@src/lib/modules/documentParser/xmlParser';
 import { WithholdingReaderSchema } from '@src/lib/schemas/documentParser/holdingReader';
+import { parseTaxDoxId } from '@src/lib/utils/formatInvoiceNumber';
 import {
   NormalizedParsedWithholding,
   ParsedWithholding,
@@ -69,6 +70,9 @@ export const normalizeWithholding = (
       IncomeWithholding,
       IVAWithholdingPercentage,
       IncomeWithholdingPercentage,
+      linkedInvoice: parseTaxDoxId(
+        data.docsSustento.docSustento.numAutDocSustento
+      ),
     },
   };
 };

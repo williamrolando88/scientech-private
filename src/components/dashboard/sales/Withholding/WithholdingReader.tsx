@@ -1,9 +1,6 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import {
-  normalizeWithholding2Withholding,
-  parseWithholdingXML,
-} from '@src/lib/modules/documentParser/holdingParser';
+import { parseWithholdingXML } from '@src/lib/modules/documentParser/holdingParser';
 import { SalesFirestore } from '@src/services/firestore/sales';
 import { NormalizedParsedWithholding } from '@src/types/documentParsers';
 import { useSnackbar } from 'notistack';
@@ -24,22 +21,25 @@ const WithholdingReader: FC<Props> = ({ open, onClose }) => {
     setBusy(true);
     const documentParsedData = await xmlFileReader(files, parseWithholdingXML);
 
-    const withholdingDocuments = documentParsedData
-      .filter((d) => !!d)
-      .map((d) =>
-        normalizeWithholding2Withholding(d as NormalizedParsedWithholding)
-      );
+    const withholdingDocuments = documentParsedData.filter((d) => !!d);
 
-    SalesFirestore.bulkWithhold(withholdingDocuments)
-      .then(({ created, existing }) => {
-        if (created) {
-          enqueueSnackbar(`Se crearon ${created} retenciones`);
+    SalesFirestore.bulkWithhold(
+      withholdingDocuments as NormalizedParsedWithholding[]
+    )
+      .then(({ linked, ignored }) => {
+        if (linked) {
+          enqueueSnackbar(
+            `Se vincularon ${linked} retenciones a facturas existentes`
+          );
         }
 
-        if (existing) {
-          enqueueSnackbar(`No se crearon ${existing} retenciones existentes`, {
-            variant: 'info',
-          });
+        if (ignored) {
+          enqueueSnackbar(
+            `No se vincularon ${ignored} retenciones a ninguna factura existente`,
+            {
+              variant: 'info',
+            }
+          );
         }
 
         handleClose({ force: true });

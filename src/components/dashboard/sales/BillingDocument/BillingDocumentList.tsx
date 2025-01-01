@@ -63,7 +63,7 @@ const BillingDocumentList: FC = () => {
     },
     {
       field: 'paymentDue',
-      headerName: 'Total',
+      headerName: 'Por cobrar',
       type: 'number',
       sortable: false,
       valueFormatter: ({ value }) =>

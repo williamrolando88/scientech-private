@@ -1,5 +1,6 @@
 import { Button } from '@mui/material';
 import { PAYMENT_INITIAL_VALUE } from '@src/lib/constants/payment';
+import { subId } from '@src/services/firestore/helpers/subIdGenerator';
 import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { Payment, Purchase } from '@src/types/purchases';
 import { FormikConfig } from 'formik';
@@ -65,7 +66,7 @@ const PaymentButton: FC<Props> = ({ purchase }) => {
 
   const initialValue: Payment = {
     ...PAYMENT_INITIAL_VALUE,
-    id: `${purchase.id}-p`,
+    id: subId(purchase.id ?? '', 'purchasePayment'),
     amount: purchase.purchaseData.total,
   };
 

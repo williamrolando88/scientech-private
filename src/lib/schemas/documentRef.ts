@@ -5,5 +5,8 @@ export const DocumentRefSchema = z
     projectId: z.string(),
     purchaseId: z.string(),
     paymentId: z.string(),
+    sellId: z.string(),
+    withholdingId: z.string(),
+    paymentCollectionId: z.string(),
   })
   .partial();

@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { formatInvoiceNumber } from '@src/lib/utils/formatInvoiceNumber';
+import { formatTaxDocIdNumber } from '@src/lib/utils/formatInvoiceNumber';
 import { SalesFirestore } from '@src/services/firestore/sales';
 import { BillingDocument, Sale } from '@src/types/sale';
 import { FormikConfig } from 'formik';
@@ -46,7 +46,7 @@ const UpdateBillingDocument: FC<Props> = ({ sale, open, onClose }) => {
     billingDocument: { emissionPoint, establishment, sequentialNumber },
   } = sale;
 
-  const title = `Factura: ${formatInvoiceNumber({ emissionPoint, establishment, sequentialNumber })}`;
+  const title = `Factura: ${formatTaxDocIdNumber({ emissionPoint, establishment, sequentialNumber })}`;
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>{title}</DialogTitle>

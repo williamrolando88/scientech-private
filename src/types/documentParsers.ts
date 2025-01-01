@@ -25,5 +25,10 @@ export interface NormalizedParsedWithholding extends ParsedWithholding {
     IncomeWithholding: number;
     IVAWithholdingPercentage: number;
     IncomeWithholdingPercentage: number;
+    linkedInvoice: {
+      emissionPoint: number;
+      establishment: number;
+      sequentialNumber: number;
+    };
   };
 }
