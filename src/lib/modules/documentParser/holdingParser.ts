@@ -5,6 +5,7 @@ import {
   NormalizedParsedWithholding,
   ParsedWithholding,
 } from '@src/types/documentParsers';
+import { Withholding } from '@src/types/sale';
 import { get } from 'lodash';
 import { round } from 'mathjs';
 
@@ -84,6 +85,28 @@ export const parseWithholdingXML = (xmlText: string) => {
   return null;
 };
 
-// export const normalizeWithholding2Withholding = (
-//   data: NormalizedParsedWithholding
-// ): Withholding => {};
+export const normalizeWithholding2Withholding = (
+  data: NormalizedParsedWithholding
+): Omit<Withholding, 'id'> => {
+  const issueDate = new Date(
+    `${data.infoCompRetencion.fechaEmision
+      .split('/')
+      .reverse()
+      .join('-')}T12:00:00-05:00`
+  );
+
+  const { IVAWithholding, IncomeWithholding } = data.normalizedData;
+
+  return {
+    establishment: Number(data.infoTributaria.estab),
+    emissionPoint: Number(data.infoTributaria.ptoEmi),
+    sequentialNumber: Number(data.infoTributaria.secuencial),
+    issueDate,
+    issuerId: data.infoTributaria.ruc,
+    issuerName: data.infoTributaria.razonSocial,
+    IVAWithholding,
+    IncomeWithholding,
+    total: IVAWithholding + IncomeWithholding,
+    ref: {},
+  };
+};

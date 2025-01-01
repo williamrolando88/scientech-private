@@ -81,8 +81,29 @@ const BillingDocumentList: FC = () => {
       ],
     },
     {
-      field: 'ready',
-      headerName: '',
+      field: 'withholding',
+      headerName: 'Ret.',
+      type: 'boolean',
+      width: 10,
+      sortable: false,
+      valueGetter: ({ row }) =>
+        Boolean(row.withholding) || Boolean(row.paymentCollection),
+      renderCell: (params) =>
+        params.value ? (
+          <Iconify
+            icon="pajamas:review-checkmark"
+            sx={{ color: (theme) => theme.palette.success.main }}
+          />
+        ) : (
+          <Iconify
+            icon="pajamas:review-warning"
+            sx={{ color: (theme) => theme.palette.warning.main }}
+          />
+        ),
+    },
+    {
+      field: 'salesAccount',
+      headerName: 'Cta.',
       type: 'boolean',
       width: 10,
       sortable: false,

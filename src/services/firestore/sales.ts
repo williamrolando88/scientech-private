@@ -1,5 +1,5 @@
 import { DB } from '@src/settings/firebase';
-import { BillingDocument, Sale } from '@src/types/sale';
+import { BillingDocument, Sale, Withholding } from '@src/types/sale';
 import {
   deleteDoc,
   doc,
@@ -106,8 +106,18 @@ const remove = async (sale: Sale) => {
   await deleteDoc(docRef);
 };
 
+const bulkWithhold = async (withholdings: Omit<Withholding, 'id'>[]) => {
+  console.log('first');
+
+  return {
+    created: 0,
+    existing: 0,
+  };
+};
+
 export const SalesFirestore = {
   bulkCreate,
   update,
   remove,
+  bulkWithhold,
 };

@@ -1,16 +1,20 @@
 import {
+  DEFAULT_ACCOUNT,
   IVA_RATE_12,
   IVA_RATE_15,
   TAX_PERCENTAGE_CODES,
 } from '@src/lib/constants/settings';
 import { DOCUMENT_TYPE } from '@src/lib/enums/documentParser';
 import { documentParser } from '@src/lib/modules/documentParser/xmlParser';
-import { NormalizedInvoice, ParsedInvoice } from '@src/types/documentParsers';
+import {
+  NormalizedParsedInvoice,
+  ParsedInvoice,
+} from '@src/types/documentParsers';
 import { BillingDocument } from '@src/types/sale';
 import { round } from 'mathjs';
 import { InvoiceReaderSchema } from '../../schemas/documentParser/invoiceReader';
 
-export const parseInvoiceXML = (xmlText: string): ParsedInvoice | null => {
+export const parseInvoiceXML = (xmlText: string) => {
   const documentData = documentParser(xmlText, DOCUMENT_TYPE.INVOICE);
 
   if (!documentData) {
@@ -20,7 +24,7 @@ export const parseInvoiceXML = (xmlText: string): ParsedInvoice | null => {
   const parsedFactura = InvoiceReaderSchema.safeParse(documentData);
 
   if (parsedFactura.success) {
-    return parsedFactura.data;
+    return normalizeInvoice(parsedFactura.data);
   }
 
   if (parsedFactura.error) {
@@ -30,7 +34,9 @@ export const parseInvoiceXML = (xmlText: string): ParsedInvoice | null => {
   return null;
 };
 
-export const normalizeInvoice = (invoice: ParsedInvoice): NormalizedInvoice => {
+export const normalizeInvoice = (
+  invoice: ParsedInvoice
+): NormalizedParsedInvoice => {
   let description = '';
   if (Array.isArray(invoice.detalles.detalle)) {
     description = invoice.detalles.detalle
@@ -85,7 +91,7 @@ export const normalizeInvoice = (invoice: ParsedInvoice): NormalizedInvoice => {
 };
 
 export const normalizedInvoice2BillingDocument = (
-  invoice: NormalizedInvoice
+  invoice: NormalizedParsedInvoice
 ): BillingDocument => {
   const IVA_RATE =
     invoice.normalizedData.issueDate < new Date('2024-04-01')
@@ -107,6 +113,6 @@ export const normalizedInvoice2BillingDocument = (
     total: invoice.infoFactura.importeTotal,
     ref: {},
     paid: false,
-    saleAccount: '',
+    saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
   };
 };

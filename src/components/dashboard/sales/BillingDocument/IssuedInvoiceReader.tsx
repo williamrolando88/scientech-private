@@ -1,12 +1,11 @@
 import { Dialog, DialogTitle } from '@mui/material';
-import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import {
   normalizedInvoice2BillingDocument,
   parseInvoiceXML,
 } from '@src/lib/modules/documentParser/invoiceParser';
 import { SalesFirestore } from '@src/services/firestore/sales';
-import { BillingDocument } from '@src/types/sale';
+import { NormalizedParsedInvoice } from '@src/types/documentParsers';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { DropdownSection } from '../../documentParser/DropdownSection';
@@ -27,12 +26,8 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
 
     const billingDocuments = documentParsedData
       .filter((d) => !!d)
-      .map(
-        (d) =>
-          ({
-            ...normalizedInvoice2BillingDocument(d),
-            saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
-          }) as BillingDocument
+      .map((d) =>
+        normalizedInvoice2BillingDocument(d as NormalizedParsedInvoice)
       );
 
     SalesFirestore.bulkCreate(billingDocuments)

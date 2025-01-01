@@ -1,7 +1,11 @@
 import { Dialog, DialogTitle } from '@mui/material';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
-import { parseWithholdingXML } from '@src/lib/modules/documentParser/holdingParser';
-import { ParsedWithholding } from '@src/types/documentParsers';
+import {
+  normalizeWithholding2Withholding,
+  parseWithholdingXML,
+} from '@src/lib/modules/documentParser/holdingParser';
+import { SalesFirestore } from '@src/services/firestore/sales';
+import { NormalizedParsedWithholding } from '@src/types/documentParsers';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { DropdownSection } from '../../documentParser/DropdownSection';
@@ -18,43 +22,37 @@ const WithholdingReader: FC<Props> = ({ open, onClose }) => {
 
   const handleUpload = async () => {
     setBusy(true);
-    const documentParsedData = await xmlFileReader<ParsedWithholding>(
-      files,
-      parseWithholdingXML
-    );
+    const documentParsedData = await xmlFileReader(files, parseWithholdingXML);
 
-    // const billingDocuments = documentParsedData.map((d) => {
-    //   const normalData = normalizeInvoice(d);
+    const withholdingDocuments = documentParsedData
+      .filter((d) => !!d)
+      .map((d) =>
+        normalizeWithholding2Withholding(d as NormalizedParsedWithholding)
+      );
 
-    //   return {
-    //     ...normalizedInvoice2BillingDocument(normalData),
-    //     saleAccount: DEFAULT_ACCOUNT.INCOME_ROOT,
-    //   } satisfies BillingDocument;
-    // });
+    SalesFirestore.bulkWithhold(withholdingDocuments)
+      .then(({ created, existing }) => {
+        if (created) {
+          enqueueSnackbar(`Se crearon ${created} retenciones`);
+        }
 
-    // SalesFirestore.bulkCreate(billingDocuments)
-    //   .then(({ created, existing }) => {
-    //     if (created) {
-    //       enqueueSnackbar(`Se crearon ${created} facturas`);
-    //     }
+        if (existing) {
+          enqueueSnackbar(`No se crearon ${existing} retenciones existentes`, {
+            variant: 'info',
+          });
+        }
 
-    //     if (existing) {
-    //       enqueueSnackbar(`No se crearon ${existing} facturas existentes`, {
-    //         variant: 'info',
-    //       });
-    //     }
-
-    //     handleClose({ force: true });
-    //   })
-    //   .catch((e) => {
-    //     enqueueSnackbar(`Algo salió mal, vuelva a intentarlo nuevamente`, {
-    //       variant: 'error',
-    //     });
-    //     console.error(e);
-    //   })
-    //   .finally(() => {
-    //     setBusy(false);
-    //   });
+        handleClose({ force: true });
+      })
+      .catch((e) => {
+        enqueueSnackbar(`Algo salió mal, vuelva a intentarlo nuevamente`, {
+          variant: 'error',
+        });
+        console.error(e);
+      })
+      .finally(() => {
+        setBusy(false);
+      });
   };
 
   const handleClose = ({ force = false } = {}) => {
