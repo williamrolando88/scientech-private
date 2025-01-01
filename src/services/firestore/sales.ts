@@ -14,6 +14,7 @@ import {
   where,
   writeBatch,
 } from 'firebase/firestore';
+import { round } from 'mathjs';
 import { COLLECTIONS } from './collections';
 import { subId } from './helpers/subIdGenerator';
 
@@ -161,7 +162,7 @@ const bulkWithhold = async (
 
       const sale: Partial<Sale> = {
         withholding,
-        paymentDue: saleDoc.billingDocument.total - withholding.total,
+        paymentDue: round(saleDoc.billingDocument.total - withholding.total, 2),
       };
 
       batch.update(docRef, sale);

@@ -110,7 +110,7 @@ export const normalizeWithholding2Withholding = (
     issuerName: data.infoTributaria.razonSocial,
     IVAWithholding,
     IncomeWithholding,
-    total: IVAWithholding + IncomeWithholding,
+    total: round(IVAWithholding + IncomeWithholding, 2),
     ref: {},
   };
 };
