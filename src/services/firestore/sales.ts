@@ -217,6 +217,16 @@ const collectPayment = async (sale: Sale) => {
   await updateDoc(docRef, newSale);
 };
 
+const removePaymentCollection = async (sale: Sale) => {
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+
+  const newSale: Partial<Sale> = {
+    paymentCollection: null,
+  };
+
+  await updateDoc(docRef, newSale);
+};
+
 export const SalesFirestore = {
   bulkCreate,
   update,
@@ -224,4 +234,5 @@ export const SalesFirestore = {
   bulkWithhold,
   deleteWithhold,
   collectPayment,
+  removePaymentCollection,
 };

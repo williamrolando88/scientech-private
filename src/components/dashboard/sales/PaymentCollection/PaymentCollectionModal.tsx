@@ -12,6 +12,7 @@ import {
   FormikAutoCalculateField,
   FormikDatePicker,
 } from '@src/components/shared/formik-components';
+import Iconify from '@src/components/shared/iconify';
 import { ALLOWED_ACCOUNTS } from '@src/lib/constants/settings';
 import { PaymentCollectionSchema } from '@src/lib/schemas/sale';
 import { PaymentCollection } from '@src/types/sale';
@@ -26,6 +27,7 @@ interface Props
   initialAmount: number;
   open: boolean;
   onClose: VoidFunction;
+  onDelete?: VoidFunction;
 }
 
 const PaymentCollectionModal: FC<Props> = ({
@@ -33,64 +35,89 @@ const PaymentCollectionModal: FC<Props> = ({
   initialAmount,
   initialValues,
   onClose,
+  onDelete,
   onSubmit,
-}) => (
-  <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-    <DialogTitle>Registrar cobro</DialogTitle>
+}) => {
+  const handleDeleteClick = () => {
+    onDelete?.();
+  };
 
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(PaymentCollectionSchema)}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">
-              Indique la fecha de cobro y el monto de los anticipos recibidos
-            </Alert>
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>Registrar cobro</DialogTitle>
 
-            <FormikDatePicker
-              name="paymentDate"
-              label="Fecha de pago"
-              required
-            />
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={toFormikValidationSchema(PaymentCollectionSchema)}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Stack component={DialogContent} gap={2}>
+              <Alert severity="info">
+                Indique la fecha de cobro y el monto de los anticipos recibidos
+              </Alert>
 
-            <AccountCategorySelector
-              size="small"
-              label="Cuenta destino"
-              name="paymentAccount"
-              selectableCategories={ALLOWED_ACCOUNTS.PAYMENT_COLLECTION}
-              required
-            />
+              <FormikDatePicker
+                name="paymentDate"
+                label="Fecha de pago"
+                required
+              />
 
-            <FormikAutoCalculateField
-              size="small"
-              name="advancePaymentAmount"
-              label="Anticipos recibidos"
-              required
-            />
+              <AccountCategorySelector
+                size="small"
+                label="Cuenta destino"
+                name="paymentAccount"
+                selectableCategories={ALLOWED_ACCOUNTS.PAYMENT_COLLECTION}
+                required
+              />
 
-            <PaymentCollectionAmountField initialAmount={initialAmount} />
-          </Stack>
+              <FormikAutoCalculateField
+                size="small"
+                name="advancePaymentAmount"
+                label="Anticipos recibidos"
+                required
+              />
 
-          <DialogActions>
-            <Button type="button" onClick={onClose}>
-              Cancelar
-            </Button>
+              <PaymentCollectionAmountField initialAmount={initialAmount} />
+            </Stack>
 
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              loading={isSubmitting}
-            >
-              Guardar
-            </LoadingButton>
-          </DialogActions>
-        </Form>
-      )}
-    </Formik>
-  </Dialog>
-);
+            <DialogActions>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                width="100%"
+              >
+                <Button
+                  type="button"
+                  color="error"
+                  variant="outlined"
+                  onClick={handleDeleteClick}
+                  disabled={!onDelete}
+                >
+                  <Iconify icon="pajamas:remove" />
+                </Button>
+
+                <Stack direction="row" gap={2}>
+                  <Button type="button" onClick={onClose}>
+                    Cancelar
+                  </Button>
+
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting}
+                  >
+                    Guardar
+                  </LoadingButton>
+                </Stack>
+              </Stack>
+            </DialogActions>
+          </Form>
+        )}
+      </Formik>
+    </Dialog>
+  );
+};
 
 export default PaymentCollectionModal;

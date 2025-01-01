@@ -40,6 +40,22 @@ const PaymentCollectionButton: FC<Props> = ({ sale }) => {
       });
   };
 
+  const handleDelete = () => {
+    SalesFirestore.removePaymentCollection(sale)
+      .then(() => {
+        enqueueSnackbar('Cobro eliminado exitosamente');
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar(`No se pudo eliminar el documento. ${error}`, {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        closeModal();
+      });
+  };
+
   const collected = Boolean(sale.paymentCollection);
   const isDisabled =
     sale.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
@@ -68,6 +84,7 @@ const PaymentCollectionButton: FC<Props> = ({ sale }) => {
         initialValues={sale.paymentCollection ?? initialValue}
         initialAmount={sale.paymentDue}
         onSubmit={handleSubmit}
+        onDelete={sale.paymentCollection ? handleDelete : undefined}
       />
     </>
   );
