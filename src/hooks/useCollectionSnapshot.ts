@@ -13,9 +13,9 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 
 interface useCollectionSnapshotParams<T> {
+  additionalQueries?: QueryConstraint[];
   collectionName: COLLECTIONS_ENUM;
   converter?: FirestoreDataConverter<any>;
-  additionalQueries?: QueryConstraint[];
   order?: { field: keyof T; direction?: OrderByDirection };
 }
 
@@ -32,7 +32,9 @@ export const useCollectionSnapshot = <T>({
     if (converter) collectionRef = collectionRef.withConverter(converter);
 
     const queries = [];
+
     if (additionalQueries) queries.push(...additionalQueries);
+
     if (order) queries.push(orderBy(order.field as string, order.direction));
 
     // TODO: Used for debugging purposes, remove in production
