@@ -14,7 +14,11 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { UploadBox } from '@src/components/shared/upload';
-import { ALLOWED_ACCOUNTS, DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
+import {
+  ALLOWED_ACCOUNTS,
+  DEFAULT_ACCOUNT,
+  USER_RUC,
+} from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
 import { ReceivedInvoiceSchema } from '@src/lib/schemas/purchases';
@@ -49,7 +53,9 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   const handleOnDropAccepted =
     (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
-      const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
+      const documentParsedData = (
+        await xmlFileReader(files, parseInvoiceXML)
+      ).filter((d) => d?.infoTributaria.ruc !== USER_RUC);
 
       if (!documentParsedData || !documentParsedData.length) {
         return;

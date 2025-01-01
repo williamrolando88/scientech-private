@@ -1,6 +1,7 @@
 import { Button, Stack } from '@mui/material';
 import { DropdownSection } from '@src/components/dashboard/documentParser/DropdownSection';
 import { InvoiceDetailsViewer } from '@src/components/dashboard/documentParser/InvoiceDetailsViewer';
+import { USER_RUC } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import { parseInvoiceXML } from '@src/lib/modules/documentParser/invoiceParser';
 import { NormalizedParsedInvoice } from '@src/types/documentParsers';
@@ -22,7 +23,11 @@ function Page() {
   const handleUpload = async () => {
     const documentParsedData = await xmlFileReader(files, parseInvoiceXML);
 
-    setParsedData(documentParsedData);
+    const filteredDocuments = documentParsedData.filter(
+      (d) => d?.infoTributaria.ruc !== USER_RUC
+    );
+
+    setParsedData(filteredDocuments);
   };
 
   const handleReset = () => {

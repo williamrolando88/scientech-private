@@ -1,4 +1,5 @@
 import { Dialog, DialogTitle } from '@mui/material';
+import { USER_RUC } from '@src/lib/constants/settings';
 import { xmlFileReader } from '@src/lib/modules/documentParser/documentReader';
 import {
   normalizedInvoice2BillingDocument,
@@ -26,6 +27,7 @@ export const IssuedInvoiceReader: FC<Props> = ({ onClose, open }) => {
 
     const billingDocuments = documentParsedData
       .filter((d) => !!d)
+      .filter((d) => d.infoTributaria.ruc === USER_RUC)
       .map((d) =>
         normalizedInvoice2BillingDocument(d as NormalizedParsedInvoice)
       );

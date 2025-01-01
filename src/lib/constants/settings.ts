@@ -5,6 +5,7 @@ export const ISD_TAX_RATE = 5;
 export const FODINFA_TAX_RATE = 0.5;
 export const INSURANCE_RATE = 1;
 export const TAX_PERCENTAGE_CODES = [2, 4];
+export const USER_RUC = '1722528872001';
 
 export const DEFAULT_ACCOUNT = {
   INVOICE: {
