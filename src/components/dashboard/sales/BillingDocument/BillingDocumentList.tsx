@@ -1,4 +1,4 @@
-import { Button, CardContent } from '@mui/material';
+import { Button, CardContent, IconButton } from '@mui/material';
 import {
   DataGrid,
   GridActionsCellItem,
@@ -15,12 +15,14 @@ import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import ShowWithholding from '../Withholding/ShowWithholding';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
 const BillingDocumentList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [sale2Update, setSale2Update] = useState<Sale | null>(null);
   const [sale2Delete, setSale2Delete] = useState<Sale | null>(null);
+  const [withholding2Open, setWithholding2Open] = useState<Sale | null>(null);
   const [withholding2Delete, setWithholding2Delete] = useState<Sale | null>(
     null
   );
@@ -93,10 +95,17 @@ const BillingDocumentList: FC = () => {
         Boolean(row.withholding) || Boolean(row.paymentCollection),
       renderCell: (params) =>
         params.value ? (
-          <Iconify
-            icon="pajamas:review-checkmark"
-            sx={{ color: (theme) => theme.palette.success.main }}
-          />
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              setWithholding2Open(params.row);
+            }}
+          >
+            <Iconify
+              icon="pajamas:review-checkmark"
+              sx={{ color: (theme) => theme.palette.success.main }}
+            />
+          </IconButton>
         ) : (
           <Iconify
             icon="pajamas:review-warning"
@@ -148,12 +157,18 @@ const BillingDocumentList: FC = () => {
         if (row.withholding) {
           const withholdingOptions = [
             <GridActionsCellItem
-              label="Borrar retención"
-              onClick={() => setWithholding2Delete(row)}
-              icon={<Iconify icon="pajamas:remove" />}
+              label="Visualizar retención"
+              onClick={() => setWithholding2Open(row)}
+              icon={<Iconify icon="pajamas:review-list" />}
               sx={{
                 borderTop: '1px solid #ddd',
               }}
+              showInMenu
+            />,
+            <GridActionsCellItem
+              label="Borrar retención"
+              onClick={() => setWithholding2Delete(row)}
+              icon={<Iconify icon="pajamas:remove" />}
               showInMenu
             />,
           ];
@@ -220,18 +235,23 @@ const BillingDocumentList: FC = () => {
           pageSizeOptions={[20, 50, 100]}
         />
       </CardContent>
-
       <UpdateBillingDocument
         open={Boolean(sale2Update)}
         sale={sale2Update}
         onClose={() => setSale2Update(null)}
       />
 
+      <ShowWithholding
+        open={Boolean(withholding2Open)}
+        sale={withholding2Open}
+        onClose={() => setWithholding2Open(null)}
+      />
+
       <ConfirmDialog
         onClose={() => setSale2Delete(null)}
         open={!!sale2Delete}
         title="Borrar factura"
-        content="Esta operacion borrará la factura seleccionada y todos los documentos dependientes existentes (retenciones, cobros), así como sus asientos contables. Deseas continuar?"
+        content="Esta operación borrará la factura seleccionada y todos los documentos dependientes existentes (retenciones, cobros), así como sus asientos contables. Deseas continuar?"
         maxWidth="md"
         action={
           <Button onClick={handleDeleteInvoice} variant="contained">
@@ -239,11 +259,10 @@ const BillingDocumentList: FC = () => {
           </Button>
         }
       />
-
       <ConfirmDialog
         onClose={() => setWithholding2Delete(null)}
         open={!!withholding2Delete}
-        title="Borrar retencion"
+        title="Borrar retención"
         action={
           <Button onClick={handleDeleteWithholding} variant="contained">
             Borrar
