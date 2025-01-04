@@ -58,7 +58,8 @@ const PaymentCollectionButton: FC<Props> = ({ sale }) => {
 
   const collected = Boolean(sale.paymentCollection);
   const isDisabled =
-    sale.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
+    sale.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT ||
+    Number.isNaN(sale.paymentDue);
 
   const initialValue: PaymentCollection = {
     ...PAYMENT_COLLECTION_INITIAL_VALUE,
