@@ -87,11 +87,7 @@ export const normalizeWithholding = (
 export const parseWithholdingXML = (xmlText: string) => {
   const documentData = documentParser(xmlText, DOCUMENT_TYPE.HOLDING);
 
-  console.log('documentData', documentData);
-
   const parsedRetencion = WithholdingReaderSchema.safeParse(documentData);
-
-  console.log('parsedRetencion', parsedRetencion);
 
   if (parsedRetencion.success) {
     return normalizeWithholding(parsedRetencion.data);
