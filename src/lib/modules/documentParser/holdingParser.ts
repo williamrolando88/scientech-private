@@ -26,7 +26,14 @@ const withholdingValueGetter = (
     (value) => Math.abs(value.baseImponible - taxValue) < 1
   );
 
-  return holding ? round(holding.valorRetenido, 2) : 0;
+  if (!holding) {
+    console.error(
+      `No se pudo determinar el valor de la retencion para ${requestedValue}: ${taxValue}`
+    );
+    console.error(holdingValues);
+  }
+
+  return holding ? round(holding.valorRetenido, 2) : NaN;
 };
 
 const holdingPercentageValueGetter = (
