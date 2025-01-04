@@ -147,11 +147,17 @@ const bulkWithhold = async (
     .filter((d) => d !== 'noStored')
     .filter((d) => !!d);
 
+  let paid = 0;
+
   if (onlyStored.length) {
     const batch = writeBatch(DB);
 
     storedDocs.forEach((saleDoc, index) => {
       if (saleDoc === 'noStored' || !saleDoc) return;
+      if (saleDoc.paymentCollection) {
+        paid += 1;
+        return;
+      }
 
       const docRef = doc(COLLECTIONS.SALES, saleDoc.id);
 
@@ -175,7 +181,25 @@ const bulkWithhold = async (
   return {
     linked: onlyStored.length,
     ignored: normalizedWithholdings.length - onlyStored.length,
+    paid,
   };
+};
+
+const createSingleWithholding = async (sale: Sale) => {
+  if (sale.paymentCollection) {
+    throw new Error('El documento ya fue cobrado, no se puede modificar');
+  }
+
+  const docRef = doc(COLLECTIONS.SALES, sale.id);
+  const newSale: Sale = {
+    ...sale,
+    paymentDue: round(
+      sale.billingDocument.total - (sale.withholding?.total ?? 0),
+      2
+    ),
+  };
+
+  await updateDoc(docRef, newSale);
 };
 
 const deleteWithhold = async (sale: Sale) => {
@@ -232,6 +256,7 @@ export const SalesFirestore = {
   update,
   remove,
   bulkWithhold,
+  createSingleWithholding,
   deleteWithhold,
   collectPayment,
   removePaymentCollection,

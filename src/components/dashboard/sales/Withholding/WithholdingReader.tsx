@@ -26,7 +26,7 @@ const WithholdingReader: FC<Props> = ({ open, onClose }) => {
     SalesFirestore.bulkWithhold(
       withholdingDocuments as NormalizedParsedWithholding[]
     )
-      .then(({ linked, ignored }) => {
+      .then(({ linked, ignored, paid }) => {
         if (linked) {
           enqueueSnackbar(
             `Se vincularon ${linked} retenciones a facturas existentes`
@@ -38,6 +38,15 @@ const WithholdingReader: FC<Props> = ({ open, onClose }) => {
             `No se vincularon ${ignored} retenciones a ninguna factura existente`,
             {
               variant: 'info',
+            }
+          );
+        }
+
+        if (ignored) {
+          enqueueSnackbar(
+            `No se vincularon ${ignored} retenciones porque ya registran pago`,
+            {
+              variant: 'warning',
             }
           );
         }

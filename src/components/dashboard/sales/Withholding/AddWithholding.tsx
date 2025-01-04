@@ -20,8 +20,10 @@ import Iconify from '@src/components/shared/iconify';
 import { WithholdingSchema } from '@src/lib/schemas/sale';
 import { formatTaxDocIdNumber } from '@src/lib/utils/formatInvoiceNumber';
 import { subId } from '@src/services/firestore/helpers/subIdGenerator';
+import { SalesFirestore } from '@src/services/firestore/sales';
 import { Sale, Withholding } from '@src/types/sale';
 import { Form, Formik, FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import WithholdingTotalField from './WithholdingTotalField';
@@ -31,16 +33,32 @@ interface Props {
 }
 
 const AddWithholding: FC<Props> = ({ sale }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const handleSubmit: FormikConfig<Withholding>['onSubmit'] = (
     values,
-    { setSubmitting }
+    { setSubmitting, resetForm }
   ) => {
-    console.log('values', values);
-    setSubmitting(false);
+    const newSale: Sale = { ...sale, withholding: values };
+
+    SalesFirestore.createSingleWithholding(newSale)
+      .then(() => {
+        resetForm();
+        enqueueSnackbar('Retención registrado exitosamente');
+        closeModal();
+      })
+      .catch((error) => {
+        console.error(error);
+        enqueueSnackbar(`No se pudo guardar el documento. ${error}`, {
+          variant: 'error',
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   const withholding: Withholding = {
