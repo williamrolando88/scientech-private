@@ -21,9 +21,7 @@ export const parseTaxDoxId = (id: string): TaxDocId => {
     Number.isNaN(emissionPoint) ||
     Number.isNaN(sequentialNumber)
   ) {
-    throw new Error(
-      'El número de factura vinculada a una retención no puedo ser leido'
-    );
+    throw new Error('El número de documento no puedo ser leido');
   }
 
   return {
