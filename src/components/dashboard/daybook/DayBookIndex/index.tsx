@@ -170,6 +170,7 @@ const DayBookIndex: FC = () => {
           }}
           autoHeight
           disableRowSelectionOnClick
+          onRowClick={({ id }) => getTransactionToOpen(id as string)}
         />
       </CardContent>
 

@@ -183,6 +183,7 @@ export const AccountReport: FC<AccountReportProps> = ({
             },
           }}
           disableRowSelectionOnClick
+          onRowClick={({ id }) => getTransactionToOpen(id as string)}
         />
       </Card>
 

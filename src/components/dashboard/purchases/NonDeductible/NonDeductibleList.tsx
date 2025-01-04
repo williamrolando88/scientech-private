@@ -121,6 +121,7 @@ const NonDeductibleList: FC = () => {
           autoHeight
           columns={columns}
           rows={rows}
+          onRowClick={({ row }) => setExpenseToUpdate(row)}
           disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
