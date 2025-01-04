@@ -18,7 +18,7 @@ const SustainDocumentsSchema = z.object({
     retenciones: z.object({
       retencion: WithholdingSchema.array(),
     }),
-    numAutDocSustento: z.string(),
+    numDocSustento: z.string(),
   }),
 });
 
