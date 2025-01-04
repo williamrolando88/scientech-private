@@ -13,7 +13,12 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
-import { DoubleEntryAccounting, DoubleEntryAccountingTransaction } from '@src/types/doubleEntryAccounting';
+import { useListClients } from '@src/hooks/cache/clients';
+import { useListProjects } from '@src/hooks/cache/projects';
+import {
+  DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
+} from '@src/types/doubleEntryAccounting';
 import { FC, useMemo } from 'react';
 
 interface OpenDayBookTransactionProps {
@@ -26,13 +31,15 @@ interface OpenDayBookTransactionProps {
 }
 
 export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
-                                                                          onClose,
-                                                                          transaction,
-                                                                          actions,
-                                                                          title = 'Detalles de transacción',
-                                                                          alertText = 'La transacción seleccionada contiene los siguientes detalles asociados.',
-                                                                          alertSeverity = 'info',
-                                                                        }) => {
+  onClose,
+  transaction,
+  actions,
+  title = 'Detalles de transacción',
+  alertText = 'La transacción seleccionada contiene los siguientes detalles asociados.',
+  alertSeverity = 'info',
+}) => {
+  const { data: projects, isLoading: isLoadingProjects } = useListProjects();
+  const { data: clients, isLoading: isLoadingClients } = useListClients();
   const { data: accountCategories } = useListAccountCategories();
 
   const columns: GridColDef<DoubleEntryAccountingTransaction>[] = [
@@ -70,16 +77,27 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
   ];
 
   const rows: DoubleEntryAccountingTransaction[] = useMemo(
-    () => transaction ? (
-      Object.values(transaction.transactions).map((t) => ({
-        ...t,
-        id: t.accountId,
-      }))) : []
-    ,
-    [transaction],
+    () =>
+      transaction
+        ? Object.values(transaction.transactions).map((t) => ({
+            ...t,
+            id: t.accountId,
+          }))
+        : [],
+    [transaction]
   );
 
   if (!transaction) return null;
+
+  const getProjectName = () => {
+    if (isLoadingClients || isLoadingProjects) return '';
+
+    const project = projects.find((p) => p.id === transaction.ref.projectId);
+    if (!project) return '';
+
+    const client = clients.find((c) => c.id === project.client_id);
+    return `${project.name}(${client?.name}): ${project.description}`;
+  };
 
   return (
     <Dialog
@@ -108,7 +126,16 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
           name="description"
           label="Descripción"
           value={transaction.description}
-          inputProps={{ readOnly: true }}
+          disabled
+        />
+
+        <TextField
+          size="small"
+          fullWidth
+          name="project"
+          label="Proyecto"
+          value={getProjectName()}
+          disabled
         />
 
         <Card variant="outlined">
