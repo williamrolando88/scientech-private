@@ -130,6 +130,7 @@ const InvoiceList: FC = () => {
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
           pageSizeOptions={[20, 50, 100]}
+          onRowClick={({ row }) => setInvoiceToUpdate(row)}
         />
       </CardContent>
 

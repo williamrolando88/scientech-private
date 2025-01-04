@@ -138,6 +138,7 @@ const CustomsPaymentsList: FC = () => {
           initialState={{
             pagination: { paginationModel: { pageSize: 20 } },
           }}
+          onRowClick={({ row }) => setExpenseToUpdate(row)}
           pageSizeOptions={[20, 50, 100]}
         />
       </CardContent>
