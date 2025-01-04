@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  FormikAutoCalculateField,
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
@@ -188,10 +189,9 @@ const AddWithholding: FC<Props> = ({ sale }) => {
                   <Grid item xs={6} />
 
                   <Grid item xs={3}>
-                    <FormikTextField
+                    <FormikAutoCalculateField
                       fullWidth
                       size="small"
-                      type="number"
                       name="IncomeWithholding"
                       label="Retención"
                       required
@@ -215,10 +215,9 @@ const AddWithholding: FC<Props> = ({ sale }) => {
                   <Grid item xs={6} />
 
                   <Grid item xs={3}>
-                    <FormikTextField
+                    <FormikAutoCalculateField
                       fullWidth
                       size="small"
-                      type="number"
                       name="IVAWithholding"
                       label="Retención"
                       required
