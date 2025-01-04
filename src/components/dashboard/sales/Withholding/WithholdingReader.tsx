@@ -42,9 +42,9 @@ const WithholdingReader: FC<Props> = ({ open, onClose }) => {
           );
         }
 
-        if (ignored) {
+        if (paid) {
           enqueueSnackbar(
-            `No se vincularon ${ignored} retenciones porque ya registran pago`,
+            `No se vincularon ${paid} retenciones porque ya registran pago`,
             {
               variant: 'warning',
             }
