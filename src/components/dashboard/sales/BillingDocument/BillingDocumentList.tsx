@@ -16,6 +16,7 @@ import { orderBy } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
+import AddWithholding from '../Withholding/AddWithholding';
 import ShowWithholding from '../Withholding/ShowWithholding';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
@@ -109,12 +110,7 @@ const BillingDocumentList: FC = () => {
           ];
         }
 
-        return [
-          <Iconify
-            icon="pajamas:review-warning"
-            sx={{ color: (theme) => theme.palette.warning.main }}
-          />,
-        ];
+        return [<AddWithholding sale={row} />];
       },
     },
     {
