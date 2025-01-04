@@ -7,12 +7,11 @@ import { FC } from 'react';
 
 export const ProjectSelector: FC = () => {
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
-
   const { data: clients, isLoading: isLoadingClients } = useListClients();
 
-  const filteredProjects = projects.filter(
-    (project) => project.status === 'active'
-  );
+  const filteredProjects = projects
+    .filter((project) => project.status === 'active')
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   const getProjectName = (project: Project) => {
     const client = clients.find((c) => c.id === project.client_id);
