@@ -91,11 +91,24 @@ const BillingDocumentList: FC = () => {
       sortable: false,
       getActions: ({ row }) => {
         if (row.withholding) {
+          const hasErrors =
+            Number.isNaN(row.withholding.IVAWithholding) ||
+            Number.isNaN(row.withholding.IncomeWithholding);
+
           return [
             <IconButton onClick={() => setWithholding2Open(row)}>
               <Iconify
-                icon="pajamas:review-checkmark"
-                sx={{ color: (theme) => theme.palette.success.main }}
+                icon={
+                  hasErrors
+                    ? 'pajamas:review-warning'
+                    : 'pajamas:review-checkmark'
+                }
+                sx={{
+                  color: (theme) =>
+                    Number.isNaN(row.paymentDue)
+                      ? theme.palette.error.main
+                      : theme.palette.success.main,
+                }}
               />
             </IconButton>,
           ];
