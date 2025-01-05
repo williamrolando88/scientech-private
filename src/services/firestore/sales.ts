@@ -235,11 +235,13 @@ const deleteWithhold = async (sale: Sale) => {
 };
 
 const collectPayment = async (sale: Sale) => {
-  const paymentCollectionRefs: DocumentRef = sale.billingDocument.ref ?? {};
-  paymentCollectionRefs.saleId = sale.id;
+  const ref: DocumentRef = {
+    ...sale.billingDocument.ref,
+    saleId: sale.id,
+  };
 
   if (sale.withholding) {
-    paymentCollectionRefs.withholdingId = sale.withholding.id;
+    ref.withholdingId = sale.withholding.id;
   }
 
   const newSale: Sale = {
@@ -247,7 +249,7 @@ const collectPayment = async (sale: Sale) => {
     paymentCollection: {
       ...sale.paymentCollection!,
       id: subId(sale.id ?? '', 'salePaymentCollection'),
-      ref: paymentCollectionRefs,
+      ref,
     },
   };
 
