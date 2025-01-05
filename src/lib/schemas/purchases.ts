@@ -19,6 +19,7 @@ export const ReceivedInvoiceSchema = z.object({
   total: z.number().positive(),
   ref: DocumentRefSchema.optional(),
   expenseAccount: z.string(),
+  locked: z.boolean().default(false),
 });
 
 export const SaleNoteSchema = z.object({
