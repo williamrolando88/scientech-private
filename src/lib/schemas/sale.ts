@@ -34,6 +34,7 @@ export const WithholdingSchema = z.object({
   IncomeWithholding: z.number().nonnegative().optional(),
   total: z.number().positive(),
   ref: DocumentRefSchema.optional(),
+  unlocked: z.boolean().default(false),
 });
 
 export const PaymentCollectionSchema = z.object({

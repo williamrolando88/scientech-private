@@ -119,5 +119,6 @@ export const normalizeWithholding2Withholding = (
     IncomeWithholding,
     total: round(IVAWithholding + IncomeWithholding, 2),
     ref: {},
+    unlocked: false,
   };
 };

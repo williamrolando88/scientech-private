@@ -17,7 +17,7 @@ import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
 import AddWithholding from '../Withholding/AddWithholding';
-import ShowWithholding from '../Withholding/ShowWithholding';
+import OpenWithholding from '../Withholding/OpenWithholding';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
 const BillingDocumentList: FC = () => {
@@ -129,23 +129,42 @@ const BillingDocumentList: FC = () => {
     {
       field: 'salesAccount',
       headerName: 'Cta.',
-      type: 'boolean',
+      type: 'actions',
       width: 10,
       sortable: false,
-      valueGetter: ({ row }) =>
-        row.billingDocument.saleAccount !== DEFAULT_ACCOUNT.INCOME_ROOT,
-      renderCell: (params) =>
-        params.value ? (
+      getActions: ({ row }) => {
+        const isError =
+          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT &&
+          (row.paymentCollection || row.withholding);
+
+        if (isError) {
+          return [
+            <Iconify
+              icon="pajamas:issue-type-feature-flag"
+              sx={{ color: (theme) => theme.palette.error.main }}
+            />,
+          ];
+        }
+
+        const isWarning =
+          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
+
+        if (isWarning) {
+          return [
+            <Iconify
+              icon="pajamas:issue-type-feature-flag"
+              sx={{ color: (theme) => theme.palette.warning.main }}
+            />,
+          ];
+        }
+
+        return [
           <Iconify
             icon="pajamas:check-xs"
             sx={{ color: (theme) => theme.palette.success.main }}
-          />
-        ) : (
-          <Iconify
-            icon="pajamas:issue-type-feature-flag"
-            sx={{ color: (theme) => theme.palette.warning.main }}
-          />
-        ),
+          />,
+        ];
+      },
     },
     {
       field: 'actions',
@@ -170,7 +189,11 @@ const BillingDocumentList: FC = () => {
         if (row.withholding) {
           const withholdingOptions = [
             <GridActionsCellItem
-              label="Visualizar retención"
+              label={
+                row.withholding.unlocked
+                  ? 'Editar retención'
+                  : 'Visualizar retención'
+              }
               onClick={() => setWithholding2Open(row)}
               icon={<Iconify icon="pajamas:review-list" />}
               sx={{
@@ -255,7 +278,7 @@ const BillingDocumentList: FC = () => {
         onClose={() => setSale2Update(null)}
       />
 
-      <ShowWithholding
+      <OpenWithholding
         open={Boolean(withholding2Open)}
         sale={withholding2Open}
         onClose={() => setWithholding2Open(null)}
