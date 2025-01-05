@@ -28,7 +28,11 @@ const UpsertWithholding: FC<Props> = ({ onClose, open, sale }) => {
     SalesFirestore.upsertSingleWithholding(newSale)
       .then(() => {
         resetForm();
-        enqueueSnackbar('Retención actualizada exitosamente');
+        enqueueSnackbar(
+          sale.withholding
+            ? 'Retención actualizada exitosamente'
+            : 'Retención creada exitosamente'
+        );
         onClose();
       })
       .catch((error) => {
