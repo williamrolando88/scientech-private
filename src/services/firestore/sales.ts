@@ -92,17 +92,31 @@ const bulkCreate = async (invoices: BillingDocument[]) => {
 };
 
 const update = async (sale: Sale) => {
-  if (sale.withholding) {
-    throw new Error(
-      'El documento tiene una retención vinculada, no se puede modificar'
-    );
-  }
-  if (sale.paymentCollection) {
-    throw new Error('El documento ya fue cobrado, no se puede modificar');
+  const projectId = sale.billingDocument.ref?.projectId;
+
+  const newSale: Partial<Sale> = {
+    ...sale,
+    billingDocument: sale.billingDocument,
+  };
+
+  if (projectId) {
+    if (sale.withholding && newSale.withholding) {
+      newSale.withholding.ref = {
+        ...sale.withholding.ref,
+        projectId,
+      };
+    }
+
+    if (sale.paymentCollection && newSale.paymentCollection) {
+      newSale.paymentCollection.ref = {
+        ...sale.paymentCollection.ref,
+        projectId,
+      };
+    }
   }
 
   const docRef = doc(COLLECTIONS.SALES, sale.id);
-  await updateDoc(docRef, sale);
+  await updateDoc(docRef, newSale);
 };
 
 const remove = async (sale: Sale) => {
