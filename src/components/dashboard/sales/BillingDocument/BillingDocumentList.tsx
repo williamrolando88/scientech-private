@@ -17,7 +17,7 @@ import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
 import AddWithholding from '../Withholding/AddWithholding';
-import ShowWithholding from '../Withholding/ShowWithholding';
+import OpenWithholding from '../Withholding/OpenWithholding';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
 const BillingDocumentList: FC = () => {
@@ -189,7 +189,11 @@ const BillingDocumentList: FC = () => {
         if (row.withholding) {
           const withholdingOptions = [
             <GridActionsCellItem
-              label="Visualizar retención"
+              label={
+                row.withholding.unlocked
+                  ? 'Editar retención'
+                  : 'Visualizar retención'
+              }
               onClick={() => setWithholding2Open(row)}
               icon={<Iconify icon="pajamas:review-list" />}
               sx={{
@@ -274,7 +278,7 @@ const BillingDocumentList: FC = () => {
         onClose={() => setSale2Update(null)}
       />
 
-      <ShowWithholding
+      <OpenWithholding
         open={Boolean(withholding2Open)}
         sale={withholding2Open}
         onClose={() => setWithholding2Open(null)}
