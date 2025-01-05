@@ -199,7 +199,7 @@ const bulkWithhold = async (
   };
 };
 
-const createSingleWithholding = async (sale: Sale) => {
+const upsertSingleWithholding = async (sale: Sale) => {
   if (sale.paymentCollection) {
     throw new Error('El documento ya fue cobrado, no se puede modificar');
   }
@@ -270,7 +270,7 @@ export const SalesFirestore = {
   update,
   remove,
   bulkWithhold,
-  createSingleWithholding,
+  upsertSingleWithholding,
   deleteWithhold,
   collectPayment,
   removePaymentCollection,

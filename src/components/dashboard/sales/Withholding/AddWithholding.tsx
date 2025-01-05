@@ -25,7 +25,7 @@ const AddWithholding: FC<Props> = ({ sale }) => {
   ) => {
     const newSale: Sale = { ...sale, withholding: values };
 
-    SalesFirestore.createSingleWithholding(newSale)
+    SalesFirestore.upsertSingleWithholding(newSale)
       .then(() => {
         resetForm();
         enqueueSnackbar('Retención registrado exitosamente');
@@ -57,6 +57,7 @@ const AddWithholding: FC<Props> = ({ sale }) => {
       ...sale.billingDocument.ref,
       saleId: sale.id,
     },
+    unlocked: true,
   };
 
   const { establishment, emissionPoint, sequentialNumber } =
@@ -73,6 +74,7 @@ const AddWithholding: FC<Props> = ({ sale }) => {
 
       <Dialog open={modalOpen} onClose={closeModal} maxWidth="md" fullWidth>
         <DialogTitle>Agregar nueva retención</DialogTitle>
+
         <WithholdingForm
           IVAValue={sale.billingDocument.IVA}
           incomeValue={sale.billingDocument.taxedSubtotal}
