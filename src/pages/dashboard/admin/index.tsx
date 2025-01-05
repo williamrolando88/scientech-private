@@ -109,6 +109,7 @@ const ExportExpenses: FC = () => {
       total: data.total,
       ref,
       expenseAccount: getExpenseAccount(data.id ?? ''),
+      locked: false,
     };
 
     return {

@@ -76,6 +76,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
         issueDate: invoice.normalizedData.issueDate,
         taxedSubtotal: invoice.normalizedData.taxedSubtotal,
         noTaxSubtotal: invoice.normalizedData.noTaxSubtotal,
+        locked: true,
       });
     };
 

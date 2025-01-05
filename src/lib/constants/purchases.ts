@@ -23,6 +23,7 @@ export const RECEIVED_INVOICE_INITIAL_VALUE: ReceivedInvoice = {
     projectId: '',
   },
   expenseAccount: '5.01.01.02',
+  locked: false,
 };
 
 export const CUSTOMS_PAYMENT_INITIAL_VALUE: CustomsPayment = {
