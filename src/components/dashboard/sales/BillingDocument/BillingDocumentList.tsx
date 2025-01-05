@@ -129,23 +129,42 @@ const BillingDocumentList: FC = () => {
     {
       field: 'salesAccount',
       headerName: 'Cta.',
-      type: 'boolean',
+      type: 'actions',
       width: 10,
       sortable: false,
-      valueGetter: ({ row }) =>
-        row.billingDocument.saleAccount !== DEFAULT_ACCOUNT.INCOME_ROOT,
-      renderCell: (params) =>
-        params.value ? (
+      getActions: ({ row }) => {
+        const isError =
+          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT &&
+          (row.paymentCollection || row.withholding);
+
+        if (isError) {
+          return [
+            <Iconify
+              icon="pajamas:issue-type-feature-flag"
+              sx={{ color: (theme) => theme.palette.error.main }}
+            />,
+          ];
+        }
+
+        const isWarning =
+          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
+
+        if (isWarning) {
+          return [
+            <Iconify
+              icon="pajamas:issue-type-feature-flag"
+              sx={{ color: (theme) => theme.palette.warning.main }}
+            />,
+          ];
+        }
+
+        return [
           <Iconify
             icon="pajamas:check-xs"
             sx={{ color: (theme) => theme.palette.success.main }}
-          />
-        ) : (
-          <Iconify
-            icon="pajamas:issue-type-feature-flag"
-            sx={{ color: (theme) => theme.palette.warning.main }}
-          />
-        ),
+          />,
+        ];
+      },
     },
     {
       field: 'actions',
