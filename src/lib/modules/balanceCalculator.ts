@@ -41,24 +41,22 @@ export const calculateFlattedTotal = (
   return Object.values(flattedTotals);
 };
 
-type TreeBranch = {
-  account: string;
-  value: number;
-  children: TreeBranch;
-};
+export const createBalanceTreeDict = (data: FlattedTransaction[]) => {
+  const balanceDict: Record<string, number> = {};
 
-type BalanceTree = Record<string, TreeBranch>;
+  data.forEach((element) => {
+    if (!element.value) return;
 
-export const createBalanceTree = (data: FlattedTransaction[]): BalanceTree => {
-  const tree: BalanceTree = {};
-
-  const firstElement = data[0];
-  const accountDirections = firstElement.account.split('.');
-  accountDirections.forEach((_, i, dir) => {
-    const path = dir.slice(0, i + 1).join('.');
-
-    console.log(path);
+    const accountDirections = element.account.split('.');
+    accountDirections.forEach((_, i, dir) => {
+      const path = dir.slice(0, i + 1).join('.');
+      if (balanceDict[path]) {
+        balanceDict[path] = round(balanceDict[path] + element.value, 2);
+      } else {
+        balanceDict[path] = element.value;
+      }
+    });
   });
 
-  return tree;
+  return balanceDict;
 };
