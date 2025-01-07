@@ -60,3 +60,13 @@ export const createBalanceTreeDict = (data: FlattedTransaction[]) => {
 
   return balanceDict;
 };
+
+export const balanceCalculator = (
+  data: DoubleEntryAccounting[]
+): Record<string, number> => {
+  if (!data.length) return {};
+
+  const transactions = getValuesByAccount(data);
+  const totals = calculateFlattedTotal(transactions);
+  return createBalanceTreeDict(totals);
+};
