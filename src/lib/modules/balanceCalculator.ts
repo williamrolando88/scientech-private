@@ -70,3 +70,8 @@ export const balanceCalculator = (
   const totals = calculateFlattedTotal(transactions);
   return createBalanceTreeDict(totals);
 };
+
+export const calculateProfit = (data: DoubleEntryAccounting[]) => {
+  const balanceTree = balanceCalculator(data);
+  return round(balanceTree['4'] - balanceTree['5'], 2);
+};
