@@ -37,7 +37,6 @@ export const useCollectionSnapshot = <T>({
 
     if (order) queries.push(orderBy(order.field as string, order.direction));
 
-    // TODO: Used for debugging purposes, remove in production
     if (process.env.NODE_ENV === 'development') {
       queries.push(limit(20));
     }

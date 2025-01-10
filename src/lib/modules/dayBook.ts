@@ -1,5 +1,6 @@
 import {
   DoubleEntryAccounting,
+  DoubleEntryAccountingTransaction,
   ExpandedTransaction,
 } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
@@ -55,7 +56,7 @@ export const getTransactionDataByDetailId = (
   return transaction || null;
 };
 
-const checkDebitIncrement = (accountId: string) => {
+export const checkDebitIncrement = (accountId: string) => {
   const [root] = accountId.split('.');
 
   return ['1', '5'].includes(root);
@@ -95,7 +96,9 @@ export const getDayBookTransactions = (
     .flat();
 };
 
-export const getPositiveValueByAccount = (detail: ExpandedTransaction) => {
+export const getPositiveValueByAccount = (
+  detail: DoubleEntryAccountingTransaction
+) => {
   const { accountId, credit, debit } = detail;
 
   const roundedCredit = round(credit || 0, 2);

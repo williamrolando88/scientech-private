@@ -63,8 +63,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
 
       const invoice = documentParsedData[0] as NormalizedParsedInvoice;
 
-      // TODO: Add locking parameter for XML extracted documents
-
       setValues({
         ...initialValues,
         description: invoice.normalizedData.description,
