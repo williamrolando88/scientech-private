@@ -92,12 +92,14 @@ export default function DateRangePicker({
           ) : (
             <>
               <DatePicker
+                format="dd/MMM/yyyy"
                 label="Start date"
                 value={startDate}
                 onChange={onChangeStartDate}
               />
 
               <DatePicker
+                format="dd/MMM/yyyy"
                 label="End date"
                 value={endDate}
                 onChange={onChangeEndDate}

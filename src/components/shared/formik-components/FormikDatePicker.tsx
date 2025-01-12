@@ -24,6 +24,7 @@ export const FormikDatePicker: FC<FormikDatePickerProps> = (props) => {
       {...props}
       value={value}
       onChange={handleChange}
+      format="dd/MMM/yyyy"
       slotProps={{
         textField: {
           fullWidth,

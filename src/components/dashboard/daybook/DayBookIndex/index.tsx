@@ -6,6 +6,7 @@ import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
+import { fDate } from '@src/lib/utils/formatTime';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
@@ -71,6 +72,7 @@ const DayBookIndex: FC = () => {
         headerName: 'Fecha',
         flex: 1,
         type: 'date',
+        valueFormatter: (params) => fDate(params.value),
       },
       {
         field: 'accountId',

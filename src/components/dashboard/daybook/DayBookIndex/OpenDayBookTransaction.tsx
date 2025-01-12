@@ -112,9 +112,10 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
         {alertText && <Alert severity={alertSeverity}>{alertText}</Alert>}
 
         <DatePicker
+          format="dd/MMM/yyyy"
           value={transaction.issueDate}
           label="Fecha"
-          readOnly
+          disabled
           sx={{ width: 200 }}
         />
 
