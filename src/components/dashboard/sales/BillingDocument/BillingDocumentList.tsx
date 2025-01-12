@@ -10,6 +10,7 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { fDate } from '@src/lib/utils/formatTime';
 import { saleConverter, SalesFirestore } from '@src/services/firestore/sales';
 import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
@@ -44,8 +45,8 @@ const BillingDocumentList: FC = () => {
       headerName: 'Fecha de Emisión',
       type: 'date',
       width: 130,
-      sortable: false,
       valueGetter: ({ row }) => row.billingDocument.issueDate,
+      valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'sequentialNumber',
@@ -264,7 +265,6 @@ const BillingDocumentList: FC = () => {
           autoHeight
           columns={columns}
           rows={sales}
-          disableColumnFilter
           onRowClick={onRowClick}
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
