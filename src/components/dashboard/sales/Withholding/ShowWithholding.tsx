@@ -56,6 +56,7 @@ const ShowWithholding: FC<Props> = ({ sale, open, onClose }) => {
 
           <Grid item xs={2}>
             <DatePicker
+              format="dd/MMM/yyyy"
               label="Fecha de Emisión"
               value={issueDate}
               slotProps={{

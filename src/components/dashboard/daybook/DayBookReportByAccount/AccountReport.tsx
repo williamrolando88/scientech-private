@@ -2,6 +2,7 @@ import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import Iconify from '@src/components/shared/iconify';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
+import { fDate } from '@src/lib/utils/formatTime';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
@@ -74,6 +75,7 @@ export const AccountReport: FC<AccountReportProps> = ({
       flex: 1,
       type: 'date',
       headerAlign: 'left',
+      valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'amount',
