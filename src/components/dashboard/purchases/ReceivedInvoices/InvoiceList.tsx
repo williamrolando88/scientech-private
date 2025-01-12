@@ -4,6 +4,7 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { fDate } from '@src/lib/utils/formatTime';
 import {
   purchaseConverter,
   PurchasesFirestore,
@@ -37,13 +38,12 @@ const InvoiceList: FC = () => {
       headerName: 'Fecha de Emisión',
       type: 'date',
       width: 130,
-      sortable: false,
+      valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'issuerId',
       headerName: 'RUC',
       width: 180,
-      sortable: false,
     },
     {
       field: 'sequentialNumber',
@@ -126,7 +126,6 @@ const InvoiceList: FC = () => {
           autoHeight
           columns={columns}
           rows={rows}
-          disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
           pageSizeOptions={[20, 50, 100]}

@@ -4,6 +4,7 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { fDate } from '@src/lib/utils/formatTime';
 import {
   purchaseConverter,
   PurchasesFirestore,
@@ -39,7 +40,7 @@ const CustomsPaymentsList: FC = () => {
       headerName: 'Fecha de Emisión',
       type: 'date',
       flex: 1,
-      sortable: false,
+      valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'customsPaymentNumber',
@@ -133,7 +134,6 @@ const CustomsPaymentsList: FC = () => {
           autoHeight
           columns={columns}
           rows={rows}
-          disableColumnFilter
           disableRowSelectionOnClick
           initialState={{
             pagination: { paginationModel: { pageSize: 20 } },

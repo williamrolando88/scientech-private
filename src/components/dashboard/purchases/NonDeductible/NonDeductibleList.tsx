@@ -4,6 +4,7 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog/ConfirmDialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { fDate } from '@src/lib/utils/formatTime';
 import {
   purchaseConverter,
   PurchasesFirestore,
@@ -39,7 +40,7 @@ const NonDeductibleList: FC = () => {
       headerName: 'Fecha de Emisión',
       type: 'date',
       width: 130,
-      sortable: false,
+      valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'issuerName',
@@ -122,7 +123,6 @@ const NonDeductibleList: FC = () => {
           columns={columns}
           rows={rows}
           onRowClick={({ row }) => setExpenseToUpdate(row)}
-          disableColumnFilter
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
           pageSizeOptions={[20, 50, 100]}
