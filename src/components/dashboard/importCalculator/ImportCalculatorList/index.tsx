@@ -1,5 +1,6 @@
 import { Card } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { fDate } from '@src/lib/utils/formatTime';
 import ImportCalculationsFirebase from '@src/services/firestore/importCalculations';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
@@ -37,6 +38,7 @@ function ImportCalculatorList() {
         type: 'date',
         width: 180,
         valueGetter: (params) => new Date(params.row.metadata.createdAt || ''),
+        valueFormatter: (params) => fDate(params.value),
       },
       {
         field: 'updated_at',
@@ -46,6 +48,7 @@ function ImportCalculatorList() {
         type: 'date',
         width: 180,
         valueGetter: (params) => new Date(params.row.metadata.updatedAt || ''),
+        valueFormatter: (params) => fDate(params.value),
       },
       {
         field: 'actions',
