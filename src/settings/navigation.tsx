@@ -41,21 +41,16 @@ const navConfig = [
         path: PATH_DASHBOARD.calculator.root,
         icon: ICONS.ecommerce,
       },
-      {
-        title: 'Proyectos',
-        path: PATH_DASHBOARD.projects.root,
-        icon: ICONS.folder,
-      },
-      {
-        title: 'Clientes',
-        path: PATH_DASHBOARD.clients.root,
-        icon: ICONS.user,
-      },
     ],
   },
   {
     subheader: 'Contabilidad',
     items: [
+      {
+        title: 'Proyectos',
+        path: PATH_DASHBOARD.projects.root,
+        icon: ICONS.folder,
+      },
       {
         title: 'Compras',
         path: PATH_DASHBOARD.purchases.root,
@@ -98,13 +93,23 @@ const navConfig = [
     ],
   },
   {
-    subheader: 'Herramientas',
+    subheader: 'Administrar',
     items: [
       {
-        title: 'Administrador de cuentas contables',
+        title: 'Clientes',
+        path: PATH_DASHBOARD.clients.root,
+        icon: ICONS.user,
+      },
+      {
+        title: 'Cuentas contables',
         path: PATH_DASHBOARD.accountCategories.root,
         icon: ICONS.menuItem,
       },
+    ],
+  },
+  {
+    subheader: 'Otros',
+    items: [
       {
         title: 'Lector de documentos',
         path: PATH_DASHBOARD.documentParser.root,

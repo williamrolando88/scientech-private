@@ -9,7 +9,7 @@ import {
 // utils
 import localStorageAvailable from '../../../lib/utils/localStorageAvailable';
 //
-import { defaultSettings } from './config-setting';
+import { defaultUISettings } from '../../../settings/uiSettings';
 import { defaultPreset, getPresets, presetsOption } from './presets';
 import {
   SettingsContextProps,
@@ -24,7 +24,7 @@ import {
 // ----------------------------------------------------------------------
 
 const initialState: SettingsContextProps = {
-  ...defaultSettings,
+  ...defaultUISettings,
   // Mode
   onToggleMode: () => {},
   onChangeMode: () => {},
@@ -68,34 +68,35 @@ type SettingsProviderProps = {
 };
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
-  const [themeMode, setThemeMode] = useState(defaultSettings.themeMode);
-  const [themeLayout, setThemeLayout] = useState(defaultSettings.themeLayout);
+  const [themeMode, setThemeMode] = useState(defaultUISettings.themeMode);
+  const [themeLayout, setThemeLayout] = useState(defaultUISettings.themeLayout);
   const [themeStretch, setThemeStretch] = useState(
-    defaultSettings.themeStretch
+    defaultUISettings.themeStretch
   );
   const [themeContrast, setThemeContrast] = useState(
-    defaultSettings.themeContrast
+    defaultUISettings.themeContrast
   );
   const [themeDirection, setThemeDirection] = useState(
-    defaultSettings.themeDirection
+    defaultUISettings.themeDirection
   );
   const [themeColorPresets, setThemeColorPresets] = useState(
-    defaultSettings.themeColorPresets
+    defaultUISettings.themeColorPresets
   );
 
   const storageAvailable = localStorageAvailable();
 
   useEffect(() => {
     if (storageAvailable) {
-      const mode = getCookie('themeMode') || defaultSettings.themeMode;
-      const layout = getCookie('themeLayout') || defaultSettings.themeLayout;
-      const stretch = getCookie('themeStretch') || defaultSettings.themeStretch;
+      const mode = getCookie('themeMode') || defaultUISettings.themeMode;
+      const layout = getCookie('themeLayout') || defaultUISettings.themeLayout;
+      const stretch =
+        getCookie('themeStretch') || defaultUISettings.themeStretch;
       const contrast =
-        getCookie('themeContrast') || defaultSettings.themeContrast;
+        getCookie('themeContrast') || defaultUISettings.themeContrast;
       const direction =
-        getCookie('themeDirection') || defaultSettings.themeDirection;
+        getCookie('themeDirection') || defaultUISettings.themeDirection;
       const colorPresets =
-        getCookie('themeColorPresets') || defaultSettings.themeColorPresets;
+        getCookie('themeColorPresets') || defaultUISettings.themeColorPresets;
 
       setThemeMode(mode as ThemeModeValue);
       setThemeLayout(layout as ThemeLayoutValue);
@@ -195,12 +196,12 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
 
   // Reset
   const onResetSetting = useCallback(() => {
-    setThemeMode(defaultSettings.themeMode);
-    setThemeLayout(defaultSettings.themeLayout);
-    setThemeStretch(defaultSettings.themeStretch);
-    setThemeContrast(defaultSettings.themeContrast);
-    setThemeDirection(defaultSettings.themeDirection);
-    setThemeColorPresets(defaultSettings.themeColorPresets);
+    setThemeMode(defaultUISettings.themeMode);
+    setThemeLayout(defaultUISettings.themeLayout);
+    setThemeStretch(defaultUISettings.themeStretch);
+    setThemeContrast(defaultUISettings.themeContrast);
+    setThemeDirection(defaultUISettings.themeDirection);
+    setThemeColorPresets(defaultUISettings.themeColorPresets);
     removeCookie('themeMode');
     removeCookie('themeLayout');
     removeCookie('themeStretch');
