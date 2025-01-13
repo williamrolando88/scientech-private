@@ -5,7 +5,6 @@ import {
   DocumentData,
   FirestoreDataConverter,
   QueryDocumentSnapshot,
-  collection,
   deleteDoc,
   doc,
   getDocs,
@@ -13,19 +12,25 @@ import {
   query,
   setDoc,
 } from 'firebase/firestore';
+import { COLLECTIONS } from './collections';
 
 export const ProjectConverter: FirestoreDataConverter<Project> = {
   toFirestore: (project: Project) => project,
   fromFirestore: (snapshot: QueryDocumentSnapshot<Project, DocumentData>) => ({
     ...snapshot.data(),
-    end_date: snapshot.get('end_date').toDate(),
-    start_date: snapshot.get('start_date').toDate(),
+    startedAt: snapshot.get('startedAt').toDate(),
+    estimateFinishDate: snapshot.get('estimateFinishDate').toDate(),
+    finishedAt: snapshot.get('finishedAt')?.toDate(),
+
+    // TODO: Delete deprecated properties
+    end_date: snapshot.get('end_date')?.toDate(),
+    start_date: snapshot.get('start_date')?.toDate(),
   }),
 };
 
 const list = async (): Promise<Project[]> => {
   const q = query(
-    collection(DB, COLLECTIONS_ENUM.PROJECTS).withConverter(ProjectConverter),
+    COLLECTIONS.PROJECTS.withConverter(ProjectConverter),
     orderBy('id', 'desc')
   );
   const querySnapshot = await getDocs(q);
@@ -39,13 +44,14 @@ const list = async (): Promise<Project[]> => {
 };
 
 const upsert = async (project: Project): Promise<string> => {
-  const docCollection = collection(DB, COLLECTIONS_ENUM.PROJECTS);
   let docRef;
 
   if (project.id) {
-    docRef = doc(docCollection, project.id).withConverter(ProjectConverter);
+    docRef = doc(COLLECTIONS.PROJECTS, project.id).withConverter(
+      ProjectConverter
+    );
   } else {
-    docRef = doc(docCollection).withConverter(ProjectConverter);
+    docRef = doc(COLLECTIONS.PROJECTS).withConverter(ProjectConverter);
   }
 
   await setDoc(docRef, { ...project, id: docRef.id });
@@ -59,8 +65,16 @@ const remove = async (id: string) => {
   return id;
 };
 
+const migrate = async (project: Project) => {
+  const docRef = doc(COLLECTIONS.PROJECTS, project.id);
+
+  await setDoc(docRef, project);
+  return docRef.id;
+};
+
 export const Projects = {
   list,
   upsert,
   remove,
+  migrate,
 };
