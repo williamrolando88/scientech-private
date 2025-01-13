@@ -16,14 +16,14 @@ export const ProjectSchema = z.object({
   status: ProjectStatusSchema,
   description: z.string().optional(),
   startedAt: z.coerce.date(),
-  finishedAt: z.coerce.date(),
   estimateFinishDate: z.coerce.date(),
+  finishedAt: z.coerce.date().nullish(),
   budget: z.number(),
-  contingency: z.number().nullish().default(0),
   profitMargin: z.number(),
+  contingency: z.number().nullish(),
   ref: DocumentRefSchema,
 
-  // Deprecated properties
+  // TODO: Delete deprecated properties
   name: z.string().nullish(),
   client_id: z.string().nullish(),
   start_date: z.coerce.date().nullish(),

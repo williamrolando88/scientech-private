@@ -11,7 +11,7 @@ export const ProjectSelector: FC = () => {
 
   const filteredProjects = projects
     .filter((project) => project.status === 'active')
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => a.number - b.number);
 
   const getProjectName = (project: Project) => {
     const client = clients.find((c) => c.id === project.client_id);
