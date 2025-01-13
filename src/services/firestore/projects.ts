@@ -18,13 +18,23 @@ export const ProjectConverter: FirestoreDataConverter<Project> = {
   toFirestore: (project: Project) => project,
   fromFirestore: (snapshot: QueryDocumentSnapshot<Project, DocumentData>) => ({
     ...snapshot.data(),
-    startedAt: snapshot.get('startedAt').toDate(),
-    estimateFinishDate: snapshot.get('estimateFinishDate').toDate(),
-    finishedAt: snapshot.get('finishedAt')?.toDate(),
+    startedAt: snapshot.get('startedAt')
+      ? snapshot.get('startedAt').toDate()
+      : new Date(),
+    estimateFinishDate: snapshot.get('estimateFinishDate')
+      ? snapshot.get('estimateFinishDate').toDate()
+      : new Date(),
+    finishedAt: snapshot.get('finishedAt')
+      ? snapshot.get('finishedAt').toDate()
+      : undefined,
 
     // TODO: Delete deprecated properties
-    end_date: snapshot.get('end_date')?.toDate(),
-    start_date: snapshot.get('start_date')?.toDate(),
+    end_date: snapshot.get('end_date')
+      ? snapshot.get('end_date').toDate()
+      : undefined,
+    start_date: snapshot.get('start_date')
+      ? snapshot.get('start_date').toDate()
+      : undefined,
   }),
 };
 
@@ -35,12 +45,7 @@ const list = async (): Promise<Project[]> => {
   );
   const querySnapshot = await getDocs(q);
 
-  const projects: Project[] = [];
-  querySnapshot.forEach((document) => {
-    projects.push(document.data());
-  });
-
-  return projects;
+  return querySnapshot.docs.map((document) => document.data());
 };
 
 const upsert = async (project: Project): Promise<string> => {
