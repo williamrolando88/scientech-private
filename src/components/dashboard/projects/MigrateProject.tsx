@@ -40,7 +40,14 @@ const MigrateProject: FC<Props> = ({ open, project, onClose }) => {
 
   if (!project) return null;
 
-  const initialValues = { ...PROJECTS_INITIAL_VALUE };
+  const initialValues: Project = {
+    ...PROJECTS_INITIAL_VALUE,
+    id: project.id,
+    number: Number(project.name),
+    description: project.description,
+    startedAt: project.start_date || new Date(),
+    estimateFinishDate: project.end_date || new Date(),
+  };
 
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
