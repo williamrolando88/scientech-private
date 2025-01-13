@@ -43,7 +43,7 @@ const AddProject: FC = () => {
 
       <Dialog
         fullWidth
-        maxWidth="lg"
+        maxWidth="md"
         open={openModal}
         onClose={handleCloseModal}
       >

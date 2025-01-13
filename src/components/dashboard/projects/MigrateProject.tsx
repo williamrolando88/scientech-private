@@ -43,7 +43,7 @@ const MigrateProject: FC<Props> = ({ open, project, onClose }) => {
   const initialValues = { ...PROJECTS_INITIAL_VALUE };
 
   return (
-    <Dialog fullWidth maxWidth="lg" open={open} onClose={onClose}>
+    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle>Actualizar Proyecto</DialogTitle>
 
       <ProjectForm

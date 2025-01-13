@@ -11,6 +11,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import { COLLECTIONS } from './collections';
 
@@ -48,18 +49,18 @@ const list = async (): Promise<Project[]> => {
   return querySnapshot.docs.map((document) => document.data());
 };
 
-const upsert = async (project: Project): Promise<string> => {
-  let docRef;
+const add = async (project: Project): Promise<string> => {
+  const docRef = doc(COLLECTIONS.PROJECTS);
+  project.id = docRef.id;
 
-  if (project.id) {
-    docRef = doc(COLLECTIONS.PROJECTS, project.id).withConverter(
-      ProjectConverter
-    );
-  } else {
-    docRef = doc(COLLECTIONS.PROJECTS).withConverter(ProjectConverter);
-  }
+  await setDoc(docRef, project);
+  return docRef.id;
+};
 
-  await setDoc(docRef, { ...project, id: docRef.id });
+const update = async (project: Project): Promise<string> => {
+  const docRef = doc(COLLECTIONS.PROJECTS, project.id);
+
+  await updateDoc(docRef, project);
   return docRef.id;
 };
 
@@ -79,7 +80,8 @@ const migrate = async (project: Project) => {
 
 export const Projects = {
   list,
-  upsert,
+  add,
+  update,
   remove,
   migrate,
 };

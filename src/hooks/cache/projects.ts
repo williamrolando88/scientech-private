@@ -18,7 +18,7 @@ export const useAddProject = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: Projects.upsert,
+    mutationFn: Projects.add,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
@@ -55,7 +55,7 @@ export const useUpdateProject = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: Projects.upsert,
+    mutationFn: Projects.update,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
