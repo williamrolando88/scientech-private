@@ -4,7 +4,6 @@ import {
   ExpandedTransaction,
 } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
-import { DayBookTableEntryOld, DayBookTransactionOld } from 'src/types/dayBook';
 
 export const dayBookTransactionsValidator = (
   entry: DoubleEntryAccounting
@@ -60,40 +59,6 @@ export const checkDebitIncrement = (accountId: string) => {
   const [root] = accountId.split('.');
 
   return ['1', '5'].includes(root);
-};
-
-export const expandDoubleEntryAccountTransaction = (
-  transactions: DayBookTransactionOld[]
-): DayBookTableEntryOld[] => {
-  if (!transactions) return [];
-
-  return transactions
-    .map((entry) =>
-      (entry.transactions || []).map((detail, index) => ({
-        ...detail,
-        id: `${entry.id}:${index}`,
-        date: entry.date,
-        locked: entry.locked,
-      }))
-    )
-    .flat();
-};
-
-export const getDayBookTransactions = (
-  transactions: DayBookTransactionOld[]
-): DayBookTableEntryOld[] => {
-  if (!transactions) return [];
-
-  return transactions
-    .map((entry) =>
-      (entry.transactions || []).map((detail, index) => ({
-        ...detail,
-        id: `${entry.id}:${index}`,
-        date: entry.date,
-        locked: entry.locked,
-      }))
-    )
-    .flat();
 };
 
 export const getPositiveValueByAccount = (
