@@ -6,10 +6,12 @@ import { PROJECT_STATE } from '@src/lib/enums/projects';
 import { PATH_DASHBOARD } from '@src/routes/paths';
 import { Project } from '@src/types/projects';
 import { useRouter } from 'next/router';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
+import MigrateProject from './MigrateProject';
 
 const ProjectIndex: FC = () => {
   const { push } = useRouter();
+  const [project2Migrate, setProject2Migrate] = useState<Project | null>(null);
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
 
   const columns: GridColDef<Project>[] = useMemo(
@@ -50,31 +52,44 @@ const ProjectIndex: FC = () => {
   );
 
   const handleRowClick: GridEventListener<'rowClick'> = (params) => {
-    push(PATH_DASHBOARD.projects.open(params.id.toString()));
+    if (params.row.number) {
+      push(PATH_DASHBOARD.projects.open(params.id.toString()));
+    } else {
+      setProject2Migrate(params.row);
+    }
   };
 
   return (
-    <Card>
-      <DataGrid
-        columns={columns}
-        rows={projects}
-        loading={isLoadingProjects}
-        initialState={{
-          sorting: {
-            sortModel: [{ field: 'number', sort: 'desc' }],
-          },
-        }}
-        onRowClick={handleRowClick}
-        sx={{
-          '& .MuiDataGrid-columnHeader': {
-            bgcolor: (theme) => theme.palette.action.selected,
-          },
-        }}
-        autoHeight
-        disableRowSelectionOnClick
-        density="compact"
+    <>
+      <Card>
+        <DataGrid
+          columns={columns}
+          rows={projects}
+          loading={isLoadingProjects}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'number', sort: 'desc' }],
+            },
+            pagination: { paginationModel: { pageSize: 25 } },
+          }}
+          onRowClick={handleRowClick}
+          sx={{
+            '& .MuiDataGrid-columnHeader': {
+              bgcolor: (theme) => theme.palette.action.selected,
+            },
+          }}
+          autoHeight
+          disableRowSelectionOnClick
+          density="compact"
+        />
+      </Card>
+
+      <MigrateProject
+        onClose={() => setProject2Migrate(null)}
+        open={Boolean(project2Migrate)}
+        project={project2Migrate}
       />
-    </Card>
+    </>
   );
 };
 

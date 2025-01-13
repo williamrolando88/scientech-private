@@ -13,31 +13,33 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { useListClients } from '@src/hooks/cache/clients';
+import { ProjectSchema } from '@src/lib/schemas/projects';
 import { Project } from '@src/types/projects';
 import { Form, Formik, FormikConfig } from 'formik';
 import { FC } from 'react';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-type FormikProps = Pick<
-  FormikConfig<Project>,
-  'initialValues' | 'validationSchema'
->;
+type FormikProps = Pick<FormikConfig<Project>, 'initialValues' | 'onSubmit'>;
 
 interface ProjectFormProps extends FormikProps {
-  onSubmit: FormikConfig<Project>['onSubmit'];
   onClose: VoidFunction;
   infoText?: string;
 }
 
 const ProjectForm: FC<ProjectFormProps> = ({
+  initialValues,
+  infoText,
   onClose,
   onSubmit,
-  infoText,
-  ...formikProps
 }) => {
   const { data: clients } = useListClients();
 
   return (
-    <Formik {...formikProps} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={toFormikValidationSchema(ProjectSchema)}
+    >
       {({ isSubmitting }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
