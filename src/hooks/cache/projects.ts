@@ -1,6 +1,5 @@
 import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { Projects } from '@src/services/firestore/projects';
-import { Client } from '@src/types/clients';
 import { Project } from '@src/types/projects';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -19,7 +18,7 @@ export const useAddProject = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: Projects.upsert,
+    mutationFn: Projects.add,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
@@ -56,12 +55,30 @@ export const useUpdateProject = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: Projects.upsert,
+    mutationFn: Projects.update,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
     },
     onSuccess: (id, input) => {
-      queryClient.setQueryData(queryKey, (prevData: Client[]) =>
+      queryClient.setQueryData(queryKey, (prevData: Project[]) =>
+        prevData.map((project) => (project.id === id ? input : project))
+      );
+    },
+  });
+
+  return mutation;
+};
+
+export const useMigrateProject = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: Projects.migrate,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+    },
+    onSuccess: (id, input) => {
+      queryClient.setQueryData(queryKey, (prevData: Project[]) =>
         prevData.map((project) => (project.id === id ? input : project))
       );
     },

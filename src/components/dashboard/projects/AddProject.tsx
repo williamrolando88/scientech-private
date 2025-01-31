@@ -1,12 +1,10 @@
 import { Button, Dialog, DialogTitle } from '@mui/material';
 import { useAddProject } from '@src/hooks/cache/projects';
 import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
-import { ProjectSchema } from '@src/lib/schemas/projects';
 import { Project } from '@src/types/projects';
 import { FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
 import ProjectForm from './ProjectForm';
 
 const AddProject: FC = () => {
@@ -45,18 +43,17 @@ const AddProject: FC = () => {
 
       <Dialog
         fullWidth
-        maxWidth="lg"
+        maxWidth="md"
         open={openModal}
         onClose={handleCloseModal}
       >
         <DialogTitle>Crear Proyecto</DialogTitle>
 
         <ProjectForm
-          infoText="Es hora de crear un nuevo proyecto"
+          infoText="Ingrese la información requerida para crear un nuevo proyecto"
           initialValues={PROJECTS_INITIAL_VALUE}
           onSubmit={onSubmit}
           onClose={handleCloseModal}
-          validationSchema={toFormikValidationSchema(ProjectSchema)}
         />
       </Dialog>
     </>

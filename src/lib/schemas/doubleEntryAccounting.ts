@@ -10,7 +10,7 @@ export const TransactionSchema = z.object({
 export const DoubleEntryAccountingSchema = z.object({
   id: z.string().optional(),
   issueDate: z.coerce.date(),
-  description: z.string(),
+  description: z.string().trim(),
   ref: DocumentRefSchema,
   transactions: TransactionSchema.array(),
   accounts: z.string().array(),

@@ -11,10 +11,10 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { NAV } from 'src/settings/global';
 import { bgBlur } from '../../../../lib/utils/cssStyles';
+import { defaultUISettings } from '../../../../settings/uiSettings';
 import Iconify from '../../iconify';
 import Scrollbar from '../../scrollbar';
 import { useSettingsContext } from '../SettingsContext';
-import { defaultSettings } from '../config-setting';
 import BadgeDot from './BadgeDot';
 import Block from './Block';
 import ColorPresetsOptions from './ColorPresetsOptions';
@@ -52,12 +52,12 @@ export default function SettingsDrawer() {
   };
 
   const notDefault =
-    themeMode !== defaultSettings.themeMode ||
-    themeLayout !== defaultSettings.themeLayout ||
-    themeStretch !== defaultSettings.themeStretch ||
-    themeContrast !== defaultSettings.themeContrast ||
-    themeDirection !== defaultSettings.themeDirection ||
-    themeColorPresets !== defaultSettings.themeColorPresets;
+    themeMode !== defaultUISettings.themeMode ||
+    themeLayout !== defaultUISettings.themeLayout ||
+    themeStretch !== defaultUISettings.themeStretch ||
+    themeContrast !== defaultUISettings.themeContrast ||
+    themeDirection !== defaultUISettings.themeDirection ||
+    themeColorPresets !== defaultUISettings.themeColorPresets;
 
   return (
     <>

@@ -1,22 +1,28 @@
 import { MenuItem } from '@mui/material';
 import { FormikTextField } from '@src/components/shared/formik-components';
-import { useListClients } from '@src/hooks/cache/clients';
 import { useListProjects } from '@src/hooks/cache/projects';
 import { Project } from '@src/types/projects';
 import { FC } from 'react';
 
 export const ProjectSelector: FC = () => {
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
-  const { data: clients, isLoading: isLoadingClients } = useListClients();
 
   const filteredProjects = projects
     .filter((project) => project.status === 'active')
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => a.number ?? 0 - b.number ?? 0);
 
   const getProjectName = (project: Project) => {
-    const client = clients.find((c) => c.id === project.client_id);
+    const description = project.description
+      ?.split('\\n')
+      .map((s) => s.trim())
+      .join(' ');
 
-    return `${project.name}(${client?.name}): ${project.description}`;
+    let text = '';
+    if (project.number) text += project.number;
+    if (project?.client?.name) text += ` (${project.client.name}): `;
+    if (description) text += description;
+
+    return text;
   };
 
   return (
@@ -30,7 +36,7 @@ export const ProjectSelector: FC = () => {
       <MenuItem sx={{ fontStyle: 'italic' }} key="void" value="">
         Ninguno
       </MenuItem>
-      {!(isLoadingProjects && isLoadingClients) &&
+      {!isLoadingProjects &&
         filteredProjects.map((project) => (
           <MenuItem key={project.id} value={project.id}>
             {getProjectName(project)}

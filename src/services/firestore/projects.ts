@@ -5,50 +5,62 @@ import {
   DocumentData,
   FirestoreDataConverter,
   QueryDocumentSnapshot,
-  collection,
   deleteDoc,
   doc,
   getDocs,
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from 'firebase/firestore';
+import { COLLECTIONS } from './collections';
 
 export const ProjectConverter: FirestoreDataConverter<Project> = {
   toFirestore: (project: Project) => project,
   fromFirestore: (snapshot: QueryDocumentSnapshot<Project, DocumentData>) => ({
     ...snapshot.data(),
-    end_date: snapshot.get('end_date').toDate(),
-    start_date: snapshot.get('start_date').toDate(),
+    startedAt: snapshot.get('startedAt')
+      ? snapshot.get('startedAt').toDate()
+      : new Date(),
+    estimateFinishDate: snapshot.get('estimateFinishDate')
+      ? snapshot.get('estimateFinishDate').toDate()
+      : new Date(),
+    finishedAt: snapshot.get('finishedAt')
+      ? snapshot.get('finishedAt').toDate()
+      : undefined,
+
+    // TODO: Delete deprecated properties
+    end_date: snapshot.get('end_date')
+      ? snapshot.get('end_date').toDate()
+      : undefined,
+    start_date: snapshot.get('start_date')
+      ? snapshot.get('start_date').toDate()
+      : undefined,
   }),
 };
 
 const list = async (): Promise<Project[]> => {
   const q = query(
-    collection(DB, COLLECTIONS_ENUM.PROJECTS).withConverter(ProjectConverter),
+    COLLECTIONS.PROJECTS.withConverter(ProjectConverter),
     orderBy('id', 'desc')
   );
   const querySnapshot = await getDocs(q);
 
-  const projects: Project[] = [];
-  querySnapshot.forEach((document) => {
-    projects.push(document.data());
-  });
-
-  return projects;
+  return querySnapshot.docs.map((document) => document.data());
 };
 
-const upsert = async (project: Project): Promise<string> => {
-  const docCollection = collection(DB, COLLECTIONS_ENUM.PROJECTS);
-  let docRef;
+const add = async (project: Project): Promise<string> => {
+  const docRef = doc(COLLECTIONS.PROJECTS);
+  project.id = docRef.id;
 
-  if (project.id) {
-    docRef = doc(docCollection, project.id).withConverter(ProjectConverter);
-  } else {
-    docRef = doc(docCollection).withConverter(ProjectConverter);
-  }
+  await setDoc(docRef, project);
+  return docRef.id;
+};
 
-  await setDoc(docRef, { ...project, id: docRef.id });
+const update = async (project: Project): Promise<string> => {
+  const docRef = doc(COLLECTIONS.PROJECTS, project.id);
+
+  await updateDoc(docRef, project);
   return docRef.id;
 };
 
@@ -59,8 +71,17 @@ const remove = async (id: string) => {
   return id;
 };
 
+const migrate = async (project: Project) => {
+  const docRef = doc(COLLECTIONS.PROJECTS, project.id);
+
+  await setDoc(docRef, project);
+  return docRef.id;
+};
+
 export const Projects = {
   list,
-  upsert,
+  add,
+  update,
   remove,
+  migrate,
 };
