@@ -6,7 +6,7 @@ export const ProjectStatusValues = ['active', 'completed'] as const;
 const ProjectStatusSchema = z.enum(ProjectStatusValues);
 
 const ProjectClientDetails = z.object({
-  name: z.string(),
+  name: z.string().trim(),
 });
 
 export const ProjectSchema = z.object({
@@ -14,7 +14,7 @@ export const ProjectSchema = z.object({
   number: z.number(),
   client: ProjectClientDetails,
   status: ProjectStatusSchema,
-  description: z.string().optional(),
+  description: z.string().trim().optional(),
   startedAt: z.coerce.date(),
   estimateFinishDate: z.coerce.date(),
   finishedAt: z.coerce.date().nullish(),
