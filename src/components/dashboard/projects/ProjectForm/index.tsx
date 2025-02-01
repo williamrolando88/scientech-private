@@ -49,6 +49,7 @@ const ProjectForm: FC<ProjectFormProps> = ({
                 size="small"
                 label="No."
                 name="number"
+                type="number"
                 required
               />
             </Grid>
