@@ -2,6 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import { Project } from '@src/types/projects';
 import { FC } from 'react';
 import ProjectDescription from './ProjectDescription';
+import ProjectResults from './ProjectResults';
 
 interface Props {
   project: Project | null;
@@ -19,6 +20,7 @@ const ProjectBasePage: FC<Props> = ({ project }) => {
   return (
     <Stack>
       <ProjectDescription project={project} />
+      <ProjectResults id={project.id ?? ''} />
     </Stack>
   );
 };
