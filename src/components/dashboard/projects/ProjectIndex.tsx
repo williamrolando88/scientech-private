@@ -34,6 +34,11 @@ const ProjectIndex: FC = () => {
         field: 'description',
         headerName: 'Descripción',
         flex: 3,
+        valueGetter: ({ row }) =>
+          row.description
+            ?.split('\\n')
+            .map((s) => s.trim())
+            .join(' '),
       },
       {
         field: 'status',
