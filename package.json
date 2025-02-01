@@ -8,7 +8,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "lint": "eslint --ext .ts,.tsx . && tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx . --cache && tsc --noEmit",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "test": "jest",

@@ -27,8 +27,7 @@ const ProjectIndex: FC = () => {
         field: 'client',
         headerName: 'Cliente',
         flex: 1,
-        valueGetter: (params) =>
-          params.row.client?.name ?? params.row.client_id,
+        valueGetter: (params) => params.row.client?.name,
       },
       {
         field: 'description',
