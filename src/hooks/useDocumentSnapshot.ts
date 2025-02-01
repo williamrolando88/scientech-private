@@ -12,8 +12,6 @@ export const useDocumentSnapshot = <T>({ collection, id }: FunctionParams) => {
   const queryDocument = useCallback(
     () =>
       onSnapshot(doc(collection, id), (d) => {
-        console.debug('Current data: ', d.data());
-
         if (d.exists()) {
           setDocumentData(d.data() as T);
         }

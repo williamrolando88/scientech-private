@@ -15,6 +15,7 @@ const ProjectBasePage: FC<Props> = ({ project }) => {
       </Typography>
     );
   }
+
   return (
     <Stack>
       <ProjectDescription project={project} />

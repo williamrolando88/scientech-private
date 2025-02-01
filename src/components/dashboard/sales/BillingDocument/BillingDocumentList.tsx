@@ -9,8 +9,8 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { fDate } from '@src/lib/utils/formatTime';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import { saleConverter, SalesFirestore } from '@src/services/firestore/sales';
 import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
@@ -31,7 +31,7 @@ const BillingDocumentList: FC = () => {
   );
 
   const sales = useCollectionSnapshot<Sale>({
-    collectionName: COLLECTIONS_ENUM.SALES,
+    collection: COLLECTIONS.SALES,
     converter: saleConverter,
     additionalQueries: [
       orderBy('billingDocument.issueDate', 'desc'),

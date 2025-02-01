@@ -3,8 +3,8 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { fDate } from '@src/lib/utils/formatTime';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import {
   purchaseConverter,
   PurchasesFirestore,
@@ -24,7 +24,7 @@ const InvoiceList: FC = () => {
     useState<ReceivedInvoice | null>(null);
 
   const purchases = useCollectionSnapshot<Purchase>({
-    collectionName: COLLECTIONS_ENUM.PURCHASES,
+    collection: COLLECTIONS.PURCHASES,
     converter: purchaseConverter,
     additionalQueries: [
       where('type', '==', 'receivedInvoice'),

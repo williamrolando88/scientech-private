@@ -1,6 +1,6 @@
 import { CardContent, CardHeader, Stack } from '@mui/material';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { FC } from 'react';
@@ -16,7 +16,7 @@ const DayBookReportByAccount: FC = () => {
   );
 
   const accountingData = useCollectionSnapshot<DoubleEntryAccounting>({
-    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
+    collection: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
