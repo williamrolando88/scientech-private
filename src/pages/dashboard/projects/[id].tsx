@@ -1,8 +1,8 @@
-import { useListProjects } from '@src/hooks/cache/projects';
-import { PROJECTS_INITIAL_VALUE } from '@src/lib/constants/projects';
+import ProjectBasePage from '@src/components/dashboard/projects/Project/ProjectBasePage';
+import { useDocumentSnapshot } from '@src/hooks/useDocumentSnapshot';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import { Project } from '@src/types/projects';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
 import DashboardTemplate from 'src/components/shared/layouts/dashboard/DashboardTemplate';
 
@@ -14,24 +14,16 @@ export default function Page() {
   const {
     query: { id },
   } = useRouter();
-  const { data: projects } = useListProjects();
-  const [currentProject, setCurrentProject] = useState<Project>(
-    PROJECTS_INITIAL_VALUE
-  );
+  const processedId = Array.isArray(id) ? id.join('') : id;
+  const projectData = useDocumentSnapshot<Project>({
+    id: processedId ?? '',
+    collection: COLLECTIONS.PROJECTS,
+  });
 
-  useEffect(() => {
-    const project = projects?.find(
-      (storedProject) => String(storedProject.id) === id
-    );
-    setCurrentProject(project ?? PROJECTS_INITIAL_VALUE);
-  }, [id, projects]);
-
+  const title = `Proyecto ${projectData?.number ? `#${projectData?.number}` : 'Desconocido'}`;
   return (
-    <DashboardTemplate
-      documentTitle={`Proyecto ${currentProject?.name ?? ''}`}
-      heading={currentProject?.name ?? 'Proyecto'}
-    >
-      Proyecto
+    <DashboardTemplate documentTitle={title} heading={title}>
+      <ProjectBasePage project={projectData} />
     </DashboardTemplate>
   );
 }
