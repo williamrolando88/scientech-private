@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material';
 import { FormikTextField } from '@src/components/shared/formik-components';
 import { useListProjects } from '@src/hooks/cache/projects';
-import { getProjectName } from '@src/lib/modules/projects';
+import { getProjectName } from '@src/lib/modules/projects/projects';
 import { FC } from 'react';
 
 export const ProjectSelector: FC = () => {

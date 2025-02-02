@@ -1,23 +1,34 @@
-import { CollectionReference, doc, onSnapshot } from 'firebase/firestore';
+import {
+  CollectionReference,
+  doc,
+  FirestoreDataConverter,
+  onSnapshot,
+} from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 
 interface FunctionParams {
   id: string;
   collection: CollectionReference;
+  converter?: FirestoreDataConverter<any>;
 }
 
-export const useDocumentSnapshot = <T>({ collection, id }: FunctionParams) => {
+export const useDocumentSnapshot = <T>({
+  collection,
+  id,
+  converter,
+}: FunctionParams) => {
   const [documentData, setDocumentData] = useState<T | null>(null);
 
-  const queryDocument = useCallback(
-    () =>
-      onSnapshot(doc(collection, id), (d) => {
-        if (d.exists()) {
-          setDocumentData(d.data() as T);
-        }
-      }),
-    [id, collection]
-  );
+  const queryDocument = useCallback(() => {
+    let docRef = doc(collection, id);
+    if (converter) docRef = docRef.withConverter(converter);
+
+    return onSnapshot(docRef, (d) => {
+      if (d.exists()) {
+        setDocumentData(d.data() as T);
+      }
+    });
+  }, [collection, id, converter]);
 
   useEffect(() => {
     const unsubscribe = queryDocument();

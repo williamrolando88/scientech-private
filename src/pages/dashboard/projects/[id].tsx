@@ -1,6 +1,9 @@
+import { Typography } from '@mui/material';
 import ProjectBasePage from '@src/components/dashboard/projects/Project/ProjectBasePage';
+import { ProjectProvider } from '@src/components/dashboard/projects/Project/ProjectProvider';
 import { useDocumentSnapshot } from '@src/hooks/useDocumentSnapshot';
 import { COLLECTIONS } from '@src/services/firestore/collections';
+import { ProjectConverter } from '@src/services/firestore/projects';
 import { Project } from '@src/types/projects';
 import { useRouter } from 'next/router';
 import DashboardLayout from 'src/components/shared/layouts/dashboard/DashboardLayout';
@@ -18,12 +21,21 @@ export default function Page() {
   const projectData = useDocumentSnapshot<Project>({
     id: processedId ?? '',
     collection: COLLECTIONS.PROJECTS,
+    converter: ProjectConverter,
   });
 
   const title = `Proyecto ${projectData?.number ? `#${projectData?.number}` : 'Desconocido'}`;
   return (
     <DashboardTemplate documentTitle={title} heading={title}>
-      <ProjectBasePage project={projectData} />
+      {projectData ? (
+        <ProjectProvider project={projectData}>
+          <ProjectBasePage />
+        </ProjectProvider>
+      ) : (
+        <Typography variant="body1">
+          No hay informacion del proyecto solicitado
+        </Typography>
+      )}
     </DashboardTemplate>
   );
 }

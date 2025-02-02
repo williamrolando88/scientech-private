@@ -1,28 +1,13 @@
-import { Stack, Typography } from '@mui/material';
-import { Project } from '@src/types/projects';
+import { Stack } from '@mui/material';
 import { FC } from 'react';
 import ProjectDescription from './ProjectDescription';
 import ProjectResults from './ProjectResults';
 
-interface Props {
-  project: Project | null;
-}
-
-const ProjectBasePage: FC<Props> = ({ project }) => {
-  if (!project) {
-    return (
-      <Typography variant="body1">
-        No hay informacion del proyecto solicitado
-      </Typography>
-    );
-  }
-
-  return (
-    <Stack gap={4}>
-      <ProjectDescription project={project} />
-      <ProjectResults project={project} />
-    </Stack>
-  );
-};
+const ProjectBasePage: FC = () => (
+  <Stack gap={4}>
+    <ProjectDescription />
+    <ProjectResults />
+  </Stack>
+);
 
 export default ProjectBasePage;

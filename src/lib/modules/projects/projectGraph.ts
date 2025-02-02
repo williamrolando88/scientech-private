@@ -1,20 +1,6 @@
-import { Project } from '@src/types/projects';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 
-export const getProjectName = (project: Project) => {
-  const description = project.description
-    ?.split('\\n')
-    .map((s) => s.trim())
-    .join(' ');
-
-  let text = '';
-  if (project.number) text += project.number;
-  if (project?.client?.name) text += ` (${project.client.name}): `;
-  if (description) text += description;
-
-  return text;
-};
-
-export const getAccumulatedData = (data: number[]) =>
+const getAccumulatedData = (data: number[]) =>
   data.reduce((acc, value, index) => {
     if (index === 0) {
       acc.push(value);
@@ -44,4 +30,24 @@ export const getOngoingProjectGraphSeries = ({
   const expensesEntries = expenses.length;
   const isOverBudget = accExpensesArray[expensesEntries - 1] > budget;
   return { budgetArray, accExpensesArray, isOverBudget };
+};
+
+export const getExpensesValuesAndLabels = (data: DoubleEntryAccounting[]) => {
+  const labels: string[] = [];
+  const expenseValues: number[] = [];
+
+  if (!data) {
+    return { labels, expenseValues };
+  }
+
+  data.forEach((d) => {
+    d.transactions.forEach((dt) => {
+      if (dt.accountId.split('.')[0] === '5') {
+        expenseValues.push(dt.debit);
+        labels.push(d.issueDate.toISOString());
+      }
+    });
+  });
+
+  return { labels, expenseValues };
 };

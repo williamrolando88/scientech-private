@@ -14,7 +14,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { useListProjects } from '@src/hooks/cache/projects';
-import { getProjectName } from '@src/lib/modules/projects';
+import { getProjectName } from '@src/lib/modules/projects/projects';
 import {
   DoubleEntryAccounting,
   DoubleEntryAccountingTransaction,

@@ -1,27 +1,28 @@
 import { Card, Typography, useTheme } from '@mui/material';
 import Chart, { useChart } from '@src/components/shared/chart';
-import { getOngoingProjectGraphSeries } from '@src/lib/modules/projects';
-import { Project } from '@src/types/projects';
+import { useProjectContext } from '@src/hooks/useProjectContext';
+import {
+  getExpensesValuesAndLabels,
+  getOngoingProjectGraphSeries,
+} from '@src/lib/modules/projects/projectGraph';
+import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { round } from 'mathjs';
 import { FC } from 'react';
 
-interface Props extends Pick<Project, 'budget' | 'contingency'> {
-  labels: string[];
-  expenseValues: number[];
+interface Props {
+  accountingData: DoubleEntryAccounting[];
 }
 
-const OngoingProjectGraph: FC<Props> = ({
-  budget = 0,
-  contingency,
-  expenseValues = [],
-  labels = [],
-}) => {
+const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
+  const { project } = useProjectContext();
   const theme = useTheme();
+
+  const { expenseValues, labels } = getExpensesValuesAndLabels(accountingData);
 
   const { accExpensesArray, budgetArray, isOverBudget } =
     getOngoingProjectGraphSeries({
-      budget,
-      contingency: contingency ?? 0,
+      budget: project.budget,
+      contingency: project.contingency ?? 0,
       expenses: expenseValues,
     });
 
