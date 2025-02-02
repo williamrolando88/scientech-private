@@ -18,7 +18,7 @@ const ProjectBasePage: FC<Props> = ({ project }) => {
   }
 
   return (
-    <Stack>
+    <Stack gap={4}>
       <ProjectDescription project={project} />
       <ProjectResults id={project.id ?? ''} />
     </Stack>

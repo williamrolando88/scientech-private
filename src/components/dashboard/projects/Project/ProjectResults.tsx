@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import {
   balanceCalculator,
@@ -9,6 +8,7 @@ import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEn
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
 import { where } from 'firebase/firestore';
 import { FC } from 'react';
+import OngoingGraph from './ProjectResults/OngoingGraph';
 
 interface Props {
   id: string;
@@ -25,12 +25,7 @@ const ProjectResults: FC<Props> = ({ id }) => {
   const projectTree = balanceCalculator(accountingData);
   const projectProfit = calculateProfit(accountingData);
 
-  return (
-    <Stack direction="row">
-      <pre>{JSON.stringify(projectTree, null, 2)}</pre>
-      <pre>Ganancia: {projectProfit}</pre>
-    </Stack>
-  );
+  return <OngoingGraph accountingData={accountingData} />;
 };
 
 export default ProjectResults;
