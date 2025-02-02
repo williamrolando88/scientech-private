@@ -4,7 +4,11 @@ import { useListProjects } from '@src/hooks/cache/projects';
 import { getProjectName } from '@src/lib/modules/projects/projects';
 import { FC } from 'react';
 
-export const ProjectSelector: FC = () => {
+interface Props {
+  disabled?: boolean;
+}
+
+export const ProjectSelector: FC<Props> = ({ disabled }) => {
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
 
   const filteredProjects = projects
@@ -18,6 +22,7 @@ export const ProjectSelector: FC = () => {
       size="small"
       name="ref.projectId"
       label="Proyecto asociado"
+      disabled={disabled}
     >
       <MenuItem sx={{ fontStyle: 'italic' }} key="void" value="">
         Ninguno

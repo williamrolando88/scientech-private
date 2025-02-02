@@ -51,6 +51,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
         onClose={onClose}
         initialValues={initialValues}
         onSubmit={handleSubmit}
+        readOnly={initialValues.paid}
       />
     </Dialog>
   );

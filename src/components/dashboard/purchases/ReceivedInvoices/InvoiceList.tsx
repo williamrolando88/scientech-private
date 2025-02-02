@@ -2,8 +2,10 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
+import { useListProjects } from '@src/hooks/cache/projects';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
+import { PATH_DASHBOARD } from '@src/routes/paths';
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import {
   purchaseConverter,
@@ -11,12 +13,14 @@ import {
 } from '@src/services/firestore/purchases';
 import { Purchase, ReceivedInvoice } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
+import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
 import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
+  const { data: projectsList } = useListProjects();
   const { enqueueSnackbar } = useSnackbar();
   const [invoiceToDelete, setInvoiceToDelete] =
     useState<ReceivedInvoice | null>(null);
@@ -58,6 +62,32 @@ const InvoiceList: FC = () => {
       sortable: false,
     },
     {
+      field: 'project',
+      headerName: 'Proyecto',
+      sortable: false,
+      type: 'actions',
+      getActions: ({ row }) => {
+        const projectNumber =
+          row.ref?.projectId && projectsList
+            ? projectsList.find((p) => p.id === row.ref?.projectId)?.number
+            : null;
+
+        if (!projectNumber) return [];
+
+        return [
+          <Link
+            target="_blank"
+            href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
+          >
+            <Button variant="soft">
+              {projectNumber}
+              <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
+            </Button>
+          </Link>,
+        ];
+      },
+    },
+    {
       field: 'total',
       headerName: 'Total',
       type: 'number',
@@ -80,16 +110,17 @@ const InvoiceList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: (params) => [
+      getActions: ({ row }) => [
         <GridActionsCellItem
           label="Modificar"
-          onClick={() => setInvoiceToUpdate(params.row)}
+          onClick={() => setInvoiceToUpdate(row)}
           icon={<Iconify icon="pajamas:doc-changes" />}
           showInMenu
+          disabled={row.paid}
         />,
         <GridActionsCellItem
           label="Borrar"
-          onClick={() => setInvoiceToDelete(params.row)}
+          onClick={() => setInvoiceToDelete(row)}
           icon={<Iconify icon="pajamas:remove" />}
           showInMenu
         />,

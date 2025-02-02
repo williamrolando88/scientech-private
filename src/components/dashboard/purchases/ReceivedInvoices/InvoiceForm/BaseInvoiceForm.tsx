@@ -40,6 +40,7 @@ type FormikProps = Pick<
 export interface InvoiceFormProps extends FormikProps {
   onClose?: VoidFunction;
   infoText?: string;
+  readOnly?: boolean;
 }
 
 const BaseInvoiceForm: FC<InvoiceFormProps> = ({
@@ -47,6 +48,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   infoText,
   initialValues,
   onSubmit,
+  readOnly,
 }) => {
   const isUpdating = Boolean(initialValues.id);
 
@@ -87,7 +89,11 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
       {({ isSubmitting, setValues, values }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">{infoText}</Alert>
+            <Alert severity="info">
+              {values.locked
+                ? 'Solo puedes modificar los valores que no provienen del archivo XML proporcionado. Por favor agrega unicamente la información faltante'
+                : infoText}
+            </Alert>
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
@@ -97,7 +103,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Suc."
                   type="number"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -108,7 +114,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Pto."
                   type="number"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -119,7 +125,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Nro."
                   type="number"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -131,7 +137,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="issueDate"
                   label="Fecha de Emisión"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -141,7 +147,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="issuerId"
                   label="RUC Emisor"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -151,7 +157,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="issuerName"
                   label="Razón Social Emisor"
                   required
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -162,7 +168,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -174,6 +180,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
                   initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
                   required
+                  disabled={readOnly}
                 />
               </Grid>
 
@@ -185,7 +192,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="taxedSubtotal"
                   label="Base imponible"
                   size="small"
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -197,7 +204,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="noTaxSubtotal"
                   label="Subtotal 0%"
                   size="small"
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -208,7 +215,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <ProjectSelector />
+                <ProjectSelector disabled={readOnly} />
               </Grid>
 
               <Grid item xs={2} />
@@ -252,13 +259,15 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 Cancelar
               </Button>
 
-              <LoadingButton
-                variant="contained"
-                type="submit"
-                loading={isSubmitting}
-              >
-                {isUpdating ? 'Actualizar' : 'Guardar'}
-              </LoadingButton>
+              {!readOnly && (
+                <LoadingButton
+                  variant="contained"
+                  type="submit"
+                  loading={isSubmitting}
+                >
+                  {isUpdating ? 'Actualizar' : 'Guardar'}
+                </LoadingButton>
+              )}
             </Stack>
           </DialogActions>
         </Form>
