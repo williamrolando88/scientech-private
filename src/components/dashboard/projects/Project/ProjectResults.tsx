@@ -6,26 +6,27 @@ import {
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { Project } from '@src/types/projects';
 import { where } from 'firebase/firestore';
 import { FC } from 'react';
-import OngoingGraph from './ProjectResults/OngoingGraph';
+import OngoingProjectGraph from './ProjectResults/OngoingProjectGraph';
 
 interface Props {
-  id: string;
+  project: Project;
 }
 
-const ProjectResults: FC<Props> = ({ id }) => {
+const ProjectResults: FC<Props> = ({ project }) => {
   const accountingData = useCollectionSnapshot<DoubleEntryAccounting>({
     collection: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
-    additionalQueries: [where('ref.projectId', '==', id)],
+    additionalQueries: [where('ref.projectId', '==', project.id)],
     order: { field: 'issueDate', direction: 'desc' },
   });
 
   const projectTree = balanceCalculator(accountingData);
   const projectProfit = calculateProfit(accountingData);
 
-  return <OngoingGraph accountingData={accountingData} />;
+  return <OngoingProjectGraph />;
 };
 
 export default ProjectResults;
