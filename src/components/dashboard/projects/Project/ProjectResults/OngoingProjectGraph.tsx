@@ -28,7 +28,10 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
 
   const series = [
     {
-      name: 'Presupuesto',
+      name:
+        isOverBudget && project.contingency
+          ? 'Presupuesto + Contingencia'
+          : 'Presupuesto',
       type: 'area',
       data: budgetArray,
     },
@@ -54,7 +57,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       width: [5, 2],
     },
     plotOptions: {
-      bar: { columnWidth: '50%' },
+      bar: { columnWidth: expenseValues.length < 5 ? '10%' : '50%' },
     },
     fill: {
       type: ['gradient', 'gradient', 'solid'],

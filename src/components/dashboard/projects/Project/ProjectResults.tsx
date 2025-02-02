@@ -1,5 +1,10 @@
+import { Card, Typography } from '@mui/material';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { useProjectContext } from '@src/hooks/useProjectContext';
+import {
+  balanceCalculator,
+  calculateProfit,
+} from '@src/lib/modules/balanceCalculator';
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
@@ -17,7 +22,22 @@ const ProjectResults: FC = () => {
     order: { field: 'issueDate', direction: 'asc' },
   });
 
-  return <OngoingProjectGraph accountingData={accountingData} />;
+  const projectBalance = balanceCalculator(accountingData);
+  const projectProfit = calculateProfit(accountingData);
+
+  return (
+    <>
+      <OngoingProjectGraph accountingData={accountingData} />
+
+      <Card>
+        <Typography>Project Profit: {projectProfit}</Typography>
+      </Card>
+
+      <Card>
+        <pre>{JSON.stringify(projectBalance, null, 2)}</pre>
+      </Card>
+    </>
+  );
 };
 
 export default ProjectResults;

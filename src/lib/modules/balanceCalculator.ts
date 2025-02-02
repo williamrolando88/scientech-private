@@ -73,5 +73,5 @@ export const balanceCalculator = (
 
 export const calculateProfit = (data: DoubleEntryAccounting[]) => {
   const balanceTree = balanceCalculator(data);
-  return round(balanceTree['4'] - balanceTree['5'], 2);
+  return round(balanceTree['4'] ?? 0 - balanceTree['5'] ?? 0, 2);
 };

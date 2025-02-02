@@ -1,14 +1,17 @@
 import { DoubleEntryAccounting } from '@src/types/doubleEntryAccounting';
+import { round } from 'mathjs';
 
 const getAccumulatedData = (data: number[]) =>
-  data.reduce((acc, value, index) => {
-    if (index === 0) {
-      acc.push(value);
-    } else {
-      acc.push(acc[index - 1] + value);
-    }
-    return acc;
-  }, [] as number[]);
+  data
+    .reduce((acc, value, index) => {
+      if (index === 0) {
+        acc.push(value);
+      } else {
+        acc.push(acc[index - 1] + value);
+      }
+      return acc;
+    }, [] as number[])
+    .map((v) => round(v, 2));
 
 type getOngoingProjectGraphSeriesParams = {
   expenses: number[];
@@ -23,9 +26,11 @@ export const getOngoingProjectGraphSeries = ({
 }: getOngoingProjectGraphSeriesParams) => {
   const accExpensesArray = getAccumulatedData(expenses);
 
-  const budgetArray = accExpensesArray.map((e) =>
-    e < budget ? budget : budget * (1 + contingency / 100)
-  );
+  const budgetArray = accExpensesArray
+    .map((e) => (e < budget ? budget : budget * (1 + contingency / 100)))
+    .map((v) => round(v, 2));
+
+  console.log('budgetArray', budgetArray);
 
   const expensesEntries = expenses.length;
   const isOverBudget = accExpensesArray[expensesEntries - 1] > budget;
