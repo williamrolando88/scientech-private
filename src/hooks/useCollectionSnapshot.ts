@@ -1,7 +1,5 @@
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
-import { DB } from '@src/settings/firebase';
 import {
-  collection,
+  CollectionReference,
   FirestoreDataConverter,
   limit,
   onSnapshot,
@@ -14,13 +12,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 interface useCollectionSnapshotParams<T> {
   additionalQueries?: QueryConstraint[];
-  collectionName: COLLECTIONS_ENUM;
+  collection: CollectionReference;
   converter?: FirestoreDataConverter<any>;
   order?: { field: keyof T; direction?: OrderByDirection };
 }
 
 export const useCollectionSnapshot = <T>({
-  collectionName,
+  collection,
   converter,
   additionalQueries,
   order,
@@ -28,7 +26,7 @@ export const useCollectionSnapshot = <T>({
   const [data, setData] = useState<T[]>([]);
 
   const queryGenerator = useCallback(() => {
-    let collectionRef = collection(DB, collectionName);
+    let collectionRef = collection;
     if (converter) collectionRef = collectionRef.withConverter(converter);
 
     const queries = [];
@@ -42,7 +40,7 @@ export const useCollectionSnapshot = <T>({
     }
 
     return query(collectionRef, ...queries);
-  }, [additionalQueries, collectionName, converter, order]);
+  }, [additionalQueries, collection, converter, order]);
 
   const queryCollection = useCallback(
     () =>

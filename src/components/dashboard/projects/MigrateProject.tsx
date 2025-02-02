@@ -43,10 +43,6 @@ const MigrateProject: FC<Props> = ({ open, project, onClose }) => {
   const initialValues: Project = {
     ...PROJECTS_INITIAL_VALUE,
     id: project.id,
-    number: Number(project.name),
-    description: project.description,
-    startedAt: project.start_date || new Date(),
-    estimateFinishDate: project.end_date || new Date(),
   };
 
   return (

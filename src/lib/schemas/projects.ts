@@ -22,10 +22,4 @@ export const ProjectSchema = z.object({
   profitMargin: z.number(),
   contingency: z.number().nullish(),
   ref: DocumentRefSchema,
-
-  // TODO: Delete deprecated properties
-  name: z.string().nullish(),
-  client_id: z.string().nullish(),
-  start_date: z.coerce.date().nullish(),
-  end_date: z.coerce.date().nullish(),
 });

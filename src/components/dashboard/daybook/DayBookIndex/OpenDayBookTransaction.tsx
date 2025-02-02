@@ -13,8 +13,8 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
-import { useListClients } from '@src/hooks/cache/clients';
 import { useListProjects } from '@src/hooks/cache/projects';
+import { getProjectName } from '@src/lib/modules/projects/projects';
 import {
   DoubleEntryAccounting,
   DoubleEntryAccountingTransaction,
@@ -39,7 +39,6 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
   alertSeverity = 'info',
 }) => {
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
-  const { data: clients, isLoading: isLoadingClients } = useListClients();
   const { data: accountCategories } = useListAccountCategories();
 
   const columns: GridColDef<DoubleEntryAccountingTransaction>[] = [
@@ -89,14 +88,13 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
 
   if (!transaction) return null;
 
-  const getProjectName = () => {
-    if (isLoadingClients || isLoadingProjects) return '';
+  const renderProjectName = () => {
+    if (isLoadingProjects) return '';
 
     const project = projects.find((p) => p.id === transaction.ref.projectId);
     if (!project) return '';
 
-    const client = clients.find((c) => c.id === project.client_id);
-    return `${project.name}(${client?.name}): ${project.description}`;
+    return getProjectName(project);
   };
 
   return (
@@ -135,7 +133,7 @@ export const OpenDayBookTransaction: FC<OpenDayBookTransactionProps> = ({
           fullWidth
           name="project"
           label="Proyecto"
-          value={getProjectName()}
+          value={renderProjectName()}
           disabled
         />
 

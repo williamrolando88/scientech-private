@@ -15,6 +15,20 @@
       ]
     },
     {
+      "collectionGroup": "doubleEntryAccounting",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ref.projectId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "issueDate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "purchases",
       "queryScope": "COLLECTION",
       "fields": [

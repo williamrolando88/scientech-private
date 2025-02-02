@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material';
 import { FormikTextField } from '@src/components/shared/formik-components';
 import { useListProjects } from '@src/hooks/cache/projects';
-import { Project } from '@src/types/projects';
+import { getProjectName } from '@src/lib/modules/projects/projects';
 import { FC } from 'react';
 
 export const ProjectSelector: FC = () => {
@@ -10,20 +10,6 @@ export const ProjectSelector: FC = () => {
   const filteredProjects = projects
     .filter((project) => project.status === 'active')
     .sort((a, b) => a.number ?? 0 - b.number ?? 0);
-
-  const getProjectName = (project: Project) => {
-    const description = project.description
-      ?.split('\\n')
-      .map((s) => s.trim())
-      .join(' ');
-
-    let text = '';
-    if (project.number) text += project.number;
-    if (project?.client?.name) text += ` (${project.client.name}): `;
-    if (description) text += description;
-
-    return text;
-  };
 
   return (
     <FormikTextField

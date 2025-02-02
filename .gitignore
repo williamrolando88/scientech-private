@@ -42,3 +42,4 @@ yarn-error.log*
 _static
 *.tsbuildinfo
 .env*.local
+.eslintcache

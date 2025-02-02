@@ -3,10 +3,10 @@ import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import Iconify from '@src/components/shared/iconify';
 import { useListAccountCategories } from '@src/hooks/cache/accountCategories';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { COLLECTIONS_ENUM } from '@src/lib/enums/collections';
 import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
 import { fDate } from '@src/lib/utils/formatTime';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
@@ -27,7 +27,7 @@ const DayBookIndex: FC = () => {
   const { data: accountCategories } = useListAccountCategories();
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
-    collectionName: COLLECTIONS_ENUM.DOUBLE_ENTRY_ACCOUNTING,
+    collection: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
