@@ -17,6 +17,13 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
   const { project } = useProjectContext();
   const theme = useTheme();
 
+  // TODO: Enable add project to issued invoices directly
+  // TODO: Enable add project to received invoices directly
+  // TODO: Enable interactive form to update project details values
+
+  // TODO: Always must be a point 0 at beginning
+  // TODO: Draw between the starting date and the estimates/finished date always
+
   const { expenseValues, labels } = getExpensesValuesAndLabels(accountingData);
 
   const { accExpensesArray, budgetArray, isOverBudget } =
@@ -79,6 +86,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       shared: true,
       intersect: false,
       y: {
+        // TODO: Fix 0 value
         formatter: (value: number) => (value ? `$ ${round(value, 2)}` : ''),
       },
     },
