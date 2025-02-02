@@ -14,7 +14,7 @@ const ProjectResults: FC = () => {
     collection: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
     converter: doubleEntryAccountingConverter,
     additionalQueries: [where('ref.projectId', '==', project.id)],
-    order: { field: 'issueDate', direction: 'desc' },
+    order: { field: 'issueDate', direction: 'asc' },
   });
 
   return <OngoingProjectGraph accountingData={accountingData} />;
