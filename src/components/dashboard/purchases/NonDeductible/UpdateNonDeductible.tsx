@@ -42,12 +42,16 @@ const UpdateNonDeductible: FC<UpdateNonDeductibleProps> = ({
 
   if (!initialValues) return null;
 
+  const infoText = initialValues.paid
+    ? 'El gasto no deducible ya fue pagado, unicamente puedes modificar los campos habilitados. Para poder modificarla, primero elimina el pago asociado'
+    : 'Actualiza los datos del gasto no deducible recibido. Los campos marcados con * son obligatorios.';
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar gasto no deducible</DialogTitle>
 
       <BaseNonDeductibleForm
-        infoText="Actualiza los datos no deducibles. Los campos marcados con * son obligatorios."
+        infoText={infoText}
         onClose={onClose}
         initialValues={initialValues}
         onSubmit={handleSubmit}
