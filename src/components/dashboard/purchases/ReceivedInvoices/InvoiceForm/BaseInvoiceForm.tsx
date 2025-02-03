@@ -101,7 +101,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Suc."
                   type="number"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -112,7 +112,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Pto."
                   type="number"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -123,7 +123,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   label="Nro."
                   type="number"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -132,10 +132,11 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={3}>
                 <FormikDatePicker
                   fullWidth
+                  size="small"
                   name="issueDate"
                   label="Fecha de Emisión"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -145,7 +146,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="issuerId"
                   label="RUC Emisor"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -155,7 +156,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="issuerName"
                   label="Razón Social Emisor"
                   required
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 
@@ -166,7 +167,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   fullWidth
                   name="description"
                   label="Descripción"
-                  disabled={values.locked || readOnly}
+                  disabled={values.locked}
                 />
               </Grid>
 

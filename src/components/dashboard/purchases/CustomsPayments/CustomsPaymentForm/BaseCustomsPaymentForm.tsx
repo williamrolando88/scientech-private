@@ -54,7 +54,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="customsPaymentNumber"
                 label="No. de liquidación"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -67,7 +66,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="issueDate"
                 label="Fecha de Emisión"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -79,7 +77,6 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 fullWidth
                 name="description"
                 label="Descripción"
-                disabled={values.paid}
               />
             </Grid>
 

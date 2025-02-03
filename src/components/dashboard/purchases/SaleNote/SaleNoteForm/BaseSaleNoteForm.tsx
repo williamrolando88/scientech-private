@@ -52,7 +52,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="establishment"
                 label="Suc."
                 type="number"
-                disabled={values.paid}
               />
             </Grid>
 
@@ -63,7 +62,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="emissionPoint"
                 label="Pto."
                 type="number"
-                disabled={values.paid}
               />
             </Grid>
 
@@ -74,7 +72,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="sequentialNumber"
                 label="Nro."
                 type="number"
-                disabled={values.paid}
               />
             </Grid>
 
@@ -87,7 +84,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="issueDate"
                 label="Fecha de Emisión"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -98,7 +94,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="issuerId"
                 label="CI/RUC Emisor"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -109,7 +104,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="issuerName"
                 label="Razón Social Emisor"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -122,7 +116,6 @@ const BaseSaleNoteForm: FC<BaseSaleNoteFormProps> = ({
                 name="description"
                 label="Descripción"
                 required
-                disabled={values.paid}
               />
             </Grid>
 

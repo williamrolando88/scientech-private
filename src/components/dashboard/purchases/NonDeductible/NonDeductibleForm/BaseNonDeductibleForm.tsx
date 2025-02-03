@@ -57,7 +57,6 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
                 name="issueDate"
                 label="Fecha de Emisión"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -68,7 +67,6 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
                 name="issuerName"
                 label="Emisor y/o motivo"
                 required
-                disabled={values.paid}
               />
             </Grid>
 
@@ -80,7 +78,6 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
                 fullWidth
                 name="description"
                 label="Descripción"
-                disabled={values.paid}
               />
             </Grid>
 
