@@ -42,12 +42,16 @@ const UpdateSaleNote: FC<UpdateSaleNoteProps> = ({
 
   if (!initialValues) return null;
 
+  const infoText = initialValues.paid
+    ? 'La nota de venta ya fue pagada, unicamente puedes modificar los campos habilitados. Para poder modificarla, primero elimina el pago asociado'
+    : 'Actualiza los datos de la nota de venta recibida. Los campos marcados con * son obligatorios.';
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar nota de venta</DialogTitle>
 
       <BaseSaleNoteForm
-        infoText="Actualiza los datos de la nota de venta. Los campos marcados con * son obligatorios."
+        infoText={infoText}
         onClose={onClose}
         initialValues={initialValues}
         onSubmit={handleSubmit}

@@ -18,12 +18,9 @@ interface Props {
 const ProjectTableAction: FC<Props> = ({ row }) => {
   const { data: projectsList } = useListProjects();
 
-  const projectNumber =
-    row.ref?.projectId && projectsList
-      ? projectsList.find((p) => p.id === row.ref?.projectId)?.number
-      : null;
+  const project = projectsList?.find((p) => p.id === row.ref?.projectId);
 
-  if (!projectNumber) return <Label>N/A</Label>;
+  if (!project) return <Label>N/A</Label>;
 
   return (
     <Link
@@ -31,7 +28,7 @@ const ProjectTableAction: FC<Props> = ({ row }) => {
       href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
     >
       <Label variant="soft" color="info" sx={{ cursor: 'pointer' }}>
-        {projectNumber}
+        {project.number ?? '--'}
         <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
       </Label>
     </Link>
