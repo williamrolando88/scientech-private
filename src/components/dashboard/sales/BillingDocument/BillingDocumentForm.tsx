@@ -23,9 +23,9 @@ import { AccountCategorySelector } from '../../purchases/AccountCategorySelector
 import { ProjectSelector } from '../../purchases/ProjectSelector';
 
 const MISSING_SALE_ACCOUNT =
-  'Es necesario actualizar la informacion de Proyecto relacionado y Cuenta contable';
+  'Es necesario actualizar la información de Proyecto relacionado y Cuenta contable.';
 const DEFAULT_MESSAGE =
-  'Los datos presentados fueron extraidos directamente del XML generado, no estan disponibles para edicion';
+  'Los datos presentados fueron extraídos directamente del XML generado, no están disponibles para edición; únicamente puedes modificar los campos habilitados.';
 
 type FormikProps = Pick<
   FormikConfig<BillingDocument>,

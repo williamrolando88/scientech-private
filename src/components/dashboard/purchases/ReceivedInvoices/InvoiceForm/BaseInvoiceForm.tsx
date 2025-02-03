@@ -40,6 +40,7 @@ type FormikProps = Pick<
 export interface InvoiceFormProps extends FormikProps {
   onClose?: VoidFunction;
   infoText?: string;
+  readOnly?: boolean;
 }
 
 const BaseInvoiceForm: FC<InvoiceFormProps> = ({
@@ -47,9 +48,8 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   infoText,
   initialValues,
   onSubmit,
+  readOnly,
 }) => {
-  const isUpdating = Boolean(initialValues.id);
-
   const handleOnDropAccepted =
     (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
@@ -87,7 +87,11 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
       {({ isSubmitting, setValues, values }) => (
         <Form>
           <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">{infoText}</Alert>
+            <Alert severity="info">
+              {values.locked
+                ? 'Solo puedes modificar los valores que no provienen del archivo XML proporcionado. Por favor agrega unicamente la información faltante'
+                : infoText}
+            </Alert>
 
             <Grid container columns={12} spacing={2}>
               <Grid item xs={1}>
@@ -128,6 +132,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               <Grid item xs={3}>
                 <FormikDatePicker
                   fullWidth
+                  size="small"
                   name="issueDate"
                   label="Fecha de Emisión"
                   required
@@ -185,7 +190,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="taxedSubtotal"
                   label="Base imponible"
                   size="small"
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -197,7 +202,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   name="noTaxSubtotal"
                   label="Subtotal 0%"
                   size="small"
-                  disabled={values.locked}
+                  disabled={values.locked || readOnly}
                 />
               </Grid>
 
@@ -208,7 +213,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
               </Grid>
 
               <Grid item xs={7}>
-                <ProjectSelector />
+                <ProjectSelector disabled={readOnly} />
               </Grid>
 
               <Grid item xs={2} />
@@ -257,7 +262,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 type="submit"
                 loading={isSubmitting}
               >
-                {isUpdating ? 'Actualizar' : 'Guardar'}
+                Guardar
               </LoadingButton>
             </Stack>
           </DialogActions>

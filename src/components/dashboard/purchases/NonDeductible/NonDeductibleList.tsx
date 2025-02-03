@@ -15,6 +15,8 @@ import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
 import UpdateNonDeductible from './UpdateNonDeductible';
+import ProjectTableAction from '../ProjectTableAction';
+import UpdatePurchasesProject from '../UpdatePurchasesProject';
 
 const NonDeductibleList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -22,6 +24,9 @@ const NonDeductibleList: FC = () => {
     null
   );
   const [expenseToUpdate, setExpenseToUpdate] = useState<NonDeductible | null>(
+    null
+  );
+  const [expenseToAttach, setExpenseToAttach] = useState<NonDeductible | null>(
     null
   );
 
@@ -50,14 +55,23 @@ const NonDeductibleList: FC = () => {
     },
     {
       field: 'description',
-      flex: 3,
+      flex: 1,
       headerName: 'Descripción',
       sortable: false,
+    },
+    {
+      field: 'project',
+      headerName: 'Proyecto',
+      width: 90,
+      sortable: false,
+      type: 'actions',
+      getActions: ({ row }) => [<ProjectTableAction row={row} />],
     },
     {
       field: 'total',
       headerName: 'Total',
       type: 'number',
+      width: 100,
       sortable: false,
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
@@ -77,20 +91,36 @@ const NonDeductibleList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: (params) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setExpenseToUpdate(params.row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setExpenseToDelete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
+      getActions: ({ row }) => {
+        const baseActions = [
+          <GridActionsCellItem
+            label="Modificar"
+            onClick={() => setExpenseToUpdate(row)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+            disabled={row.paid}
+          />,
+          <GridActionsCellItem
+            label="Borrar"
+            onClick={() => setExpenseToDelete(row)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+          />,
+        ];
+
+        if (row.paid) {
+          baseActions.push(
+            <GridActionsCellItem
+              label="Modificar proyecto"
+              onClick={() => setExpenseToAttach(row)}
+              icon={<Iconify icon="pajamas:doc-symlink" />}
+              showInMenu
+            />
+          );
+        }
+
+        return baseActions;
+      },
     },
   ];
 
@@ -134,6 +164,12 @@ const NonDeductibleList: FC = () => {
         initialValues={expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
         key={expenseToUpdate?.id}
+      />
+
+      <UpdatePurchasesProject
+        open={!!expenseToAttach}
+        purchase={expenseToAttach}
+        onClose={() => setExpenseToAttach(null)}
       />
 
       <ConfirmDialog

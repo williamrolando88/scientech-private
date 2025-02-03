@@ -36,100 +36,97 @@ const BaseNonDeductibleForm: FC<BaseNonDeductibleFormProps> = ({
   infoText,
   initialValues,
   onSubmit,
-}) => {
-  const isUpdating = Boolean(initialValues.id);
+}) => (
+  <Formik
+    initialValues={initialValues}
+    onSubmit={onSubmit}
+    validationSchema={toFormikValidationSchema(NonDeductibleSchema)}
+  >
+    {({ isSubmitting, values }) => (
+      <Form>
+        <Stack component={DialogContent} gap={2}>
+          <Alert severity="info">{infoText}</Alert>
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(NonDeductibleSchema)}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <Stack component={DialogContent} gap={2}>
-            <Alert severity="info">{infoText}</Alert>
+          <Grid container columns={12} spacing={2}>
+            <Grid item xs={9} />
 
-            <Grid container columns={12} spacing={2}>
-              <Grid item xs={9} />
-
-              <Grid item xs={3}>
-                <FormikDatePicker
-                  size="small"
-                  fullWidth
-                  name="issueDate"
-                  label="Fecha de Emisión"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormikTextField
-                  size="small"
-                  fullWidth
-                  name="issuerName"
-                  label="Emisor y/o motivo"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormikTextField
-                  size="small"
-                  multiline
-                  rows={3}
-                  fullWidth
-                  name="description"
-                  label="Descripción"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <AccountCategorySelector
-                  size="small"
-                  label="Cuenta de gasto"
-                  name="expenseAccount"
-                  selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.EXPENSE}
-                  initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.EXPENSE}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={7}>
-                <ProjectSelector />
-              </Grid>
-
-              <Grid item xs={2} />
-
-              <Grid item xs={3}>
-                <FormikAutoCalculateField
-                  size="small"
-                  fullWidth
-                  name="total"
-                  label="Total"
-                  required
-                />
-              </Grid>
+            <Grid item xs={3}>
+              <FormikDatePicker
+                size="small"
+                fullWidth
+                name="issueDate"
+                label="Fecha de Emisión"
+                required
+              />
             </Grid>
-          </Stack>
 
-          <DialogActions>
-            <Button onClick={onClose} disabled={isSubmitting}>
-              Cancelar
-            </Button>
+            <Grid item xs={12}>
+              <FormikTextField
+                size="small"
+                fullWidth
+                name="issuerName"
+                label="Emisor y/o motivo"
+                required
+              />
+            </Grid>
 
-            <LoadingButton
-              variant="contained"
-              type="submit"
-              loading={isSubmitting}
-            >
-              {isUpdating ? 'Actualizar' : 'Guardar'}
-            </LoadingButton>
-          </DialogActions>
-        </Form>
-      )}
-    </Formik>
-  );
-};
+            <Grid item xs={12}>
+              <FormikTextField
+                size="small"
+                multiline
+                rows={3}
+                fullWidth
+                name="description"
+                label="Descripción"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <AccountCategorySelector
+                size="small"
+                label="Cuenta de gasto"
+                name="expenseAccount"
+                selectableCategories={ALLOWED_ACCOUNTS.NON_DEDUCTIBLE.EXPENSE}
+                initialValue={DEFAULT_ACCOUNT.NON_DEDUCTIBLE.EXPENSE}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={7}>
+              <ProjectSelector disabled={values.paid} />
+            </Grid>
+
+            <Grid item xs={2} />
+
+            <Grid item xs={3}>
+              <FormikAutoCalculateField
+                size="small"
+                fullWidth
+                name="total"
+                label="Total"
+                required
+                disabled={values.paid}
+              />
+            </Grid>
+          </Grid>
+        </Stack>
+
+        <DialogActions>
+          <Button onClick={onClose} disabled={isSubmitting}>
+            Cancelar
+          </Button>
+
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+          >
+            Guardar
+          </LoadingButton>
+        </DialogActions>
+      </Form>
+    )}
+  </Formik>
+);
 
 export default BaseNonDeductibleForm;

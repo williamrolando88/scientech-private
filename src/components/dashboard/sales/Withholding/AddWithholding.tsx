@@ -21,6 +21,7 @@ const AddWithholding: FC<Props> = ({ sale }) => {
           sx={{ color: (theme) => theme.palette.warning.main }}
         />
       </IconButton>
+
       <UpsertWithholding open={modalOpen} onClose={closeModal} sale={sale} />
     </>
   );

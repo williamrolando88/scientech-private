@@ -42,12 +42,16 @@ const UpdateCustomsPayment: FC<UpdateCustomsPaymentProps> = ({
 
   if (!initialValues) return null;
 
+  const infoText = initialValues.paid
+    ? 'La liquidación aduanera ya fue pagada, no puedes modificarla. Para poder modificarla, primero elimina el pago asociado'
+    : 'Actualiza los datos de la liquidación aduanera recibida. Los campos marcados con * son obligatorios.';
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar liquidación aduanera</DialogTitle>
 
       <BaseCustomsPaymentForm
-        infoText="Actualiza los datos de la liquidación aduanera recibida. Los campos marcados con * son obligatorios."
+        infoText={infoText}
         onClose={onClose}
         initialValues={initialValues}
         onSubmit={handleSubmit}

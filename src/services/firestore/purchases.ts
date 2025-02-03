@@ -42,10 +42,6 @@ const create = async (purchase: Partial<Purchase>) => {
 };
 
 const update = async (purchase: Partial<Purchase>) => {
-  if (purchase.purchaseData?.paid) {
-    throw new Error('El documento ya fue pagado, no se puede modificar');
-  }
-
   const docRef = doc(COLLECTIONS.PURCHASES, purchase.id!);
   await setDoc(docRef, purchase, { merge: true });
   return docRef.id;

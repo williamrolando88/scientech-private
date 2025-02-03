@@ -28,14 +28,6 @@ export const ProjectConverter: FirestoreDataConverter<Project> = {
     finishedAt: snapshot.get('finishedAt')
       ? snapshot.get('finishedAt').toDate()
       : undefined,
-
-    // TODO: Delete deprecated properties
-    end_date: snapshot.get('end_date')
-      ? snapshot.get('end_date').toDate()
-      : undefined,
-    start_date: snapshot.get('start_date')
-      ? snapshot.get('start_date').toDate()
-      : undefined,
   }),
 };
 

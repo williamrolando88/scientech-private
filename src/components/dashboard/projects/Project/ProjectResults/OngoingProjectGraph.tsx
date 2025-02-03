@@ -17,6 +17,10 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
   const { project } = useProjectContext();
   const theme = useTheme();
 
+  // TODO: Enable interactive form to update project details values
+  // TODO: Always must be a point 0 at beginning
+  // TODO: Draw between the starting date and the estimates/finished date always
+
   const { expenseValues, labels } = getExpensesValuesAndLabels(accountingData);
 
   const { accExpensesArray, budgetArray, isOverBudget } =
@@ -28,7 +32,10 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
 
   const series = [
     {
-      name: 'Presupuesto',
+      name:
+        isOverBudget && project.contingency
+          ? 'Presupuesto + Contingencia'
+          : 'Presupuesto',
       type: 'area',
       data: budgetArray,
     },
@@ -50,17 +57,17 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       type: 'line',
     },
     stroke: {
-      curve: 'straight',
+      curve: ['stepline', 'stepline'],
       width: [5, 2],
     },
     plotOptions: {
-      bar: { columnWidth: '50%' },
+      bar: { columnWidth: expenseValues.length < 5 ? '10%' : '50%' },
     },
     fill: {
       type: ['gradient', 'gradient', 'solid'],
     },
     colors: [
-      isOverBudget ? theme.palette.error.light : theme.palette.success.main,
+      isOverBudget ? theme.palette.error.main : theme.palette.success.main,
       theme.palette.secondary.main,
       theme.palette.secondary.light,
     ],
@@ -76,7 +83,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       shared: true,
       intersect: false,
       y: {
-        formatter: (value: number) => (value ? `$ ${round(value, 2)}` : ''),
+        formatter: (value: number) => (value ? `$${round(value, 2)}` : '$0'),
       },
     },
   });

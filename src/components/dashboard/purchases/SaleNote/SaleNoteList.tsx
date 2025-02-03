@@ -14,12 +14,15 @@ import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
+import ProjectTableAction from '../ProjectTableAction';
 import UpdateSaleNote from './UpdateSaleNote';
+import UpdatePurchasesProject from '../UpdatePurchasesProject';
 
 const SaleNoteList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [expenseToDelete, setExpenseToDelete] = useState<SaleNote | null>(null);
   const [expenseToUpdate, setExpenseToUpdate] = useState<SaleNote | null>(null);
+  const [expenseToAttach, setExpenseToAttach] = useState<SaleNote | null>(null);
 
   const purchases = useCollectionSnapshot<Purchase>({
     collection: COLLECTIONS.PURCHASES,
@@ -46,8 +49,8 @@ const SaleNoteList: FC = () => {
     },
     {
       field: 'issuerName',
-      flex: 2,
-      headerName: 'Emisor y/o motivo',
+      flex: 1,
+      headerName: 'Emisor',
       sortable: false,
     },
     {
@@ -55,6 +58,14 @@ const SaleNoteList: FC = () => {
       flex: 3,
       headerName: 'Descripción',
       sortable: false,
+    },
+    {
+      field: 'project',
+      headerName: 'Proyecto',
+      width: 90,
+      sortable: false,
+      type: 'actions',
+      getActions: ({ row }) => [<ProjectTableAction row={row} />],
     },
     {
       field: 'total',
@@ -79,20 +90,36 @@ const SaleNoteList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: (params) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setExpenseToUpdate(params.row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setExpenseToDelete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
+      getActions: ({ row }) => {
+        const baseActions = [
+          <GridActionsCellItem
+            label="Modificar"
+            onClick={() => setExpenseToUpdate(row)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+            disabled={row.paid}
+          />,
+          <GridActionsCellItem
+            label="Borrar"
+            onClick={() => setExpenseToDelete(row)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+          />,
+        ];
+
+        if (row.paid) {
+          baseActions.push(
+            <GridActionsCellItem
+              label="Modificar proyecto"
+              onClick={() => setExpenseToAttach(row)}
+              icon={<Iconify icon="pajamas:doc-symlink" />}
+              showInMenu
+            />
+          );
+        }
+
+        return baseActions;
+      },
     },
   ];
 
@@ -137,6 +164,12 @@ const SaleNoteList: FC = () => {
         initialValues={expenseToUpdate}
         onClose={() => setExpenseToUpdate(null)}
         key={expenseToUpdate?.id}
+      />
+
+      <UpdatePurchasesProject
+        open={!!expenseToAttach}
+        purchase={expenseToAttach}
+        onClose={() => setExpenseToAttach(null)}
       />
 
       <ConfirmDialog
