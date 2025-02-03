@@ -39,7 +39,7 @@ const UpdatePurchasesProject: FC<Props> = ({ purchase, onClose, open }) => {
       updatedRefs.payment = { ref: paymentRef } as Payment;
     }
 
-    PurchasesFirestore.update(updatedRefs, true)
+    PurchasesFirestore.update(updatedRefs)
       .then(() => {
         resetForm();
         enqueueSnackbar('Proyecto vinculado exitosamente');

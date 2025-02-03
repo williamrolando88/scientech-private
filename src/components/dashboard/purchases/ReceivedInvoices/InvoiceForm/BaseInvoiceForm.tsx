@@ -180,7 +180,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                   selectableCategories={ALLOWED_ACCOUNTS.INVOICE.EXPENSE}
                   initialValue={DEFAULT_ACCOUNT.INVOICE.EXPENSE}
                   required
-                  disabled={readOnly}
                 />
               </Grid>
 
@@ -259,15 +258,13 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 Cancelar
               </Button>
 
-              {!readOnly && (
-                <LoadingButton
-                  variant="contained"
-                  type="submit"
-                  loading={isSubmitting}
-                >
-                  {isUpdating ? 'Actualizar' : 'Guardar'}
-                </LoadingButton>
-              )}
+              <LoadingButton
+                variant="contained"
+                type="submit"
+                loading={isSubmitting}
+              >
+                {isUpdating ? 'Actualizar' : 'Guardar'}
+              </LoadingButton>
             </Stack>
           </DialogActions>
         </Form>

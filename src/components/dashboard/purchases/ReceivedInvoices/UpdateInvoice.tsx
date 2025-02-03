@@ -42,12 +42,16 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
 
   if (!initialValues) return null;
 
+  const infoText = initialValues.paid
+    ? 'La factura ya fue pagada, unicamente puedes modificar los campos habilitados'
+    : 'Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios.';
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Actualizar factura</DialogTitle>
 
       <BaseInvoiceForm
-        infoText="Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios."
+        infoText={infoText}
         onClose={onClose}
         initialValues={initialValues}
         onSubmit={handleSubmit}
