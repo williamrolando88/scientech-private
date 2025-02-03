@@ -30,8 +30,6 @@ export const getOngoingProjectGraphSeries = ({
     .map((e) => (e < budget ? budget : budget * (1 + contingency / 100)))
     .map((v) => round(v, 2));
 
-  console.log('budgetArray', budgetArray);
-
   const expensesEntries = expenses.length;
   const isOverBudget = accExpensesArray[expensesEntries - 1] > budget;
   return { budgetArray, accExpensesArray, isOverBudget };

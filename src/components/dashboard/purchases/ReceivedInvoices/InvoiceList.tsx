@@ -2,6 +2,7 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
+import Label from '@src/components/shared/label';
 import { useListProjects } from '@src/hooks/cache/projects';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
@@ -17,6 +18,7 @@ import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
+import UpdatePurchasesProject from '../UpdatePurchasesProject';
 import UpdateInvoice from './UpdateInvoice';
 
 const InvoiceList: FC = () => {
@@ -25,6 +27,8 @@ const InvoiceList: FC = () => {
   const [invoiceToDelete, setInvoiceToDelete] =
     useState<ReceivedInvoice | null>(null);
   const [invoiceToUpdate, setInvoiceToUpdate] =
+    useState<ReceivedInvoice | null>(null);
+  const [invoiceToAttach, setInvoiceToAttach] =
     useState<ReceivedInvoice | null>(null);
 
   const purchases = useCollectionSnapshot<Purchase>({
@@ -47,7 +51,7 @@ const InvoiceList: FC = () => {
     {
       field: 'issuerId',
       headerName: 'RUC',
-      width: 180,
+      width: 150,
     },
     {
       field: 'sequentialNumber',
@@ -64,6 +68,7 @@ const InvoiceList: FC = () => {
     {
       field: 'project',
       headerName: 'Proyecto',
+      width: 90,
       sortable: false,
       type: 'actions',
       getActions: ({ row }) => {
@@ -72,17 +77,17 @@ const InvoiceList: FC = () => {
             ? projectsList.find((p) => p.id === row.ref?.projectId)?.number
             : null;
 
-        if (!projectNumber) return [];
+        if (!projectNumber) return [<Label>N/A</Label>];
 
         return [
           <Link
             target="_blank"
             href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
           >
-            <Button variant="soft">
+            <Label variant="soft" color="info" sx={{ cursor: 'pointer' }}>
               {projectNumber}
               <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
-            </Button>
+            </Label>
           </Link>,
         ];
       },
@@ -110,21 +115,36 @@ const InvoiceList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: ({ row }) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setInvoiceToUpdate(row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-          disabled={row.paid}
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setInvoiceToDelete(row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
+      getActions: ({ row }) => {
+        const baseActions = [
+          <GridActionsCellItem
+            label="Modificar"
+            onClick={() => setInvoiceToUpdate(row)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+            disabled={row.paid}
+          />,
+          <GridActionsCellItem
+            label="Borrar"
+            onClick={() => setInvoiceToDelete(row)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+          />,
+        ];
+
+        if (row.paid) {
+          baseActions.push(
+            <GridActionsCellItem
+              label="Modificar proyecto"
+              onClick={() => setInvoiceToAttach(row)}
+              icon={<Iconify icon="pajamas:doc-symlink" />}
+              showInMenu
+            />
+          );
+        }
+
+        return baseActions;
+      },
     },
   ];
 
@@ -169,6 +189,12 @@ const InvoiceList: FC = () => {
         initialValues={invoiceToUpdate}
         onClose={() => setInvoiceToUpdate(null)}
         key={invoiceToUpdate?.id}
+      />
+
+      <UpdatePurchasesProject
+        open={!!invoiceToAttach}
+        purchase={invoiceToAttach}
+        onClose={() => setInvoiceToAttach(null)}
       />
 
       <ConfirmDialog
