@@ -11,9 +11,9 @@ interface Props {
 export const ProjectSelector: FC<Props> = ({ disabled }) => {
   const { data: projects, isLoading: isLoadingProjects } = useListProjects();
 
-  const filteredProjects = projects
+  const activeProjects = projects
     .filter((project) => project.status === 'active')
-    .sort((a, b) => a.number ?? 0 - b.number ?? 0);
+    .sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
 
   return (
     <FormikTextField
@@ -28,7 +28,7 @@ export const ProjectSelector: FC<Props> = ({ disabled }) => {
         Ninguno
       </MenuItem>
       {!isLoadingProjects &&
-        filteredProjects.map((project) => (
+        activeProjects.map((project) => (
           <MenuItem key={project.id} value={project.id}>
             {getProjectName(project)}
           </MenuItem>
