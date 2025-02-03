@@ -17,10 +17,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
   const { project } = useProjectContext();
   const theme = useTheme();
 
-  // TODO: Enable add project to issued invoices directly
-  // TODO: Enable add project to received invoices directly
   // TODO: Enable interactive form to update project details values
-
   // TODO: Always must be a point 0 at beginning
   // TODO: Draw between the starting date and the estimates/finished date always
 
@@ -60,7 +57,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       type: 'line',
     },
     stroke: {
-      curve: 'straight',
+      curve: ['stepline', 'stepline'],
       width: [5, 2],
     },
     plotOptions: {
@@ -70,7 +67,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       type: ['gradient', 'gradient', 'solid'],
     },
     colors: [
-      isOverBudget ? theme.palette.error.light : theme.palette.success.main,
+      isOverBudget ? theme.palette.error.main : theme.palette.success.main,
       theme.palette.secondary.main,
       theme.palette.secondary.light,
     ],
@@ -86,8 +83,7 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
       shared: true,
       intersect: false,
       y: {
-        // TODO: Fix 0 value
-        formatter: (value: number) => (value ? `$ ${round(value, 2)}` : ''),
+        formatter: (value: number) => (value ? `$${round(value, 2)}` : '$0'),
       },
     },
   });

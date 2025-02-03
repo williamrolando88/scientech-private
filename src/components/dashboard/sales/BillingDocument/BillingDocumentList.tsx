@@ -1,12 +1,6 @@
-import { Button, CardContent, IconButton } from '@mui/material';
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridEventListener,
-} from '@mui/x-data-grid';
+import { Button, CardContent } from '@mui/material';
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
-import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
@@ -17,10 +11,11 @@ import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
 import ProjectTableAction from '../../purchases/ProjectTableAction';
 import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
-import AddWithholding from '../Withholding/AddWithholding';
 import OpenWithholding from '../Withholding/OpenWithholding';
+import { BillingDocumentActions } from './BillingDocumentActions';
 import SalesAccountCheck from './SalesAccountCheck';
 import UpdateBillingDocument from './UpdateBillingDocument';
+import WithholdingAction from './WithholdingAction';
 
 const BillingDocumentList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -91,42 +86,12 @@ const BillingDocumentList: FC = () => {
       type: 'actions',
       width: 10,
       sortable: false,
-      getActions: ({ row }) => {
-        if (row.withholding) {
-          const hasErrors =
-            Number.isNaN(row.withholding.IVAWithholding) ||
-            Number.isNaN(row.withholding.IncomeWithholding);
-
-          return [
-            <IconButton onClick={() => setWithholdingToOpen(row)}>
-              <Iconify
-                icon={
-                  hasErrors
-                    ? 'pajamas:review-warning'
-                    : 'pajamas:review-checkmark'
-                }
-                sx={{
-                  color: (theme) =>
-                    Number.isNaN(row.paymentDue)
-                      ? theme.palette.error.main
-                      : theme.palette.success.main,
-                }}
-              />
-            </IconButton>,
-          ];
-        }
-
-        if (row.paymentCollection && !row.withholding) {
-          return [
-            <Iconify
-              icon="pajamas:review-list"
-              sx={{ color: (theme) => theme.palette.grey[400] }}
-            />,
-          ];
-        }
-
-        return [<AddWithholding sale={row} />];
-      },
+      getActions: ({ row }) => [
+        <WithholdingAction
+          row={row}
+          onWithholdingClick={setWithholdingToOpen}
+        />,
+      ],
     },
     {
       field: 'salesAccount',
@@ -150,50 +115,14 @@ const BillingDocumentList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: ({ row }) => {
-        const defaultOptions = [
-          <GridActionsCellItem
-            label="Modificar factura"
-            onClick={() => setSaleToUpdate(row)}
-            icon={<Iconify icon="pajamas:doc-changes" />}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            label="Borrar factura"
-            onClick={() => setSaleToDelete(row)}
-            icon={<Iconify icon="pajamas:remove" />}
-            showInMenu
-          />,
-        ];
-
-        if (row.withholding) {
-          const withholdingOptions = [
-            <GridActionsCellItem
-              label={
-                row.withholding.unlocked
-                  ? 'Editar retención'
-                  : 'Visualizar retención'
-              }
-              onClick={() => setWithholdingToOpen(row)}
-              icon={<Iconify icon="pajamas:review-list" />}
-              sx={{
-                borderTop: '1px solid #ddd',
-              }}
-              showInMenu
-            />,
-            <GridActionsCellItem
-              label="Borrar retención"
-              onClick={() => setWithholdingToDelete(row)}
-              icon={<Iconify icon="pajamas:remove" />}
-              showInMenu
-            />,
-          ];
-
-          defaultOptions.push(...withholdingOptions);
-        }
-
-        return defaultOptions;
-      },
+      getActions: ({ row }) =>
+        BillingDocumentActions({
+          row,
+          onSaleDelete: setSaleToDelete,
+          onSaleUpdate: setSaleToUpdate,
+          onWithholdingDelete: setWithholdingToDelete,
+          onWithholdingOpen: setWithholdingToOpen,
+        }),
     },
   ];
 
@@ -209,7 +138,7 @@ const BillingDocumentList: FC = () => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })
       .catch((error) => {
-        enqueueSnackbar(`No se pudo eliminar el documento`, {
+        enqueueSnackbar(`No se pudo eliminar el documento: ${error.message}`, {
           variant: 'error',
         });
         console.error(error);
@@ -227,7 +156,7 @@ const BillingDocumentList: FC = () => {
         enqueueSnackbar('Retencion eliminada exitosamente');
       })
       .catch((error) => {
-        enqueueSnackbar(`No se pudo eliminar el documento`, {
+        enqueueSnackbar(`No se pudo eliminar el documento: ${error.message}`, {
           variant: 'error',
         });
         console.error(error);
@@ -270,7 +199,11 @@ const BillingDocumentList: FC = () => {
         content="Esta operación borrará la factura seleccionada y todos los documentos dependientes existentes (retenciones, cobros), así como sus asientos contables. Deseas continuar?"
         maxWidth="md"
         action={
-          <Button onClick={handleDeleteInvoice} variant="contained">
+          <Button
+            onClick={handleDeleteInvoice}
+            variant="contained"
+            color="error"
+          >
             Borrar
           </Button>
         }
@@ -280,7 +213,11 @@ const BillingDocumentList: FC = () => {
         open={!!withholdingToDelete}
         title="Borrar retención"
         action={
-          <Button onClick={handleDeleteWithholding} variant="contained">
+          <Button
+            onClick={handleDeleteWithholding}
+            variant="contained"
+            color="error"
+          >
             Borrar
           </Button>
         }
