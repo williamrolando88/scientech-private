@@ -2,11 +2,8 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
-import Label from '@src/components/shared/label';
-import { useListProjects } from '@src/hooks/cache/projects';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
-import { PATH_DASHBOARD } from '@src/routes/paths';
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import {
   purchaseConverter,
@@ -14,15 +11,14 @@ import {
 } from '@src/services/firestore/purchases';
 import { CustomsPayment, Purchase } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
-import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
+import ProjectTableAction from '../ProjectTableAction';
 import UpdatePurchasesProject from '../UpdatePurchasesProject';
 import UpdateCustomsPayment from './UpdateCustomsPayment';
 
 const CustomsPaymentsList: FC = () => {
-  const { data: projectsList } = useListProjects();
   const { enqueueSnackbar } = useSnackbar();
   const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
     null
@@ -70,26 +66,7 @@ const CustomsPaymentsList: FC = () => {
       width: 90,
       sortable: false,
       type: 'actions',
-      getActions: ({ row }) => {
-        const projectNumber =
-          row.ref?.projectId && projectsList
-            ? projectsList.find((p) => p.id === row.ref?.projectId)?.number
-            : null;
-
-        if (!projectNumber) return [<Label>N/A</Label>];
-
-        return [
-          <Link
-            target="_blank"
-            href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
-          >
-            <Label variant="soft" color="info" sx={{ cursor: 'pointer' }}>
-              {projectNumber}
-              <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
-            </Label>
-          </Link>,
-        ];
-      },
+      getActions: ({ row }) => [<ProjectTableAction row={row} />],
     },
     {
       field: 'total',
