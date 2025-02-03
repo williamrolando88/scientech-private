@@ -2,8 +2,11 @@ import { Button, CardContent } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
+import Label from '@src/components/shared/label';
+import { useListProjects } from '@src/hooks/cache/projects';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
+import { PATH_DASHBOARD } from '@src/routes/paths';
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import {
   purchaseConverter,
@@ -11,17 +14,23 @@ import {
 } from '@src/services/firestore/purchases';
 import { CustomsPayment, Purchase } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
+import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
+import UpdatePurchasesProject from '../UpdatePurchasesProject';
 import UpdateCustomsPayment from './UpdateCustomsPayment';
 
 const CustomsPaymentsList: FC = () => {
+  const { data: projectsList } = useListProjects();
   const { enqueueSnackbar } = useSnackbar();
   const [expenseToDelete, setExpenseToDelete] = useState<CustomsPayment | null>(
     null
   );
   const [expenseToUpdate, setExpenseToUpdate] = useState<CustomsPayment | null>(
+    null
+  );
+  const [expenseToAttach, setExpenseToAttach] = useState<CustomsPayment | null>(
     null
   );
 
@@ -39,36 +48,54 @@ const CustomsPaymentsList: FC = () => {
       field: 'issueDate',
       headerName: 'Fecha de Emisión',
       type: 'date',
-      flex: 1,
+      width: 130,
       valueFormatter: (params) => fDate(params.value),
     },
     {
       field: 'customsPaymentNumber',
       headerName: 'Nro. Liquidación',
       type: 'number',
-      flex: 1,
+      width: 130,
       sortable: false,
     },
     {
       field: 'description',
-      flex: 6,
+      flex: 1,
       headerName: 'Descripción',
       sortable: false,
     },
     {
-      field: 'IVA',
-      headerName: 'IVA',
-      type: 'number',
-      flex: 1,
+      field: 'project',
+      headerName: 'Proyecto',
+      width: 90,
       sortable: false,
-      valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
+      type: 'actions',
+      getActions: ({ row }) => {
+        const projectNumber =
+          row.ref?.projectId && projectsList
+            ? projectsList.find((p) => p.id === row.ref?.projectId)?.number
+            : null;
+
+        if (!projectNumber) return [<Label>N/A</Label>];
+
+        return [
+          <Link
+            target="_blank"
+            href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
+          >
+            <Label variant="soft" color="info" sx={{ cursor: 'pointer' }}>
+              {projectNumber}
+              <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
+            </Label>
+          </Link>,
+        ];
+      },
     },
     {
       field: 'total',
       headerName: 'Total',
       type: 'number',
-      flex: 1,
+      width: 100,
       sortable: false,
       valueFormatter: ({ value }) =>
         value ? `$${Number(value).toFixed(2)}` : '-',
@@ -88,20 +115,36 @@ const CustomsPaymentsList: FC = () => {
       field: 'actions',
       type: 'actions',
       width: 50,
-      getActions: (params) => [
-        <GridActionsCellItem
-          label="Modificar"
-          onClick={() => setExpenseToUpdate(params.row)}
-          icon={<Iconify icon="pajamas:doc-changes" />}
-          showInMenu
-        />,
-        <GridActionsCellItem
-          label="Borrar"
-          onClick={() => setExpenseToDelete(params.row)}
-          icon={<Iconify icon="pajamas:remove" />}
-          showInMenu
-        />,
-      ],
+      getActions: ({ row }) => {
+        const baseActions = [
+          <GridActionsCellItem
+            label="Modificar"
+            onClick={() => setExpenseToUpdate(row)}
+            icon={<Iconify icon="pajamas:doc-changes" />}
+            showInMenu
+            disabled={row.paid}
+          />,
+          <GridActionsCellItem
+            label="Borrar"
+            onClick={() => setExpenseToDelete(row)}
+            icon={<Iconify icon="pajamas:remove" />}
+            showInMenu
+          />,
+        ];
+
+        if (row.paid) {
+          baseActions.push(
+            <GridActionsCellItem
+              label="Modificar proyecto"
+              onClick={() => setExpenseToAttach(row)}
+              icon={<Iconify icon="pajamas:doc-symlink" />}
+              showInMenu
+            />
+          );
+        }
+
+        return baseActions;
+      },
     },
   ];
 
@@ -148,6 +191,12 @@ const CustomsPaymentsList: FC = () => {
         onClose={() => setExpenseToUpdate(null)}
         initialValues={expenseToUpdate}
         key={expenseToUpdate?.id}
+      />
+
+      <UpdatePurchasesProject
+        open={!!expenseToAttach}
+        purchase={expenseToAttach}
+        onClose={() => setExpenseToAttach(null)}
       />
 
       <ConfirmDialog

@@ -43,7 +43,7 @@ const UpdateInvoice: FC<UpdateInvoiceProps> = ({
   if (!initialValues) return null;
 
   const infoText = initialValues.paid
-    ? 'La factura ya fue pagada, unicamente puedes modificar los campos habilitados'
+    ? 'La factura ya fue pagada, unicamente puedes modificar los campos habilitados. Para poder modificarla, primero elimina el pago asociado'
     : 'Actualiza los datos de la factura recibida. Los campos marcados con * son obligatorios.';
 
   return (

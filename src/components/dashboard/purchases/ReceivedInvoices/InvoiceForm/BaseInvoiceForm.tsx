@@ -50,8 +50,6 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
   onSubmit,
   readOnly,
 }) => {
-  const isUpdating = Boolean(initialValues.id);
-
   const handleOnDropAccepted =
     (setValues: FormikHelpers<ReceivedInvoice>['setValues']) =>
     async (files: File[]) => {
@@ -263,7 +261,7 @@ const BaseInvoiceForm: FC<InvoiceFormProps> = ({
                 type="submit"
                 loading={isSubmitting}
               >
-                {isUpdating ? 'Actualizar' : 'Guardar'}
+                Guardar
               </LoadingButton>
             </Stack>
           </DialogActions>

@@ -41,7 +41,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
     onSubmit={onSubmit}
     validationSchema={toFormikValidationSchema(CustomsPaymentSchema)}
   >
-    {({ isSubmitting }) => (
+    {({ isSubmitting, values }) => (
       <Form>
         <Stack component={DialogContent} gap={2}>
           <Alert severity="info">{infoText}</Alert>
@@ -54,6 +54,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="customsPaymentNumber"
                 label="No. de liquidación"
                 required
+                disabled={values.paid}
               />
             </Grid>
 
@@ -66,6 +67,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="issueDate"
                 label="Fecha de Emisión"
                 required
+                disabled={values.paid}
               />
             </Grid>
 
@@ -77,6 +79,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 fullWidth
                 name="description"
                 label="Descripción"
+                disabled={values.paid}
               />
             </Grid>
 
@@ -88,6 +91,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 fullWidth
                 name="adValoremTariff"
                 label="Arancel Ad Valorem"
+                disabled={values.paid}
               />
             </Grid>
 
@@ -99,6 +103,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 fullWidth
                 name="specificTariff"
                 label="Arancel Específico"
+                disabled={values.paid}
               />
             </Grid>
 
@@ -111,6 +116,7 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="FODINFA"
                 label="FODINFA"
                 required
+                disabled={values.paid}
               />
             </Grid>
 
@@ -123,11 +129,12 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
                 name="IVA"
                 label="IVA"
                 required
+                disabled={values.paid}
               />
             </Grid>
 
             <Grid item xs={7}>
-              <ProjectSelector />
+              <ProjectSelector disabled={values.paid} />
             </Grid>
 
             <Grid item xs={2} />
@@ -140,16 +147,18 @@ const BaseCustomsPaymentForm: FC<BaseCustomsPaymentFormProps> = ({
 
         <DialogActions>
           <Button onClick={onClose} disabled={isSubmitting}>
-            Cancelar
+            {values.paid ? 'Cerrar' : 'Cancelar'}
           </Button>
 
-          <LoadingButton
-            variant="contained"
-            type="submit"
-            loading={isSubmitting}
-          >
-            Guardar
-          </LoadingButton>
+          {!values.paid && (
+            <LoadingButton
+              variant="contained"
+              type="submit"
+              loading={isSubmitting}
+            >
+              Guardar
+            </LoadingButton>
+          )}
         </DialogActions>
       </Form>
     )}

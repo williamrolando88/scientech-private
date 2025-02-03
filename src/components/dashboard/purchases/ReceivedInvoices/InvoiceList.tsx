@@ -24,11 +24,11 @@ import UpdateInvoice from './UpdateInvoice';
 const InvoiceList: FC = () => {
   const { data: projectsList } = useListProjects();
   const { enqueueSnackbar } = useSnackbar();
-  const [invoiceToDelete, setInvoiceToDelete] =
+  const [expenseToDelete, setExpenseToDelete] =
     useState<ReceivedInvoice | null>(null);
-  const [invoiceToUpdate, setInvoiceToUpdate] =
+  const [expenseToUpdate, setExpenseToUpdate] =
     useState<ReceivedInvoice | null>(null);
-  const [invoiceToAttach, setInvoiceToAttach] =
+  const [expenseToAttach, setExpenseToAttach] =
     useState<ReceivedInvoice | null>(null);
 
   const purchases = useCollectionSnapshot<Purchase>({
@@ -47,11 +47,6 @@ const InvoiceList: FC = () => {
       type: 'date',
       width: 130,
       valueFormatter: (params) => fDate(params.value),
-    },
-    {
-      field: 'issuerId',
-      headerName: 'RUC',
-      width: 150,
     },
     {
       field: 'sequentialNumber',
@@ -96,9 +91,10 @@ const InvoiceList: FC = () => {
       field: 'total',
       headerName: 'Total',
       type: 'number',
+      width: 100,
       sortable: false,
       valueFormatter: ({ value }) =>
-        value ? `$${Number(value).toFixed(2)}` : '-',
+        value ? `$ ${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'paid',
@@ -119,14 +115,14 @@ const InvoiceList: FC = () => {
         const baseActions = [
           <GridActionsCellItem
             label="Modificar"
-            onClick={() => setInvoiceToUpdate(row)}
+            onClick={() => setExpenseToUpdate(row)}
             icon={<Iconify icon="pajamas:doc-changes" />}
             showInMenu
             disabled={row.paid}
           />,
           <GridActionsCellItem
             label="Borrar"
-            onClick={() => setInvoiceToDelete(row)}
+            onClick={() => setExpenseToDelete(row)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
@@ -136,7 +132,7 @@ const InvoiceList: FC = () => {
           baseActions.push(
             <GridActionsCellItem
               label="Modificar proyecto"
-              onClick={() => setInvoiceToAttach(row)}
+              onClick={() => setExpenseToAttach(row)}
               icon={<Iconify icon="pajamas:doc-symlink" />}
               showInMenu
             />
@@ -149,9 +145,9 @@ const InvoiceList: FC = () => {
   ];
 
   const handleDeleteExpense = () => {
-    if (!invoiceToDelete?.id) return;
+    if (!expenseToDelete?.id) return;
 
-    PurchasesFirestore.remove({ id: invoiceToDelete.id })
+    PurchasesFirestore.remove({ id: expenseToDelete.id })
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })
@@ -161,7 +157,7 @@ const InvoiceList: FC = () => {
         });
       })
       .finally(() => {
-        setInvoiceToDelete(null);
+        setExpenseToDelete(null);
       });
   };
 
@@ -180,26 +176,26 @@ const InvoiceList: FC = () => {
           disableRowSelectionOnClick
           initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
           pageSizeOptions={[20, 50, 100]}
-          onRowClick={({ row }) => setInvoiceToUpdate(row)}
+          onRowClick={({ row }) => setExpenseToUpdate(row)}
         />
       </CardContent>
 
       <UpdateInvoice
-        open={!!invoiceToUpdate}
-        initialValues={invoiceToUpdate}
-        onClose={() => setInvoiceToUpdate(null)}
-        key={invoiceToUpdate?.id}
+        open={!!expenseToUpdate}
+        initialValues={expenseToUpdate}
+        onClose={() => setExpenseToUpdate(null)}
+        key={expenseToUpdate?.id}
       />
 
       <UpdatePurchasesProject
-        open={!!invoiceToAttach}
-        purchase={invoiceToAttach}
-        onClose={() => setInvoiceToAttach(null)}
+        open={!!expenseToAttach}
+        purchase={expenseToAttach}
+        onClose={() => setExpenseToAttach(null)}
       />
 
       <ConfirmDialog
-        onClose={() => setInvoiceToDelete(null)}
-        open={!!invoiceToDelete}
+        onClose={() => setExpenseToDelete(null)}
+        open={!!expenseToDelete}
         title="Borrar factura"
         action={
           <Button onClick={handleDeleteExpense} variant="contained">
