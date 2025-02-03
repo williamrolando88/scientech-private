@@ -8,11 +8,17 @@ import {
   ReceivedInvoice,
   SaleNote,
 } from '@src/types/purchases';
+import { BillingDocument } from '@src/types/sale';
 import Link from 'next/link';
 import { FC } from 'react';
 
 interface Props {
-  row: SaleNote | CustomsPayment | NonDeductible | ReceivedInvoice;
+  row:
+    | SaleNote
+    | CustomsPayment
+    | NonDeductible
+    | ReceivedInvoice
+    | BillingDocument;
 }
 
 const ProjectTableAction: FC<Props> = ({ row }) => {
@@ -23,13 +29,10 @@ const ProjectTableAction: FC<Props> = ({ row }) => {
   if (!project) return <Label>N/A</Label>;
 
   return (
-    <Link
-      target="_blank"
-      href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}
-    >
+    <Link href={PATH_DASHBOARD.projects.open(row.ref?.projectId ?? '')}>
       <Label variant="soft" color="info" sx={{ cursor: 'pointer' }}>
         {project.number ?? '--'}
-        <Iconify icon="pajamas:external-link" sx={{ ml: 1 }} width={15} />
+        <Iconify icon="pajamas:link" sx={{ ml: 1 }} width={15} />
       </Label>
     </Link>
   );

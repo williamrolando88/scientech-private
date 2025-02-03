@@ -17,7 +17,7 @@ export const BillingDocumentSchema = z.object({
   IVA: z.number().positive(),
   taxedSubtotal: z.number().positive(),
   total: z.number().positive(),
-  ref: DocumentRefSchema.optional(),
+  ref: DocumentRefSchema,
   saleAccount: z.string(),
   paid: z.boolean().default(false),
 });
@@ -33,7 +33,7 @@ export const WithholdingSchema = z.object({
   IVAWithholding: z.number().nonnegative().optional(),
   IncomeWithholding: z.number().nonnegative().optional(),
   total: z.number().positive(),
-  ref: DocumentRefSchema.optional(),
+  ref: DocumentRefSchema,
   unlocked: z.boolean().default(false),
 });
 

@@ -8,7 +8,6 @@ import {
 import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
-import { DEFAULT_ACCOUNT } from '@src/lib/constants/settings';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
 import { saleConverter, SalesFirestore } from '@src/services/firestore/sales';
@@ -16,17 +15,19 @@ import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useState } from 'react';
+import ProjectTableAction from '../../purchases/ProjectTableAction';
 import PaymentCollectionButton from '../PaymentCollection/PaymentCollectionButton';
 import AddWithholding from '../Withholding/AddWithholding';
 import OpenWithholding from '../Withholding/OpenWithholding';
+import SalesAccountCheck from './SalesAccountCheck';
 import UpdateBillingDocument from './UpdateBillingDocument';
 
 const BillingDocumentList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [sale2Update, setSale2Update] = useState<Sale | null>(null);
-  const [sale2Delete, setSale2Delete] = useState<Sale | null>(null);
-  const [withholding2Open, setWithholding2Open] = useState<Sale | null>(null);
-  const [withholding2Delete, setWithholding2Delete] = useState<Sale | null>(
+  const [saleToUpdate, setSaleToUpdate] = useState<Sale | null>(null);
+  const [saleToDelete, setSaleToDelete] = useState<Sale | null>(null);
+  const [withholdingToOpen, setWithholdingToOpen] = useState<Sale | null>(null);
+  const [withholdingToDelete, setWithholdingToDelete] = useState<Sale | null>(
     null
   );
 
@@ -97,7 +98,7 @@ const BillingDocumentList: FC = () => {
             Number.isNaN(row.withholding.IncomeWithholding);
 
           return [
-            <IconButton onClick={() => setWithholding2Open(row)}>
+            <IconButton onClick={() => setWithholdingToOpen(row)}>
               <Iconify
                 icon={
                   hasErrors
@@ -133,39 +134,17 @@ const BillingDocumentList: FC = () => {
       type: 'actions',
       width: 10,
       sortable: false,
-      getActions: ({ row }) => {
-        const isError =
-          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT &&
-          (row.paymentCollection || row.withholding);
-
-        if (isError) {
-          return [
-            <Iconify
-              icon="pajamas:issue-type-feature-flag"
-              sx={{ color: (theme) => theme.palette.error.main }}
-            />,
-          ];
-        }
-
-        const isWarning =
-          row.billingDocument.saleAccount === DEFAULT_ACCOUNT.INCOME_ROOT;
-
-        if (isWarning) {
-          return [
-            <Iconify
-              icon="pajamas:issue-type-feature-flag"
-              sx={{ color: (theme) => theme.palette.warning.main }}
-            />,
-          ];
-        }
-
-        return [
-          <Iconify
-            icon="pajamas:check-xs"
-            sx={{ color: (theme) => theme.palette.success.main }}
-          />,
-        ];
-      },
+      getActions: ({ row }) => [<SalesAccountCheck row={row} />],
+    },
+    {
+      field: 'project',
+      headerName: 'Proyecto',
+      width: 90,
+      sortable: false,
+      type: 'actions',
+      getActions: ({ row }) => [
+        <ProjectTableAction row={row.billingDocument} />,
+      ],
     },
     {
       field: 'actions',
@@ -175,13 +154,13 @@ const BillingDocumentList: FC = () => {
         const defaultOptions = [
           <GridActionsCellItem
             label="Modificar factura"
-            onClick={() => setSale2Update(row)}
+            onClick={() => setSaleToUpdate(row)}
             icon={<Iconify icon="pajamas:doc-changes" />}
             showInMenu
           />,
           <GridActionsCellItem
             label="Borrar factura"
-            onClick={() => setSale2Delete(row)}
+            onClick={() => setSaleToDelete(row)}
             icon={<Iconify icon="pajamas:remove" />}
             showInMenu
           />,
@@ -195,7 +174,7 @@ const BillingDocumentList: FC = () => {
                   ? 'Editar retención'
                   : 'Visualizar retención'
               }
-              onClick={() => setWithholding2Open(row)}
+              onClick={() => setWithholdingToOpen(row)}
               icon={<Iconify icon="pajamas:review-list" />}
               sx={{
                 borderTop: '1px solid #ddd',
@@ -204,7 +183,7 @@ const BillingDocumentList: FC = () => {
             />,
             <GridActionsCellItem
               label="Borrar retención"
-              onClick={() => setWithholding2Delete(row)}
+              onClick={() => setWithholdingToDelete(row)}
               icon={<Iconify icon="pajamas:remove" />}
               showInMenu
             />,
@@ -219,13 +198,13 @@ const BillingDocumentList: FC = () => {
   ];
 
   const onRowClick: GridEventListener<'rowClick'> = ({ row }) => {
-    setSale2Update(row);
+    setSaleToUpdate(row);
   };
 
   const handleDeleteInvoice = async () => {
-    if (!sale2Delete) return;
+    if (!saleToDelete) return;
 
-    SalesFirestore.remove(sale2Delete)
+    SalesFirestore.remove(saleToDelete)
       .then(() => {
         enqueueSnackbar('Factura eliminada exitosamente');
       })
@@ -236,14 +215,14 @@ const BillingDocumentList: FC = () => {
         console.error(error);
       })
       .finally(() => {
-        setSale2Delete(null);
+        setSaleToDelete(null);
       });
   };
 
   const handleDeleteWithholding = async () => {
-    if (!withholding2Delete) return;
+    if (!withholdingToDelete) return;
 
-    SalesFirestore.deleteWithhold(withholding2Delete)
+    SalesFirestore.deleteWithhold(withholdingToDelete)
       .then(() => {
         enqueueSnackbar('Retencion eliminada exitosamente');
       })
@@ -254,7 +233,7 @@ const BillingDocumentList: FC = () => {
         console.error(error);
       })
       .finally(() => {
-        setWithholding2Delete(null);
+        setWithholdingToDelete(null);
       });
   };
 
@@ -273,20 +252,20 @@ const BillingDocumentList: FC = () => {
       </CardContent>
 
       <UpdateBillingDocument
-        open={Boolean(sale2Update)}
-        sale={sale2Update}
-        onClose={() => setSale2Update(null)}
+        open={Boolean(saleToUpdate)}
+        sale={saleToUpdate}
+        onClose={() => setSaleToUpdate(null)}
       />
 
       <OpenWithholding
-        open={Boolean(withholding2Open)}
-        sale={withholding2Open}
-        onClose={() => setWithholding2Open(null)}
+        open={Boolean(withholdingToOpen)}
+        sale={withholdingToOpen}
+        onClose={() => setWithholdingToOpen(null)}
       />
 
       <ConfirmDialog
-        onClose={() => setSale2Delete(null)}
-        open={!!sale2Delete}
+        onClose={() => setSaleToDelete(null)}
+        open={!!saleToDelete}
         title="Borrar factura"
         content="Esta operación borrará la factura seleccionada y todos los documentos dependientes existentes (retenciones, cobros), así como sus asientos contables. Deseas continuar?"
         maxWidth="md"
@@ -297,8 +276,8 @@ const BillingDocumentList: FC = () => {
         }
       />
       <ConfirmDialog
-        onClose={() => setWithholding2Delete(null)}
-        open={!!withholding2Delete}
+        onClose={() => setWithholdingToDelete(null)}
+        open={!!withholdingToDelete}
         title="Borrar retención"
         action={
           <Button onClick={handleDeleteWithholding} variant="contained">

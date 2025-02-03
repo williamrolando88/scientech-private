@@ -71,7 +71,7 @@ const InvoiceList: FC = () => {
       width: 100,
       sortable: false,
       valueFormatter: ({ value }) =>
-        value ? `$ ${Number(value).toFixed(2)}` : '-',
+        value ? `$${Number(value).toFixed(2)}` : '-',
     },
     {
       field: 'paid',

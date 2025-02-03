@@ -10,8 +10,8 @@ Page.getLayout = (page: React.ReactElement) => (
 export default function Page() {
   return (
     <DashboardTemplate
-      documentTitle="Facturas Recibidas"
-      heading="Facturas Recibidas"
+      documentTitle="Facturas Emitidas"
+      heading="Facturas Emitidas"
       action={<AddSalesDocument />}
     >
       <BillingDocumentList />
