@@ -13,6 +13,7 @@ interface AccountCategorySelectorProps {
   size?: 'small' | 'medium';
   required?: boolean;
   disabled?: boolean;
+  excludeCategories?: boolean;
 }
 
 export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
@@ -23,6 +24,7 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
   size = 'medium',
   required = false,
   disabled = false,
+  excludeCategories = false,
 }) => {
   const { data: accountCategories } = useListAccountCategories();
   const [{ value }, , { setValue }] = useField(name);
@@ -31,6 +33,11 @@ export const AccountCategorySelector: FC<AccountCategorySelectorProps> = ({
     .filter(
       (category) =>
         !selectableCategories.every((type) => !category.id.startsWith(type))
+    )
+    .filter((category) =>
+      excludeCategories
+        ? selectableCategories.every((root) => root !== category.id)
+        : true
     )
     .sort((a, b) => a.id.localeCompare(b.id));
 

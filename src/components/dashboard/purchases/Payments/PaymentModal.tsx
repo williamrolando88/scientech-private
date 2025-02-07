@@ -81,9 +81,10 @@ const PaymentModal: FC<Props> = ({
                   size="small"
                   label="Cuenta de pago"
                   name="paymentAccount"
-                  selectableCategories={ALLOWED_ACCOUNTS.INVOICE.PAYMENT}
+                  selectableCategories={ALLOWED_ACCOUNTS.PAYMENTS}
                   initialValue={DEFAULT_ACCOUNT.INVOICE.PAYMENT}
                   disabled={lockEdit}
+                  excludeCategories
                   required
                 />
 
