@@ -23,8 +23,8 @@ const collectionMapping = {
   sale: {
     collection: COLLECTIONS.SALES,
     searchKeys: {
-      invoice: {
-        value: 'invoice',
+      billingDocument: {
+        value: 'billingDocument',
         label: 'Facturas',
         queryKey: 'billingDocument.issueDate',
       },

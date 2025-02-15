@@ -1,21 +1,19 @@
-import { Purchase } from '@src/types/purchases';
+import { Stack } from '@mui/material';
 import { Sale } from '@src/types/sale';
 import { FC, useState } from 'react';
+import FetchReportData from './FetchReportData';
 import ReportPreview from './ReportPreview';
-import FetchReportData from './ReportsForm';
 
 const Reports: FC = () => {
-  const [data, setData] = useState<Sale[] | Purchase[]>([]);
+  const [data, setData] = useState<Sale[]>([]);
   const [searchKey, setSearchKey] = useState('');
 
-  console.log('data', data);
-  console.log('searchKey', searchKey);
-
   return (
-    <>
+    <Stack gap={4}>
       <FetchReportData setData={setData} setSearchKey={setSearchKey} />
-      <ReportPreview />
-    </>
+
+      <ReportPreview data={data} searchKey={searchKey} />
+    </Stack>
   );
 };
 
