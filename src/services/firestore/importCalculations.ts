@@ -16,11 +16,9 @@ const list = async (): Promise<ImportCalculator[]> => {
   );
   const querySnapshot = await getDocs(q);
 
-  const calculations = [] as ImportCalculator[];
-  querySnapshot.forEach((document) =>
-    calculations.push(document.data() as ImportCalculator)
+  return querySnapshot.docs.map(
+    (document) => document.data() as ImportCalculator
   );
-  return calculations;
 };
 
 const open = async (id: string): Promise<ImportCalculator> => {

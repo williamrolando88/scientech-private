@@ -13,12 +13,7 @@ const list = async (): Promise<Client[]> => {
   const q = query(COLLECTIONS.CLIENTS, orderBy('name', 'desc'));
   const querySnapshot = await getDocs(q);
 
-  const clients: Client[] = [];
-  querySnapshot.forEach((document) => {
-    clients.push(document.data());
-  });
-
-  return clients;
+  return querySnapshot.docs.map((document) => document.data() as Client);
 };
 
 const upsert = async (client: Client): Promise<string> => {
