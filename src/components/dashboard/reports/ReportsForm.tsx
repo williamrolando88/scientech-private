@@ -4,48 +4,99 @@ import {
   FormikDatePicker,
   FormikTextField,
 } from '@src/components/shared/formik-components';
-import { Purchase } from '@src/types/purchases';
+import { useQueryCollection } from '@src/hooks/useQueryCollection';
+import { COLLECTIONS } from '@src/services/firestore/collections';
 import { Sale } from '@src/types/sale';
+import { where } from 'firebase/firestore';
 import { Form, Formik, FormikConfig } from 'formik';
+import { useSnackbar } from 'notistack';
 import { FC } from 'react';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 interface Props {
-  setData: (data: Sale[] | Purchase[]) => void;
+  setData: (data: Sale[]) => void;
+  setSearchKey: (value: string) => void;
 }
 
-const ValidationSchema = z.object({
-  collection: z.enum(['sale']),
-  data: z.string(),
-  startAt: z.coerce.date(),
-  endAt: z.coerce.date(),
-});
+const collectionMapping = {
+  sale: {
+    collection: COLLECTIONS.SALES,
+    searchKeys: {
+      invoice: {
+        value: 'invoice',
+        label: 'Facturas',
+        queryKey: 'billingDocument.issueDate',
+      },
+      withholding: {
+        value: 'withholding',
+        label: 'Retenciones',
+        queryKey: 'withholding.issueDate',
+      },
+    },
+  },
+} as const;
+
+const ValidationSchema = z
+  .object({
+    collection: z.enum(
+      Object.keys(collectionMapping) as [keyof typeof collectionMapping]
+    ),
+    searchKey: z.string(),
+    startAt: z.coerce.date(),
+    endAt: z.coerce.date(),
+  })
+  .refine(
+    (data) =>
+      new Date(data.startAt.toDateString()) <=
+      new Date(data.endAt.toDateString()),
+    {
+      message: 'La fecha de inicio no puede ser mayor a la fecha de fin',
+      path: ['startAt'],
+    }
+  );
 
 type FormType = z.infer<typeof ValidationSchema>;
 
 const initialValues: FormType = {
   collection: 'sale',
-  data: '',
+  searchKey: '',
   startAt: new Date(),
   endAt: new Date(),
 };
 
-const dataAvailable = {
-  sale: [
-    { value: 'invoices', label: 'Facturas' },
-    { value: 'withholding', label: 'Retenciones' },
-  ],
-};
+const FetchReportData: FC<Props> = ({ setData, setSearchKey }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const { queryCollection } = useQueryCollection();
 
-const FetchReportData: FC = () => {
   const handleSubmit: FormikConfig<FormType>['onSubmit'] = (
     values,
     { setSubmitting }
   ) => {
-    console.log('values', values);
+    const { collection, searchKeys } = collectionMapping[values.collection];
 
-    setSubmitting(false);
+    // @ts-expect-error - Assert to string literal
+    const { queryKey } = searchKeys[values.searchKey];
+    const additionalQueries = [
+      where(queryKey, '>=', new Date(values.startAt.setHours(0, 0, 0, 0))),
+      where(queryKey, '<=', new Date(values.endAt.setHours(23, 59, 59, 999))),
+    ];
+
+    queryCollection({
+      collection,
+      additionalQueries,
+    })
+      .then((data) => {
+        setData(data as Sale[]);
+        setSearchKey(values.searchKey);
+      })
+      .catch((e) => {
+        enqueueSnackbar(`Algo salió mal: ${e.message}`, { variant: 'error' });
+        console.error(e);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -74,7 +125,7 @@ const FetchReportData: FC = () => {
               <Grid item xs={1}>
                 <FormikTextField
                   select
-                  name="data"
+                  name="searchKey"
                   size="medium"
                   required
                   label="Información"
@@ -83,7 +134,9 @@ const FetchReportData: FC = () => {
                   <MenuItem sx={{ fontStyle: 'italic' }} key="void" value="">
                     Elige una opción
                   </MenuItem>
-                  {dataAvailable[values.collection].map((field) => (
+                  {Object.values(
+                    collectionMapping[values.collection].searchKeys
+                  ).map((field) => (
                     <MenuItem key={field.value} value={field.value}>
                       {field.label}
                     </MenuItem>
@@ -92,11 +145,11 @@ const FetchReportData: FC = () => {
               </Grid>
 
               <Grid item xs={1}>
-                <FormikDatePicker name="startAt" fullWidth />
+                <FormikDatePicker name="startAt" fullWidth label="Desde" />
               </Grid>
 
               <Grid item xs={1}>
-                <FormikDatePicker name="endAt" fullWidth />
+                <FormikDatePicker name="endAt" fullWidth label="Hasta" />
               </Grid>
             </Grid>
 

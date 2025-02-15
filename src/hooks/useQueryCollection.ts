@@ -1,55 +1,55 @@
 import {
   CollectionReference,
   getDocs,
-  orderBy,
-  OrderByDirection,
   query,
   QueryConstraint,
 } from 'firebase/firestore';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-interface useQueryCollectionParams<T> {
+interface useQueryCollectionParams {
   additionalQueries?: QueryConstraint[];
   collection: CollectionReference;
-  order?: { field: keyof T; direction?: OrderByDirection };
 }
 
-export const useQueryCollection = <T>({
-  collection,
-  additionalQueries,
-  order,
-}: useQueryCollectionParams<T>) => {
+export const useQueryCollection = <T>() => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const queryGenerator = useCallback(() => {
-    const queries = [];
-    if (additionalQueries) queries.push(...additionalQueries);
-    if (order) queries.push(orderBy(order.field as string, order.direction));
+  const queryGenerator = useCallback(
+    ({ additionalQueries, collection }: useQueryCollectionParams) => {
+      const queries = [];
 
-    return query(collection, ...queries);
-  }, [additionalQueries, collection, order]);
+      if (additionalQueries) {
+        queries.push(...additionalQueries);
+      }
 
-  const queryCollection = useCallback(() => {
-    setLoading(true);
-    const q = queryGenerator();
+      return query(collection, ...queries);
+    },
+    []
+  );
 
-    getDocs(q)
-      .then((snapshot) => {
-        const documents = snapshot.docs.map((document) => document.data() as T);
-        setData(documents);
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [queryGenerator]);
+  const queryCollection = useCallback(
+    async (params: useQueryCollectionParams) => {
+      setLoading(true);
+      const q = queryGenerator(params);
 
-  useEffect(() => {
-    queryCollection();
-  }, [queryCollection]);
+      return getDocs(q)
+        .then((snapshot) => {
+          const documents = snapshot.docs.map(
+            (document) => document.data() as T
+          );
+          setData(documents);
+          return documents;
+        })
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [queryGenerator]
+  );
 
-  return [data, loading];
+  return { data, loading, queryCollection };
 };

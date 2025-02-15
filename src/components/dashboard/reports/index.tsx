@@ -5,12 +5,15 @@ import ReportPreview from './ReportPreview';
 import FetchReportData from './ReportsForm';
 
 const Reports: FC = () => {
-  const [dat, setData] = useState<Sale[] | Purchase[]>([]);
-  console.log('first');
+  const [data, setData] = useState<Sale[] | Purchase[]>([]);
+  const [searchKey, setSearchKey] = useState('');
+
+  console.log('data', data);
+  console.log('searchKey', searchKey);
 
   return (
     <>
-      <FetchReportData />
+      <FetchReportData setData={setData} setSearchKey={setSearchKey} />
       <ReportPreview />
     </>
   );
