@@ -1,6 +1,5 @@
 import {
   CollectionReference,
-  FirestoreDataConverter,
   limit,
   onSnapshot,
   orderBy,
@@ -13,22 +12,17 @@ import { useCallback, useEffect, useState } from 'react';
 interface useCollectionSnapshotParams<T> {
   additionalQueries?: QueryConstraint[];
   collection: CollectionReference;
-  converter?: FirestoreDataConverter<any>;
   order?: { field: keyof T; direction?: OrderByDirection };
 }
 
 export const useCollectionSnapshot = <T>({
   collection,
-  converter,
   additionalQueries,
   order,
 }: useCollectionSnapshotParams<T>) => {
   const [data, setData] = useState<T[]>([]);
 
   const queryGenerator = useCallback(() => {
-    let collectionRef = collection;
-    if (converter) collectionRef = collectionRef.withConverter(converter);
-
     const queries = [];
 
     if (additionalQueries) queries.push(...additionalQueries);
@@ -39,8 +33,8 @@ export const useCollectionSnapshot = <T>({
       queries.push(limit(20));
     }
 
-    return query(collectionRef, ...queries);
-  }, [additionalQueries, collection, converter, order]);
+    return query(collection, ...queries);
+  }, [additionalQueries, collection, order]);
 
   const queryCollection = useCallback(
     () =>

@@ -1,31 +1,6 @@
 import { Purchase } from '@src/types/purchases';
-import {
-  deleteDoc,
-  doc,
-  DocumentData,
-  FirestoreDataConverter,
-  QueryDocumentSnapshot,
-  setDoc,
-} from 'firebase/firestore';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { COLLECTIONS } from './collections';
-
-export const purchaseConverter: FirestoreDataConverter<Purchase> = {
-  toFirestore: (purchase: Purchase) => purchase,
-  fromFirestore: (snapshot: QueryDocumentSnapshot<Purchase, DocumentData>) =>
-    ({
-      ...snapshot.data(),
-      purchaseData: {
-        ...snapshot.data().purchaseData,
-        issueDate: snapshot.get('purchaseData.issueDate').toDate(),
-      },
-      payment: snapshot.data().payment
-        ? {
-            ...snapshot.data().payment,
-            paymentDate: snapshot.get('payment.paymentDate').toDate(),
-          }
-        : null,
-    }) as Purchase,
-};
 
 const create = async (purchase: Partial<Purchase>) => {
   const docRef = doc(COLLECTIONS.PURCHASES);

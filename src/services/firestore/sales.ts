@@ -6,11 +6,8 @@ import { BillingDocument, Sale, Withholding } from '@src/types/sale';
 import {
   deleteDoc,
   doc,
-  DocumentData,
-  FirestoreDataConverter,
   getDocs,
   query,
-  QueryDocumentSnapshot,
   updateDoc,
   where,
   writeBatch,
@@ -18,30 +15,6 @@ import {
 import { round } from 'mathjs';
 import { COLLECTIONS } from './collections';
 import { subId } from './helpers/subIdGenerator';
-
-export const saleConverter: FirestoreDataConverter<Sale> = {
-  toFirestore: (sale: Sale) => sale,
-  fromFirestore: (snapshot: QueryDocumentSnapshot<Sale, DocumentData>) =>
-    ({
-      ...snapshot.data(),
-      billingDocument: {
-        ...snapshot.data().billingDocument,
-        issueDate: snapshot.get('billingDocument.issueDate').toDate(),
-      },
-      withholding: snapshot.data().withholding
-        ? {
-            ...snapshot.data().withholding,
-            issueDate: snapshot.get('withholding.issueDate').toDate(),
-          }
-        : null,
-      paymentCollection: snapshot.data().paymentCollection
-        ? {
-            ...snapshot.data().paymentCollection,
-            paymentDate: snapshot.get('paymentCollection.paymentDate').toDate(),
-          }
-        : null,
-    }) as Sale,
-};
 
 const bulkCreate = async (invoices: BillingDocument[]) => {
   const storedDocuments = await Promise.all(
@@ -133,7 +106,7 @@ const bulkWithhold = async (
       const { linkedInvoice } = withholding.normalizedData;
 
       const q = query(
-        COLLECTIONS.SALES.withConverter(saleConverter),
+        COLLECTIONS.SALES,
         where(
           'billingDocument.emissionPoint',
           '==',

@@ -33,7 +33,7 @@ export default function Page() {
         </ProjectProvider>
       ) : (
         <Typography variant="body1">
-          No hay informacion del proyecto solicitado
+          No hay información del proyecto solicitado
         </Typography>
       )}
     </DashboardTemplate>

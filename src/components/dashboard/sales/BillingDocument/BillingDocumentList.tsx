@@ -4,7 +4,7 @@ import ConfirmDialog from '@src/components/shared/confirm-dialog';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
-import { saleConverter, SalesFirestore } from '@src/services/firestore/sales';
+import { SalesFirestore } from '@src/services/firestore/sales';
 import { Sale } from '@src/types/sale';
 import { orderBy } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
@@ -28,7 +28,6 @@ const BillingDocumentList: FC = () => {
 
   const sales = useCollectionSnapshot<Sale>({
     collection: COLLECTIONS.SALES,
-    converter: saleConverter,
     additionalQueries: [
       orderBy('billingDocument.issueDate', 'desc'),
       orderBy('billingDocument.sequentialNumber', 'desc'),

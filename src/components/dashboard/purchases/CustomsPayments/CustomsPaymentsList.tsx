@@ -32,7 +32,6 @@ const CustomsPaymentsList: FC = () => {
 
   const purchases = useCollectionSnapshot<Purchase>({
     collection: COLLECTIONS.PURCHASES,
-    converter: purchaseConverter,
     additionalQueries: [
       where('type', '==', 'customsPayment'),
       orderBy('purchaseData.issueDate', 'desc'),
