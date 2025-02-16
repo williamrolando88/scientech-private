@@ -5,18 +5,15 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
-import {
-  purchaseConverter,
-  PurchasesFirestore,
-} from '@src/services/firestore/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { Purchase, SaleNote } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
 import ProjectTableAction from '../ProjectTableAction';
-import UpdateSaleNote from './UpdateSaleNote';
 import UpdatePurchasesProject from '../UpdatePurchasesProject';
+import UpdateSaleNote from './UpdateSaleNote';
 
 const SaleNoteList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +27,6 @@ const SaleNoteList: FC = () => {
       where('type', '==', 'saleNote'),
       orderBy('purchaseData.issueDate', 'desc'),
     ],
-    converter: purchaseConverter,
   });
 
   const columns: GridColDef<SaleNote>[] = [

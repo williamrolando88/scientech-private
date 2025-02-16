@@ -12,8 +12,8 @@ import {
   useMemo,
   useReducer,
 } from 'react';
-import { COLLECTIONS_ENUM } from 'src/lib/enums/collections';
 import { AUTH, DB } from 'src/settings/firebase';
+import { COLLECTIONS } from '../firestore/collections';
 import {
   ActionMapType,
   AuthStateType,
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       onAuthStateChanged(AUTH, async (user) => {
         if (user) {
-          const userRef = doc(DB, COLLECTIONS_ENUM.USERS, user.uid);
+          const userRef = doc(COLLECTIONS.USERS, user.uid);
           const docSnap = await getDoc(userRef);
           const profile = docSnap.data();
 

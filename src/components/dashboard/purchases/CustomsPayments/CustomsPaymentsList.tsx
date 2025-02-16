@@ -5,10 +5,7 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
-import {
-  purchaseConverter,
-  PurchasesFirestore,
-} from '@src/services/firestore/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { CustomsPayment, Purchase } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
@@ -32,7 +29,6 @@ const CustomsPaymentsList: FC = () => {
 
   const purchases = useCollectionSnapshot<Purchase>({
     collection: COLLECTIONS.PURCHASES,
-    converter: purchaseConverter,
     additionalQueries: [
       where('type', '==', 'customsPayment'),
       orderBy('purchaseData.issueDate', 'desc'),

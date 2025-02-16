@@ -5,18 +5,15 @@ import Iconify from '@src/components/shared/iconify';
 import { useCollectionSnapshot } from '@src/hooks/useCollectionSnapshot';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
-import {
-  purchaseConverter,
-  PurchasesFirestore,
-} from '@src/services/firestore/purchases';
+import { PurchasesFirestore } from '@src/services/firestore/purchases';
 import { NonDeductible, Purchase } from '@src/types/purchases';
 import { orderBy, where } from 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import { FC, useMemo, useState } from 'react';
 import PaymentButton from '../Payments/PaymentButton';
-import UpdateNonDeductible from './UpdateNonDeductible';
 import ProjectTableAction from '../ProjectTableAction';
 import UpdatePurchasesProject from '../UpdatePurchasesProject';
+import UpdateNonDeductible from './UpdateNonDeductible';
 
 const NonDeductibleList: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -32,7 +29,6 @@ const NonDeductibleList: FC = () => {
 
   const purchases = useCollectionSnapshot<Purchase>({
     collection: COLLECTIONS.PURCHASES,
-    converter: purchaseConverter,
     additionalQueries: [
       where('type', '==', 'nonDeductible'),
       orderBy('purchaseData.issueDate', 'desc'),

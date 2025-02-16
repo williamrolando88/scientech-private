@@ -7,7 +7,6 @@ import { getTransactionDataByDetailId } from '@src/lib/modules/dayBook';
 import { expandDoubleEntryAccounting } from '@src/lib/modules/doubleEntryAccounting';
 import { fDate } from '@src/lib/utils/formatTime';
 import { COLLECTIONS } from '@src/services/firestore/collections';
-import { doubleEntryAccountingConverter } from '@src/services/firestore/doubleEntryAccounting';
 import {
   DoubleEntryAccounting,
   ExpandedTransaction,
@@ -28,7 +27,6 @@ const DayBookIndex: FC = () => {
 
   const doubleEntryAccounting = useCollectionSnapshot<DoubleEntryAccounting>({
     collection: COLLECTIONS.DOUBLE_ENTRY_ACCOUNTING,
-    converter: doubleEntryAccountingConverter,
     order: { field: 'issueDate', direction: 'desc' },
   });
 

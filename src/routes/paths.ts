@@ -63,4 +63,7 @@ export const PATH_DASHBOARD = {
     invoice: path(ROOTS_DASHBOARD, 'document-parser', 'invoice'),
     holding: path(ROOTS_DASHBOARD, 'document-parser', 'holding'),
   },
+  reports: {
+    root: path(ROOTS_DASHBOARD, 'reports'),
+  },
 };

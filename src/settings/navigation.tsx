@@ -111,6 +111,11 @@ const navConfig = [
     subheader: 'Otros',
     items: [
       {
+        title: 'Generar reporte',
+        path: PATH_DASHBOARD.reports.root,
+        icon: ICONS.dashboard,
+      },
+      {
         title: 'Lector de documentos',
         path: PATH_DASHBOARD.documentParser.root,
         icon: ICONS.file,
