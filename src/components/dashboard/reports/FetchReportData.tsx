@@ -5,13 +5,17 @@ import {
   FormikTextField,
 } from '@src/components/shared/formik-components';
 import { useQueryCollection } from '@src/hooks/useQueryCollection';
-import { COLLECTIONS } from '@src/services/firestore/collections';
+import { REPORT_FORM_INITIAL_VALUE } from '@src/lib/constants/reports';
+import {
+  reportCollectionMapping,
+  ReportFormValidationSchema,
+} from '@src/lib/schemas/reports';
+import { ReportForm } from '@src/types/reports';
 import { Sale } from '@src/types/sale';
 import { where } from 'firebase/firestore';
 import { Form, Formik, FormikConfig } from 'formik';
 import { useSnackbar } from 'notistack';
 import { FC } from 'react';
-import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 interface Props {
@@ -19,61 +23,16 @@ interface Props {
   setSearchKey: (value: string) => void;
 }
 
-const collectionMapping = {
-  sale: {
-    collection: COLLECTIONS.SALES,
-    searchKeys: {
-      billingDocument: {
-        value: 'billingDocument',
-        label: 'Facturas',
-        queryKey: 'billingDocument.issueDate',
-      },
-      withholding: {
-        value: 'withholding',
-        label: 'Retenciones',
-        queryKey: 'withholding.issueDate',
-      },
-    },
-  },
-} as const;
-
-const ValidationSchema = z
-  .object({
-    collection: z.enum(
-      Object.keys(collectionMapping) as [keyof typeof collectionMapping]
-    ),
-    searchKey: z.string(),
-    startAt: z.coerce.date(),
-    endAt: z.coerce.date(),
-  })
-  .refine(
-    (data) =>
-      new Date(data.startAt.toDateString()) <=
-      new Date(data.endAt.toDateString()),
-    {
-      message: 'La fecha de inicio no puede ser mayor a la fecha de fin',
-      path: ['startAt'],
-    }
-  );
-
-type FormType = z.infer<typeof ValidationSchema>;
-
-const initialValues: FormType = {
-  collection: 'sale',
-  searchKey: '',
-  startAt: new Date(),
-  endAt: new Date(),
-};
-
 const FetchReportData: FC<Props> = ({ setData, setSearchKey }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { queryCollection } = useQueryCollection();
 
-  const handleSubmit: FormikConfig<FormType>['onSubmit'] = (
+  const handleSubmit: FormikConfig<ReportForm>['onSubmit'] = (
     values,
     { setSubmitting }
   ) => {
-    const { collection, searchKeys } = collectionMapping[values.collection];
+    const { collection, searchKeys } =
+      reportCollectionMapping[values.collection];
 
     // @ts-expect-error - Assert to string literal
     const { queryKey } = searchKeys[values.searchKey];
@@ -102,8 +61,8 @@ const FetchReportData: FC<Props> = ({ setData, setSearchKey }) => {
   return (
     <Card sx={{ p: 4 }}>
       <Formik
-        initialValues={initialValues}
-        validationSchema={toFormikValidationSchema(ValidationSchema)}
+        initialValues={REPORT_FORM_INITIAL_VALUE}
+        validationSchema={toFormikValidationSchema(ReportFormValidationSchema)}
         onSubmit={handleSubmit}
       >
         {({ values }) => (
@@ -135,7 +94,7 @@ const FetchReportData: FC<Props> = ({ setData, setSearchKey }) => {
                     Elige una opción
                   </MenuItem>
                   {Object.values(
-                    collectionMapping[values.collection].searchKeys
+                    reportCollectionMapping[values.collection].searchKeys
                   ).map((field) => (
                     <MenuItem key={field.value} value={field.value}>
                       {field.label}
