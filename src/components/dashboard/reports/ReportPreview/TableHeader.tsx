@@ -8,8 +8,8 @@ interface Props {
 
 const TableHeader: FC<Props> = ({ headerString }) => (
   <>
-    {headerString.split(CSV_PARSER_CONFIG.DELIMITER.PREVIEW).map((h) => (
-      <Grid item xs={1}>
+    {headerString.split(CSV_PARSER_CONFIG.DELIMITER.PREVIEW).map((h, i) => (
+      <Grid key={i} item xs={1}>
         <Box
           sx={{
             border: '1px solid',

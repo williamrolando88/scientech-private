@@ -51,6 +51,6 @@ export const ALLOWED_ACCOUNTS = {
 };
 
 export const CSV_PARSER_CONFIG = {
-  DELIMITER: { PREVIEW: '|', EXPORT: ',' },
-  NEW_LINE: { PREVIEW: '\r\n' },
+  DELIMITER: { PREVIEW: '|', FILE: ',' },
+  NEW_LINE: { PREVIEW: '.;.', FILE: '\r\n' },
 };

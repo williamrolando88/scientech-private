@@ -10,7 +10,7 @@ interface Props {
 }
 
 const PreviewTable: FC<Props> = ({ csvData }) => {
-  if (!csvData || !csvData.length || typeof csvData !== 'string') {
+  if (!csvData || !csvData.length) {
     return null;
   }
 
