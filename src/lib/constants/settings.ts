@@ -49,3 +49,8 @@ export const ALLOWED_ACCOUNTS = {
   ISSUED_INVOICES: ['4.01.01', '4.01.02'],
   PAYMENT_COLLECTION: ['1.01.01.03'],
 };
+
+export const CSV_PARSER_CONFIG = {
+  DELIMITER: { PREVIEW: '|', EXPORT: ',' },
+  NEW_LINE: { PREVIEW: '\r\n' },
+};

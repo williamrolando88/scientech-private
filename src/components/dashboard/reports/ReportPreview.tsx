@@ -1,6 +1,8 @@
-import { Card, Stack } from '@mui/material';
+import { Card } from '@mui/material';
+import { extractSearchResults } from '@src/lib/modules/reports';
 import { Sale } from '@src/types/sale';
 import { FC } from 'react';
+import PreviewTable from './ReportPreview/PreviewTable';
 
 interface Props {
   data: Sale[];
@@ -12,11 +14,7 @@ const ReportPreview: FC<Props> = ({ data, searchKey }) => {
 
   return (
     <Card sx={{ p: 4 }}>
-      <Stack>
-        {data.map((d, i) => (
-          <pre key={i}>{JSON.stringify(d[searchKey], null, 2)}</pre>
-        ))}
-      </Stack>
+      <PreviewTable csvData={extractSearchResults(data, searchKey) as string} />
     </Card>
   );
 };

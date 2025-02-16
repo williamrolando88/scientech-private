@@ -1,3 +1,6 @@
+import Papa from 'papaparse';
+import { CSV_PARSER_CONFIG } from '../constants/settings';
+
 export const extractSearchResults = (
   data: Record<string, any>[],
   searchKey: string
@@ -5,7 +8,10 @@ export const extractSearchResults = (
   if (!data || !data.length) return [];
 
   const searchResults = data.map((d) => hideSystemInfo(d[searchKey])) || [];
-  return searchResults;
+  return Papa.unparse(searchResults, {
+    delimiter: CSV_PARSER_CONFIG.DELIMITER.PREVIEW,
+    newline: CSV_PARSER_CONFIG.NEW_LINE.PREVIEW,
+  });
 };
 
 const hideSystemInfo = (data: Record<string, any>) => {
