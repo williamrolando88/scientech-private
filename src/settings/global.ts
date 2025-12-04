@@ -7,10 +7,7 @@ export const FIREBASE_API = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.FIREBASE_APPID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
-
-export const MAP_API = process.env.MAPBOX_API;
 
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.home;
 

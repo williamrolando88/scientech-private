@@ -78,12 +78,15 @@ const OngoingProjectGraph: FC<Props> = ({ accountingData }) => {
     yaxis: {
       title: { text: 'USD' },
       min: 0,
+      labels: {
+        formatter: (value: number) => round(value, 2).toString(),
+      },
     },
     tooltip: {
       shared: true,
       intersect: false,
       y: {
-        formatter: (value: number) => (value ? `$${round(value, 2)}` : '$0'),
+        formatter: (value: number) => (value ? `$ ${round(value, 2)}` : '$0'),
       },
     },
   });
